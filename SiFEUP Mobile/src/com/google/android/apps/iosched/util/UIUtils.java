@@ -20,7 +20,6 @@ import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
 import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
 import com.google.android.apps.iosched.ui.phone.MapActivity;
-import com.google.android.apps.iosched.ui.tablet.MapMultiPaneActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -207,11 +206,4 @@ public class UIUtils {
         return null;
     }
 
-    public static Class getMapActivityClass(Context context) {
-        if (UIUtils.isHoneycombTablet(context)) {
-            return MapMultiPaneActivity.class;
-        }
-
-        return MapActivity.class;
-    }
 }

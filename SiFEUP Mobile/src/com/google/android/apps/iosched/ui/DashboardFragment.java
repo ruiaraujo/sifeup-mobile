@@ -18,10 +18,8 @@ package com.google.android.apps.iosched.ui;
 
 import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract;
+import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.ui.phone.ScheduleActivity;
-import com.google.android.apps.iosched.ui.tablet.ScheduleMultiPaneActivity;
-import com.google.android.apps.iosched.ui.tablet.SessionsMultiPaneActivity;
-import com.google.android.apps.iosched.ui.tablet.VendorsMultiPaneActivity;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
@@ -48,12 +46,8 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_schedule).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Schedule");
-                if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
-                } else {
-                    startActivity(new Intent(getActivity(), ScheduleActivity.class));
-                }
-                
+                startActivity(new Intent(getActivity(), ScheduleActivity.class));
+                    
             }
             
         });
@@ -62,16 +56,13 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Sessions");
                 // Launch sessions list
-                if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), SessionsMultiPaneActivity.class));
-                } else {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ScheduleContract.Tracks.CONTENT_URI);
-                    intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_session_tracks));
-                    intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
-                            TracksFragment.NEXT_TYPE_SESSIONS);
-                    startActivity(intent);
-                }
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        ScheduleContract.Tracks.CONTENT_URI);
+                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_session_tracks));
+                intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
+                        TracksFragment.NEXT_TYPE_SESSIONS);
+                startActivity(intent);
+                
 
             }
         });
@@ -88,16 +79,12 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Sandbox");
                 // Launch vendors list
-                if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), VendorsMultiPaneActivity.class));
-                } else {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
                             ScheduleContract.Tracks.CONTENT_URI);
                     intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_vendor_tracks));
                     intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
                             TracksFragment.NEXT_TYPE_VENDORS);
                     startActivity(intent);
-                }
             }
         });
 
@@ -105,8 +92,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 // Launch map of conference venue
                 fireTrackerEvent("Map");
-                startActivity(new Intent(getActivity(),
-                        UIUtils.getMapActivityClass(getActivity())));
+                startActivity(new Intent(getActivity(),MapActivity.class));
             }
         });
 

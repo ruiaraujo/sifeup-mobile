@@ -32,7 +32,7 @@ import android.view.MenuItem;
  * inherit from {@link BaseSinglePaneActivity} or {@link BaseMultiPaneActivity}.
  */
 public abstract class BaseActivity extends FragmentActivity {
-    final ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
+    final ActivityHelper mActivityHelper = new ActivityHelper(this);
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

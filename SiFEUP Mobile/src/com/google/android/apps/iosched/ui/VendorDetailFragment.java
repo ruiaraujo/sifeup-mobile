@@ -18,6 +18,7 @@ package com.google.android.apps.iosched.ui;
 
 import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract;
+import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.BitmapUtils;
@@ -217,7 +218,7 @@ public class VendorDetailFragment extends Fragment implements
         if (item.getItemId() == R.id.menu_map) {
             // The room ID for the sandbox, in the map, is just the track ID
             final Intent intent = new Intent(getActivity().getApplicationContext(),
-                    UIUtils.getMapActivityClass(getActivity()));
+                    MapActivity.class);
             intent.putExtra(MapFragment.EXTRA_ROOM,
                     ParserUtils.translateTrackIdAliasInverse(mTrackId));
             startActivity(intent);

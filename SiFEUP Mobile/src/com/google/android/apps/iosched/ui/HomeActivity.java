@@ -20,7 +20,6 @@ import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.service.SyncService;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.DetachableResultReceiver;
-import com.google.android.apps.iosched.util.EulaHelper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,16 +41,11 @@ import android.widget.Toast;
 public class HomeActivity extends BaseActivity {
     private static final String TAG = "HomeActivity";
 
-    private TagStreamFragment mTagStreamFragment;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!EulaHelper.hasAcceptedEula(this)) {
-            EulaHelper.showEula(false, this);
-        }
 
         AnalyticsUtils.getInstance(this).trackPageView("/Home");
 
@@ -60,7 +54,6 @@ public class HomeActivity extends BaseActivity {
 
         FragmentManager fm = getSupportFragmentManager();
 
-        mTagStreamFragment = (TagStreamFragment) fm.findFragmentById(R.id.fragment_tag_stream);
 
         mSyncStatusUpdaterFragment = (SyncStatusUpdaterFragment) fm
                 .findFragmentByTag(SyncStatusUpdaterFragment.TAG);
@@ -101,9 +94,7 @@ public class HomeActivity extends BaseActivity {
         intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
         startService(intent);
 
-        if (mTagStreamFragment != null) {
-            mTagStreamFragment.refresh();
-        }
+       
     }
 
     private void updateRefreshStatus(boolean refreshing) {

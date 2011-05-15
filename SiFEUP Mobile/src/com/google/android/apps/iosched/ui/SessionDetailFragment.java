@@ -18,6 +18,7 @@ package com.google.android.apps.iosched.ui;
 
 import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract;
+import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.BitmapUtils;
@@ -283,13 +284,6 @@ public class SessionDetailFragment extends Fragment implements
 
                 mTagDisplay.setText(sb);
 
-                mTagDisplay.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), TagStreamActivity.class);
-                        intent.putExtra(TagStreamFragment.EXTRA_QUERY, getHashtagsString());
-                        startActivity(intent);
-                    }
-                });
             } else {
                 mTagDisplay.setVisibility(View.GONE);
             }
@@ -336,7 +330,11 @@ public class SessionDetailFragment extends Fragment implements
         }
     }
 
-    /**
+    private String getHashtagsString() {
+		return "WAS HERE";//TODO
+	}
+
+	/**
      * Handle {@link TracksQuery} {@link Cursor}.
      */
     private void onTrackQueryComplete(Cursor cursor) {
@@ -445,7 +443,7 @@ public class SessionDetailFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.menu_map:
                 intent = new Intent(getActivity().getApplicationContext(),
-                        UIUtils.getMapActivityClass(getActivity()));
+                        MapActivity.class);
                 intent.putExtra(MapFragment.EXTRA_ROOM, mRoomId);
                 startActivity(intent);
                 return true;
@@ -631,13 +629,7 @@ public class SessionDetailFragment extends Fragment implements
         container.findViewById(R.id.empty_links).setVisibility(hasLinks ? View.GONE : View.VISIBLE);
     }
 
-    private String getHashtagsString() {
-        if (!TextUtils.isEmpty(mHashtag)) {
-            return TagStreamFragment.CONFERENCE_HASHTAG + " #" + mHashtag;
-        } else {
-            return TagStreamFragment.CONFERENCE_HASHTAG;
-        }
-    }
+ 
 
     private BroadcastReceiver mPackageChangesReceiver = new BroadcastReceiver() {
         @Override

@@ -47,13 +47,8 @@ public class ActivityHelper {
      * on which device the app is running, either a basic helper or Honeycomb-specific helper will
      * be returned.
      */
-    public static ActivityHelper createInstance(Activity activity) {
-        return UIUtils.isHoneycomb() ?
-                new ActivityHelperHoneycomb(activity) :
-                new ActivityHelper(activity);
-    }
 
-    protected ActivityHelper(Activity activity) {
+    public ActivityHelper(Activity activity) {
         mActivity = activity;
     }
 
