@@ -16,7 +16,7 @@
 
 package com.google.android.apps.iosched.ui;
 
-import com.google.android.apps.iosched.R;
+
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.ui.widget.BlockView;
 import com.google.android.apps.iosched.ui.widget.BlocksLayout;
@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+
+import pt.up.fe.mobile.R;
 
 /**
  * Shows a horizontally-pageable calendar of conference days. Horizontaly paging is achieved using

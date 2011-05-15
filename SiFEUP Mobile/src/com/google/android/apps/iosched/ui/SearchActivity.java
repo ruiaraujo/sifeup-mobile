@@ -16,7 +16,9 @@
 
 package com.google.android.apps.iosched.ui;
 
-import com.google.android.apps.iosched.R;
+
+import pt.up.fe.mobile.R;
+
 import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
 import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
 import com.google.android.apps.iosched.ui.phone.SessionDetailActivity;

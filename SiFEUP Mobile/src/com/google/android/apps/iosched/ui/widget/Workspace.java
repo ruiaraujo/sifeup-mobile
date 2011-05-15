@@ -17,7 +17,6 @@
 package com.google.android.apps.iosched.ui.widget;
 
 import com.google.android.apps.iosched.util.MotionEventUtils;
-import com.google.android.apps.iosched.util.ReflectionUtils;
 
 import android.content.Context;
 import android.graphics.Canvas;

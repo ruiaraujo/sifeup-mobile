@@ -16,10 +16,9 @@
 
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.apps.iosched"
     android:versionCode="16"
     android:versionName="0.16"
-    android:installLocation="auto">
+    android:installLocation="preferExternal" package="pt.up.fe.mobile">
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -57,19 +56,15 @@
         </activity>
 
         <activity
-            android:name=".ui.BulletinActivity"
+            android:name="com.google.android.apps.iosched.ui.BulletinActivity"
             android:label="@string/title_bulletin" />
 
         <activity
-            android:name=".ui.TagStreamActivity"
-            android:label="@string/title_tagstream" />
-
-        <activity
-            android:name=".ui.StarredActivity"
+            android:name="com.google.android.apps.iosched.ui.StarredActivity"
             android:label="@string/title_starred" />
 
         <activity
-            android:name=".ui.SearchActivity"
+            android:name="com.google.android.apps.iosched.ui.SearchActivity"
             android:label="@string/title_search"
             android:launchMode="singleTop">
             <intent-filter>
@@ -82,11 +77,11 @@
         <!-- Phone-only activities -->
 
         <activity
-            android:name=".ui.phone.ScheduleActivity"
+            android:name="com.google.android.apps.iosched.ui.phone.ScheduleActivity"
             android:label="@string/title_schedule" />
 
         <activity
-            android:name=".ui.phone.TracksActivity"
+            android:name="com.google.android.apps.iosched.ui.phone.TracksActivity"
             android:label="@string/title_tracks">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -96,7 +91,7 @@
         </activity>
 
         <activity
-            android:name=".ui.phone.SessionsActivity"
+            android:name="com.google.android.apps.iosched.ui.phone.SessionsActivity"
             android:label="@string/title_sessions">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -106,7 +101,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.phone.SessionDetailActivity">
+        <activity android:name="com.google.android.apps.iosched.ui.phone.SessionDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -115,7 +110,7 @@
         </activity>
 
         <activity
-            android:name=".ui.phone.VendorsActivity"
+            android:name="com.google.android.apps.iosched.ui.phone.VendorsActivity"
             android:label="@string/title_vendors">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -125,7 +120,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.phone.VendorDetailActivity">
+        <activity android:name="com.google.android.apps.iosched.ui.phone.VendorDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -134,28 +129,9 @@
         </activity>
 
         <activity
-            android:name=".ui.phone.MapActivity"
+            android:name="com.google.android.apps.iosched.ui.phone.MapActivity"
             android:label="@string/title_map"
             android:configChanges="orientation|keyboardHidden" />
-
-        <!-- Tablet-only activities -->
-
-        <activity
-            android:name=".ui.tablet.SessionsMultiPaneActivity"
-            android:label="@string/title_sessions" />
-        <activity
-            android:name=".ui.tablet.VendorsMultiPaneActivity"
-            android:label="@string/title_vendors" />
-        <activity
-            android:name=".ui.tablet.ScheduleMultiPaneActivity"
-            android:label="@string/title_schedule" />
-        <activity
-            android:name=".ui.tablet.MapMultiPaneActivity"
-            android:label="@string/title_map"
-            android:configChanges="orientation|keyboardHidden" />
-        <activity
-            android:name=".ui.tablet.NowPlayingMultiPaneActivity"
-            android:label="@string/title_now_playing" />
 
         <!-- Used for install referrer tracking -->
         <receiver
@@ -172,10 +148,10 @@
             android:name="android.app.default_searchable"
             android:value=".ui.SearchActivity" />
 
-        <service android:name=".service.SyncService" />
+        <service android:name="com.google.android.apps.iosched.service.SyncService" />
 
         <provider
-            android:name=".provider.ScheduleProvider"
+            android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
             android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
 

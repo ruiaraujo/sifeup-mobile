@@ -16,7 +16,6 @@
 
 package com.google.android.apps.iosched.service;
 
-import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.io.LocalBlocksHandler;
 import com.google.android.apps.iosched.io.LocalExecutor;
 import com.google.android.apps.iosched.io.LocalRoomsHandler;
@@ -45,6 +44,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
+
+import pt.up.fe.mobile.R;
 
 import android.app.IntentService;
 import android.app.Service;

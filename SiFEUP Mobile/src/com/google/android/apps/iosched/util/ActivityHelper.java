@@ -16,8 +16,10 @@
 
 package com.google.android.apps.iosched.util;
 
-import com.google.android.apps.iosched.R;
-import com.google.android.apps.iosched.ui.HomeActivity;
+import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.HomeActivity;
+
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -41,12 +43,6 @@ import android.widget.TextView;
  */
 public class ActivityHelper {
     protected Activity mActivity;
-
-    /**
-     * Factory method for creating {@link ActivityHelper} objects for a given activity. Depending
-     * on which device the app is running, either a basic helper or Honeycomb-specific helper will
-     * be returned.
-     */
 
     public ActivityHelper(Activity activity) {
         mActivity = activity;

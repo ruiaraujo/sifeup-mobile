@@ -16,8 +16,9 @@
 
 package com.google.android.apps.iosched.ui;
 
-import com.google.android.apps.iosched.R;
 
+
+import pt.up.fe.mobile.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

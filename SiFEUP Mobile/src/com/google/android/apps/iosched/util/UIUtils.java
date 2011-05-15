@@ -16,7 +16,6 @@
 
 package com.google.android.apps.iosched.util;
 
-import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
 import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
 import com.google.android.apps.iosched.ui.phone.MapActivity;
@@ -47,6 +46,8 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import pt.up.fe.mobile.R;
 
 /**
  * An assortment of UI helpers.
@@ -174,20 +175,6 @@ public class UIUtils {
         return ((30 * Color.red(color) +
                 59 * Color.green(color) +
                 11 * Color.blue(color)) / 100) <= BRIGHTNESS_THRESHOLD;
-    }
-
-    public static boolean isHoneycomb() {
-        // Can use static final constants like HONEYCOMB, declared in later versions
-        // of the OS since they are inlined at compile time. This is guaranteed behavior.
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    }
-
-    public static boolean isHoneycombTablet(Context context) {
-        // Can use static final constants like HONEYCOMB, declared in later versions
-        // of the OS since they are inlined at compile time. This is guaranteed behavior.
-        return isHoneycomb() && (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                == Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
     public static long getCurrentTime(final Context context) {

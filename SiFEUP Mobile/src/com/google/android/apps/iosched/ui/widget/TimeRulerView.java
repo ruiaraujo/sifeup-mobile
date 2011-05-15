@@ -16,7 +16,8 @@
 
 package com.google.android.apps.iosched.ui.widget;
 
-import com.google.android.apps.iosched.R;
+import pt.up.fe.mobile.R;
+
 import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Context;
