@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">SIFEUP Mobile</string>
+    <string name="app_name">SiFEUP Mobile</string>
 
     <string name="description_logo">Google I/O 2011</string>
     <string name="description_home">Home</string>
@@ -129,10 +129,15 @@
 
     <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
 
+
+
     <!-- EULA -->
     <string name="eula_title">EULA title.</string>
     <string name="eula_text">EULA goes here.</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
+    
+   <string name="bt_cancel">Cancel</string>
+    <string name="lb_login_cancel">Connecting...</string>
 
 </resources>

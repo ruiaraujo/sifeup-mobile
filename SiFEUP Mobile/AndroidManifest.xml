@@ -49,6 +49,12 @@
             android:name=".ui.HomeActivity"
             android:theme="@style/Theme.IOSched.Home"
             android:label="@string/app_name">
+        </activity>
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:noHistory="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -146,7 +152,7 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".ui.SearchActivity" />
+            android:value="com.google.android.apps.iosched.ui.SearchActivity" />
 
         <service android:name="com.google.android.apps.iosched.service.SyncService" />
 
