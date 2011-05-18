@@ -31,7 +31,8 @@ import android.net.Uri;
  * {@link https://github.com/catch/docs-api/}.
  */
 public class CatchNotesHelper {
-    private static final String TAG = "CatchNotesHelper";
+    @SuppressWarnings("unused")
+	private static final String TAG = "CatchNotesHelper";
 
     // Intent actions
     public static final String ACTION_ADD = "com.catchnotes.intent.action.ADD";

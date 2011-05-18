@@ -11,10 +11,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -27,9 +24,9 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.fe.up.mobile.service.SessionCookie;
+import pt.fe.up.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.R;
-
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -41,7 +38,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -58,18 +54,18 @@ public class LoginActivity extends Activity
 
         setContentView(R.layout.login);
         
-        final EditText login = (EditText) findViewById(R.id.username);
-        final EditText pass = (EditText) findViewById(R.id.pass);
+        final EditText username = (EditText) findViewById(R.id.username);
+        final EditText password = (EditText) findViewById(R.id.pass);
 
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override
 			public void onClick(View v) 
 			{
-				String urlS = "https://www.fe.up.pt/si/MOBC_GERAL.autentica?pv_login="+
-				login.getText().toString().trim() + "&pv_password=" + pass.getText().toString().trim();
 	        	logintask = new LoginTask();
-				logintask.execute(urlS);
+				logintask.execute(SifeupAPI.getAuthenticationUrl(
+						username.getText().toString().trim(), 
+						password.getText().toString().trim()));
 			}
 				
 		});
@@ -78,8 +74,8 @@ public class LoginActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-				login.setText("");
-				pass.setText("");
+				username.setText("");
+				password.setText("");
 			}
 				
 		});
@@ -116,7 +112,6 @@ public class LoginActivity extends Activity
 		ctx.init(null, new TrustManager[] { tm }, null);					
 		HttpsURLConnection httpConn = (HttpsURLConnection) new URL(url).openConnection();
 		httpConn.setSSLSocketFactory(ctx.getSocketFactory());
-		//httpConn.setRequestProperty("Cookie", myCookie);
 		httpConn.setHostnameVerifier(new HostnameVerifier() {
 			@Override
 			public boolean verify(String paramString, SSLSession paramSSLSession) {
@@ -149,7 +144,6 @@ public class LoginActivity extends Activity
 		return null;
 	}
 	
-	public static String cookie = "";
     private class LoginTask extends AsyncTask<String, Void, Boolean> {
 
     	protected void onPreExecute (){
@@ -170,6 +164,8 @@ public class LoginActivity extends Activity
         	removeDialog(DIALOG_CONNECTING);
 
         }
+
+        
 		@Override
 		protected Boolean doInBackground(String ... params) {
 				InputStream in = null;
@@ -192,13 +188,16 @@ public class LoginActivity extends Activity
 						baf.append(buffer, 0, read);
 					}
 					page = new String(baf.toByteArray());
-					Map<String, List<String>> headers = conn.getHeaderFields(); 
-					List<String> values = headers.get("Set-Cookie"); 
-
-					for (Iterator<String> iter = values.iterator(); iter.hasNext(); ) {
-					     String v = iter.next(); 
-					     cookie = cookie + ";" + v;
+					
+					//Saving cookie for later using throughout the program
+					String cookie = "";
+     				String headerName=null;
+					for (int i=1; (headerName = conn.getHeaderFieldKey(i)) != null; i++) {
+					    if (headerName.equalsIgnoreCase("Set-Cookie")) {
+					    	cookie +=conn.getHeaderField(i)+";";
+					    }
 					}
+					SessionCookie.getInstance().setCookie(cookie);
 					Log.e("Login cookie" ,  cookie);
 
 					bis.close();

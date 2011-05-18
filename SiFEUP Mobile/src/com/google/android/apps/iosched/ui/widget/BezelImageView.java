@@ -36,7 +36,8 @@ import android.widget.ImageView;
  */
 public class BezelImageView extends ImageView {
 
-    private static final String TAG = "BezelImageView";
+    @SuppressWarnings("unused")
+	private static final String TAG = "BezelImageView";
 
     private Paint mMaskedPaint;
     private Paint mCopyPaint;

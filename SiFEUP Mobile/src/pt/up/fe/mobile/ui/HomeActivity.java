@@ -10,8 +10,9 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONObject;
 
+import pt.fe.up.mobile.service.SessionCookie;
+import pt.fe.up.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.R;
 
 import com.google.android.apps.iosched.service.SyncService;
@@ -30,7 +31,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class HomeActivity extends BaseActivity {
-	   private static final String TAG = "HomeActivity";
+	   @SuppressWarnings("unused")
+	private static final String TAG = "HomeActivity";
 
 	    private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
@@ -56,16 +58,17 @@ public class HomeActivity extends BaseActivity {
 	            triggerRefresh();
 	        }
 	    }
-	    
+	    // Simple function to test cookies TODO:remove this
 	    private void testCookie(){
 	    	InputStream in = null;
 			String page = "";
 			try {
-				String urlS = "https://www.fe.up.pt/si/MOBC_GERAL.aluno?pv_codigo=080503281";
 
-				Log.e("Login",urlS );
-				HttpsURLConnection httpConn = LoginActivity.getDangerousCon(urlS);
-				httpConn.setRequestProperty("Cookie", LoginActivity.cookie);
+				Log.e("Login and cookie",SessionCookie.getInstance().getCookie() );
+				HttpsURLConnection httpConn = LoginActivity.getDangerousCon(SifeupAPI.getStudentUrl("080503281"));
+				
+				//This sets the cookie 
+				httpConn.setRequestProperty("Cookie", SessionCookie.getInstance().getCookie());
 				httpConn.connect();
 				in = httpConn.getInputStream();
 				BufferedInputStream bis = new BufferedInputStream(in);
