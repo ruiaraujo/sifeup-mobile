@@ -137,7 +137,13 @@
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     
-   <string name="bt_cancel">Cancel</string>
+    <!-- Login -->
+   	<string name="bt_cancel">Cancel</string>
     <string name="lb_login_cancel">Connecting...</string>
+    <string name="bt_login">Login</string>
+    <string name="bt_reset">Reset</string>
+    <string name="lb_login_remember">   Remember Me</string>
+    <string name="lb_login_username">Enter User Name</string>
+    <string name="lb_login_password">Enter Password</string>
 
 </resources>

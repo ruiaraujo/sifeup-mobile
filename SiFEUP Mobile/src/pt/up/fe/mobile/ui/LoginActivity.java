@@ -31,6 +31,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,25 +50,44 @@ public class LoginActivity extends Activity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        logintask = new LoginTask();
+        logintask = null;
+
         setContentView(R.layout.login);
         
-        final EditText login = (EditText) findViewById(R.id.login);
+        final EditText login = (EditText) findViewById(R.id.username);
         final EditText pass = (EditText) findViewById(R.id.pass);
 
-        Button confirm = (Button) findViewById(R.id.confirm);
-        
-        confirm.setOnClickListener(new OnClickListener() 
+        findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override
 			public void onClick(View v) 
 			{
 				String urlS = "https://www.fe.up.pt/si/MOBC_GERAL.autentica?pv_login="+
 				login.getText().toString().trim() + "&pv_password=" + pass.getText().toString().trim();
+	        	logintask = new LoginTask();
 				logintask.execute(urlS);
 			}
 				
 		});
+        findViewById(R.id.login_reset).setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				login.setText("");
+				pass.setText("");
+			}
+				
+		});
+        findViewById(R.id.login_cancel).setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				finish();
+			}
+		});
+        
     }
 
     
@@ -105,16 +125,16 @@ public class LoginActivity extends Activity
 	protected Dialog onCreateDialog(int id ) {
 		switch (id) {
 			case DIALOG_CONNECTING: {
-				ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+				ProgressDialog progressDialog =new ProgressDialog(LoginActivity.this);
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.setCancelable(false);
-				progressDialog.setTitle(getString(R.string.lb_login_cancel));
-				progressDialog.setButton(getString(R.string.bt_cancel),
-						new DialogInterface.OnClickListener(){
-					public void onClick(DialogInterface dialog, int which) {
+				progressDialog.setCancelable(true);
+				progressDialog.setMessage(getString(R.string.lb_login_cancel));
+				progressDialog.setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
 						if ( LoginActivity.this.logintask != null )
 							LoginActivity.this.logintask.cancel(true);
-						removeDialog(DIALOG_CONNECTING);
+						removeDialog(DIALOG_CONNECTING);						
 					}
 				});
 				progressDialog.setIndeterminate(false);
@@ -126,7 +146,7 @@ public class LoginActivity extends Activity
     private class LoginTask extends AsyncTask<String, Void, Boolean> {
 
     	protected void onPreExecute (){
-    		showDialog(DIALOG_CONNECTING);
+    		showDialog(DIALOG_CONNECTING);  
     	}
 
         protected void onPostExecute(Boolean result) {
@@ -141,7 +161,7 @@ public class LoginActivity extends Activity
 				Toast.makeText(LoginActivity.this, "Fuck", Toast.LENGTH_LONG).show();
 			}
         	removeDialog(DIALOG_CONNECTING);
-        	logintask = new LoginTask();
+
         }
 
 		@Override
@@ -149,7 +169,6 @@ public class LoginActivity extends Activity
 				InputStream in = null;
 				String page = "";
 				try {
-					
 					Log.e("Login",params[0] );
 					HttpsURLConnection httpConn = getDangerousCon(params[0]);
 					httpConn.connect();
@@ -169,7 +188,9 @@ public class LoginActivity extends Activity
 					page = new String(baf.toByteArray());
 					bis.close();
 					in.close();
-					httpConn.disconnect();
+					httpConn.disconnect();	
+					JSONObject jObject = new JSONObject(page);
+					return jObject.optBoolean("authenticated");					
 				} catch (MalformedURLException e) {
 				 // DEBUG
 				 Log.e("DEBUG url exceptop: ", e.toString());
@@ -180,18 +201,11 @@ public class LoginActivity extends Activity
 					e.printStackTrace();
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
-				}
-				JSONObject jObject;
-				try {
-					jObject = new JSONObject(page);
-					return jObject.optBoolean("authenticated");					
 				} catch (JSONException e) {
-				 // DEBUG
-				 Log.e("DEBUG: ", e.toString());
-				}			
+					e.printStackTrace();
+				}
 				return false;
 		}
     }
-    
  
 }
