@@ -1,5 +1,17 @@
 package pt.up.fe.mobile.ui;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONObject;
+
 import pt.up.fe.mobile.R;
 
 import com.google.android.apps.iosched.service.SyncService;
@@ -12,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -26,7 +39,7 @@ public class HomeActivity extends BaseActivity {
 	        super.onCreate(savedInstanceState);
 
 	        AnalyticsUtils.getInstance(this).trackPageView("/Home");
-
+	        testCookie();
 	        setContentView(R.layout.activity_home);
 	        getActivityHelper().setupActionBar(null, 0);
 
@@ -42,6 +55,48 @@ public class HomeActivity extends BaseActivity {
 
 	            triggerRefresh();
 	        }
+	    }
+	    
+	    private void testCookie(){
+	    	InputStream in = null;
+			String page = "";
+			try {
+				String urlS = "https://www.fe.up.pt/si/MOBC_GERAL.aluno?pv_codigo=080503281";
+
+				Log.e("Login",urlS );
+				HttpsURLConnection httpConn = LoginActivity.getDangerousCon(urlS);
+				httpConn.setRequestProperty("Cookie", LoginActivity.cookie);
+				httpConn.connect();
+				in = httpConn.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(in);
+				ByteArrayBuffer baf = new ByteArrayBuffer(50);
+				int read = 0;
+				int bufSize = 512;
+				byte[] buffer = new byte[bufSize];
+				while ( true ) {
+					read = bis.read( buffer );
+					if( read == -1 ){
+						break;
+					}
+					baf.append(buffer, 0, read);
+				}
+				page = new String(baf.toByteArray());
+				bis.close();
+				in.close();
+				httpConn.disconnect();
+				Log.e("Cookie Test", page);
+				
+			} catch (MalformedURLException e) {
+			 // DEBUG
+			 Log.e("DEBUG url exceptop: ", e.toString());
+			} catch (IOException e) {
+			 // DEBUG
+			 Log.e("DEBUG: ioexcep ", e.toString());
+			}  catch (KeyManagementException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} 
 	    }
 
 

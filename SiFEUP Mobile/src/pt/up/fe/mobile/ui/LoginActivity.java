@@ -11,6 +11,10 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -91,7 +95,7 @@ public class LoginActivity extends Activity
     }
 
     
-    private HttpsURLConnection getDangerousCon(String url) throws 
+    public static HttpsURLConnection getDangerousCon(String url) throws 
     				NoSuchAlgorithmException, KeyManagementException, MalformedURLException, IOException{
     	X509TrustManager tm = new X509TrustManager() {
 			@Override
@@ -112,6 +116,7 @@ public class LoginActivity extends Activity
 		ctx.init(null, new TrustManager[] { tm }, null);					
 		HttpsURLConnection httpConn = (HttpsURLConnection) new URL(url).openConnection();
 		httpConn.setSSLSocketFactory(ctx.getSocketFactory());
+		//httpConn.setRequestProperty("Cookie", myCookie);
 		httpConn.setHostnameVerifier(new HostnameVerifier() {
 			@Override
 			public boolean verify(String paramString, SSLSession paramSSLSession) {
@@ -143,6 +148,8 @@ public class LoginActivity extends Activity
 		}
 		return null;
 	}
+	
+	public static String cookie = "";
     private class LoginTask extends AsyncTask<String, Void, Boolean> {
 
     	protected void onPreExecute (){
@@ -163,16 +170,15 @@ public class LoginActivity extends Activity
         	removeDialog(DIALOG_CONNECTING);
 
         }
-
 		@Override
 		protected Boolean doInBackground(String ... params) {
 				InputStream in = null;
 				String page = "";
 				try {
 					Log.e("Login",params[0] );
-					HttpsURLConnection httpConn = getDangerousCon(params[0]);
-					httpConn.connect();
-					in = httpConn.getInputStream();
+					HttpsURLConnection conn = getDangerousCon(params[0]);
+					conn.connect();
+					in = conn.getInputStream();
 					BufferedInputStream bis = new BufferedInputStream(in);
 					ByteArrayBuffer baf = new ByteArrayBuffer(50);
 					int read = 0;
@@ -186,9 +192,18 @@ public class LoginActivity extends Activity
 						baf.append(buffer, 0, read);
 					}
 					page = new String(baf.toByteArray());
+					Map<String, List<String>> headers = conn.getHeaderFields(); 
+					List<String> values = headers.get("Set-Cookie"); 
+
+					for (Iterator<String> iter = values.iterator(); iter.hasNext(); ) {
+					     String v = iter.next(); 
+					     cookie = cookie + ";" + v;
+					}
+					Log.e("Login cookie" ,  cookie);
+
 					bis.close();
 					in.close();
-					httpConn.disconnect();	
+					conn.disconnect();	
 					JSONObject jObject = new JSONObject(page);
 					return jObject.optBoolean("authenticated");					
 				} catch (MalformedURLException e) {
