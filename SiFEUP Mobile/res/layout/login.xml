@@ -67,6 +67,7 @@
 		android:layout_height="wrap_content"
 		>
 		<CheckBox
+			android:id="@+id/login_remember"
 			android:textSize="16.0sp"
 			android:textStyle="normal"
 			android:layout_width="fill_parent"

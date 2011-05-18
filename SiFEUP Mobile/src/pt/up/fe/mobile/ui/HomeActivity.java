@@ -4,8 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -58,14 +56,14 @@ public class HomeActivity extends BaseActivity {
 	            triggerRefresh();
 	        }
 	    }
-	    // Simple function to test cookies TODO:remove this
+	    // Simple function to test cookie storage TODO:remove this
 	    private void testCookie(){
 	    	InputStream in = null;
 			String page = "";
 			try {
 
 				Log.e("Login and cookie",SessionCookie.getInstance().getCookie() );
-				HttpsURLConnection httpConn = LoginActivity.getDangerousCon(SifeupAPI.getStudentUrl("080503281"));
+				HttpsURLConnection httpConn = LoginActivity.getUncheckedConnection(SifeupAPI.getStudentUrl("080503281"));
 				
 				//This sets the cookie 
 				httpConn.setRequestProperty("Cookie", SessionCookie.getInstance().getCookie());
@@ -95,11 +93,7 @@ public class HomeActivity extends BaseActivity {
 			} catch (IOException e) {
 			 // DEBUG
 			 Log.e("DEBUG: ioexcep ", e.toString());
-			}  catch (KeyManagementException e) {
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} 
+			}
 	    }
 
 
