@@ -18,6 +18,7 @@ package com.google.android.apps.iosched.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.ExamsActivity;
 import pt.up.fe.mobile.ui.PrintActivity;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
@@ -94,8 +95,10 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue
-                fireTrackerEvent("Map");
-                startActivity(new Intent(getActivity(),MapActivity.class));
+                //fireTrackerEvent("Map");
+                //startActivity(new Intent(getActivity(),MapActivity.class));
+            	Intent intent = new Intent(getActivity(), ExamsActivity.class);
+                startActivity(intent);
             }
         });
 
