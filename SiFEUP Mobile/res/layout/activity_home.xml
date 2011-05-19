@@ -20,7 +20,7 @@
     android:layout_height="fill_parent">
     <include layout="@layout/actionbar" />
 
-    <fragment android:name="com.google.android.apps.iosched.ui.DashboardFragment"
+    <fragment android:name="pt.up.fe.mobile.ui.DashboardFragment"
         android:id="@+id/fragment_dashboard"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

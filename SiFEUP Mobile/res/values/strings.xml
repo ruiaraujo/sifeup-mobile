@@ -17,7 +17,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SiFEUP Mobile</string>
 
-    <string name="description_logo">Google I/O 2011</string>
+    <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
     <string name="description_search">Search</string>
     <string name="description_map">Map</string>
@@ -37,7 +37,7 @@
     <string name="title_vendor_detail">Company Information</string>
     <string name="title_map">Map</string>
     <string name="title_tagstream">Realtime Stream</string>
-    <string name="title_bulletin">Bulletin</string>
+    <string name="title_printing">Printing Quota</string>
 
     <string name="title_session_tracks">Session tracks</string>
     <string name="title_vendor_tracks">Sandbox pods</string>
@@ -52,7 +52,8 @@
     <string name="btn_sessions">Sessions</string>
     <string name="btn_starred">Starred</string>
     <string name="btn_vendors">Sandbox</string>
-    <string name="btn_print_balance">Saldo Imp.</string>
+    <string name="btn_printing">Printing Quota</string>
+
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
 
@@ -129,14 +130,6 @@
 
     <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
 
-
-
-    <!-- EULA -->
-    <string name="eula_title">EULA title.</string>
-    <string name="eula_text">EULA goes here.</string>
-    <string name="accept">Accept</string>
-    <string name="decline">Decline</string>
-    
     <!-- Login -->
    	<string name="bt_cancel">Cancel</string>
     <string name="lb_login_cancel">Connecting...</string>
@@ -145,7 +138,11 @@
     <string name="lb_login_remember">   Remember Me</string>
     <string name="lb_login_username">Enter User Name</string>
     <string name="lb_login_password">Enter Password</string>
-    <string name="print_lbl">Saldo de Impressão</string>
-    <string name="print_balance">7.32 €</string>
+    <string name="toast_login_error_empty_username">Username cannot be empty.</string>
+    <string name="toast_login_error_empty_password">Password cannot be empty.</string>
+    
+    
+    <string name="print_lbl">Printing Quota</string>
+    <string name="print_balance">7.60 €</string>
 
 </resources>

@@ -60,10 +60,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity 
+        	android:label="@string/title_printing"
+        	android:name=".ui.PrintActivity" />
 
         <activity
-            android:name="com.google.android.apps.iosched.ui.BulletinActivity"
-            android:label="@string/title_bulletin" />
+        	android:name=".ui.ExamsActivity"
+        	android:label="@string/app_name"/>
 
         <activity
             android:name="com.google.android.apps.iosched.ui.StarredActivity"
@@ -160,8 +164,6 @@
             android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
             android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
-        <activity android:label="@string/print_lbl" android:name=".ui.PrintActivity"></activity>
-        <activity android:name=".ui.ExamsActivity" android:label="@string/app_name"></activity>
 
     </application>
 </manifest>

@@ -1,31 +1,10 @@
 package pt.up.fe.mobile.ui;
 
-import java.io.BufferedInputStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionCookie;
+import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import android.app.Activity;
 import android.app.Dialog;
@@ -77,7 +56,7 @@ public class LoginActivity extends Activity
         		username.setText(user);
         		password.setText(pass);
         		logintask = new LoginTask();
-        		logintask.execute(SifeupAPI.getAuthenticationUrl( user , pass ));
+        		logintask.execute();
         	}
         }
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
@@ -85,10 +64,20 @@ public class LoginActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-	        	logintask = new LoginTask();
 	        	user = username.getText().toString().trim();
+	        	if ( user.equals("") )
+	        	{
+	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_username), Toast.LENGTH_SHORT);
+	        		return;
+	        	}
 	        	pass = password.getText().toString().trim();
-				logintask.execute(SifeupAPI.getAuthenticationUrl( user, pass));
+	        	if ( pass.equals("") )
+	        	{
+	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_password), Toast.LENGTH_SHORT);
+	        		return;
+	        	}
+	        	logintask = new LoginTask();
+	        	logintask.execute();
 			}
 				
 		});
@@ -148,7 +137,7 @@ public class LoginActivity extends Activity
 		return null;
 	}
 	
-    private class LoginTask extends AsyncTask<String, Void, Boolean> {
+    private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
     	protected void onPreExecute (){
     		showDialog(DIALOG_CONNECTING);  
@@ -170,58 +159,19 @@ public class LoginActivity extends Activity
 			}
 			else{	
 				Log.e("Login","error");
-				Toast.makeText(LoginActivity.this, "Fuck", Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, "F***", Toast.LENGTH_LONG).show();
 			}
         	removeDialog(DIALOG_CONNECTING);
-
         }
 
-        
 		@Override
-		protected Boolean doInBackground(String ... url) {
-				InputStream in = null;
+		protected Boolean doInBackground(Void ... theVoid) {
 				String page = "";
-				try {
-					Log.e("Login",url[0] );
-					HttpsURLConnection conn = getUncheckedConnection(url[0]);
-					conn.connect();
-					in = conn.getInputStream();
-					BufferedInputStream bis = new BufferedInputStream(in);
-					ByteArrayBuffer baf = new ByteArrayBuffer(50);
-					int read = 0;
-					int bufSize = 512;
-					byte[] buffer = new byte[bufSize];
-					while ( true ) {
-						read = bis.read( buffer );
-						if( read == -1 ){
-							break;
-						}
-						baf.append(buffer, 0, read);
-					}
-					page = new String(baf.toByteArray());
-					
-					//Saving cookie for later using throughout the program
-					String cookie = "";
-     				String headerName=null;
-					for (int i=1; (headerName = conn.getHeaderFieldKey(i)) != null; i++) {
-					    if (headerName.equalsIgnoreCase("Set-Cookie")) {
-					    	cookie +=conn.getHeaderField(i)+";";
-					    }
-					}
-					SessionCookie.getInstance().setCookie(cookie);
-					Log.e("Login cookie" ,  cookie);
-
-					bis.close();
-					in.close();
-					conn.disconnect();	
+				try {					
+					SessionManager.getInstance().setLoginCode(user);
+					page = SifeupAPI.getAuthenticationReply(user, pass);
 					JSONObject jObject = new JSONObject(page);
 					return jObject.optBoolean("authenticated");					
-				} catch (MalformedURLException e) {
-				 // DEBUG
-				 Log.e("DEBUG url exceptop: ", e.toString());
-				} catch (IOException e) {
-				 // DEBUG
-				 Log.e("DEBUG: ioexcep ", e.toString());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -231,48 +181,7 @@ public class LoginActivity extends Activity
     
 
     
-    public static HttpsURLConnection getUncheckedConnection(String url){ 
-		try {
-			X509TrustManager tm = new X509TrustManager() {
-				@Override
-				public X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-
-				@Override
-				public void checkServerTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-
-				}
-
-				@Override
-				public void checkClientTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-				}
-			};
-			
-			SSLContext ctx = SSLContext.getInstance("TLS");
-			ctx.init(null, new TrustManager[] { tm }, null);
-			HttpsURLConnection httpConn = (HttpsURLConnection) new URL(url).openConnection();
-			httpConn.setSSLSocketFactory(ctx.getSocketFactory());
-			httpConn.setHostnameVerifier(new HostnameVerifier() {
-				@Override
-				public boolean verify(String paramString, SSLSession paramSSLSession) {
-					return true;
-				}
-			});
-			return httpConn;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return null;
-    }
+   
     
  
 }

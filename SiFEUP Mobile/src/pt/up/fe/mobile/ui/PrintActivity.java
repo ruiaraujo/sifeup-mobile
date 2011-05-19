@@ -16,29 +16,10 @@
 
 package pt.up.fe.mobile.ui;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionCookie;
-import pt.up.fe.mobile.service.SifeupAPI;
-
 import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class PrintActivity extends BaseSinglePaneActivity {
     @Override

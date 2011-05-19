@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.ui.ExamsActivity;
-import pt.up.fe.mobile.ui.PrintActivity;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.ui.phone.MapActivity;
+import com.google.android.apps.iosched.ui.StarredActivity;
+import com.google.android.apps.iosched.ui.TracksFragment;
 import com.google.android.apps.iosched.ui.phone.ScheduleActivity;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -95,18 +93,16 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue
-                //fireTrackerEvent("Map");
-                //startActivity(new Intent(getActivity(),MapActivity.class));
-            	Intent intent = new Intent(getActivity(), ExamsActivity.class);
-                startActivity(intent);
+                fireTrackerEvent("Map");
+                startActivity(new Intent(getActivity(),ExamsActivity.class));
             }
         });
 
-        root.findViewById(R.id.home_btn_announcements).setOnClickListener(
+        root.findViewById(R.id.home_btn_printing).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         // splicing in tag streamer
-                        fireTrackerEvent("Print");
+                        fireTrackerEvent("Printing");
                         Intent intent = new Intent(getActivity(), PrintActivity.class);
                         startActivity(intent);
                     }
