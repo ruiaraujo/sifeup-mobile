@@ -18,6 +18,7 @@ package com.google.android.apps.iosched.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.PrintActivity;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.ui.phone.MapActivity;
@@ -102,8 +103,8 @@ public class DashboardFragment extends Fragment {
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         // splicing in tag streamer
-                        fireTrackerEvent("Bulletin");
-                        Intent intent = new Intent(getActivity(), BulletinActivity.class);
+                        //fireTrackerEvent("Bulletin");
+                        Intent intent = new Intent(getActivity(), PrintActivity.class);
                         startActivity(intent);
                     }
                 });

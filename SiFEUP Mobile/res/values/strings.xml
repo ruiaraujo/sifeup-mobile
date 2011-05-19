@@ -145,5 +145,7 @@
     <string name="lb_login_remember">   Remember Me</string>
     <string name="lb_login_username">Enter User Name</string>
     <string name="lb_login_password">Enter Password</string>
+    <string name="print_lbl">Saldo de Impressão</string>
+    <string name="print_balance">7.32 €</string>
 
 </resources>

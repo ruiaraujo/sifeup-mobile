@@ -1,4 +1,4 @@
-package pt.fe.up.mobile.service;
+package pt.up.fe.mobile.service;
 
 public  class SifeupAPI {
 	final private static String WEBSERVICE = "https://www.fe.up.pt/si/MOBC_GERAL.";
@@ -10,7 +10,7 @@ public  class SifeupAPI {
 		String CODE = "pv_codigo";
 	}
 
-	private interface Tuiton {
+	private interface Tuition {
 		String NAME = "propinas";
 		String CODE = "pv_codigo";
 	}
@@ -58,7 +58,7 @@ public  class SifeupAPI {
 
 	
 	public static String getTuitonUrl( String code ){
-		return WEBSERVICE + Tuiton.NAME + WEBSERVICE_SEP + Tuiton.CODE + EQUALS + code ;
+		return WEBSERVICE + Tuition.NAME + WEBSERVICE_SEP + Tuition.CODE + EQUALS + code ;
 	}
 	
 	public static String getStudentUrl( String code ){

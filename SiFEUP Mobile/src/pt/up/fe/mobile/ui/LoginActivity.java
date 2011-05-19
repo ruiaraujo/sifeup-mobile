@@ -24,9 +24,9 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.fe.up.mobile.service.SessionCookie;
-import pt.fe.up.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionCookie;
+import pt.up.fe.mobile.service.SifeupAPI;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -167,7 +167,6 @@ public class LoginActivity extends Activity
 					prefEditor.commit();
 				}
 				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-				
 			}
 			else{	
 				Log.e("Login","error");

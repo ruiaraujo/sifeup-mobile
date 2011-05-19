@@ -1,4 +1,4 @@
-package pt.fe.up.mobile.service;
+package pt.up.fe.mobile.service;
 
 /**
  * Singleton class that holds the active Session cookie.

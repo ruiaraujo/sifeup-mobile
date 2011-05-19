@@ -9,9 +9,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import pt.fe.up.mobile.service.SessionCookie;
-import pt.fe.up.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionCookie;
+import pt.up.fe.mobile.service.SifeupAPI;
 
 import com.google.android.apps.iosched.service.SyncService;
 import com.google.android.apps.iosched.ui.BaseActivity;

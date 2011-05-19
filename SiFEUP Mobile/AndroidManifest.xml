@@ -18,7 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
     android:versionName="0.01"
-    android:installLocation="preferExternal" package="pt.up.fe.mobile">
+    package="pt.up.fe.mobile" android:installLocation="auto">
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -160,6 +160,7 @@
             android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
             android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
+        <activity android:label="@string/print_lbl" android:name=".ui.PrintActivity"></activity>
 
     </application>
 </manifest>
