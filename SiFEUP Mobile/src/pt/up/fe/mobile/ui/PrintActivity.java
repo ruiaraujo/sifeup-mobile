@@ -29,6 +29,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionCookie;
 import pt.up.fe.mobile.service.SifeupAPI;
 
@@ -36,6 +37,7 @@ import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PrintActivity extends BaseSinglePaneActivity {

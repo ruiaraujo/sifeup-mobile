@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -77,59 +78,18 @@ public class PrintFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Bulletin");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Print");
+        
+        
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
     	
-    	InputStream in = null;
-		String page = "";
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
-    	try {
-    		
-    		
-    		
-			HttpsURLConnection httpConn = LoginActivity.getUncheckedConnection(SifeupAPI.getPrintingUrl("080509072"));
-			httpConn.setRequestProperty("Cookie", SessionCookie.getInstance().getCookie());
-			httpConn.connect();
-			
-			in = httpConn.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in);
-			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int read = 0;
-			int bufSize = 512;
-			byte[] buffer = new byte[bufSize];
-			while ( true ) {
-				read = bis.read( buffer );
-				if( read == -1 ){
-					break;
-				}
-				baf.append(buffer, 0, read);
-			}
-			page = new String(baf.toByteArray());
-			bis.close();
-			in.close();
-			httpConn.disconnect();
-			
-			JSONObject jObject = new JSONObject(page);			
-			saldo="Saldo "+jObject.optDouble("saldo")+" €";
 		
-			Toast.makeText(getActivity(), saldo, Toast.LENGTH_LONG).show();
-			
-		} catch (MalformedURLException e) {
-			Toast.makeText(getActivity(), "FUCK URL", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		} catch (IOException e) {
-			Toast.makeText(getActivity(), "FUCK IO", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		} catch (JSONException e) {
-			Toast.makeText(getActivity(), "FUCK JSON", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
-    	
+		Toast.makeText(getActivity(), saldo, Toast.LENGTH_LONG).show();
     	
         
 /*

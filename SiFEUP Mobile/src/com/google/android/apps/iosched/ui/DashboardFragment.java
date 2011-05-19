@@ -106,7 +106,7 @@ public class DashboardFragment extends Fragment {
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         // splicing in tag streamer
-                        //fireTrackerEvent("Bulletin");
+                        fireTrackerEvent("Print");
                         Intent intent = new Intent(getActivity(), PrintActivity.class);
                         startActivity(intent);
                     }

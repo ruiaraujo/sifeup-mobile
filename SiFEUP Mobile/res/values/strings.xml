@@ -52,7 +52,7 @@
     <string name="btn_sessions">Sessions</string>
     <string name="btn_starred">Starred</string>
     <string name="btn_vendors">Sandbox</string>
-    <string name="btn_announcements">Bulletin</string>
+    <string name="btn_print_balance">Saldo Imp.</string>
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
 

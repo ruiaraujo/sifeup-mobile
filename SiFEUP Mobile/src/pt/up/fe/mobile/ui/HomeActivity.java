@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionCookie;
@@ -26,6 +28,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeActivity extends BaseActivity {
@@ -39,7 +42,8 @@ public class HomeActivity extends BaseActivity {
 	        super.onCreate(savedInstanceState);
 
 	        AnalyticsUtils.getInstance(this).trackPageView("/Home");
-	        testCookie();
+	        //testCookie();
+	        getPrintBalance();
 	        setContentView(R.layout.activity_home);
 	        getActivityHelper().setupActionBar(null, 0);
 
@@ -56,6 +60,59 @@ public class HomeActivity extends BaseActivity {
 	            triggerRefresh();
 	        }
 	    }
+	    
+	    //TODO: this should go to a service and the data from all the different webservices 
+	    //should be stored in a JSON file in the assets folder to be later read and used to update
+	    //the different text fiels
+	    private void getPrintBalance()
+	    {
+		    InputStream in = null;
+			String page = "";
+	    	try {
+				HttpsURLConnection httpConn = LoginActivity.getUncheckedConnection(SifeupAPI.getPrintingUrl("080509072"));
+				httpConn.setRequestProperty("Cookie", SessionCookie.getInstance().getCookie());
+				httpConn.connect();
+				
+				in = httpConn.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(in);
+				ByteArrayBuffer baf = new ByteArrayBuffer(50);
+				int read = 0;
+				int bufSize = 512;
+				byte[] buffer = new byte[bufSize];
+				while ( true ) {
+					read = bis.read( buffer );
+					if( read == -1 ){
+						break;
+					}
+					baf.append(buffer, 0, read);
+				}
+				page = new String(baf.toByteArray());
+				bis.close();
+				in.close();
+				httpConn.disconnect();
+				
+				JSONObject jObject = new JSONObject(page);			
+				PrintFragment.setSaldo("Saldo "+jObject.optDouble("saldo")+" €");
+				
+				//TODO Does not work, dont know why
+				//TextView tv=(TextView) findViewById(R.id.balance);
+				//tv.setText(PrintFragment.getSaldo());
+				
+				//Toast.makeText(this, PrintFragment.getSaldo(), Toast.LENGTH_LONG).show();
+				
+			} catch (MalformedURLException e) {
+				Toast.makeText(this, "FUCK URL", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			} catch (IOException e) {
+				Toast.makeText(this, "FUCK IO", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			} catch (JSONException e) {
+				Toast.makeText(this, "FUCK JSON", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}
+	    }
+	    
+	    
 	    // Simple function to test cookie storage TODO:remove this
 	    private void testCookie(){
 	    	InputStream in = null;
