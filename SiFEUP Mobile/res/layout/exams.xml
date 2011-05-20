@@ -27,7 +27,7 @@
     	android:layout_height="wrap_content"
     	android:layout_width="wrap_content"
     	android:layout_gravity="center"
-    	android:id="@+id/printing_balance"
+    	android:id="@+id/exams_test"
     	android:textSize="31.0sp"
-    	android:text="@string/print_balance"/>
+    	android:text=""/>
 </FrameLayout>

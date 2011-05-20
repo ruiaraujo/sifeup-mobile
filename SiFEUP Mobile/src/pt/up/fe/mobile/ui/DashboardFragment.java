@@ -90,10 +90,10 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.home_btn_exams).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue
-                fireTrackerEvent("Map");
+                fireTrackerEvent("Exams");
                 startActivity(new Intent(getActivity(),ExamsActivity.class));
             }
         });

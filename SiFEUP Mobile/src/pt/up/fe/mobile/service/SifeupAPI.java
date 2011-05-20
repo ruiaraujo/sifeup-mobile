@@ -21,8 +21,6 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import android.util.Log;
 
-import pt.up.fe.mobile.ui.LoginActivity;
-
 public  class SifeupAPI {
 	final private static String WEBSERVICE = "https://www.fe.up.pt/si/MOBC_GERAL.";
 	final private static String EQUALS = "=";

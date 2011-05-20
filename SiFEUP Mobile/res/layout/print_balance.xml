@@ -22,7 +22,7 @@
     	android:layout_width="wrap_content"
     	android:layout_gravity="center"
     	android:textSize="31.0sp"
-    	android:id="@+id/balance"
+    	android:id="@+id/print_balance"
     	android:bufferType="normal"
     	android:text=""></TextView>
 </FrameLayout>

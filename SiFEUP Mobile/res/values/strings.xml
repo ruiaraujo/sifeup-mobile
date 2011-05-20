@@ -35,7 +35,7 @@
     <string name="title_tracks">Tracks</string>
     <string name="title_vendors">Sandbox</string>
     <string name="title_vendor_detail">Company Information</string>
-    <string name="title_map">Map</string>
+    <string name="title_exams">Exams</string>
     <string name="title_tagstream">Realtime Stream</string>
     <string name="title_printing">Printing Quota</string>
 
@@ -48,7 +48,7 @@
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
 
     <string name="btn_schedule">Schedule</string>
-    <string name="btn_map">Map</string>
+    <string name="btn_exams">Exams</string>
     <string name="btn_sessions">Sessions</string>
     <string name="btn_starred">Starred</string>
     <string name="btn_vendors">Sandbox</string>
@@ -141,7 +141,7 @@
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     
-    
+     <string name="lb_data_fetching">Fetching data...</string>
     <string name="print_lbl">Printing Quota</string>
     <string name="print_balance">7.60 €</string>
 

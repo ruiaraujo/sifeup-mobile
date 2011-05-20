@@ -19,8 +19,10 @@ package pt.up.fe.mobile.ui;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import pt.up.fe.mobile.service.SifeupAPI;
 public class PrintFragment extends Fragment {
 
     private String saldo;
+    private TextView display;
     public String getSaldo() {
 		return saldo;
 	}
@@ -56,22 +59,53 @@ public class PrintFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	new PrintTask().execute();
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
+    	display = ((TextView)root.findViewById(R.id.print_balance));
+    	return root;
 
-    	
-		String page = "";
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
-    	try {
-    		page = SifeupAPI.getPrintingReply(
-							SessionManager.getInstance().getLoginCode());
-    		JSONObject jObject = new JSONObject(page);			
-			saldo="Saldo "+jObject.optDouble("saldo")+" €";
-			((TextView)root.findViewById(R.id.printing_balance)).setText(saldo);
-			
-		} catch (JSONException e) {
-			Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
+    }
+    private class PrintTask extends AsyncTask<Void, Void, String> {
+
+    	protected void onPreExecute (){
+    		if ( getActivity() != null ) 
+    			getActivity().showDialog(PrintActivity.DIALOG_FETCHING);  
+    	}
+
+        protected void onPostExecute(String saldo) {
+        	if ( !saldo.equals("") )
+        	{
+				Log.e("Login","success");
+				display.setText(saldo);
+				PrintFragment.this.saldo = saldo;
+			}
+			else{	
+				Log.e("Login","error");
+			}
+        	if ( getActivity() != null ) 
+        		getActivity().removeDialog(PrintActivity.DIALOG_FETCHING);
+        }
+
+		@Override
+		protected String doInBackground(Void ... theVoid) {
+			String page = "";
+			try {
+	    		do
+	    		{
+	    			page = SifeupAPI.getPrintingReply(
+								SessionManager.getInstance().getLoginCode());
+	    		} while ( page.equals(""));
+	    		JSONObject jObject = new JSONObject(page);			
+				return "Saldo "+jObject.optDouble("saldo")+" €";
+				
+				
+			} catch (JSONException e) {
+				if ( getActivity() != null ) 
+					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}
+			return "";
 		}
-        return root;
     }
 
 }

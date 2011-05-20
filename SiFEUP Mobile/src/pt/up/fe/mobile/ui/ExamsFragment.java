@@ -38,85 +38,69 @@ import pt.up.fe.mobile.service.SifeupAPI;
 
 public class ExamsFragment extends Fragment {
 
-	//ExamsTask examsTask;
+    private TextView display;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Printing");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
-    	
-		String page = "";
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
-    	try {
-    		page = SifeupAPI.getExamsReply(
-							SessionManager.getInstance().getLoginCode());
-    		if(JSONError(page))
-    			((TextView)root.findViewById(R.id.printing_balance)).setText("F***");
-			else
-				((TextView)root.findViewById(R.id.printing_balance)).setText("Sucess");
-			
-		} catch (JSONException e) {
-			Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.exams, null);
+		display = ((TextView)root.findViewById(R.id.exams_test));
+		new ExamsTask().execute();
         return root;
     }
 
-    
-    //Depois usa-se isto.
     /** Classe privada para a busca de dados ao servidor */
-	private class ExamsTask extends AsyncTask<Void, Void, Boolean> {
-		
-    	/*protected void onPreExecute (){
-    	 	// initiate dialog
-    		showDialog(DIALOG_CONNECTING);  
-    	}*/
+    private class ExamsTask extends AsyncTask<Void, Void, String> {
 
-        protected void onPostExecute(Boolean result) {
-        	if ( result )
+    	protected void onPreExecute (){
+    		if ( getActivity() != null ) 
+    			getActivity().showDialog(ExamsActivity.DIALOG_FETCHING);  
+    	}
+
+        protected void onPostExecute(String result) {
+        	if ( !result.equals("") )
         	{
-				Log.e("Exames","success");
-				//Toast.makeText(ExamsFragment.this, "Yeah!", Toast.LENGTH_LONG).show();
-				
+				Log.e("Login","success");
+				display.setText(result);
 			}
 			else{	
-				Log.e("Exames","error");
-				//Toast.makeText(ExamsActivity.this, "F***", Toast.LENGTH_LONG).show();
+				Log.e("Login","error");
 			}
-        	// remove dialog
-        	//removeDialog(DIALOG_CONNECTING);
+        	if ( getActivity() != null ) 
+        		getActivity().removeDialog(ExamsActivity.DIALOG_FETCHING);
         }
-        
+
 		@Override
-		protected Boolean doInBackground(Void ... theVoid ) {
-			String page = null;
-			
-			//after a click, fetches info from server
-			try {
-				page = SifeupAPI.getExamsReply(
-						SessionManager.getInstance().getLoginCode());
-				
-				Log.e("APPPPPPPP", page);
-				
-				
-				// check error
-				if(JSONError(page))
-					return false;
+		protected String doInBackground(Void ... theVoid) {
+			String page = "";
+		  	try {
+	    		do
+	    		{
+	    			page = SifeupAPI.getExamsReply(
+								SessionManager.getInstance().getLoginCode());
+	    		} while ( page.equals(""));
+	    		if(JSONError(page))
+	    			return "F***";
 				else
-					return true; 
+					return "Sucess";
+				
+			} catch (JSONException e) {
+				if ( getActivity() != null ) 
+					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
 			}
-			catch (JSONException e) {e.printStackTrace();}
-			
-			return false;
+
+			return "";
 		}
-	}
+    }
+
 	
 	/** 
 	 * Prints error message on Log.e()
