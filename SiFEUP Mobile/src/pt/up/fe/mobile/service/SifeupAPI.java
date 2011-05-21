@@ -139,7 +139,7 @@ public  class SifeupAPI {
 		String page = null;
 		try {
 			HttpsURLConnection httpConn = getUncheckedConnection(
-										getPrintingUrl( code ) );
+										getExamsUrl( code ) );
 			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 			httpConn.connect();
 			page = getPage(httpConn.getInputStream());
@@ -148,7 +148,22 @@ public  class SifeupAPI {
 			e.printStackTrace();
 		}
 		return page;
-	}	
+	}
+	
+	public static String getScheduleReply( String code, String init, String end ){
+		String page = null;
+		try {
+			HttpsURLConnection httpConn = getUncheckedConnection(
+										getScheduleUrl( code, init, end ) );
+			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+			httpConn.connect();
+			page = getPage(httpConn.getInputStream());
+			httpConn.disconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
 	
 	public static String getAuthenticationReply( String code , String pass ){
 		String page = null;

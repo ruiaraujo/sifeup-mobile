@@ -22,7 +22,7 @@ import pt.up.fe.mobile.R;
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.ui.StarredActivity;
 import com.google.android.apps.iosched.ui.TracksFragment;
-import com.google.android.apps.iosched.ui.phone.ScheduleActivity;
+//import com.google.android.apps.iosched.ui.phone.ScheduleActivity;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
