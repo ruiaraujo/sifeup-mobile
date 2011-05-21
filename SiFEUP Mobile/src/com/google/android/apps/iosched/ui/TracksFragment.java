@@ -18,6 +18,8 @@ package com.google.android.apps.iosched.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.SessionDetailFragment;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.AnalyticsUtils;

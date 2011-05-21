@@ -18,6 +18,10 @@ package com.google.android.apps.iosched.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.SessionDetailFragment;
+import pt.up.fe.mobile.ui.SessionsFragment;
+import pt.up.fe.mobile.ui.VendorDetailFragment;
+import pt.up.fe.mobile.ui.VendorsFragment;
 
 import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
 import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;

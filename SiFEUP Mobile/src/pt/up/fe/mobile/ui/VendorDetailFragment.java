@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
+import com.google.android.apps.iosched.ui.MapFragment;
 import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;

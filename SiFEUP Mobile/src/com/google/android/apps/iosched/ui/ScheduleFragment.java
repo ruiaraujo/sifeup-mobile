@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.SessionsFragment;
 
 /**
  * Shows a horizontally-pageable calendar of conference days. Horizontaly paging is achieved using

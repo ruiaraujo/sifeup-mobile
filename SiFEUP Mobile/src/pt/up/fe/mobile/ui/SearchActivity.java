@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
 import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
+import com.google.android.apps.iosched.ui.BaseMultiPaneActivity;
+import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 import com.google.android.apps.iosched.ui.phone.SessionDetailActivity;
 import com.google.android.apps.iosched.ui.phone.VendorDetailActivity;
 

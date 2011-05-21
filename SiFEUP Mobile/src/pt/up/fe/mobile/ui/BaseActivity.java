@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
+import pt.up.fe.mobile.service.SessionManager;
+
+import com.google.android.apps.iosched.ui.BaseMultiPaneActivity;
+import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -68,6 +73,32 @@ public abstract class BaseActivity extends FragmentActivity {
     protected ActivityHelper getActivityHelper() {
         return mActivityHelper;
     }
+    
+    protected  void onCreate( Bundle o){
+    	super.onCreate(o);
+    	if ( SessionManager.getInstance().getCookie() == null)
+    	{
+            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
+            long now = System.currentTimeMillis();
+            long before = loginSettings.getLong( LoginActivity.PREF_COOKIE_TIME, 0);
+            String oldCookie = loginSettings.getString( LoginActivity.PREF_COOKIE, "");
+            if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
+            {
+            	SessionManager.getInstance().setCookie(oldCookie);
+            	SessionManager.getInstance().setLoginCode(loginSettings.getString(
+            										LoginActivity.PREF_USERNAME_SAVED, ""));
+            	
+            }
+            else	
+            {
+            	startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+            	finish();
+            }
+    	}
+    		
+
+    }
+    
 
     /**
      * Takes a given intent and either starts a new activity to handle it (the default behavior),

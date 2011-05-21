@@ -26,6 +26,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import java.util.List;
 
+import pt.up.fe.mobile.ui.BaseActivity;
+
 /**
  * A {@link BaseActivity} that can contain multiple panes, and has the ability to substitute
  * fragments for activities when intents are fired using

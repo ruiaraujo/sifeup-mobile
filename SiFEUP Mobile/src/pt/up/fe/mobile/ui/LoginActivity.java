@@ -24,10 +24,12 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity 
 {
-	final String PREF_REMEMBER = "Remember Credentials";
-	final String PREF_USERNAME = "Username";
-	final String PREF_PASSWORD = "Password";
-
+	public static final String PREF_REMEMBER = "Remember Credentials";
+	public static  final String PREF_USERNAME = "Username";
+	public static  final String PREF_PASSWORD = "Password";
+	public static  final String PREF_COOKIE = "Cookie";
+	public static  final String PREF_COOKIE_TIME = "Cookie Time";
+	public static  final String PREF_USERNAME_SAVED = "Cookie User";
 	private LoginTask logintask;
 	private boolean rememberUser;
 	private String user;
@@ -45,6 +47,17 @@ public class LoginActivity extends Activity
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText password = (EditText) findViewById(R.id.pass);
         final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
+        long now = System.currentTimeMillis();
+        long before = loginSettings.getLong( PREF_COOKIE_TIME, 0);
+        String oldCookie = loginSettings.getString( PREF_COOKIE, "");
+        if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
+        {
+        	SessionManager.getInstance().setCookie(oldCookie);
+        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
+        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        	finish();
+        	return;
+        }
         rememberUser = loginSettings.getBoolean(PREF_REMEMBER, false);
     	check.setChecked(rememberUser);
         if ( rememberUser )
@@ -146,16 +159,21 @@ public class LoginActivity extends Activity
         protected void onPostExecute(Boolean result) {
         	if ( result )
         	{
+				SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
+		        SharedPreferences.Editor prefEditor = loginSettings.edit();
+		        prefEditor.putString(PREF_COOKIE, SessionManager.getInstance().getCookie());
+				prefEditor.putLong(PREF_COOKIE_TIME, System.currentTimeMillis());
+				prefEditor.putString(PREF_USERNAME_SAVED, SessionManager.getInstance().getLoginCode());
 				Log.e("Login","success");
 				if ( rememberUser )
 				{
-					SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
-			        SharedPreferences.Editor prefEditor = loginSettings.edit();
+
 					prefEditor.putString(PREF_USERNAME, user);
 					prefEditor.putString(PREF_PASSWORD, pass);
-					prefEditor.commit();
 				}
+				prefEditor.commit();
 				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+				finish();
 			}
 			else{	
 				Log.e("Login","error");

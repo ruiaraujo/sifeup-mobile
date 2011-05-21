@@ -16,8 +16,9 @@
 
 package com.google.android.apps.iosched.ui.phone;
 
+import pt.up.fe.mobile.ui.VendorDetailFragment;
+
 import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
-import com.google.android.apps.iosched.ui.VendorDetailFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
