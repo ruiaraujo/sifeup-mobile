@@ -279,34 +279,34 @@ public  class SifeupAPI {
 			return null;
 	    }
 	
-	 /** 
-		 * Prints error message on Log.e()
-		 * Returns true in case of a existing error.
-		 * 
-		 * @param page
-		 * @return boolean
-		 * @throws JSONException
-		 */
-		public static boolean JSONError(String page) throws JSONException{
-			if ( page == null )
-			{
-				Log.e("APPPPPPPPerro", "PAge was null!");
-				return false;
-			}
-			JSONObject jObject = new JSONObject(page);
-			String erro = null;
-			String erro_msg = null;
-			
-			if(jObject.has("erro")){
-				erro = (String) jObject.get("erro");
-				Log.e("APPPPPPPPerro", erro);
-				if(erro.substring(0, 8).equals("Autoriza")){
-					erro_msg = (String) jObject.get("erro_msg");
-					Log.e("APPPPPPPPerro_msg", erro_msg);
-				}
-				return true;
-			}
-			
+ 	/** 
+	 * Prints error message on Log.e()
+	 * Returns true in case of a existing error.
+	 * 
+	 * @param page
+	 * @return boolean
+	 * @throws JSONException
+	 */
+	public static boolean JSONError(String page) throws JSONException{
+		if ( page == null )
+		{
+			Log.e("JSON", "null page");
 			return false;
 		}
+		JSONObject jObject = new JSONObject(page);
+		String erro = null;
+		String erro_msg = null;
+		
+		if(jObject.has("erro")){
+			erro = (String) jObject.get("erro");
+			Log.e("JSON", erro);
+			if(erro.substring(0, 8).equals("Autoriza")){
+				erro_msg = (String) jObject.get("erro_msg");
+				Log.e("JSON", erro_msg);
+			}
+			return true;
+		}
+		
+		return false;
+	}
 }

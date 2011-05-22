@@ -1,6 +1,11 @@
 package pt.up.fe.mobile.ui;
 
+import java.util.ArrayList;
+import java.util.jar.JarFile;
+
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
@@ -41,6 +46,7 @@ public class ScheduleFragment extends Fragment implements
     private int mTitleCurrentDayIndex = -1;
     private View mLeftIndicator;
     private View mRightIndicator;
+    private ArrayList<Block> schedule = new ArrayList<Block>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,6 +248,7 @@ public class ScheduleFragment extends Fragment implements
 								SessionManager.getInstance().getLoginCode(), 
 								firstDay, 
 								lastDay);
+		  		JSONSchedule(page);
 	    		if(SifeupAPI.JSONError(page))
 	    			return "F***";
 				else
@@ -256,4 +263,63 @@ public class ScheduleFragment extends Fragment implements
 			return "";
 		}
     }
+    
+    private class Block{
+    	private int weekDay; // [1 ... 6]
+    	private int startTime; // seconds from midnight
+    	
+    	private String lectureCode; // EIC0036
+    	private String lectureAcronym; // ex: SDIS
+    	private String lectureType; // T|TP|P
+    	private double lectureDuration; // 2; 1,5 (in hours)
+    	private String classAcronym; // 3MIEIC1
+    	
+    	private String teacherAcronym; // RMA
+    	private String teacherCode; // 466651
+    	
+    	private String roomCode; // 002
+    	private String buildingCode; // B
+    	private String semester; // 2S
+    }
+    
+    public boolean JSONSchedule(String page) throws JSONException{
+    	JSONObject jObject = new JSONObject(page);
+    	
+    	// clear old schedule
+    	this.schedule.clear();
+    	
+    	if(jObject.has("horario")){
+    		Log.e("JSON", "founded schedule");
+    		JSONArray jArray = jObject.getJSONArray("horario");
+    		
+    		// iterate over jArray
+    		for(int i = 0; i < jArray.length(); i++){
+    			// new JSONObject
+    			JSONObject jBlock = jArray.getJSONObject(i);
+    			// new Block
+    			Block block = new Block();
+    			
+    			if(jBlock.has("dia")) block.weekDay = jBlock.getInt("dia");
+    			if(jBlock.has("hora_inicio")) block.startTime = jBlock.getInt("hora_inicio");
+    			if(jBlock.has("cad_codigo")) block.lectureCode = jBlock.getString("cad_codigo");
+    			if(jBlock.has("cad_sigla")) block.lectureAcronym = jBlock.getString("cad_sigla");
+    			if(jBlock.has("tipo")) block.lectureType = jBlock.getString("tipo");
+    			if(jBlock.has("aula_duracao")) block.lectureDuration = jBlock.getDouble("aula_duracao");
+    			if(jBlock.has("turma_sigla")) block.classAcronym = jBlock.getString("turma_sigla");
+    			if(jBlock.has("doc_sigla")) block.teacherAcronym = jBlock.getString("doc_sigla");
+    			if(jBlock.has("doc_codigo")) block.teacherCode = jBlock.getString("doc_codigo");
+    			if(jBlock.has("sala_cod")) block.roomCode = jBlock.getString("sala_cod");
+    			if(jBlock.has("edi_cod")) block.buildingCode = jBlock.getString("edi_cod");
+    			if(jBlock.has("periodo")) block.semester = jBlock.getString("periodo");
+    			
+    			// add block to schedule
+    			this.schedule.add(block);
+    		}
+    		Log.e("JSON", "loaded schedule");
+    		return true;
+    	}
+    	Log.e("JSON", "schedule not found");
+    	return false;
+    }
+    
 }
