@@ -264,6 +264,13 @@ public class ScheduleFragment extends Fragment implements
 		}
     }
     
+    /**
+     * 
+     * Represents a lecture.
+     * Holds all data about it.
+     * (time, place, teacher)
+     *
+     */
     private class Block{
     	private int weekDay; // [1 ... 6]
     	private int startTime; // seconds from midnight
@@ -282,6 +289,15 @@ public class ScheduleFragment extends Fragment implements
     	private String semester; // 2S
     }
     
+    /** 
+	 * Schedule Parser
+	 * Stores Blocks in ScheduleFragment.schedule
+	 * Returns true in case of correct parsing.
+	 * 
+	 * @param page
+	 * @return boolean
+	 * @throws JSONException
+	 */
     public boolean JSONSchedule(String page) throws JSONException{
     	JSONObject jObject = new JSONObject(page);
     	
