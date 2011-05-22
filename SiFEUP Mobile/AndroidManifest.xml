@@ -160,6 +160,7 @@
             android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
             android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
+        <activity android:name=".ui.ScheduleActivity"></activity>
 
     </application>
 </manifest>
