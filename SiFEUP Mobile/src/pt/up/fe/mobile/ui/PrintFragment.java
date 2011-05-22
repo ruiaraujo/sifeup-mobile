@@ -19,6 +19,7 @@ package pt.up.fe.mobile.ui;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -80,7 +81,13 @@ public class PrintFragment extends Fragment {
 				PrintFragment.this.saldo = saldo;
 			}
 			else{	
-				Log.e("Login","error");
+				if ( getActivity() != null ) 
+				{
+					getActivity().removeDialog(PrintActivity.DIALOG_FETCHING);
+					startActivity(new Intent(getActivity(), LoginActivity.class));
+					getActivity().finish();
+					return;
+				}
 			}
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(PrintActivity.DIALOG_FETCHING);

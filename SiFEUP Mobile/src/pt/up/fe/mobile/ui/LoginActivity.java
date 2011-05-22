@@ -30,6 +30,9 @@ public class LoginActivity extends Activity
 	public static  final String PREF_COOKIE = "Cookie";
 	public static  final String PREF_COOKIE_TIME = "Cookie Time";
 	public static  final String PREF_USERNAME_SAVED = "Cookie User";
+	public static  final String EXTRA_DIFFERENT_LOGIN =
+        "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
+
 	private LoginTask logintask;
 	private boolean rememberUser;
 	private String user;
@@ -47,19 +50,8 @@ public class LoginActivity extends Activity
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText password = (EditText) findViewById(R.id.pass);
         final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
-        long now = System.currentTimeMillis();
-        long before = loginSettings.getLong( PREF_COOKIE_TIME, 0);
-        String oldCookie = loginSettings.getString( PREF_COOKIE, "");
-        if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
-        {
-        	SessionManager.getInstance().setCookie(oldCookie);
-        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
-        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        	finish();
-        	return;
-        }
+        
         rememberUser = loginSettings.getBoolean(PREF_REMEMBER, false);
-    	check.setChecked(rememberUser);
         if ( rememberUser )
         {
         	user = loginSettings.getString(PREF_USERNAME, "");
@@ -68,10 +60,10 @@ public class LoginActivity extends Activity
         	{
         		username.setText(user);
         		password.setText(pass);
-        		logintask = new LoginTask();
-        		logintask.execute();
+        		
         	}
         }
+    	check.setChecked(rememberUser);
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override
@@ -125,6 +117,31 @@ public class LoginActivity extends Activity
 				prefEditor.commit(); 
 			}
 		});
+        // In case of a logout.
+        Intent i = getIntent();
+        boolean relogin = i.getBooleanExtra(EXTRA_DIFFERENT_LOGIN, false);
+        if ( !relogin )
+        {
+	        //Take advantage of the 24h period while the session
+	        // is still active on the main server.
+	        long now = System.currentTimeMillis();
+	        long before = loginSettings.getLong( PREF_COOKIE_TIME, 0);
+	        String oldCookie = loginSettings.getString( PREF_COOKIE, "");
+	        if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
+	        {
+	        	SessionManager.getInstance().setCookie(oldCookie);
+	        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
+	        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+	        	finish();
+	        	return;
+	        }
+	        if ( rememberUser )
+	        {
+		        logintask = new LoginTask();
+	    		logintask.execute();
+	        }
+	        
+        }
     }
 
     private static final int DIALOG_CONNECTING = 3000;

@@ -75,7 +75,7 @@
             android:label="@string/title_starred" />
 
         <activity
-            android:name="ui.SearchActivity"
+            android:name=".ui.SearchActivity"
             android:label="@string/title_search"
             android:launchMode="singleTop">
             <intent-filter>
@@ -88,7 +88,7 @@
         <!-- Phone-only activities -->
 
         <activity
-            android:name="com.google.android.apps.iosched.ui.phone.ScheduleActivity"
+            android:name=".ui.ScheduleActivity"
             android:label="@string/title_schedule" />
 
         <activity
@@ -160,7 +160,6 @@
             android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
             android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
-        <activity android:name=".ui.ScheduleActivity"></activity>
 
     </application>
 </manifest>

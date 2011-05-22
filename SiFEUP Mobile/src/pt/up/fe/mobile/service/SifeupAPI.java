@@ -18,6 +18,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -26,6 +28,8 @@ public  class SifeupAPI {
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
 	final private static String WEBSERVICE_SEP = "?";
+	
+	
 	private interface Student {
 		String NAME = "aluno";
 		String CODE = "pv_codigo";
@@ -93,12 +97,16 @@ public  class SifeupAPI {
 	public static String getPrintingReply( String code ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
-										getPrintingUrl( code ) );
-			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-			httpConn.disconnect();
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getPrintingUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,12 +116,16 @@ public  class SifeupAPI {
 	public static String getStudentReply( String code ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
-										getStudentUrl( code ) );
-			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-			httpConn.disconnect();
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getStudentUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -123,12 +135,16 @@ public  class SifeupAPI {
 	public static String getTuitionReply( String code ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
-										getTuitionUrl( code ) );
-			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-			httpConn.disconnect();
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getTuitionUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+				return null;
+			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,12 +154,16 @@ public  class SifeupAPI {
 	public static String getExamsReply( String code ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
-										getExamsUrl( code ) );
-			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-			httpConn.disconnect();
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getExamsUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -153,12 +173,16 @@ public  class SifeupAPI {
 	public static String getScheduleReply( String code, String init, String end ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
 										getScheduleUrl( code, init, end ) );
-			httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-			httpConn.disconnect();
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -202,8 +226,8 @@ public  class SifeupAPI {
 				read = bis.read( buffer );
 				if( read == -1 ){
 					break;
-			}
-			baf.append(buffer, 0, read);
+				}
+				baf.append(buffer, 0, read);
 			}
 			bis.close();
 			in.close();
@@ -252,10 +276,37 @@ public  class SifeupAPI {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			
 			return null;
 	    }
 	
-	
+	 /** 
+		 * Prints error message on Log.e()
+		 * Returns true in case of a existing error.
+		 * 
+		 * @param page
+		 * @return boolean
+		 * @throws JSONException
+		 */
+		public static boolean JSONError(String page) throws JSONException{
+			if ( page == null )
+			{
+				Log.e("APPPPPPPPerro", "PAge was null!");
+				return false;
+			}
+			JSONObject jObject = new JSONObject(page);
+			String erro = null;
+			String erro_msg = null;
+			
+			if(jObject.has("erro")){
+				erro = (String) jObject.get("erro");
+				Log.e("APPPPPPPPerro", erro);
+				if(erro.substring(0, 8).equals("Autoriza")){
+					erro_msg = (String) jObject.get("erro_msg");
+					Log.e("APPPPPPPPerro_msg", erro_msg);
+				}
+				return true;
+			}
+			
+			return false;
+		}
 }

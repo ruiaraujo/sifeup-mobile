@@ -5,6 +5,7 @@ import pt.up.fe.mobile.R;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,16 +34,20 @@ public class HomeActivity extends BaseActivity {
 
 	    @Override
 	    public boolean onCreateOptionsMenu(Menu menu) {
-	        getMenuInflater().inflate(R.menu.refresh_menu_items, menu);
 	        super.onCreateOptionsMenu(menu);
+	        getMenuInflater().inflate(R.menu.home_menu_items, menu);
 	        return true;
 	    }
 
 		public boolean onOptionsItemSelected(MenuItem item) {
 			switch (item.getItemId()) {
-			case R.id.menu_refresh:
+			case R.id.menu_home:
+				final Intent intent = new Intent(this, LoginActivity.class);
+		        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		        intent.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, true);
+		        startActivity(intent);
+		        finish();
 				return true;
-
 			default:
 				return super.onOptionsItemSelected(item);
 			}

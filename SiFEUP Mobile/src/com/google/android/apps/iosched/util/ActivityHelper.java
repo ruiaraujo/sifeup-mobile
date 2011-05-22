@@ -38,7 +38,7 @@ import android.widget.TextView;
 
 /**
  * A class that handles some common activity-related functionality in the app, such as setting up
- * the action bar. This class provides functioanlity useful for both phones and tablets, and does
+ * the action bar. This class provides functionality useful for both phones and tablets, and does
  * not require any Android 3.0-specific features.
  */
 public class ActivityHelper {
@@ -75,7 +75,7 @@ public class ActivityHelper {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            return true;
+            return false;
         }
         return false;
     }

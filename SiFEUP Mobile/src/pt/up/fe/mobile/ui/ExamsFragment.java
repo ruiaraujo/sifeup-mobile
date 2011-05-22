@@ -19,6 +19,7 @@ package pt.up.fe.mobile.ui;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -72,6 +73,13 @@ public class ExamsFragment extends Fragment {
 			}
 			else{	
 				Log.e("Login","error");
+				if ( getActivity() != null ) 
+				{
+					getActivity().removeDialog(ExamsActivity.DIALOG_FETCHING);
+					startActivity(new Intent(getActivity(), LoginActivity.class));
+					getActivity().finish();
+					return;
+				}
 			}
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(ExamsActivity.DIALOG_FETCHING);
@@ -81,13 +89,12 @@ public class ExamsFragment extends Fragment {
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 		  	try {
-	    		do
-	    		{
 	    			page = SifeupAPI.getExamsReply(
 								SessionManager.getInstance().getLoginCode());
-	    		} while ( page.equals(""));
-	    		if(JSONError(page))
-	    			return "F***";
+	    		if(	SifeupAPI.JSONError(page))
+	    		{
+		    		 return "F***";
+	    		}
 				else
 					return "Sucess";
 				
@@ -102,29 +109,5 @@ public class ExamsFragment extends Fragment {
     }
 
 	
-	/** 
-	 * Prints error message on Log.e()
-	 * Returns true in case of a existing error.
-	 * 
-	 * @param page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-	public static boolean JSONError(String page) throws JSONException{
-		JSONObject jObject = new JSONObject(page);
-		String erro = null;
-		String erro_msg = null;
-		
-		if(jObject.has("erro")){
-			erro = (String) jObject.get("erro");
-			Log.e("APPPPPPPPerro", erro);
-			if(erro.substring(0, 8).equals("Autoriza")){
-				erro_msg = (String) jObject.get("erro_msg");
-				Log.e("APPPPPPPPerro_msg", erro_msg);
-			}
-			return true;
-		}
-		
-		return false;
-	}
+	
 }

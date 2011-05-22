@@ -1,3 +1,4 @@
+<<<<<<< .mine
 /*
  * Copyright 2011 Google Inc.
  *
@@ -45,12 +46,12 @@ public abstract class BaseActivity extends FragmentActivity {
         mActivityHelper.onPostCreate(savedInstanceState);
     }
 
-    @Override
+   @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         return mActivityHelper.onKeyLongPress(keyCode, event) ||
                 super.onKeyLongPress(keyCode, event);
     }
-
+   
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return mActivityHelper.onKeyDown(keyCode, event) ||
@@ -59,12 +60,14 @@ public abstract class BaseActivity extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return mActivityHelper.onCreateOptionsMenu(menu) || super.onCreateOptionsMenu(menu);
+        return mActivityHelper.onCreateOptionsMenu(menu) ||
+        			super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return mActivityHelper.onOptionsItemSelected(item) ||
+        			super.onOptionsItemSelected(item);
     }
 
     /**
@@ -76,6 +79,8 @@ public abstract class BaseActivity extends FragmentActivity {
     
     protected  void onCreate( Bundle o){
     	super.onCreate(o);
+    	//Recovering the Cookie here
+    	// as every activity will descend from this one.
     	if ( SessionManager.getInstance().getCookie() == null)
     	{
             SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  

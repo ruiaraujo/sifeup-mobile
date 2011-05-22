@@ -23,6 +23,7 @@
     <string name="description_map">Map</string>
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
+    <string name="description_logout">Log Out</string>
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
     <string name="description_now">Go to Now</string>
