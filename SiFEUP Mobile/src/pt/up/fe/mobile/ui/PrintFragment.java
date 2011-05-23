@@ -19,7 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -70,7 +69,7 @@ public class PrintFragment extends Fragment {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
-    			getActivity().showDialog(PrintActivity.DIALOG_FETCHING);  
+    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
     	}
 
         protected void onPostExecute(String saldo) {
@@ -83,14 +82,14 @@ public class PrintFragment extends Fragment {
 			else{	
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(PrintActivity.DIALOG_FETCHING);
-					startActivity(new Intent(getActivity(), LoginActivity.class));
-					getActivity().finish();
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
 			}
         	if ( getActivity() != null ) 
-        		getActivity().removeDialog(PrintActivity.DIALOG_FETCHING);
+        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -101,11 +100,10 @@ public class PrintFragment extends Fragment {
 								SessionManager.getInstance().getLoginCode());
 	    		
     			if(	SifeupAPI.JSONError(page))
-	    		{
-		    		 return "F***";
-	    		}
+    				return "";
+
 	    		JSONObject jObject = new JSONObject(page);			
-				return "Saldo "+jObject.optDouble("saldo")+" €";
+				return getString(R.string.print_lbl) + " "+ jObject.optDouble("saldo")+" €";
 				
 				
 			} catch (JSONException e) {

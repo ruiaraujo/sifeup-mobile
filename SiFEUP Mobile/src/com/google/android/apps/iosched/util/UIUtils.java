@@ -49,7 +49,7 @@ public class UIUtils {
 
     
     public static String TIME_REFERENCE = "GMT+00:00";
-   
+
     /**
      * Populate the given {@link TextView} with the requested text, formatting
      * through {@link Html#fromHtml(String)} when applicable. Also sets

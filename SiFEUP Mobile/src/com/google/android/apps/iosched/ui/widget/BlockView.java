@@ -16,7 +16,6 @@
 
 package com.google.android.apps.iosched.ui.widget;
 
-import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -25,7 +24,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.text.format.DateUtils;
 import android.widget.Button;
 
-import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
 

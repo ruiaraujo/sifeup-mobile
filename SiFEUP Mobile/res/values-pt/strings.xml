@@ -118,18 +118,20 @@
     <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
 
     <!-- Login -->
-   	<string name="bt_cancel">Cancelar</string>
+   	<string name="bt_cancel">Sair</string>
     <string name="lb_login_cancel">Connecting...</string>
-    <string name="bt_login">Login</string>
+    <string name="bt_login">Entrar</string>
     <string name="bt_reset">Reset</string>
     <string name="lb_login_remember">   Remember Me</string>
-    <string name="lb_login_username">Enter User Name</string>
-    <string name="lb_login_password">Enter Password</string>
-    <string name="toast_login_error_empty_username">Username cannot be empty.</string>
-    <string name="toast_login_error_empty_password">Password cannot be empty.</string>
+    <string name="lb_login_username">Utilizador:</string>
+    <string name="lb_login_password">Senha:</string>
+    <string name="toast_login_error_empty_username">Utilizador não pode estar vazio.</string>
+    <string name="toast_login_error_empty_password">Senha não pode estar vazia.</string>
     
-     <string name="lb_data_fetching">Fetching data...</string>
+     <string name="lb_data_fetching">Obtendo dados...</string>
     <string name="print_lbl">Saldo</string>
     <string name="print_balance">7.60 €</string>
+    
+    <string name="toast_auth_error">A sua sessão terminou. Por favor, faça login de novo.</string>
 
 </resources>

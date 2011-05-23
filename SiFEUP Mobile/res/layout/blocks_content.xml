@@ -27,7 +27,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layerType="software"
-        iosched:columns="3">
+        iosched:columns="2">
         <view
             class="com.google.android.apps.iosched.ui.widget.TimeRulerView"
             android:id="@id/blocks_ruler"
@@ -40,8 +40,8 @@
             iosched:labelPaddingLeft="@dimen/schedule_label_padding"
             iosched:labelColor="#000000"
             iosched:dividerColor="#22000000"
-            iosched:startHour="7"
-            iosched:endHour="23" />
+            iosched:startHour="8"
+            iosched:endHour="21" />
         <View
             android:id="@id/blocks_now"
             android:background="@drawable/now_bar"

@@ -19,7 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
@@ -62,7 +60,7 @@ public class ExamsFragment extends Fragment {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
-    			getActivity().showDialog(ExamsActivity.DIALOG_FETCHING);  
+    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
     	}
 
         protected void onPostExecute(String result) {
@@ -75,14 +73,14 @@ public class ExamsFragment extends Fragment {
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(ExamsActivity.DIALOG_FETCHING);
-					startActivity(new Intent(getActivity(), LoginActivity.class));
-					getActivity().finish();
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
 			}
         	if ( getActivity() != null ) 
-        		getActivity().removeDialog(ExamsActivity.DIALOG_FETCHING);
+        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -93,7 +91,7 @@ public class ExamsFragment extends Fragment {
 								SessionManager.getInstance().getLoginCode());
 	    		if(	SifeupAPI.JSONError(page))
 	    		{
-		    		 return "F***";
+		    		 return "";
 	    		}
 				else
 					return "Sucess";

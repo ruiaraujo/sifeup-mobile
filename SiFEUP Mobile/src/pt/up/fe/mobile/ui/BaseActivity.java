@@ -16,12 +16,17 @@
 
 package pt.up.fe.mobile.ui;
 
+import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 
 import com.google.android.apps.iosched.util.ActivityHelper;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -93,8 +98,7 @@ public abstract class BaseActivity extends FragmentActivity {
             }
             else	
             {
-            	startActivity(new Intent(BaseActivity.this, LoginActivity.class));
-            	finish();
+            	goLogin(false);
             }
     	}
     		
@@ -154,4 +158,37 @@ public abstract class BaseActivity extends FragmentActivity {
         intent.removeExtra("_uri");
         return intent;
     }
+    
+	public static final int DIALOG_FETCHING = 3000;
+	protected Dialog onCreateDialog(int id ) {
+		switch (id) {
+			case DIALOG_FETCHING: {
+				ProgressDialog progressDialog =new ProgressDialog(this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setCancelable(true);
+				progressDialog.setMessage(getString(R.string.lb_data_fetching));
+				progressDialog.setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						removeDialog(DIALOG_FETCHING);
+						finish();
+					}
+				});
+				progressDialog.setIndeterminate(false);
+				return progressDialog;
+			}
+		}
+		return null;
+	}
+	
+	public void goLogin( boolean logOff ){
+		Intent i = new Intent(this, LoginActivity.class);
+		if ( logOff )
+			i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, true);
+		startActivity(i);
+		finish();
+		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+	}
+	
+
 }

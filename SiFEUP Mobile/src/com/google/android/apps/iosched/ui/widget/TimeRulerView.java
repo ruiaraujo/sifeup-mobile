@@ -16,9 +16,12 @@
 
 package com.google.android.apps.iosched.ui.widget;
 
-import pt.up.fe.mobile.R;
+import java.util.TimeZone;
 
 import com.google.android.apps.iosched.util.UIUtils;
+
+import pt.up.fe.mobile.R;
+
 
 import android.content.Context;
 import android.content.res.TypedArray;

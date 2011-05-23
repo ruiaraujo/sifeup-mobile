@@ -255,23 +255,29 @@ public class SifeupAPI {
 	public static String getAuthenticationReply( String code , String pass ){
 		String page = null;
 		try {
-			HttpsURLConnection httpConn = getUncheckedConnection(
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
 										getAuthenticationUrl( code , pass) );
-			httpConn.connect();
-			page = getPage(httpConn.getInputStream());
-
-			//Saving cookie for later using throughout the program
-			String cookie = "";
-				String headerName=null;
-			for (int i=1; (headerName = httpConn.getHeaderFieldKey(i)) != null; i++) {
-			    if (headerName.equalsIgnoreCase("Set-Cookie")) {
-			    	cookie +=httpConn.getHeaderField(i)+";";
-			    }
-			}
-			SessionManager.getInstance().setCookie(cookie);
-			Log.e("Login cookie" ,  cookie);
-
-			httpConn.disconnect();
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				if ( page == null || page.equals(""))
+				{
+					httpConn.disconnect();
+					continue;
+				}
+				//Saving cookie for later using throughout the program
+				String cookie = "";
+					String headerName=null;
+				for (int i=1; (headerName = httpConn.getHeaderFieldKey(i)) != null; i++) {
+				    if (headerName.equalsIgnoreCase("Set-Cookie")) {
+				    	cookie +=httpConn.getHeaderField(i)+";";
+				    }
+				}
+				SessionManager.getInstance().setCookie(cookie);
+				Log.e("Login cookie" ,  cookie);
+	
+				httpConn.disconnect();
+		} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -19,8 +19,6 @@ package com.google.android.apps.iosched.util;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.HomeActivity;
 
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -115,6 +113,8 @@ public class ActivityHelper {
         mActivity.startActivity(intent);
         mActivity.overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
+    
+
 
     /**
      * Invoke "search" action, triggering a default search.

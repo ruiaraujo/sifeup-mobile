@@ -1,7 +1,5 @@
 package pt.up.fe.mobile.service;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.json.JSONException;
@@ -37,6 +35,7 @@ public class Payment {
 			
 			this.name=payment.getString("nome_prestacao");
 			String[] dueDateString=payment.getString("data_limite_pag").split("-");
+			//TODO: GregorianCalendar is very very very slow. Check if Time can't do the same thing
 			if(dueDateString.length==3)
 				this.dueDate=new GregorianCalendar(Integer.parseInt(dueDateString[0]), Integer.parseInt(dueDateString[1]), Integer.parseInt(dueDateString[2]));
 			this.amount=payment.getDouble("valor");

@@ -31,7 +31,7 @@ public class LoginActivity extends Activity
 	public static final String PREF_COOKIE_TIME = "Cookie Time";
 	public static final String PREF_USERNAME_SAVED = "Cookie User";
 	public static final String EXTRA_DIFFERENT_LOGIN =
-        "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
+        					"pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
 
 	private LoginTask logintask;
 	private boolean rememberUser;
@@ -124,7 +124,12 @@ public class LoginActivity extends Activity
         // In case of a logout.
         Intent i = getIntent();
         boolean relogin = i.getBooleanExtra(EXTRA_DIFFERENT_LOGIN, false);
-        if ( !relogin )
+        if ( relogin )
+        {	// if logging out the cookie is removed
+        	prefEditor.putString(PREF_COOKIE, "");
+        	prefEditor.commit(); 
+        }
+        else
         {
 	        //Take advantage of the 24h period while the session
 	        // is still active on the main server.

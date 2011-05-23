@@ -20,7 +20,6 @@ import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.MotionEventUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,12 +48,7 @@ public class ScheduleFragment extends Fragment implements
     private ArrayList<Block> schedule = new ArrayList<Block>();
     private List<Day> mDays = new ArrayList<Day>();
 
-    /**
-     * Flags used with {@link android.text.format.DateUtils#formatDateRange}.
-     */
-    private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_DATE
-            | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,7 +169,7 @@ public class ScheduleFragment extends Fragment implements
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
-    			getActivity().showDialog(ScheduleActivity.DIALOG_FETCHING);  
+    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
     	}
 
         protected void onPostExecute(String result) {
@@ -187,16 +181,17 @@ public class ScheduleFragment extends Fragment implements
 				 updateWorkspaceHeader(0);
 			}
 			else{	
+				Log.e("Schedule","fail");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(ScheduleActivity.DIALOG_FETCHING);
-					startActivity(new Intent(getActivity(), LoginActivity.class));
-					getActivity().finish();
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
 			}
         	if ( getActivity() != null ) 
-        		getActivity().removeDialog(ScheduleActivity.DIALOG_FETCHING);
+        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -204,7 +199,7 @@ public class ScheduleFragment extends Fragment implements
 			String page = "";
 		  	try {
 		  		long mondayMillis = firstDayofWeek();
-		  		Time monday = new Time();
+		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
 		  		monday.set(mondayMillis);
 		  		monday.normalize(false);
 		  		String firstDay = monday.format("%Y%m%d");
@@ -219,12 +214,10 @@ public class ScheduleFragment extends Fragment implements
 								lastDay);
 	    		
 	    		if(SifeupAPI.JSONError(page))
-	    			return "F***";
-	    		
+	    			return "";
 	    		
 	    		JSONSchedule(page);
-				
-		  		
+
 				return page;
 				
 			} catch (JSONException e) {
@@ -259,9 +252,11 @@ public class ScheduleFragment extends Fragment implements
         day.blocksView.setAlwaysDrawnWithCacheEnabled(true);
         // Clear out any existing sessions before inserting again
         day.blocksView.removeAllBlocks();
-
-        day.label = DateUtils.formatDateTime(getActivity(), startMillis, TIME_FLAGS);
-        
+        Time date = new Time(UIUtils.TIME_REFERENCE);
+  		date.set(startMillis);
+  		date.normalize(false);
+        day.label =DateUtils.getDayOfWeekString(date.weekDay+1, DateUtils.LENGTH_LONG) +", " +
+        			date.format("%d-%m");
         mWorkspace.addView(day.rootView);
         mDays.add(day);
     }
@@ -371,13 +366,14 @@ public class ScheduleFragment extends Fragment implements
         Day day = mDays.get(dayIndex);
 
         final String blockId = block.lectureAcronym;
-        final String title = block.lectureAcronym + "\n" +  block.buildingCode + block.roomCode;
+        final String title = block.lectureAcronym + " (" + block.lectureType + ")" 
+        						+ "\n" +  block.buildingCode + block.roomCode;
         final long start = block.startTime * 1000 + day.timeStart;
         final long end = ( block.startTime + (long)(block.lectureDuration * 3600) ) * 1000;
         final boolean containsStarred = false;
 
         int column = 0;
-        if ( block.equals("T") )
+        if ( block.lectureType.equals("T") )
         	column = 1;
 		final BlockView blockView = new BlockView(getActivity(), blockId,title , start, end,
         		containsStarred , column );
@@ -401,7 +397,7 @@ public class ScheduleFragment extends Fragment implements
   		//Our week starts at Monday
   		if ( weekDay < 0 )
   			weekDay = 6;
-  		mondayMillis = yourDate.toMillis(false);
+  		mondayMillis = yourDate.toMillis(true);
   		mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
   		return mondayMillis;
     }

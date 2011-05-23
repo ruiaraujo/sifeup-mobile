@@ -132,18 +132,20 @@
     <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
 
     <!-- Login -->
-   	<string name="bt_cancel">Cancel</string>
+   	<string name="bt_cancel">Exit</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Reset</string>
     <string name="lb_login_remember">   Remember Me</string>
-    <string name="lb_login_username">Enter User Name</string>
-    <string name="lb_login_password">Enter Password</string>
+    <string name="lb_login_username">Username:</string>
+    <string name="lb_login_password">Password:</string>
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     
      <string name="lb_data_fetching">Fetching data...</string>
     <string name="print_lbl">Printing Quota</string>
     <string name="print_balance">7.60 €</string>
+    
+    <string name="toast_auth_error">Your session timed out. Please login again.</string>
 
 </resources>

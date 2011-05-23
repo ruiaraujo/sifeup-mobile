@@ -31,7 +31,7 @@ import android.view.ViewGroup;
  * {@link R.id#blocks_now} view when applicable.
  */
 public class BlocksLayout extends ViewGroup {
-    private int mColumns = 3;
+    private int mColumns = 2;
 
     private TimeRulerView mRulerView;
     private View mNowView;
