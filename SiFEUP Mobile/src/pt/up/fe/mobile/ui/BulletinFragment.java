@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 
 import com.google.android.apps.iosched.util.AnalyticsUtils;

@@ -2,7 +2,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

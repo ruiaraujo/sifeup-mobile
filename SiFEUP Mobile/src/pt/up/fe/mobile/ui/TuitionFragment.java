@@ -19,7 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
@@ -44,7 +43,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import static com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
-import static com.google.android.apps.iosched.util.UIUtils.formatSessionSubtitle;
 
 /**
  * A {@link ListFragment} showing a list of sessions.
@@ -97,7 +95,7 @@ public class TuitionFragment extends ListFragment implements
         }
 
         String[] projection;
-        if (!ScheduleContract.Sessions.isSearchUri(sessionsUri)) {
+      /*  if (!ScheduleContract.Sessions.isSearchUri(sessionsUri)) {
             mAdapter = new SessionsAdapter(getActivity());
             projection = SessionsQuery.PROJECTION;
             sessionQueryToken = SessionsQuery._TOKEN;
@@ -106,13 +104,13 @@ public class TuitionFragment extends ListFragment implements
             mAdapter = new SearchAdapter(getActivity());
             projection = SearchQuery.PROJECTION;
             sessionQueryToken = SearchQuery._TOKEN;
-        }
+        }*/
 
         setListAdapter(mAdapter);
 
         // Start background query to load sessions
-        mHandler.startQuery(sessionQueryToken, null, sessionsUri, projection, null, null,
-                ScheduleContract.Sessions.DEFAULT_SORT);
+    //    mHandler.startQuery(sessionQueryToken, null, sessionsUri, projection, null, null,
+    //            ScheduleContract.Sessions.DEFAULT_SORT);
 
         // If caller launched us with specific track hint, pass it along when
         // launching session details. Also start a query to load the track info.
@@ -192,8 +190,8 @@ public class TuitionFragment extends ListFragment implements
     public void onResume() {
         super.onResume();
         mMessageQueueHandler.post(mRefreshSessionsRunnable);
-        getActivity().getContentResolver().registerContentObserver(
-                ScheduleContract.Sessions.CONTENT_URI, true, mSessionChangesObserver);
+       // getActivity().getContentResolver().registerContentObserver(
+     //           ScheduleContract.Sessions.CONTENT_URI, true, mSessionChangesObserver);
         if (mCursor != null) {
             mCursor.requery();
         }
@@ -218,7 +216,7 @@ public class TuitionFragment extends ListFragment implements
         // Launch viewer for specific session, passing along any track knowledge
         // that should influence the title-bar.
         final Cursor cursor = (Cursor)mAdapter.getItem(position);
-        final String sessionId = cursor.getString(cursor.getColumnIndex(
+      /* final String sessionId = cursor.getString(cursor.getColumnIndex(
                 ScheduleContract.Sessions.SESSION_ID));
         final Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
@@ -226,7 +224,7 @@ public class TuitionFragment extends ListFragment implements
         ((BaseActivity) getActivity()).openActivityOrFragment(intent);
 
         getListView().setItemChecked(position, true);
-        mCheckedPosition = position;
+        mCheckedPosition = position;*/
     }
 
     public void clearCheckedPosition() {
@@ -263,9 +261,9 @@ public class TuitionFragment extends ListFragment implements
             final long blockStart = cursor.getLong(SessionsQuery.BLOCK_START);
             final long blockEnd = cursor.getLong(SessionsQuery.BLOCK_END);
             final String roomName = cursor.getString(SessionsQuery.ROOM_NAME);
-            final String subtitle = formatSessionSubtitle(blockStart, blockEnd, roomName, context);
+            //final String subtitle = formatSessionSubtitle(blockStart, blockEnd, roomName, context);
 
-            subtitleView.setText(subtitle);
+          //  subtitleView.setText(subtitle);
 
             final boolean starred = cursor.getInt(SessionsQuery.STARRED) != 0;
             view.findViewById(R.id.star_button).setVisibility(
@@ -339,12 +337,12 @@ public class TuitionFragment extends ListFragment implements
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Sessions.SESSION_ID,
+              /*  ScheduleContract.Sessions.SESSION_ID,
                 ScheduleContract.Sessions.SESSION_TITLE,
                 ScheduleContract.Sessions.SESSION_STARRED,
                 ScheduleContract.Blocks.BLOCK_START,
                 ScheduleContract.Blocks.BLOCK_END,
-                ScheduleContract.Rooms.ROOM_NAME,
+                ScheduleContract.Rooms.ROOM_NAME,*/
         };
 
         int _ID = 0;
@@ -363,8 +361,8 @@ public class TuitionFragment extends ListFragment implements
         int _TOKEN = 0x2;
 
         String[] PROJECTION = {
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+            //    ScheduleContract.Tracks.TRACK_NAME,
+             //   ScheduleContract.Tracks.TRACK_COLOR,
         };
 
         int TRACK_NAME = 0;
@@ -378,10 +376,10 @@ public class TuitionFragment extends ListFragment implements
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Sessions.SESSION_ID,
+               /* ScheduleContract.Sessions.SESSION_ID,
                 ScheduleContract.Sessions.SESSION_TITLE,
                 ScheduleContract.Sessions.SEARCH_SNIPPET,
-                ScheduleContract.Sessions.SESSION_STARRED,
+                ScheduleContract.Sessions.SESSION_STARRED,*/
         };
 
         int _ID = 0;

@@ -19,13 +19,8 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.ui.MapFragment;
-import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.BitmapUtils;
-import com.google.android.apps.iosched.util.CatchNotesHelper;
 import com.google.android.apps.iosched.util.FractionalTouchDelegate;
 import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
 import com.google.android.apps.iosched.util.UIUtils;
@@ -117,7 +112,7 @@ public class TuitionDetailFragment extends Fragment implements
             return;
         }
 
-        mSessionId = ScheduleContract.Sessions.getSessionId(mSessionUri);
+      //  mSessionId = ScheduleContract.Sessions.getSessionId(mSessionUri);
 
         setHasOptionsMenu(true);
     }
@@ -152,12 +147,12 @@ public class TuitionDetailFragment extends Fragment implements
         }
 
         // Start background queries to load session and track details
-        final Uri speakersUri = ScheduleContract.Sessions.buildSpeakersDirUri(mSessionId);
+       // final Uri speakersUri = ScheduleContract.Sessions.buildSpeakersDirUri(mSessionId);
 
         mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
         mHandler.startQuery(SessionsQuery._TOKEN, mSessionUri, SessionsQuery.PROJECTION);
         mHandler.startQuery(TracksQuery._TOKEN, mTrackUri, TracksQuery.PROJECTION);
-        mHandler.startQuery(SpeakersQuery._TOKEN, speakersUri, SpeakersQuery.PROJECTION);
+       // mHandler.startQuery(SpeakersQuery._TOKEN, speakersUri, SpeakersQuery.PROJECTION);
     }
 
     @Override
@@ -225,9 +220,10 @@ public class TuitionDetailFragment extends Fragment implements
         final Uri trackUri = intent.getParcelableExtra(EXTRA_TRACK);
         if (trackUri != null) {
             return trackUri;
-        } else {
+        } /*else {
             return ScheduleContract.Sessions.buildTracksDirUri(mSessionId);
-        }
+        }*/
+        return null;
     }
 
     /**
@@ -263,13 +259,13 @@ public class TuitionDetailFragment extends Fragment implements
             final long blockStart = cursor.getLong(SessionsQuery.BLOCK_START);
             final long blockEnd = cursor.getLong(SessionsQuery.BLOCK_END);
             final String roomName = cursor.getString(SessionsQuery.ROOM_NAME);
-            final String subtitle = UIUtils.formatSessionSubtitle(blockStart,
-                    blockEnd, roomName, getActivity());
+          //  final String subtitle = UIUtils.formatSessionSubtitle(blockStart,
+             //       blockEnd, roomName, getActivity());
 
             mTitleString = cursor.getString(SessionsQuery.TITLE);
             mTitle.setText(mTitleString);
-            mSubtitle.setText(subtitle);
-
+         //   mSubtitle.setText(subtitle);
+//
             mUrl = cursor.getString(SessionsQuery.URL);
             if (TextUtils.isEmpty(mUrl)) {
                 mUrl = "";
@@ -393,7 +389,7 @@ public class TuitionDetailFragment extends Fragment implements
                 final TextView speakerAbstractView = (TextView) speakerView
                         .findViewById(R.id.speaker_abstract);
 
-                if (!TextUtils.isEmpty(speakerImageUrl)) {
+               /* if (!TextUtils.isEmpty(speakerImageUrl)) {
                     BitmapUtils.fetchImage(getActivity(), speakerImageUrl, null, null,
                             new BitmapUtils.OnFetchCompleteListener() {
                                 public void onFetchComplete(Object cookie, Bitmap result) {
@@ -402,7 +398,7 @@ public class TuitionDetailFragment extends Fragment implements
                                     }
                                 }
                             });
-                }
+                }*/
 
                 speakerHeaderView.setText(speakerHeader);
                 UIUtils.setTextMaybeHtml(speakerAbstractView, speakerAbstract);
@@ -445,10 +441,10 @@ public class TuitionDetailFragment extends Fragment implements
 
         switch (item.getItemId()) {
             case R.id.menu_map:
-                intent = new Intent(getActivity().getApplicationContext(),
+              /*  intent = new Intent(getActivity().getApplicationContext(),
                         MapActivity.class);
                 intent.putExtra(MapFragment.EXTRA_ROOM, mRoomId);
-                startActivity(intent);
+                startActivity(intent);*/
                 return true;
 
             case R.id.menu_share:
@@ -468,10 +464,10 @@ public class TuitionDetailFragment extends Fragment implements
      * Handle toggling of starred checkbox.
      */
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        final ContentValues values = new ContentValues();
+      /*  final ContentValues values = new ContentValues();
         values.put(ScheduleContract.Sessions.SESSION_STARRED, isChecked ? 1 : 0);
         mHandler.startUpdate(mSessionUri, values);
-
+*/
         // Because change listener is set to null during initialization, these won't fire on
         // pageview.
         AnalyticsUtils.getInstance(getActivity()).trackEvent(
@@ -517,7 +513,7 @@ public class TuitionDetailFragment extends Fragment implements
     }
 
     private void updateNotesTab() {
-        final CatchNotesHelper helper = new CatchNotesHelper(getActivity());
+       /* final CatchNotesHelper helper = new CatchNotesHelper(getActivity());
         final boolean notesInstalled = helper.isNotesInstalledAndMinimumVersion();
 
         final Intent marketIntent = helper.notesMarketIntent();
@@ -573,7 +569,7 @@ public class TuitionDetailFragment extends Fragment implements
         mRootView.findViewById(R.id.notes_catch_view_link).setVisibility(
                 !notesInstalled ? View.GONE : View.VISIBLE);
         mRootView.findViewById(R.id.notes_catch_view_separator).setVisibility(
-                !notesInstalled ? View.GONE : View.VISIBLE);
+                !notesInstalled ? View.GONE : View.VISIBLE);*/
     }
 
     /**
@@ -647,7 +643,7 @@ public class TuitionDetailFragment extends Fragment implements
         int _TOKEN = 0x1;
 
         String[] PROJECTION = {
-                ScheduleContract.Blocks.BLOCK_START,
+               /* ScheduleContract.Blocks.BLOCK_START,
                 ScheduleContract.Blocks.BLOCK_END,
                 ScheduleContract.Sessions.SESSION_LEVEL,
                 ScheduleContract.Sessions.SESSION_TITLE,
@@ -663,7 +659,7 @@ public class TuitionDetailFragment extends Fragment implements
                 ScheduleContract.Sessions.SESSION_FEEDBACK_URL,
                 ScheduleContract.Sessions.SESSION_NOTES_URL,
                 ScheduleContract.Sessions.ROOM_ID,
-                ScheduleContract.Rooms.ROOM_NAME,
+                ScheduleContract.Rooms.ROOM_NAME,*/
         };
 
         int BLOCK_START = 0;
@@ -710,8 +706,8 @@ public class TuitionDetailFragment extends Fragment implements
         int _TOKEN = 0x2;
 
         String[] PROJECTION = {
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+             /*   ScheduleContract.Tracks.TRACK_NAME,
+                ScheduleContract.Tracks.TRACK_COLOR,*/
         };
 
         int TRACK_NAME = 0;
@@ -722,11 +718,11 @@ public class TuitionDetailFragment extends Fragment implements
         int _TOKEN = 0x3;
 
         String[] PROJECTION = {
-                ScheduleContract.Speakers.SPEAKER_NAME,
+               /* ScheduleContract.Speakers.SPEAKER_NAME,
                 ScheduleContract.Speakers.SPEAKER_IMAGE_URL,
                 ScheduleContract.Speakers.SPEAKER_COMPANY,
                 ScheduleContract.Speakers.SPEAKER_ABSTRACT,
-                ScheduleContract.Speakers.SPEAKER_URL,
+                ScheduleContract.Speakers.SPEAKER_URL,*/
         };
 
         int SPEAKER_NAME = 0;

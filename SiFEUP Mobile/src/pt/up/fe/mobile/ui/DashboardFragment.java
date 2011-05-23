@@ -18,10 +18,6 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
-
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.ui.StarredActivity;
-import com.google.android.apps.iosched.ui.TracksFragment;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
@@ -57,12 +53,8 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Tuition");
                 // Launch sessions list
-                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                        ScheduleContract.Tracks.CONTENT_URI);
-                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_session_tracks));
-                intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
-                        TracksFragment.NEXT_TYPE_SESSIONS);
-                startActivity(intent);
+               
+              // startActivity(new Intent(getActivity(), ));
                 
 
             }
@@ -72,7 +64,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Starred");
                 // Launch list of sessions and vendors the user has starred
-                startActivity(new Intent(getActivity(), StarredActivity.class));                
+               // startActivity(new Intent(getActivity(), StarredActivity.class));                
             }
         });
 
@@ -80,12 +72,8 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Sandbox");
                 // Launch vendors list
-                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ScheduleContract.Tracks.CONTENT_URI);
-                    intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_vendor_tracks));
-                    intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
-                            TracksFragment.NEXT_TYPE_VENDORS);
-                    startActivity(intent);
+              
+                   // startActivity(intent);
             }
         });
 

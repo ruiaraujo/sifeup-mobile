@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.ui.BaseActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,7 @@ import android.support.v4.app.Fragment;
  * A {@link BaseActivity} that simply contains a single fragment. The intent used to invoke this
  * activity is forwarded to the fragment as arguments during fragment instantiation. Derived
  * activities should only need to implement
- * {@link com.google.android.apps.iosched.ui.BaseSinglePaneActivity#onCreatePane()}.
+ * {@link pt.up.fe.mobile.ui.BaseSinglePaneActivity#onCreatePane()}.
  */
 public abstract class BaseSinglePaneActivity extends BaseActivity {
     private Fragment mFragment;

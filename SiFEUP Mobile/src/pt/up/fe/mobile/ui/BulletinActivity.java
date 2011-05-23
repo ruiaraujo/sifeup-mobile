@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.phone;
-
-import pt.up.fe.mobile.ui.VendorDetailFragment;
-
-import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
+package pt.up.fe.mobile.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class VendorDetailActivity extends BaseSinglePaneActivity {
+public class BulletinActivity extends BaseSinglePaneActivity {
     @Override
     protected Fragment onCreatePane() {
-        return new VendorDetailFragment();
+        return new BulletinFragment();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getActivityHelper().setupSubActivity();
-    }
+    }    
 }

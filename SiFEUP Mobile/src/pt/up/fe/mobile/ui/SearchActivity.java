@@ -19,11 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
-import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
-import com.google.android.apps.iosched.ui.BaseMultiPaneActivity;
-import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
-import com.google.android.apps.iosched.ui.phone.VendorDetailActivity;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -158,12 +153,12 @@ public class SearchActivity extends BaseMultiPaneActivity {
 
     private Bundle getSessionsFragmentArguments() {
         return intentToFragmentArguments(
-                new Intent(Intent.ACTION_VIEW, Sessions.buildSearchUri(mQuery)));
+                new Intent(Intent.ACTION_VIEW, null/*Sessions.buildSearchUri(mQuery)*/));
     }
 
     private Bundle getVendorsFragmentArguments() {
         return intentToFragmentArguments(
-                new Intent(Intent.ACTION_VIEW, Vendors.buildSearchUri(mQuery)));
+                new Intent(Intent.ACTION_VIEW, null/*Vendors.buildSearchUri(mQuery)*/));
     }
 
     /**
@@ -189,13 +184,13 @@ public class SearchActivity extends BaseMultiPaneActivity {
                         TuitionDetailFragment.class,
                         "session_detail",
                         R.id.fragment_container_search_detail);
-            } else if (VendorDetailActivity.class.getName().equals(activityClassName)) {
+            } /*else if (VendorDetailActivity.class.getName().equals(activityClassName)) {
                 clearSelectedItems();
                 return new BaseMultiPaneActivity.FragmentReplaceInfo(
                         VendorDetailFragment.class,
                         "vendor_detail",
                         R.id.fragment_container_search_detail);
-            }
+            }*/
         }
         return null;
     }

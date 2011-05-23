@@ -17,7 +17,6 @@
 package pt.up.fe.mobile.ui;
 
 
-import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

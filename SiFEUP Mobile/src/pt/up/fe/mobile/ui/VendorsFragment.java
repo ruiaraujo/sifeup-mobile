@@ -19,7 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
 import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
@@ -89,7 +88,7 @@ public class VendorsFragment extends ListFragment implements
         }
 
         String[] projection;
-        if (!ScheduleContract.Vendors.isSearchUri(vendorsUri)) {
+ /*       if (!ScheduleContract.Vendors.isSearchUri(vendorsUri)) {
             mAdapter = new VendorsAdapter(getActivity());
             projection = VendorsQuery.PROJECTION;
             vendorQueryToken = VendorsQuery._TOKEN;
@@ -112,7 +111,7 @@ public class VendorsFragment extends ListFragment implements
         mTrackUri = intent.getParcelableExtra(TuitionDetailFragment.EXTRA_TRACK);
         if (mTrackUri != null) {
             mHandler.startQuery(TracksQuery._TOKEN, mTrackUri, TracksQuery.PROJECTION);
-        }
+        }*/
     }
 
     @Override
@@ -186,8 +185,8 @@ public class VendorsFragment extends ListFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getContentResolver().registerContentObserver(
-                ScheduleContract.Vendors.CONTENT_URI, true, mVendorChangesObserver);
+    /*    getActivity().getContentResolver().registerContentObserver(
+                ScheduleContract.Vendors.CONTENT_URI, true, mVendorChangesObserver);*/
         if (mCursor != null) {
             mCursor.requery();
         }
@@ -211,12 +210,12 @@ public class VendorsFragment extends ListFragment implements
         // Launch viewer for specific vendor.
         final Cursor cursor = (Cursor)mAdapter.getItem(position);
         final String vendorId = cursor.getString(VendorsQuery.VENDOR_ID);
-        final Uri vendorUri = ScheduleContract.Vendors.buildVendorUri(vendorId);
+     /*   final Uri vendorUri = ScheduleContract.Vendors.buildVendorUri(vendorId);
         ((BaseActivity) getActivity()).openActivityOrFragment(new Intent(Intent.ACTION_VIEW,
                 vendorUri));
 
         getListView().setItemChecked(position, true);
-        mCheckedPosition = position;
+        mCheckedPosition = position;*/
     }
 
     public void clearCheckedPosition() {
@@ -301,10 +300,10 @@ public class VendorsFragment extends ListFragment implements
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Vendors.VENDOR_ID,
+                /*ScheduleContract.Vendors.VENDOR_ID,
                 ScheduleContract.Vendors.VENDOR_NAME,
                 ScheduleContract.Vendors.VENDOR_LOCATION,
-                ScheduleContract.Vendors.VENDOR_STARRED,
+                ScheduleContract.Vendors.VENDOR_STARRED,*/
         };
 
         int _ID = 0;
@@ -321,8 +320,8 @@ public class VendorsFragment extends ListFragment implements
         int _TOKEN = 0x2;
 
         String[] PROJECTION = {
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+              //  ScheduleContract.Tracks.TRACK_NAME,
+              //  ScheduleContract.Tracks.TRACK_COLOR,
         };
 
         int TRACK_NAME = 0;
@@ -336,10 +335,10 @@ public class VendorsFragment extends ListFragment implements
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Vendors.VENDOR_ID,
+                /*ScheduleContract.Vendors.VENDOR_ID,
                 ScheduleContract.Vendors.VENDOR_NAME,
                 ScheduleContract.Vendors.SEARCH_SNIPPET,
-                ScheduleContract.Vendors.VENDOR_STARRED,
+                ScheduleContract.Vendors.VENDOR_STARRED,*/
         };
 
         int _ID = 0;

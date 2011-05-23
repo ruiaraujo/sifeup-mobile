@@ -18,8 +18,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.service.SessionManager;
 
-import com.google.android.apps.iosched.ui.BaseMultiPaneActivity;
-import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 
 import android.content.Intent;

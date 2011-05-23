@@ -14,7 +14,6 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.ui.widget.BlockView;
 import com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import com.google.android.apps.iosched.ui.widget.ObservableScrollView;
@@ -248,9 +247,9 @@ public class ScheduleFragment extends Fragment implements
         day.index = mDays.size();
         day.timeStart = startMillis;
         day.timeEnd = startMillis + DateUtils.DAY_IN_MILLIS;
-        day.blocksUri = ScheduleContract.Blocks.buildBlocksBetweenDirUri(
+       /* day.blocksUri = ScheduleContract.Blocks.buildBlocksBetweenDirUri(
                 day.timeStart, day.timeEnd);
-
+*/
         // Setup views
         day.rootView = (ViewGroup) inflater.inflate(R.layout.blocks_content, null);
 

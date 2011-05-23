@@ -19,15 +19,10 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.ui.MapFragment;
-import com.google.android.apps.iosched.ui.phone.MapActivity;
 import com.google.android.apps.iosched.util.ActivityHelper;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.BitmapUtils;
 import com.google.android.apps.iosched.util.FractionalTouchDelegate;
 import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
-import com.google.android.apps.iosched.util.ParserUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.ContentValues;
@@ -164,7 +159,7 @@ public class VendorDetailFragment extends Fragment implements
             // Start background fetch to load vendor logo
             final String logoUrl = cursor.getString(VendorsQuery.LOGO_URL);
 
-            if (!TextUtils.isEmpty(logoUrl)) {
+          /*  if (!TextUtils.isEmpty(logoUrl)) {
                 BitmapUtils.fetchImage(getActivity(), logoUrl, null, null,
                         new BitmapUtils.OnFetchCompleteListener() {
                             public void onFetchComplete(Object cookie, Bitmap result) {
@@ -176,7 +171,7 @@ public class VendorDetailFragment extends Fragment implements
                                 }
                             }
                         });
-            }
+            }*/
 
             mUrl.setText(cursor.getString(VendorsQuery.URL));
             mDesc.setText(cursor.getString(VendorsQuery.DESC));
@@ -203,7 +198,7 @@ public class VendorDetailFragment extends Fragment implements
      */
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         final ContentValues values = new ContentValues();
-        values.put(ScheduleContract.Vendors.VENDOR_STARRED, isChecked ? 1 : 0);
+      //  values.put(ScheduleContract.Vendors.VENDOR_STARRED, isChecked ? 1 : 0);
         mHandler.startUpdate(mVendorUri, values);
 
         AnalyticsUtils.getInstance(getActivity()).trackEvent(
@@ -220,11 +215,8 @@ public class VendorDetailFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_map) {
             // The room ID for the sandbox, in the map, is just the track ID
-            final Intent intent = new Intent(getActivity().getApplicationContext(),
-                    MapActivity.class);
-            intent.putExtra(MapFragment.EXTRA_ROOM,
-                    ParserUtils.translateTrackIdAliasInverse(mTrackId));
-            startActivity(intent);
+           
+       //     startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -235,7 +227,7 @@ public class VendorDetailFragment extends Fragment implements
      */
     private interface VendorsQuery {
         String[] PROJECTION = {
-                ScheduleContract.Vendors.VENDOR_NAME,
+               /* ScheduleContract.Vendors.VENDOR_NAME,
                 ScheduleContract.Vendors.VENDOR_LOCATION,
                 ScheduleContract.Vendors.VENDOR_DESC,
                 ScheduleContract.Vendors.VENDOR_URL,
@@ -244,7 +236,7 @@ public class VendorDetailFragment extends Fragment implements
                 ScheduleContract.Vendors.VENDOR_STARRED,
                 ScheduleContract.Vendors.TRACK_ID,
                 ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+                ScheduleContract.Tracks.TRACK_COLOR,*/
         };
 
         int NAME = 0;

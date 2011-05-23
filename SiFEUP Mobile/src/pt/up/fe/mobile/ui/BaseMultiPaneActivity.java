@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui;
+package pt.up.fe.mobile.ui;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,7 +26,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import java.util.List;
 
-import pt.up.fe.mobile.ui.BaseActivity;
 
 /**
  * A {@link BaseActivity} that can contain multiple panes, and has the ability to substitute
