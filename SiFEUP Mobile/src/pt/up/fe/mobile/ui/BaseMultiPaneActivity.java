@@ -89,17 +89,20 @@ public abstract class BaseMultiPaneActivity extends BaseActivity {
      * in place of an activity.
      */
     protected class FragmentReplaceInfo {
-        private Class mFragmentClass;
+        @SuppressWarnings("unchecked")
+		private Class mFragmentClass;
         private String mFragmentTag;
         private int mContainerId;
 
-        public FragmentReplaceInfo(Class fragmentClass, String fragmentTag, int containerId) {
+        @SuppressWarnings("unchecked")
+		public FragmentReplaceInfo(Class fragmentClass, String fragmentTag, int containerId) {
             mFragmentClass = fragmentClass;
             mFragmentTag = fragmentTag;
             mContainerId = containerId;
         }
 
-        public Class getFragmentClass() {
+        @SuppressWarnings("unchecked")
+		public Class getFragmentClass() {
             return mFragmentClass;
         }
 

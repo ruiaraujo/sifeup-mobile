@@ -21,27 +21,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
 
 import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
 
@@ -49,19 +43,12 @@ import pt.up.fe.mobile.R;
  * An assortment of UI helpers.
  */
 public class UIUtils {
-
-
-    /** Flags used with {@link DateUtils#formatDateRange}. */
-    private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_TIME
-            | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
-
-    /** {@link StringBuilder} used for formatting time block. */
-    private static StringBuilder sBuilder = new StringBuilder(50);
     /** {@link Formatter} used for formatting time block. */
-    private static Formatter sFormatter = new Formatter(sBuilder, Locale.getDefault());
 
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
+    
+    public static String TIME_REFERENCE = "GMT+00:00";
    
     /**
      * Populate the given {@link TextView} with the requested text, formatting
@@ -83,7 +70,6 @@ public class UIUtils {
 
     public static void setSessionTitleColor(long blockStart, long blockEnd, TextView title,
             TextView subtitle) {
-        long currentTimeMillis = System.currentTimeMillis();
         int colorId = R.color.body_text_1;
         int subColorId = R.color.body_text_2;
 

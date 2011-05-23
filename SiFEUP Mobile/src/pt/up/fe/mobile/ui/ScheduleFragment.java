@@ -2,8 +2,6 @@ package pt.up.fe.mobile.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.jar.JarFile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +21,6 @@ import com.google.android.apps.iosched.util.MotionEventUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
-import android.graphics.Rect;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -394,7 +390,7 @@ public class ScheduleFragment extends Fragment implements
     
     private static long firstDayofWeek(){
     	long mondayMillis = System.currentTimeMillis();
-  		Time yourDate = new Time();
+  		Time yourDate = new Time(UIUtils.TIME_REFERENCE);
   		yourDate.set(mondayMillis);
   		yourDate.normalize(false);
   		yourDate.minute=0;

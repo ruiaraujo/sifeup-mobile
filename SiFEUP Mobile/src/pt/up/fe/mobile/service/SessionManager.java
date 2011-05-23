@@ -1,8 +1,5 @@
 package pt.up.fe.mobile.service;
 
-import java.util.Date;
-import java.util.Vector;
-
 /**
  * Singleton class that holds the active Session cookie.
  */
