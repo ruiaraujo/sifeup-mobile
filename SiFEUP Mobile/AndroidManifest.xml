@@ -91,15 +91,7 @@
             android:name=".ui.ScheduleActivity"
             android:label="@string/title_schedule" />
 
-        <activity
-            android:name="com.google.android.apps.iosched.ui.phone.TracksActivity"
-            android:label="@string/title_tracks">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.track" />
-            </intent-filter>
-        </activity>
+       
          
         <activity
             android:label="@string/title_sessions" android:name=".ui.TuitionActivity">
@@ -119,24 +111,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.google.android.apps.iosched.ui.phone.VendorsActivity"
-            android:label="@string/title_vendors">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.TAB" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.vendor" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="com.google.android.apps.iosched.ui.phone.VendorDetailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.iosched.vendor" />
-            </intent-filter>
-        </activity>
 
         <!-- Used for install referrer tracking -->
         <receiver
@@ -153,14 +127,6 @@
             android:name="android.app.default_searchable"
             android:value="com.google.android.apps.iosched.ui.SearchActivity" />
 
-        <service android:name="com.google.android.apps.iosched.service.SyncService" ></service>
-
-        <provider
-            android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
-            android:authorities="com.google.android.apps.iosched"
-            android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" ></provider>
-       
-        
 
     </application>
 </manifest>
