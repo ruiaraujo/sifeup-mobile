@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright 2011 Google Inc.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SiFEUP Mobile</string>
 
@@ -48,12 +34,12 @@
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
 
-    <string name="btn_schedule">Schedule</string>
-    <string name="btn_exams">Exams</string>
+    <string name="btn_schedule">Horário</string>
+    <string name="btn_exams">Exames</string>
     <string name="btn_starred">Starred</string>
-    <string name="btn_friends">Friends</string>
-    <string name="btn_printing">Printing Quota</string>
-    <string name="btn_tuition">Tuition</string>
+    <string name="btn_friends">Amigos</string>
+    <string name="btn_printing">Saldos</string>
+    <string name="btn_tuition">Propinas</string>
 
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
@@ -132,7 +118,7 @@
     <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
 
     <!-- Login -->
-   	<string name="bt_cancel">Cancel</string>
+   	<string name="bt_cancel">Cancelar</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Reset</string>
@@ -143,7 +129,7 @@
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     
      <string name="lb_data_fetching">Fetching data...</string>
-    <string name="print_lbl">Printing Quota</string>
+    <string name="print_lbl">Saldo</string>
     <string name="print_balance">7.60 €</string>
 
 </resources>

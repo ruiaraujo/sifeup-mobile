@@ -97,11 +97,13 @@ public class PrintFragment extends Fragment {
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 			try {
-	    		do
-	    		{
 	    			page = SifeupAPI.getPrintingReply(
 								SessionManager.getInstance().getLoginCode());
-	    		} while ( page.equals(""));
+	    		
+    			if(	SifeupAPI.JSONError(page))
+	    		{
+		    		 return "F***";
+	    		}
 	    		JSONObject jObject = new JSONObject(page);			
 				return "Saldo "+jObject.optDouble("saldo")+" €";
 				

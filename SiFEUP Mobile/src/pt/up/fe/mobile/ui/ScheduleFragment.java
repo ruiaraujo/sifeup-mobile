@@ -1,6 +1,8 @@
 package pt.up.fe.mobile.ui;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.jar.JarFile;
 
 import org.json.JSONArray;
@@ -14,6 +16,7 @@ import pt.up.fe.mobile.service.SifeupAPI;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.ui.widget.BlockView;
+import com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import com.google.android.apps.iosched.ui.widget.Workspace;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
@@ -21,10 +24,13 @@ import com.google.android.apps.iosched.util.MotionEventUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
+import android.graphics.Rect;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,8 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScheduleFragment extends Fragment implements
-			ObservableScrollView.OnScrollListener,
-			View.OnClickListener{
+			ObservableScrollView.OnScrollListener{
 	
     private Workspace mWorkspace;
     private TextView mTitle;
@@ -47,6 +52,14 @@ public class ScheduleFragment extends Fragment implements
     private View mLeftIndicator;
     private View mRightIndicator;
     private ArrayList<Block> schedule = new ArrayList<Block>();
+    private List<Day> mDays = new ArrayList<Day>();
+
+    /**
+     * Flags used with {@link android.text.format.DateUtils#formatDateRange}.
+     */
+    private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_DATE
+            | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,47 +70,52 @@ public class ScheduleFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
+		mWorkspace = (Workspace) root.findViewById(R.id.workspace);
 
-		  mWorkspace = (Workspace) root.findViewById(R.id.workspace);
+        mTitle = (TextView) root.findViewById(R.id.block_title);
 
-	        mTitle = (TextView) root.findViewById(R.id.block_title);
+        mLeftIndicator = root.findViewById(R.id.indicator_left);
+        mLeftIndicator.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
+                        == MotionEvent.ACTION_DOWN) {
+                    mWorkspace.scrollLeft();
+                    return true;
+                }
+                return false;
+            }
+        });
+        mLeftIndicator.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mWorkspace.scrollLeft();
+            }
+        });
 
-	        mLeftIndicator = root.findViewById(R.id.indicator_left);
-	        mLeftIndicator.setOnTouchListener(new View.OnTouchListener() {
-	            public boolean onTouch(View view, MotionEvent motionEvent) {
-	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
-	                        == MotionEvent.ACTION_DOWN) {
-	                    mWorkspace.scrollLeft();
-	                    return true;
-	                }
-	                return false;
-	            }
-	        });
-	        mLeftIndicator.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View view) {
-	                mWorkspace.scrollLeft();
-	            }
-	        });
+        mRightIndicator = root.findViewById(R.id.indicator_right);
+        mRightIndicator.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
+                        == MotionEvent.ACTION_DOWN) {
+                    mWorkspace.scrollRight();
+                    return true;
+                }
+                return false;
+            }
+        });
+        mRightIndicator.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mWorkspace.scrollRight();
+            }
+        });
+        long mondayMillis = firstDayofWeek();
+        setupDay(inflater , mondayMillis);
+  		setupDay(inflater , mondayMillis + (1 * DateUtils.DAY_IN_MILLIS));
+  		setupDay(inflater , mondayMillis + (2 * DateUtils.DAY_IN_MILLIS));
+  		setupDay(inflater , mondayMillis + (3 * DateUtils.DAY_IN_MILLIS));
+  		setupDay(inflater , mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+  		new ScheduleTask().execute();
 
-	        mRightIndicator = root.findViewById(R.id.indicator_right);
-	        mRightIndicator.setOnTouchListener(new View.OnTouchListener() {
-	            public boolean onTouch(View view, MotionEvent motionEvent) {
-	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
-	                        == MotionEvent.ACTION_DOWN) {
-	                    mWorkspace.scrollRight();
-	                    return true;
-	                }
-	                return false;
-	            }
-	        });
-	        mRightIndicator.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View view) {
-	                mWorkspace.scrollRight();
-	            }
-	        });
-		new ScheduleTask().execute();
-
-        updateWorkspaceHeader(0);
+       
         mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
             public void onScroll(float screenFraction) {
                 updateWorkspaceHeader(Math.round(screenFraction));
@@ -111,15 +129,16 @@ public class ScheduleFragment extends Fragment implements
         if (mTitleCurrentDayIndex == dayIndex) {
             return;
         }
-
+        if (dayIndex >= mDays.size())
+        	return;
         mTitleCurrentDayIndex = dayIndex;
-        //Day day = mDays.get(dayIndex);
-        //mTitle.setText(day.label);
+        Day day = mDays.get(dayIndex);
+        mTitle.setText(day.label);
 
-        /*mLeftIndicator
+        mLeftIndicator
                 .setVisibility((dayIndex != 0) ? View.VISIBLE : View.INVISIBLE);
         mRightIndicator
-                .setVisibility((dayIndex < mDays.size() - 1) ? View.VISIBLE : View.INVISIBLE);*/
+                .setVisibility((dayIndex < mDays.size() - 1) ? View.VISIBLE : View.INVISIBLE);
     }
 
     
@@ -127,11 +146,11 @@ public class ScheduleFragment extends Fragment implements
     public void onScrollChanged(ObservableScrollView view) {
         // Keep each day view at the same vertical scroll offset.
         final int scrollY = view.getScrollY();
-      /*  for (Day day : mDays) {
+        for (Day day : mDays) {
             if (day.scrollView != view) {
                 day.scrollView.scrollTo(0, scrollY);
             }
-        }*/
+        }
     }
 
     @Override
@@ -141,62 +160,20 @@ public class ScheduleFragment extends Fragment implements
     }
     
 
-    /** {@inheritDoc} */
-    public void onClick(View view) {
-        if (view instanceof BlockView) {
-            String title = ((BlockView)view).getText().toString();
-            AnalyticsUtils.getInstance(getActivity()).trackEvent(
-                    "Schedule", "Session Click", title, 0);
-            final String blockId = ((BlockView) view).getBlockId();
-            final Uri sessionsUri = ScheduleContract.Blocks.buildSessionsUri(blockId);
 
-            final Intent intent = new Intent(Intent.ACTION_VIEW, sessionsUri);
-            intent.putExtra(TuitionFragment.EXTRA_SCHEDULE_TIME_STRING,
-                    ((BlockView) view).getBlockTimeString());
-            ((BaseActivity) getActivity()).openActivityOrFragment(intent);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_now) {
-            if (!updateNowView(true)) {
+          //  if (!updateNowView(true)) {
                 Toast.makeText(getActivity(), R.string.toast_now_not_visible,
                         Toast.LENGTH_SHORT).show();
-            }
+            //}
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
     
-
-    /**
-     * Update position and visibility of "now" view.
-     */
-    private boolean updateNowView(boolean forceScroll) {
-        final long now = UIUtils.getCurrentTime(getActivity());
-
-        /*Day nowDay = null; // effectively Day corresponding to today
-        for (Day day : mDays) {
-            if (now >= day.timeStart && now <= day.timeEnd) {
-                nowDay = day;
-                day.nowView.setVisibility(View.VISIBLE);
-            } else {
-                day.nowView.setVisibility(View.GONE);
-            }
-        }
-
-        if (nowDay != null && forceScroll) {
-            // Scroll to show "now" in center
-            mWorkspace.setCurrentScreen(nowDay.index);
-            final int offset = nowDay.scrollView.getHeight() / 2;
-            nowDay.nowView.requestRectangleOnScreen(new Rect(0, offset, 0, offset), true);
-            nowDay.blocksView.requestLayout();
-            return true;
-        }
-*/
-        return false;
-    }
 
     /** Classe privada para a busca de dados ao servidor */
     private class ScheduleTask extends AsyncTask<Void, Void, String> {
@@ -210,6 +187,9 @@ public class ScheduleFragment extends Fragment implements
         	if ( !result.equals("") )
         	{
 				Log.e("Schedule","success");
+				for ( Block block : schedule)
+					addBlock(block.weekDay, block);
+				 updateWorkspaceHeader(0);
 			}
 			else{	
 				if ( getActivity() != null ) 
@@ -228,31 +208,29 @@ public class ScheduleFragment extends Fragment implements
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 		  	try {
-		  		long yourDateMillis = System.currentTimeMillis();
-		  		Time yourDate = new Time();
-		  		yourDate.set(yourDateMillis);
-		  		yourDate.normalize(false);
-		  		int weekDay = yourDate.weekDay -1;
-		  		//Our week starts at Monday
-		  		if ( weekDay < 0 )
-		  			weekDay = 6;
-		  		yourDateMillis -= (weekDay * 24 * 60 * 60 * 1000);
-		  		yourDate.set(yourDateMillis);
-		  		yourDate.normalize(false);
-		  		String firstDay = yourDate.format("%Y%m%d");
-		  		//Friday
-		  		yourDate.set(yourDateMillis + (4 * 24 * 60 * 60 * 1000));
-		  		yourDate.normalize(false);
-		  		String lastDay = yourDate.format("%Y%m%d");
+		  		long mondayMillis = firstDayofWeek();
+		  		Time monday = new Time();
+		  		monday.set(mondayMillis);
+		  		monday.normalize(false);
+		  		String firstDay = monday.format("%Y%m%d");
+		  		//Friday 
+		  		monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+		  		monday.normalize(false);
+		  		String lastDay = monday.format("%Y%m%d");
+		  		
 	    		page = SifeupAPI.getScheduleReply(
 								SessionManager.getInstance().getLoginCode(), 
 								firstDay, 
 								lastDay);
-		  		JSONSchedule(page);
+	    		
 	    		if(SifeupAPI.JSONError(page))
 	    			return "F***";
-				else
-					return page;
+	    		
+	    		
+	    		JSONSchedule(page);
+				
+		  		
+				return page;
 				
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
@@ -262,8 +240,37 @@ public class ScheduleFragment extends Fragment implements
 
 			return "";
 		}
+    } 
+    private void setupDay(LayoutInflater inflater, long startMillis) {
+        Day day = new Day();
+
+        // Setup data
+        day.index = mDays.size();
+        day.timeStart = startMillis;
+        day.timeEnd = startMillis + DateUtils.DAY_IN_MILLIS;
+        day.blocksUri = ScheduleContract.Blocks.buildBlocksBetweenDirUri(
+                day.timeStart, day.timeEnd);
+
+        // Setup views
+        day.rootView = (ViewGroup) inflater.inflate(R.layout.blocks_content, null);
+
+        day.scrollView = (ObservableScrollView) day.rootView.findViewById(R.id.blocks_scroll);
+        day.scrollView.setOnScrollListener(this);
+
+        day.blocksView = (BlocksLayout) day.rootView.findViewById(R.id.blocks);
+        day.nowView = day.rootView.findViewById(R.id.blocks_now);
+
+        day.blocksView.setDrawingCacheEnabled(true);
+        day.blocksView.setAlwaysDrawnWithCacheEnabled(true);
+        // Clear out any existing sessions before inserting again
+        day.blocksView.removeAllBlocks();
+
+        day.label = DateUtils.formatDateTime(getActivity(), startMillis, TIME_FLAGS);
+        
+        mWorkspace.addView(day.rootView);
+        mDays.add(day);
     }
-    
+
     /**
      * 
      * Represents a lecture.
@@ -288,6 +295,23 @@ public class ScheduleFragment extends Fragment implements
     	private String buildingCode; // B
     	private String semester; // 2S
     }
+    
+    /**
+     * A helper class containing object references related to a particular day in the schedule.
+     */
+    private class Day {
+        private ViewGroup rootView;
+        private ObservableScrollView scrollView;
+        private View nowView;
+        private BlocksLayout blocksView;
+
+        private int index = -1;
+        private String label = null;
+        private Uri blocksUri = null;
+        private long timeStart = -1;
+        private long timeEnd = -1;
+    }
+
     
     /** 
 	 * Schedule Parser
@@ -315,7 +339,7 @@ public class ScheduleFragment extends Fragment implements
     			// new Block
     			Block block = new Block();
     			
-    			if(jBlock.has("dia")) block.weekDay = jBlock.getInt("dia");
+    			if(jBlock.has("dia")) block.weekDay = jBlock.getInt("dia") - 2; // Monday is index 0
     			if(jBlock.has("hora_inicio")) block.startTime = jBlock.getInt("hora_inicio");
     			if(jBlock.has("cad_codigo")) block.lectureCode = jBlock.getString("cad_codigo");
     			if(jBlock.has("cad_sigla")) block.lectureAcronym = jBlock.getString("cad_sigla");
@@ -324,7 +348,12 @@ public class ScheduleFragment extends Fragment implements
     			if(jBlock.has("turma_sigla")) block.classAcronym = jBlock.getString("turma_sigla");
     			if(jBlock.has("doc_sigla")) block.teacherAcronym = jBlock.getString("doc_sigla");
     			if(jBlock.has("doc_codigo")) block.teacherCode = jBlock.getString("doc_codigo");
-    			if(jBlock.has("sala_cod")) block.roomCode = jBlock.getString("sala_cod");
+    			if(jBlock.has("sala_cod")){
+    				block.roomCode = jBlock.getString("sala_cod");
+    				while ( block.roomCode.length() < 3 )
+    					block.roomCode = "0" + block.roomCode;
+    			}
+    			
     			if(jBlock.has("edi_cod")) block.buildingCode = jBlock.getString("edi_cod");
     			if(jBlock.has("periodo")) block.semester = jBlock.getString("periodo");
     			
@@ -337,5 +366,48 @@ public class ScheduleFragment extends Fragment implements
     	Log.e("JSON", "schedule not found");
     	return false;
     }
+
+
+    public void addBlock(int dayIndex ,Block block ) {
+        if (getActivity() == null) {
+            return;
+        }
+
+        Day day = mDays.get(dayIndex);
+
+        final String blockId = block.lectureAcronym;
+        final String title = block.lectureAcronym + "\n" +  block.buildingCode + block.roomCode;
+        final long start = block.startTime * 1000 + day.timeStart;
+        final long end = ( block.startTime + (long)(block.lectureDuration * 3600) ) * 1000;
+        final boolean containsStarred = false;
+
+        int column = 0;
+        if ( block.equals("T") )
+        	column = 1;
+		final BlockView blockView = new BlockView(getActivity(), blockId,title , start, end,
+        		containsStarred , column );
+
+        day.blocksView.addBlock(blockView);
+            
+              
+       
+    }
     
+    private static long firstDayofWeek(){
+    	long mondayMillis = System.currentTimeMillis();
+  		Time yourDate = new Time();
+  		yourDate.set(mondayMillis);
+  		yourDate.normalize(false);
+  		yourDate.minute=0;
+  		yourDate.hour=0;
+  		yourDate.second=0;
+  		yourDate.normalize(false);
+  		int weekDay = yourDate.weekDay -1;
+  		//Our week starts at Monday
+  		if ( weekDay < 0 )
+  			weekDay = 6;
+  		mondayMillis = yourDate.toMillis(false);
+  		mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
+  		return mondayMillis;
+    }
 }

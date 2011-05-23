@@ -75,7 +75,7 @@ public class ActivityHelper {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            return false;
+            return true;//Changing this to false allow the regular menu to show.
         }
         return false;
     }

@@ -86,7 +86,7 @@ public class TimeRulerView extends View {
      * milliseconds since epoch).
      */
     public int getTimeVerticalOffset(long timeMillis) {
-        Time time = new Time(UIUtils.CONFERENCE_TIME_ZONE.getID());
+        Time time = new Time();
         time.set(timeMillis);
 
         final int minutes = ((time.hour - mStartHour) * 60) + time.minute;
