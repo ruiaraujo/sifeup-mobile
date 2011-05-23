@@ -25,25 +25,27 @@ import android.widget.Toast;
 public class LoginActivity extends Activity 
 {
 	public static final String PREF_REMEMBER = "Remember Credentials";
-	public static  final String PREF_USERNAME = "Username";
-	public static  final String PREF_PASSWORD = "Password";
-	public static  final String PREF_COOKIE = "Cookie";
-	public static  final String PREF_COOKIE_TIME = "Cookie Time";
-	public static  final String PREF_USERNAME_SAVED = "Cookie User";
-	public static  final String EXTRA_DIFFERENT_LOGIN =
+	public static final String PREF_USERNAME = "Username";
+	public static final String PREF_PASSWORD = "Password";
+	public static final String PREF_COOKIE = "Cookie";
+	public static final String PREF_COOKIE_TIME = "Cookie Time";
+	public static final String PREF_USERNAME_SAVED = "Cookie User";
+	public static final String EXTRA_DIFFERENT_LOGIN =
         "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
 
 	private LoginTask logintask;
 	private boolean rememberUser;
 	private String user;
 	private String pass;
-    /** Called when the activity is first created. */
-    @Override
+    
+	/** Called when the activity is first created. */
+	@Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        logintask = null;
 
+        logintask = null;
+        
         setContentView(R.layout.login);
         SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
         final SharedPreferences.Editor prefEditor = loginSettings.edit();
@@ -81,8 +83,10 @@ public class LoginActivity extends Activity
 	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_password), Toast.LENGTH_SHORT);
 	        		return;
 	        	}
+
 	        	logintask = new LoginTask();
 	        	logintask.execute();
+
 			}
 				
 		});
@@ -145,7 +149,8 @@ public class LoginActivity extends Activity
     }
 
     private static final int DIALOG_CONNECTING = 3000;
-	protected Dialog onCreateDialog(int id ) {
+	
+    protected Dialog onCreateDialog(int id ) {
 		switch (id) {
 			case DIALOG_CONNECTING: {
 				ProgressDialog progressDialog =new ProgressDialog(LoginActivity.this);
@@ -167,12 +172,27 @@ public class LoginActivity extends Activity
 		return null;
 	}
 	
+    /**
+     * AsyncTask for login functionality.
+     * Background class that checkes the authentication on 
+     * the server and saves the session cookie for later use.
+     * @author angela
+     */
     private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
+    	/**
+    	 * This function is invoked on the UI thread immediately 
+    	 * after the task is executed. 
+    	 */
     	protected void onPreExecute (){
     		showDialog(DIALOG_CONNECTING);  
     	}
 
+    	/**
+    	 * This function is invoked on the UI thread after the 
+    	 * background computation finishes.
+    	 * @param result The result of the background computation
+    	 */
         protected void onPostExecute(Boolean result) {
         	if ( result )
         	{
@@ -199,6 +219,13 @@ public class LoginActivity extends Activity
         	removeDialog(DIALOG_CONNECTING);
         }
 
+        /**
+         * This function is invoked on the background thread immediately after 
+         * onPreExecute() finishes executing. 
+         * @param theVoid The parameters of the asynchronous task
+         * @return The result of the computation that will 
+         * be passed to function onPostExecute.
+         */
 		@Override
 		protected Boolean doInBackground(Void ... theVoid) {
 				String page = "";
@@ -214,9 +241,4 @@ public class LoginActivity extends Activity
 		}
     }
     
-
-    
-   
-    
- 
 }

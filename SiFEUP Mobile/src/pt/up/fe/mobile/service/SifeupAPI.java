@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public  class SifeupAPI {
+public class SifeupAPI {
 	final private static String WEBSERVICE = "https://www.fe.up.pt/si/MOBC_GERAL.";
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
@@ -64,36 +64,71 @@ public  class SifeupAPI {
 		String END = "pv_semana_fim";
 	}
 	
-	
+	/**
+	 * Authentication Url for Web Service
+	 * @param code student code
+	 * @param password student password
+	 * @return Authentication Url
+	 */
 	public static String getAuthenticationUrl( String code , String password ){
 		return WEBSERVICE + Authentication.NAME + WEBSERVICE_SEP + Authentication.CODE + 
 					EQUALS + code + LINK_SEP + Authentication.PASSWORD + EQUALS + password;
 	}
 	
-	
+	/**
+	 * Schedule Url for Web Service
+	 * @param code
+	 * @param begin
+	 * @param end
+	 * @return Schedule Url
+	 */
 	public static String getScheduleUrl( String code , String begin , String end ){
 		return WEBSERVICE + Schedule.NAME + WEBSERVICE_SEP + Schedule.CODE + 
 					EQUALS + code + LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
 					LINK_SEP + Schedule.END + EQUALS + end;
 	}
 	
+	/**
+	 * Exams Url for Web Service
+	 * @param code
+	 * @return Exams Url
+	 */
 	public static String getExamsUrl( String code ){
 		return WEBSERVICE + Exams.NAME + WEBSERVICE_SEP + Exams.CODE + EQUALS + code ;
 	}
 
-	
+	/**
+	 * Tuition Url for Web Service
+	 * @param code
+	 * @return Tuition Url
+	 */
 	public static String getTuitionUrl( String code ){
 		return WEBSERVICE + Tuition.NAME + WEBSERVICE_SEP + Tuition.CODE + EQUALS + code ;
 	}
 	
+	/**
+	 * Student Url for Web Service
+	 * @param code
+	 * @return Student Url
+	 */
 	public static String getStudentUrl( String code ){
 		return WEBSERVICE + Student.NAME + WEBSERVICE_SEP + Student.CODE + EQUALS + code ;
 	}
 	
+	/**
+	 * Printing Url for Web Service
+	 * @param code
+	 * @return
+	 */
 	public static String getPrintingUrl( String code ){
 		return WEBSERVICE + Printing.NAME + WEBSERVICE_SEP + Printing.CODE + EQUALS + code ;
 	}
 	
+	/**
+	 * Get Printing Reply
+	 * @param code
+	 * @return
+	 */
 	public static String getPrintingReply( String code ){
 		String page = null;
 		try {
@@ -113,6 +148,11 @@ public  class SifeupAPI {
 		return page;
 	}	
 	
+	/**
+	 * Printing query Reply from web service
+	 * @param code
+	 * @return
+	 */
 	public static String getStudentReply( String code ){
 		String page = null;
 		try {
@@ -132,6 +172,11 @@ public  class SifeupAPI {
 		return page;
 	}	
 	
+	/**
+	 * Tuition query Reply from web service
+	 * @param code
+	 * @return
+	 */
 	public static String getTuitionReply( String code ){
 		String page = null;
 		try {
@@ -151,6 +196,11 @@ public  class SifeupAPI {
 		return page;
 	}	
 	
+	/**
+	 * Exams query Reply from web service
+	 * @param code
+	 * @return
+	 */
 	public static String getExamsReply( String code ){
 		String page = null;
 		try {
@@ -170,6 +220,13 @@ public  class SifeupAPI {
 		return page;
 	}
 	
+	/**
+	 * Schedule query Reply from web service
+	 * @param code
+	 * @param init
+	 * @param end
+	 * @return
+	 */
 	public static String getScheduleReply( String code, String init, String end ){
 		String page = null;
 		try {
@@ -189,6 +246,12 @@ public  class SifeupAPI {
 		return page;
 	}
 	
+	/**
+	 * Authentication query Reply from web service
+	 * @param code
+	 * @param pass
+	 * @return
+	 */
 	public static String getAuthenticationReply( String code , String pass ){
 		String page = null;
 		try {
@@ -215,6 +278,11 @@ public  class SifeupAPI {
 		return page;
 	}
 	
+	/**
+	 * Fetch data
+	 * @param in
+	 * @return
+	 */
 	private static String getPage( InputStream in  ){
 		try {
 			BufferedInputStream bis = new BufferedInputStream(in);
@@ -238,6 +306,11 @@ public  class SifeupAPI {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
 	 public static HttpsURLConnection getUncheckedConnection(String url){ 
 			try {
 				X509TrustManager tm = new X509TrustManager() {
