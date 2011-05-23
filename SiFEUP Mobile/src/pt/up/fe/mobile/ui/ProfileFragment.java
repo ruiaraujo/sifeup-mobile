@@ -19,9 +19,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StudentFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 	
-	 private TextView display;
+	private TextView name;
+	private TextView code;
+	private TextView email;
+	
 	/** User Info */
     private Student me = new Student();
     
@@ -29,21 +32,23 @@ public class StudentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Profile");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.exams, null);
-		display = ((TextView)root.findViewById(R.id.exams_test));
-		new StudentTask().execute();
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, null);
+		name = ((TextView)root.findViewById(R.id.profile_name));
+		code = ((TextView)root.findViewById(R.id.profile_code));
+		email = ((TextView)root.findViewById(R.id.profile_email));
+		new ProfileTask().execute();
         return root;
     }
     
     
     /** Classe privada para a busca de dados ao servidor */
-    private class StudentTask extends AsyncTask<Void, Void, String> {
+    private class ProfileTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -54,7 +59,9 @@ public class StudentFragment extends Fragment {
         	if ( !result.equals("") )
         	{
 				Log.e("Profile","success");
-				display.setText(result);
+				name.setText(me.name);
+				code.setText(me.code);
+				email.setText(me.email);
 			}
 			else{	
 				Log.e("Profile","error");
@@ -101,7 +108,7 @@ public class StudentFragment extends Fragment {
 		private String name; // "Nome do aluno"
 		private String courseAcronym; // "Sigla do Curso"
 		private String courseName; // "Nome do curso"
-		private String registrationYear; // ano lectivo da matrícula
+		private String registrationYear; // ano lectivo da matrï¿½cula
 		private String state; // "Estado (Frequentar, Interrompido,...)"
 		private String academicYear; // (1|2|3|4|5)
 		private String email; // "xxx@fe.up.pt"

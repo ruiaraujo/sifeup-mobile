@@ -45,14 +45,16 @@ public class LoginActivity extends Activity
         super.onCreate(savedInstanceState);
 
         logintask = null;
-        
+       
         setContentView(R.layout.login);
         SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
         final SharedPreferences.Editor prefEditor = loginSettings.edit();
+        //como os objectos sao declarados em xml para termos a referencia deles temos de fazer isto
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText password = (EditText) findViewById(R.id.pass);
         final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
-        
+        //verficar se o utilizador carregou no remember me e se sim
+        //preencher os campos com as informações gravadas
         rememberUser = loginSettings.getBoolean(PREF_REMEMBER, false);
         if ( rememberUser )
         {
@@ -105,7 +107,7 @@ public class LoginActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-				finish();
+				finish();//sair do programa.
 			}
 		});
         check.setOnClickListener(new OnClickListener() 
@@ -117,10 +119,12 @@ public class LoginActivity extends Activity
 					rememberUser = true;
 				else
 					rememberUser = false;
-				prefEditor.putBoolean(PREF_REMEMBER, rememberUser);
+				prefEditor.putBoolean(PREF_REMEMBER, rememberUser); //sempre qe se carrega na checkbox, o programa guarda a preferencia.
 				prefEditor.commit(); 
 			}
 		});
+      
+        // A actividade de login pode ser chamada no launcher ou caso a pessoa faça logout
         // In case of a logout.
         Intent i = getIntent();
         boolean relogin = i.getBooleanExtra(EXTRA_DIFFERENT_LOGIN, false);

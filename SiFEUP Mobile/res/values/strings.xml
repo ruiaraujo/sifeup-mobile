@@ -37,6 +37,7 @@
     <string name="title_vendors">Sandbox</string>
     <string name="title_vendor_detail">Company Information</string>
     <string name="title_exams">Exams</string>
+    <string name="title_friends">Friends</string>
     <string name="title_tagstream">Realtime Stream</string>
     <string name="title_printing">Printing Quota</string>
 

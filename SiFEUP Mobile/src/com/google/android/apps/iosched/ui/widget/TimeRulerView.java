@@ -31,6 +31,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
+import android.provider.Settings;
 import android.text.format.Time;
 import android.util.AttributeSet;
 import android.view.View;
@@ -141,21 +142,30 @@ public class TimeRulerView extends View {
 
             // draw text title for timestamp
             canvas.drawRect(0, dividerY, mHeaderWidth, nextDividerY, dividerPaint);
-
-            // TODO: localize these labels better, including handling
+            String prefClock = Settings.System.getString(getContext().getContentResolver(), 
+            					Settings.System.TIME_12_24);
+          
             // 24-hour mode when set in framework.
-            final int hour = mStartHour + i;
             String label;
-            if (hour == 0) {
-                label = "12am";
-            } else if (hour <= 11) {
-                label = hour + "am";
-            } else if (hour == 12) {
-                label = "12pm";
-            } else {
-                label = (hour - 12) + "pm";
+            final Integer hour = mStartHour + i;
+            
+            if (prefClock.equals("24"))
+            {
+            	label =  hour.toString().length() < 2?"0"+hour.toString(): hour.toString();
+            	label += ":00";
             }
-
+            else
+            { 
+	            if (hour == 0) {
+	                label = "12am";
+	            } else if (hour <= 11) {
+	                label = hour + "am";
+	            } else if (hour == 12) {
+	                label = "12pm";
+	            } else {
+	                label = (hour - 12) + "pm";
+	            }
+            }
             final float labelWidth = labelPaint.measureText(label);
 
             canvas.drawText(label, 0, label.length(), mHeaderWidth - labelWidth

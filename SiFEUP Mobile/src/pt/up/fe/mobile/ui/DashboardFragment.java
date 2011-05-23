@@ -48,6 +48,16 @@ public class DashboardFragment extends Fragment {
             }
             
         });
+        
+     
+        root.findViewById(R.id.home_btn_friends).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                fireTrackerEvent("Profile");
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+                    
+            }
+            
+        });
 
         root.findViewById(R.id.home_btn_sessions).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -63,18 +73,8 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_starred).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Starred");
-                startActivity(new Intent(getActivity(), StudentActivity.class));
                 // Launch list of sessions and vendors the user has starred
                // startActivity(new Intent(getActivity(), StarredActivity.class));                
-            }
-        });
-
-        root.findViewById(R.id.home_btn_vendors).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                fireTrackerEvent("Sandbox");
-                // Launch vendors list
-              
-                   // startActivity(intent);
             }
         });
 
