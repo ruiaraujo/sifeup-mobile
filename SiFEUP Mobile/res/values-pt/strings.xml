@@ -15,16 +15,16 @@
     <string name="description_now">Go to Now</string>
 
     <string name="title_now_playing">Now Playing</string>
-    <string name="title_schedule">Schedule</string>
+    <string name="title_schedule">Horário</string>
     <string name="title_sessions">Sessions</string>
     <string name="title_session_detail">Session Information</string>
     <string name="title_starred">Starred</string>
     <string name="title_tracks">Tracks</string>
     <string name="title_vendors">Sandbox</string>
     <string name="title_vendor_detail">Company Information</string>
-    <string name="title_exams">Exams</string>
+    <string name="title_exams">Exames</string>
     <string name="title_tagstream">Realtime Stream</string>
-    <string name="title_printing">Printing Quota</string>
+    <string name="title_printing">Saldo</string>
 
     <string name="title_session_tracks">Session tracks</string>
     <string name="title_vendor_tracks">Sandbox pods</string>
@@ -38,7 +38,7 @@
     <string name="btn_exams">Exames</string>
     <string name="btn_starred">Starred</string>
     <string name="btn_friends">Amigos</string>
-    <string name="btn_printing">Saldos</string>
+    <string name="btn_printing">Saldo</string>
     <string name="btn_tuition">Propinas</string>
 
 
