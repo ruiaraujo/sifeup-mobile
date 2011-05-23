@@ -63,6 +63,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_starred).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Starred");
+                startActivity(new Intent(getActivity(), StudentActivity.class));
                 // Launch list of sessions and vendors the user has starred
                // startActivity(new Intent(getActivity(), StarredActivity.class));                
             }
