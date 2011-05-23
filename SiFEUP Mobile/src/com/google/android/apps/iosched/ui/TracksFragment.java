@@ -19,7 +19,7 @@ package com.google.android.apps.iosched.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseActivity;
-import pt.up.fe.mobile.ui.SessionDetailFragment;
+import pt.up.fe.mobile.ui.TuitionDetailFragment;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.AnalyticsUtils;
@@ -129,7 +129,7 @@ public class TracksFragment extends ListFragment implements
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         final Uri trackUri = ScheduleContract.Tracks.buildTrackUri(trackId);
-        intent.putExtra(SessionDetailFragment.EXTRA_TRACK, trackUri);
+        intent.putExtra(TuitionDetailFragment.EXTRA_TRACK, trackUri);
 
         if (NEXT_TYPE_SESSIONS.equals(mNextType)) {
             if (cursor == null) {

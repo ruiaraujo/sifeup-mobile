@@ -63,7 +63,7 @@ import android.widget.TextView;
  * A fragment that shows detail information for a session, including session title, abstract,
  * time information, speaker photos and bios, etc.
  */
-public class SessionDetailFragment extends Fragment implements
+public class TuitionDetailFragment extends Fragment implements
         NotifyingAsyncQueryHandler.AsyncQueryListener,
         CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "SessionDetailFragment";

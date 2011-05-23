@@ -52,8 +52,8 @@
     <string name="btn_exams">Exams</string>
     <string name="btn_sessions">Sessions</string>
     <string name="btn_starred">Starred</string>
-    <string name="btn_vendors">Sandbox</string>
-    <string name="btn_printing">Printing Quota</string>
+    <string name="btn_friends">Amigos</string>
+    <string name="btn_printing">Saldo</string>
 
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
@@ -143,7 +143,8 @@
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     
      <string name="lb_data_fetching">Fetching data...</string>
-    <string name="print_lbl">Printing Quota</string>
+    <string name="print_lbl">Saldo</string>
     <string name="print_balance">7.60 €</string>
+    <string name="btn_tuition">Propinas</string>
 
 </resources>

@@ -28,16 +28,14 @@
         android:drawableTop="@drawable/home_btn_map" />
     <Button android:id="@+id/home_btn_sessions"
         style="@style/DashboardButton"
-        android:text="@string/btn_sessions"
-        android:drawableTop="@drawable/home_btn_sessions" />
+        android:drawableTop="@drawable/home_btn_sessions" android:text="@string/btn_tuition"/>
     <Button android:id="@+id/home_btn_starred"
         style="@style/DashboardButton"
         android:text="@string/btn_starred"
         android:drawableTop="@drawable/home_btn_starred" />
     <Button android:id="@+id/home_btn_vendors"
         style="@style/DashboardButton"
-        android:text="@string/btn_vendors"
-        android:drawableTop="@drawable/home_btn_vendors" />
+        android:drawableTop="@drawable/home_btn_vendors" android:text="@string/btn_friends"/>
     <Button android:id="@+id/home_btn_printing"
         style="@style/DashboardButton"
         android:drawableTop="@drawable/home_btn_printer"

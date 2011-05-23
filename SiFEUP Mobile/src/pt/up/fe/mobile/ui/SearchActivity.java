@@ -23,7 +23,6 @@ import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
 import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
 import com.google.android.apps.iosched.ui.BaseMultiPaneActivity;
 import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
-import com.google.android.apps.iosched.ui.phone.SessionDetailActivity;
 import com.google.android.apps.iosched.ui.phone.VendorDetailActivity;
 
 import android.app.SearchManager;
@@ -53,7 +52,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
     private TabHost mTabHost;
     private TabWidget mTabWidget;
 
-    private SessionsFragment mSessionsFragment;
+    private TuitionFragment mSessionsFragment;
     private VendorsFragment mVendorsFragment;
 
     @Override
@@ -114,9 +113,9 @@ public class SearchActivity extends BaseMultiPaneActivity {
         ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (SessionsFragment) fm.findFragmentByTag("sessions");
+        mSessionsFragment = (TuitionFragment) fm.findFragmentByTag("sessions");
         if (mSessionsFragment == null) {
-            mSessionsFragment = new SessionsFragment();
+            mSessionsFragment = new TuitionFragment();
             mSessionsFragment.setArguments(getSessionsFragmentArguments());
             fm.beginTransaction()
                     .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
@@ -184,10 +183,10 @@ public class SearchActivity extends BaseMultiPaneActivity {
         if (findViewById(R.id.fragment_container_search_detail) != null) {
             // The layout we currently have has a detail container, we can add fragments there.
             findViewById(android.R.id.empty).setVisibility(View.GONE);
-            if (SessionDetailActivity.class.getName().equals(activityClassName)) {
+            if (TuitionDetailActivity.class.getName().equals(activityClassName)) {
                 clearSelectedItems();
                 return new BaseMultiPaneActivity.FragmentReplaceInfo(
-                        SessionDetailFragment.class,
+                        TuitionDetailFragment.class,
                         "session_detail",
                         R.id.fragment_container_search_detail);
             } else if (VendorDetailActivity.class.getName().equals(activityClassName)) {

@@ -100,10 +100,9 @@
                 <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.track" />
             </intent-filter>
         </activity>
-
+         
         <activity
-            android:name="com.google.android.apps.iosched.ui.phone.SessionsActivity"
-            android:label="@string/title_sessions">
+            android:label="@string/title_sessions" android:name=".ui.TuitionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -112,7 +111,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.google.android.apps.iosched.ui.phone.SessionDetailActivity">
+        <activity android:name=".ui.TuitionDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -154,12 +153,14 @@
             android:name="android.app.default_searchable"
             android:value="com.google.android.apps.iosched.ui.SearchActivity" />
 
-        <service android:name="com.google.android.apps.iosched.service.SyncService" />
+        <service android:name="com.google.android.apps.iosched.service.SyncService" ></service>
 
         <provider
             android:name="com.google.android.apps.iosched.provider.ScheduleProvider"
             android:authorities="com.google.android.apps.iosched"
-            android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
+            android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" ></provider>
+       
+        
 
     </application>
 </manifest>

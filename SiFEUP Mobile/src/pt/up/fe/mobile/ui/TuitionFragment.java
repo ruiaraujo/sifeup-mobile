@@ -49,7 +49,7 @@ import static com.google.android.apps.iosched.util.UIUtils.formatSessionSubtitle
 /**
  * A {@link ListFragment} showing a list of sessions.
  */
-public class SessionsFragment extends ListFragment implements
+public class TuitionFragment extends ListFragment implements
         NotifyingAsyncQueryHandler.AsyncQueryListener {
 
     public static final String EXTRA_SCHEDULE_TIME_STRING =
@@ -116,7 +116,7 @@ public class SessionsFragment extends ListFragment implements
 
         // If caller launched us with specific track hint, pass it along when
         // launching session details. Also start a query to load the track info.
-        mTrackUri = intent.getParcelableExtra(SessionDetailFragment.EXTRA_TRACK);
+        mTrackUri = intent.getParcelableExtra(TuitionDetailFragment.EXTRA_TRACK);
         if (mTrackUri != null) {
             mHandler.startQuery(TracksQuery._TOKEN, mTrackUri, TracksQuery.PROJECTION);
         }
@@ -222,7 +222,7 @@ public class SessionsFragment extends ListFragment implements
                 ScheduleContract.Sessions.SESSION_ID));
         final Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
-        intent.putExtra(SessionDetailFragment.EXTRA_TRACK, mTrackUri);
+       // intent.putExtra(TuitionDetailFragment.EXTRA_TRACK, mTrackUri);
         ((BaseActivity) getActivity()).openActivityOrFragment(intent);
 
         getListView().setItemChecked(position, true);

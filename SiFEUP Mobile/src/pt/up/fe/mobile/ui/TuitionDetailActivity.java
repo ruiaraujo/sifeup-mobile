@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.phone;
+package pt.up.fe.mobile.ui;
 
-import pt.up.fe.mobile.ui.SessionDetailFragment;
 
 import com.google.android.apps.iosched.ui.BaseSinglePaneActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class SessionDetailActivity extends BaseSinglePaneActivity {
+public class TuitionDetailActivity extends BaseSinglePaneActivity {
     @Override
     protected Fragment onCreatePane() {
-        return new SessionDetailFragment();
+        return new TuitionDetailFragment();
     }
 
     @Override

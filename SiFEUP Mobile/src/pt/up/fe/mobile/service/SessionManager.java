@@ -1,5 +1,8 @@
 package pt.up.fe.mobile.service;
 
+import java.util.Date;
+import java.util.Vector;
+
 /**
  * Singleton class that holds the active Session cookie.
  */
@@ -60,7 +63,8 @@ public class SessionManager {
 	}
 	
 	//TODO: temporary hack, waiting for new feature in the webservice.
-	private String transformer(String login){
+	private String transformer(String login)
+	{
 		if ( login.startsWith("ee") )
 		{
 			return login.substring(2,4) + "0503" + login.substring(4);

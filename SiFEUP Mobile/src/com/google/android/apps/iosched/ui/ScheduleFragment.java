@@ -61,7 +61,7 @@ import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseActivity;
-import pt.up.fe.mobile.ui.SessionsFragment;
+import pt.up.fe.mobile.ui.TuitionFragment;
 
 /**
  * Shows a horizontally-pageable calendar of conference days. Horizontaly paging is achieved using
@@ -339,7 +339,7 @@ public class ScheduleFragment extends Fragment implements
             final Uri sessionsUri = ScheduleContract.Blocks.buildSessionsUri(blockId);
 
             final Intent intent = new Intent(Intent.ACTION_VIEW, sessionsUri);
-            intent.putExtra(SessionsFragment.EXTRA_SCHEDULE_TIME_STRING,
+            intent.putExtra(TuitionFragment.EXTRA_SCHEDULE_TIME_STRING,
                     ((BlockView) view).getBlockTimeString());
             ((BaseActivity) getActivity()).openActivityOrFragment(intent);
         }

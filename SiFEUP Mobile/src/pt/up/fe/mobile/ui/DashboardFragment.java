@@ -55,7 +55,7 @@ public class DashboardFragment extends Fragment {
 
         root.findViewById(R.id.home_btn_sessions).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                fireTrackerEvent("Sessions");
+                fireTrackerEvent("Tuition");
                 // Launch sessions list
                 final Intent intent = new Intent(Intent.ACTION_VIEW,
                         ScheduleContract.Tracks.CONTENT_URI);
