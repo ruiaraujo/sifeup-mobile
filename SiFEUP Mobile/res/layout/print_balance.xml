@@ -14,15 +14,40 @@
   limitations under the License.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
     <TextView
     	android:layout_height="wrap_content"
     	android:layout_width="wrap_content"
-    	android:layout_gravity="center"
-    	android:textSize="31.0sp"
+    	android:paddingTop="25dp"
+    	android:paddingLeft="15dp"
+    	android:layout_gravity="left"
+    	android:textSize="25.0sp"
     	android:id="@+id/print_balance"
     	android:bufferType="normal"
-    	android:text=""></TextView>
-</FrameLayout>
+    	android:text=""/>
+    <TextView
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"
+    	android:paddingTop="25dp"
+    	android:paddingLeft="15dp"
+    	android:layout_gravity="left"
+    	android:textSize="20.0sp"
+    	android:id="@+id/print_desc"
+    	android:bufferType="normal"
+    	android:text=""/>
+    	<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+	    	android:gravity="center"
+    		android:paddingTop="25dp">
+    		<Button 
+	    		android:text="@string/btn_print_reference"
+	    		android:id="@+id/print_generate_reference"
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:gravity="center"/>
+    	</LinearLayout>
+</LinearLayout>

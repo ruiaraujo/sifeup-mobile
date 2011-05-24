@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class PrintFragment extends Fragment {
 
     private String saldo;
     private TextView display;
+    private TextView desc;
     public String getSaldo() {
 		return saldo;
 	}
@@ -62,6 +64,13 @@ public class PrintFragment extends Fragment {
     	new PrintTask().execute();
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
     	display = ((TextView)root.findViewById(R.id.print_balance));
+    	desc = ((TextView)root.findViewById(R.id.print_desc));
+    	root.findViewById(R.id.print_generate_reference).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "I do nothing yet", Toast.LENGTH_LONG).show();
+			}
+		});
     	return root;
 
     }
@@ -76,8 +85,12 @@ public class PrintFragment extends Fragment {
         	if ( !saldo.equals("") )
         	{
 				Log.e("Login","success");
-				display.setText(saldo);
+				display.setText(getString(R.string.print_lbl) + ": "+ saldo+" €");
 				PrintFragment.this.saldo = saldo;
+				long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
+				if ( pagesA4Black > 0 )
+					desc.setText(getString(R.string.print_can_print_a4_black_begin) + " "+
+							pagesA4Black + " "+ getString(R.string.print_can_print_a4_black_end));
 			}
 			else{	
 				if ( getActivity() != null ) 
@@ -103,7 +116,7 @@ public class PrintFragment extends Fragment {
     				return "";
 
 	    		JSONObject jObject = new JSONObject(page);			
-				return getString(R.string.print_lbl) + " "+ jObject.optDouble("saldo")+" €";
+				return jObject.optString("saldo");
 				
 				
 			} catch (JSONException e) {
