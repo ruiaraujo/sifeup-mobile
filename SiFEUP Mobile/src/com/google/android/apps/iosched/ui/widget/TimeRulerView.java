@@ -149,7 +149,7 @@ public class TimeRulerView extends View {
             String label;
             final Integer hour = mStartHour + i;
             
-            if (prefClock.equals("24"))
+            if (prefClock == null || prefClock.equals("24"))
             {
             	label =  hour.toString().length() < 2?"0"+hour.toString(): hour.toString();
             	label += ":00";
