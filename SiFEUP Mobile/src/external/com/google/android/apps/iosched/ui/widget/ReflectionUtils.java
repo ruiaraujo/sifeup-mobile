@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.widget;
+package external.com.google.android.apps.iosched.ui.widget;
 
 import java.lang.reflect.InvocationTargetException;
 

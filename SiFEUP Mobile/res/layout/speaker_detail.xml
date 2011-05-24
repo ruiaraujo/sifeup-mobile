@@ -19,7 +19,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/body_padding_large">
 
-    <com.google.android.apps.iosched.ui.widget.BezelImageView android:id="@+id/speaker_image"
+    <external.com.google.android.apps.iosched.ui.widget.BezelImageView android:id="@+id/speaker_image"
         android:scaleType="centerCrop"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"

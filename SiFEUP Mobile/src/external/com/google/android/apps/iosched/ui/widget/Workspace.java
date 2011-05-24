@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.widget;
+package external.com.google.android.apps.iosched.ui.widget;
 
-import com.google.android.apps.iosched.util.MotionEventUtils;
+import external.com.google.android.apps.iosched.util.MotionEventUtils;
 
 import android.content.Context;
 import android.graphics.Canvas;

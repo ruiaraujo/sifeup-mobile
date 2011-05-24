@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.util;
+package external.com.google.android.apps.iosched.util;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.HomeActivity;
@@ -73,7 +73,7 @@ public class ActivityHelper {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            return true;//Changing this to false allow the regular menu to show.
+            return false;//Changing this to false allow the regular menu to show.
         }
         return false;
     }

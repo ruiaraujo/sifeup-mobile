@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.util;
+package external.com.google.android.apps.iosched.util;
 
 import android.content.ComponentName;
 import android.content.Context;

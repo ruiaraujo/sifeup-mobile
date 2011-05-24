@@ -19,7 +19,7 @@ package pt.up.fe.mobile.ui;
 
 import java.util.ArrayList;
 
-import com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -120,7 +120,7 @@ public class ExamsFragment extends Fragment {
 		String courseName; // nome da cadeira
 		String weekDay; // [1 ... 6]
 		String date; // data do exame
-		String startTime; // hora de início
+		String startTime; // hora de inï¿½cio
 		String endTime; // hora de fim
 		String rooms; // salas
 	}

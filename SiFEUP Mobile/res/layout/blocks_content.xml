@@ -14,7 +14,7 @@
   limitations under the License.
   -->
 <view
-    class="com.google.android.apps.iosched.ui.widget.ObservableScrollView"
+    class="external.com.google.android.apps.iosched.ui.widget.ObservableScrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:iosched="http://schemas.android.com/apk/res/pt.up.fe.mobile"
     android:id="@+id/blocks_scroll"
@@ -22,14 +22,14 @@
     android:layout_height="fill_parent"
     android:fadingEdge="vertical">
     <view
-        class="com.google.android.apps.iosched.ui.widget.BlocksLayout"
+        class="external.com.google.android.apps.iosched.ui.widget.BlocksLayout"
         android:id="@+id/blocks"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layerType="software"
         iosched:columns="2">
         <view
-            class="com.google.android.apps.iosched.ui.widget.TimeRulerView"
+            class="external.com.google.android.apps.iosched.ui.widget.TimeRulerView"
             android:id="@id/blocks_ruler"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -17,7 +17,7 @@
 package pt.up.fe.mobile.ui;
 
 
-import com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

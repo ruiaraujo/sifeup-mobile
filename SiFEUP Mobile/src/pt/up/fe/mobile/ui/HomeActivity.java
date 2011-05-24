@@ -3,7 +3,7 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.Bundle;
 import android.view.Menu;

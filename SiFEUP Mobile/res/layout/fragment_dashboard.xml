@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<com.google.android.apps.iosched.ui.widget.DashboardLayout
+<external.com.google.android.apps.iosched.ui.widget.DashboardLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -43,4 +43,4 @@
         android:drawableTop="@drawable/home_btn_printer"
         android:text="@string/btn_printing"/>
 
-</com.google.android.apps.iosched.ui.widget.DashboardLayout>
+</external.com.google.android.apps.iosched.ui.widget.DashboardLayout>

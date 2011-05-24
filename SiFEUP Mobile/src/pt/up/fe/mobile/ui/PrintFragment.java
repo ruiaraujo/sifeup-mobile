@@ -17,7 +17,7 @@
 package pt.up.fe.mobile.ui;
 
 
-import com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

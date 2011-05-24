@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.widget;
+package external.com.google.android.apps.iosched.ui.widget;
 
 import pt.up.fe.mobile.R;
 import android.content.Context;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.util;
+package external.com.google.android.apps.iosched.util;
 
 import android.graphics.Rect;
 import android.graphics.RectF;

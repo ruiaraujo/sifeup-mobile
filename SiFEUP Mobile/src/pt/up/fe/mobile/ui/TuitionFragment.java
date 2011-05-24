@@ -19,10 +19,10 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.util.ActivityHelper;
-import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
-import com.google.android.apps.iosched.util.UIUtils;
+import external.com.google.android.apps.iosched.util.ActivityHelper;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +42,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import static com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
+import static external.com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
 
 /**
  * A {@link ListFragment} showing a list of sessions.

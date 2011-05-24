@@ -370,7 +370,7 @@ public class SifeupAPI {
 		if ( page == null )
 		{
 			Log.e("JSON", "null page");
-			return false;
+			return true;
 		}
 		JSONObject jObject = new JSONObject(page);
 		String erro = null;

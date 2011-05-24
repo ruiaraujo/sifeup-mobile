@@ -7,7 +7,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 
-import com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

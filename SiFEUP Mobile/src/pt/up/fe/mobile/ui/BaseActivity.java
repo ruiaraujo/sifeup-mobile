@@ -19,7 +19,7 @@ package pt.up.fe.mobile.ui;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 
-import com.google.android.apps.iosched.util.ActivityHelper;
+import external.com.google.android.apps.iosched.util.ActivityHelper;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

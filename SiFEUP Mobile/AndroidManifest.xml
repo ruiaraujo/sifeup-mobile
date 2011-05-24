@@ -105,7 +105,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.TuitionDetailActivity">
+        <activity android:name="ui.TuitionDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -127,7 +127,7 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.google.android.apps.iosched.ui.SearchActivity" />
+            android:value=".ui.SearchActivity" />
 
 
     </application>

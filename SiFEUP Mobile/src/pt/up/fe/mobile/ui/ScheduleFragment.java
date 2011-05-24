@@ -12,14 +12,16 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 
 
-import com.google.android.apps.iosched.ui.widget.BlockView;
-import com.google.android.apps.iosched.ui.widget.BlocksLayout;
-import com.google.android.apps.iosched.ui.widget.ObservableScrollView;
-import com.google.android.apps.iosched.ui.widget.Workspace;
-import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.MotionEventUtils;
-import com.google.android.apps.iosched.util.UIUtils;
 
+import external.com.google.android.apps.iosched.ui.widget.BlockView;
+import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
+import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
+import external.com.google.android.apps.iosched.ui.widget.Workspace;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.MotionEventUtils;
+import external.com.google.android.apps.iosched.util.UIUtils;
+
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -154,15 +156,41 @@ public class ScheduleFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_now) {
-          //  if (!updateNowView(true)) {
+            if (!updateNowView(true)) {
                 Toast.makeText(getActivity(), R.string.toast_now_not_visible,
                         Toast.LENGTH_SHORT).show();
-            //}
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-    
+    /**
+     * Update position and visibility of "now" view.
+     */
+    private boolean updateNowView(boolean forceScroll) {
+        final long now = UIUtils.getCurrentTime(getActivity());
+
+        Day nowDay = null; // effectively Day corresponding to today
+        for (Day day : mDays) {
+            if (now >= day.timeStart && now <= day.timeEnd) {
+                nowDay = day;
+                day.nowView.setVisibility(View.VISIBLE);
+            } else {
+                day.nowView.setVisibility(View.GONE);
+            }
+        }
+
+        if (nowDay != null && forceScroll) {
+            // Scroll to show "now" in center
+            mWorkspace.setCurrentScreen(nowDay.index);
+            final int offset = nowDay.scrollView.getHeight() / 2;
+            nowDay.nowView.requestRectangleOnScreen(new Rect(0, offset, 0, offset), true);
+            nowDay.blocksView.requestLayout();
+            return true;
+        }
+
+        return false;
+    }
 
     /** Classe privada para a busca de dados ao servidor */
     private class ScheduleTask extends AsyncTask<Void, Void, String> {

@@ -19,11 +19,11 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 
-import com.google.android.apps.iosched.util.ActivityHelper;
-import com.google.android.apps.iosched.util.AnalyticsUtils;
-import com.google.android.apps.iosched.util.FractionalTouchDelegate;
-import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
-import com.google.android.apps.iosched.util.UIUtils;
+import external.com.google.android.apps.iosched.util.ActivityHelper;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.FractionalTouchDelegate;
+import external.com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.ContentValues;
 import android.content.Intent;
