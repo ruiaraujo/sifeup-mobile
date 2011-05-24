@@ -305,7 +305,7 @@ public class SifeupAPI {
 			}
 			bis.close();
 			in.close();
-			return new String(baf.toByteArray());
+				return new String(baf.toByteArray(),"ISO-8859-1");
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
