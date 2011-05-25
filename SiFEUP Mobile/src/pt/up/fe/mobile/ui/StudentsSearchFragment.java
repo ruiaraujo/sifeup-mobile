@@ -11,6 +11,8 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,7 +22,8 @@ import android.widget.Toast;
 
 public class StudentsSearchFragment extends ListFragment {
 	
-	Student me = new Student();
+	// query is in StudentsSearchActivity
+	private Student me = new Student();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +53,8 @@ public class StudentsSearchFragment extends ListFragment {
 		             HashMap<String, String> map = new HashMap<String, String>();
 		             // name
 		             map.put("chair", me.name);
-		             // academic year
-		             map.put("time", me.academicYear);
-		             // course acronym
-		             map.put("room", me.courseAcronym);
+		             // academic year and course acronym
+		             map.put("time", parseStudentCode(me.code) + ", " + me.academicYear + "º Ano, " + me.courseAcronym);
 		             fillMaps.add(map);
 		         //}
 				
@@ -169,5 +170,27 @@ public class StudentsSearchFragment extends ListFragment {
 		}
 		Log.e("JSON", "student not found");
 		return false;
+	}
+	
+	private String parseStudentCode(String code) {
+		if(code.length()!=9)
+			return null;
+		
+		String year = code.substring(0, 2);
+		String faculty = code.substring(2, 4);
+		String course = code.substring(4, 6);
+		String studentYearNumber = code.substring(6);
+		String studentLogin = "";
+		
+		Log.e("APAPAP", year);
+		Log.e("APAPAP", faculty);
+		Log.e("APAPAP", course);
+		Log.e("APAPAP", studentYearNumber);
+		Log.e("APAPAP", studentLogin);
+		
+		if(course.equals("03")){ studentLogin += "ee"; }
+		if(course.equals("09")){ studentLogin += "ei"; }
+		
+		return studentLogin + year + studentYearNumber;
 	}
 }
