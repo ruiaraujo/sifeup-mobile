@@ -106,7 +106,7 @@
 
     <string name="permission_write">Modify Google I/O schedule data</string>
 
-    <string name="toast_now_not_visible">Press this button during Google I/O to show the current time.</string>
+    <string name="toast_now_not_visible">Pressione este botão durante os dias da semana para mostrar o tempo actual.</string>
 
     <!-- Notes integration -->
     <string name="notes_catch_powered_by">Notes are powered by <a href="http://www.catch.com/">Catch.com</a>.</string>
@@ -120,10 +120,10 @@
 
     <!-- Login -->
    	<string name="bt_cancel">Sair</string>
-    <string name="lb_login_cancel">Connecting...</string>
+    <string name="lb_login_cancel">Conectando...</string>
     <string name="bt_login">Entrar</string>
     <string name="bt_reset">Limpar</string>
-    <string name="lb_login_remember">   Remember Me</string>
+    <string name="lb_login_remember">Remember Me</string>
     <string name="lb_login_username">Utilizador:</string>
     <string name="lb_login_password">Senha:</string>
     <string name="toast_login_error_empty_username">Utilizador não pode estar vazio.</string>
@@ -132,6 +132,8 @@
      <string name="lb_data_fetching">Obtendo dados...</string>
     <string name="print_lbl">Saldo</string>
     <string name="print_balance">7.60 €</string>
+    <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
+    <string name="btn_print_reference">Gerar Referência</string>
     
     <string name="toast_auth_error">A sua sessão terminou. Por favor, faça login de novo.</string>
 

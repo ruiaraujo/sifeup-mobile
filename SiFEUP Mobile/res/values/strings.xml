@@ -118,7 +118,7 @@
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Reset</string>
-    <string name="lb_login_remember">   Remember Me</string>
+    <string name="lb_login_remember">Remember Me</string>
     <string name="lb_login_username">Username:</string>
     <string name="lb_login_password">Password:</string>
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
@@ -129,8 +129,7 @@
     <string name="lb_data_fetching">Fetching data...</string>
     <string name="print_lbl">Printing Quota</string>
     <string name="print_balance">7.60 €</string>
-    <string name="print_can_print_a4_black_begin">You can print up to</string>
-     <string name="print_can_print_a4_black_end">pages</string>
+    <string name="print_can_print_a4_black">You can print up to <xliff:g id="pages">%1$s</xliff:g> black A4 pages.</string>
     <string name="btn_print_reference">Generate Reference</string>
     
     <string name="toast_auth_error">Your session timed out. Please login again.</string>

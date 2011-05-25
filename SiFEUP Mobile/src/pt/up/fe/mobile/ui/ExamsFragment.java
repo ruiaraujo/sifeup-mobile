@@ -18,17 +18,16 @@ package pt.up.fe.mobile.ui;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -39,9 +38,8 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 
-public class ExamsFragment extends Fragment {
+public class ExamsFragment extends ListFragment {
 
-    private TextView display;
     /** Stores all exams from Student */
 	private ArrayList<Exam> exams = new ArrayList<Exam>();
 
@@ -49,15 +47,8 @@ public class ExamsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-    }
+        new ExamsTask().execute();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.exams, null);
-		display = ((TextView)root.findViewById(R.id.exams_test));
-		new ExamsTask().execute();
-        return root;
     }
 
     /** Classe privada para a busca de dados ao servidor */
@@ -72,8 +63,26 @@ public class ExamsFragment extends Fragment {
         	if ( !result.equals("") )
         	{
 				Log.e("Login","success");
-				display.setText(result);
-			}
+				
+				 String[] from = new String[] {"chair", "time", "room"};
+		         int[] to = new int[] { R.id.exam_chair, R.id.exam_time,R.id.exam_room };
+			         // prepare the list of all records
+		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		         for(Exam e : exams){
+		             HashMap<String, String> map = new HashMap<String, String>();
+		             String tipo = "( " +  (e.type.contains("Mini teste")?"M":"E") + " ) ";
+		             map.put("chair", tipo + e.courseName);
+		             map.put("time", e.weekDay +", " + e.date + ": " + e.startTime +"-" + e.endTime);
+		             map.put("room", e.rooms );
+		             fillMaps.add(map);
+		         }
+				 
+		         // fill in the grid_item layout
+		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
+		         setListAdapter(adapter);
+		         Log.e("JSON", "exams visual list loaded");
+
+    		}
 			else{	
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
@@ -150,7 +159,7 @@ public class ExamsFragment extends Fragment {
 				if(jExam.has("uc")) exam.courseAcronym = jExam.getString("uc");
 				if(jExam.has("uc_nome")) exam.courseName = jExam.getString("uc_nome");
 				if(jExam.has("dia")) exam.weekDay = jExam.getString("dia");
-				if(jExam.has("Data")) exam.date = jExam.getString("Data");
+				if(jExam.has("data")) exam.date = jExam.getString("data");
 				if(jExam.has("hora_inicio")) exam.startTime = jExam.getString("hora_inicio");
 				if(jExam.has("hora_fim")) exam.endTime = jExam.getString("hora_fim");
 				if(jExam.has("salas")) exam.rooms = jExam.getString("salas");

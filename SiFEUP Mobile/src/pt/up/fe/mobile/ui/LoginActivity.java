@@ -68,6 +68,7 @@ public class LoginActivity extends Activity
         	}
         }
     	check.setChecked(rememberUser);
+    	check.setText("   " + check.getText());
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override

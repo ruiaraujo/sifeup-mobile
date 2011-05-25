@@ -89,9 +89,8 @@ public class PrintFragment extends Fragment {
 				PrintFragment.this.saldo = saldo;
 				long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
 				if ( pagesA4Black > 0 )
-					desc.setText(getString(R.string.print_can_print_a4_black_begin) + " "+
-							pagesA4Black + " "+ getString(R.string.print_can_print_a4_black_end));
-			}
+					desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
+								}
 			else{	
 				if ( getActivity() != null ) 
 				{
