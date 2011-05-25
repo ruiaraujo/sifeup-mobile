@@ -14,6 +14,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Profile");
     }
 
@@ -46,7 +50,24 @@ public class ProfileFragment extends Fragment {
         return root;
     }
     
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.friends_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
     
+
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_friends) {
+                Toast.makeText(getActivity(), "Exemplo de Acção",
+                        Toast.LENGTH_SHORT).show();
+            
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     /** Classe privada para a busca de dados ao servidor */
     private class ProfileTask extends AsyncTask<Void, Void, String> {
 

@@ -27,7 +27,8 @@
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
     <string name="description_now">Go to Now</string>
-
+    <string name="description_add">Add Friend</string>
+    
     <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_sessions">Sessions</string>
@@ -100,7 +101,7 @@
 
     <string name="permission_write">Modify Google I/O schedule data</string>
 
-    <string name="toast_now_not_visible">Press this button during Google I/O to show the current time.</string>
+    <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
 
     <!-- Notes integration -->
     <string name="notes_catch_powered_by">Notes are powered by <a href="http://www.catch.com/">Catch.com</a>.</string>

@@ -13,6 +13,7 @@
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
     <string name="description_now">Go to Now</string>
+    <string name="description_add">Adicionar Amigo</string>
 
     <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Horário</string>
@@ -121,7 +122,7 @@
    	<string name="bt_cancel">Sair</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Entrar</string>
-    <string name="bt_reset">Reset</string>
+    <string name="bt_reset">Limpar</string>
     <string name="lb_login_remember">   Remember Me</string>
     <string name="lb_login_username">Utilizador:</string>
     <string name="lb_login_password">Senha:</string>
