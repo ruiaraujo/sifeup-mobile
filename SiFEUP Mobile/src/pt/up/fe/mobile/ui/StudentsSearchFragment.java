@@ -54,7 +54,7 @@ public class StudentsSearchFragment extends ListFragment {
 		             // name
 		             map.put("chair", me.name);
 		             // academic year and course acronym
-		             map.put("time", parseStudentCode(me.code) + ", " + me.academicYear + "º Ano, " + me.courseAcronym);
+		             map.put("time", me.email + ", " + me.academicYear + "º Ano, " + me.courseAcronym);
 		             fillMaps.add(map);
 		         //}
 				
@@ -172,6 +172,7 @@ public class StudentsSearchFragment extends ListFragment {
 		return false;
 	}
 	
+	/*
 	private String parseStudentCode(String code) {
 		if(code.length()!=9)
 			return null;
@@ -192,5 +193,5 @@ public class StudentsSearchFragment extends ListFragment {
 		if(course.equals("09")){ studentLogin += "ei"; }
 		
 		return studentLogin + year + studentYearNumber;
-	}
+	}*/
 }
