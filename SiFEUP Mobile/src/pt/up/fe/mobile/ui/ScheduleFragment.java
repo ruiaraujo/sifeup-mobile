@@ -169,7 +169,7 @@ public class ScheduleFragment extends Fragment implements
      * Update position and visibility of "now" view.
      */
     private boolean updateNowView(boolean forceScroll) {
-        final long now = UIUtils.getCurrentTime(getActivity());
+        final long now = UIUtils.getCurrentTime();
 
         Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
@@ -180,12 +180,14 @@ public class ScheduleFragment extends Fragment implements
                 day.nowView.setVisibility(View.GONE);
             }
         }
-
         if (nowDay != null && forceScroll) {
+        	long hours  = ( now - nowDay.timeStart) / 3600000;
+        	double timeOffset =  (double)(hours -nowDay.blocksView.getTimeRulerStartHour() ) 
+        					/ (double)nowDay.blocksView.getTimeRulerHours();
             // Scroll to show "now" in center
             mWorkspace.setCurrentScreen(nowDay.index);
-            final int offset = nowDay.scrollView.getHeight() / 2;
-            nowDay.nowView.requestRectangleOnScreen(new Rect(0, offset, 0, offset), true);
+            final int offset = (int) (nowDay.scrollView.getHeight()* timeOffset);
+            nowDay.scrollView.scrollTo(0, offset);
             nowDay.blocksView.requestLayout();
             return true;
         }

@@ -51,7 +51,9 @@ public class TimeRulerView extends View {
     private int mLabelColor = Color.BLACK;
     private int mDividerColor = Color.LTGRAY;
     private int mStartHour = 0;
-    private int mEndHour = 23;
+
+
+	private int mEndHour = 23;
 
     public TimeRulerView(Context context) {
         this(context, null);
@@ -176,4 +178,12 @@ public class TimeRulerView extends View {
     public int getHeaderWidth() {
         return mHeaderWidth;
     }
+    
+    public int getStartHour() {
+		return mStartHour;
+	}
+
+	public int getEndHour() {
+		return mEndHour;
+	}
 }

@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import java.util.Formatter;
 import java.util.List;
+import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
 
@@ -129,11 +130,12 @@ public class UIUtils {
                 11 * Color.blue(color)) / 100) <= BRIGHTNESS_THRESHOLD;
     }
 
-    public static long getCurrentTime(final Context context) {
-        //SharedPreferences prefs = context.getSharedPreferences("mock_data", 0);
-        //prefs.edit().commit();
-        //return prefs.getLong("mock_current_time", System.currentTimeMillis());
-        return System.currentTimeMillis();
+    public static long getCurrentTime() {
+    	long now = System.currentTimeMillis (); //Gets current local time in ms
+        TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
+        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
+        now += tz_offset_gmt*3600000;
+        return now;
     }
 
     public static Drawable getIconForIntent(final Context context, Intent i) {

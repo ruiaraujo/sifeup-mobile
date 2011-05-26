@@ -126,7 +126,7 @@ public class BlocksLayout extends ViewGroup {
 
         // Align now view to match current time
         final View nowView = mNowView;
-        final long now = UIUtils.getCurrentTime(getContext());
+        final long now = UIUtils.getCurrentTime();
 
         final int top = rulerView.getTimeVerticalOffset(now);
         final int bottom = top + nowView.getMeasuredHeight();
@@ -134,5 +134,16 @@ public class BlocksLayout extends ViewGroup {
         final int right = getWidth();
 
         nowView.layout(left, top, right, bottom);
+    }
+    
+    
+    public int getTimeRulerHours(){
+    	return mRulerView.getEndHour() - mRulerView.getStartHour();
+    }
+    public int getTimeRulerStartHour(){
+    	return mRulerView.getStartHour();
+    }
+    public int getTimeRulerEndHour(){
+    	return mRulerView.getEndHour();
     }
 }
