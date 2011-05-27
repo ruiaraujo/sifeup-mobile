@@ -29,7 +29,6 @@
         style="@style/ListItemSubtitle" android:id="@+id/tuition_history_paid" android:layout_gravity="right|center_vertical"/>   
      <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tuition_history_paid"
         style="@style/ListItemSubtitle"
-        android:id="@+id/tuition_history_to_pay" android:layout_gravity="right|center_vertical" android:textColor="#ff0000"/>   
+        android:id="@+id/tuition_history_to_pay" android:textColor="#ff0000" android:layout_below="@id/tuition_history_year" android:layout_gravity="center_vertical" android:layout_alignParentRight="true"/>   
 </RelativeLayout>

@@ -7,8 +7,7 @@ import android.support.v4.app.Fragment;
 public class TuitionHistoryActivity extends BaseSinglePaneActivity {
 	
     protected Fragment onCreatePane() {
-    	
-        return new TuitionHistoryFragment();
+    	return new TuitionHistoryFragment();
     }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

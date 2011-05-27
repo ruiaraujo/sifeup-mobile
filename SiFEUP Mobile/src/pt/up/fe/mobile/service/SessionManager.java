@@ -7,6 +7,7 @@ public class SessionManager {
 	
 	private String cookie;
 	private String loginCode;
+	public static TuitionHistory tuitionHistory=new TuitionHistory();
 
 	private SessionManager() {
 	}

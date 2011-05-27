@@ -18,6 +18,7 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.*;
 
 import external.com.google.android.apps.iosched.util.ActivityHelper;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
@@ -44,12 +45,16 @@ import android.widget.TextView;
 
 import static external.com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
 
+
 /**
  * A {@link ListFragment} showing a list of sessions.
  */
 public class TuitionFragment extends ListFragment implements
         NotifyingAsyncQueryHandler.AsyncQueryListener {
 
+	YearsTuition year;
+	
+	
     public static final String EXTRA_SCHEDULE_TIME_STRING =
             "com.google.android.iosched.extra.SCHEDULE_TIME_STRING";
 

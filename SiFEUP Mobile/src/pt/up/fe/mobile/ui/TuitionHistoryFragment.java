@@ -23,10 +23,13 @@ import java.util.List;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -38,7 +41,7 @@ import pt.up.fe.mobile.service.*;
 
 public class TuitionHistoryFragment extends ListFragment {
 
-   TuitionHistory history=new TuitionHistory();
+   
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +50,29 @@ public class TuitionHistoryFragment extends ListFragment {
         new TuitionTask().execute();
 
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        // Launch viewer for specific session, passing along any track knowledge
+        // that should influence the title-bar.
+        //final Cursor cursor = (Cursor)mAdapter.getItem(position);
+      /* final String sessionId = cursor.getString(cursor.getColumnIndex(
+                ScheduleContract.Sessions.SESSION_ID));
+        final Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
+       // intent.putExtra(TuitionDetailFragment.EXTRA_TRACK, mTrackUri);
+        ((BaseActivity) getActivity()).openActivityOrFragment(intent);
+
+        getListView().setItemChecked(position, true);
+        mCheckedPosition = position;*/
+    }
 
     /** Classe privada para a busca de dados ao servidor */
     private class TuitionTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null && !history.isLoaded()) 
+    		if ( getActivity() != null && !SessionManager.tuitionHistory.isLoaded()) 
     			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
     	}
 
@@ -66,13 +86,13 @@ public class TuitionHistoryFragment extends ListFragment {
 			    //prepare the list of all records
 		        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		         
-		        for(YearsTuition y: history.getHistory()){
+		        for(YearsTuition y: SessionManager.tuitionHistory.getHistory()){
 		            HashMap<String, String> map = new HashMap<String, String>();
 		            //String tipo = "( " +  (e.type.contains("Mini teste")?"M":"E") + " ) ";
-		            map.put("year",y.getYear());
-		            map.put("paid", y.getTotal_paid()+"€");
+		            map.put("year", getString(R.string.lbl_year)+" "+y.getYear());
+		            map.put("paid", getString(R.string.lbl_paid)+": "+y.getTotal_paid()+"€");
 		            if(y.getTotal_in_debt()>0.0)
-		            	map.put("to_pay", "-"+y.getTotal_in_debt()+"€");
+		            	map.put("to_pay", getString(R.string.lbl_still_to_pay)+": "+y.getTotal_in_debt()+"€");
 		            fillMaps.add(map);
 		        }
 				 
@@ -99,7 +119,7 @@ public class TuitionHistoryFragment extends ListFragment {
 		@Override
 		protected String doInBackground(Void ... theVoid) {
 			try {
-			  		if(!history.isLoaded())
+			  		if(!SessionManager.tuitionHistory.isLoaded())
 			  		{
 			  			String page = "";
 		    			page = SifeupAPI.getTuitionReply(
@@ -111,12 +131,13 @@ public class TuitionHistoryFragment extends ListFragment {
 						
 			    		JSONObject jHistory=new JSONObject(page);
 			    		
-			    		if(history.load(jHistory))
+			    		if(SessionManager.tuitionHistory.load(jHistory))
 			    			return "Sucess";
 			    		else
 			    			return "";			    		
 			  		}
-			  		return "";
+			  		else
+			  			return "Sucess";
 				
 				} catch (JSONException e) {
 					if ( getActivity() != null ) 

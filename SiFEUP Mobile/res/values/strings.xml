@@ -134,5 +134,8 @@
     
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
     <string name="title_tuition_history">Tuition History</string>
+    <string name="lbl_year">Year </string>
+    <string name="lbl_paid">Paid</string>
+    <string name="lbl_still_to_pay">Still to pay</string>
 
 </resources>
