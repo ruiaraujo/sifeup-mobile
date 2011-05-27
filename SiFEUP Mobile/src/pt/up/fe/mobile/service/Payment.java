@@ -45,7 +45,7 @@ public class Payment {
 		catch (JSONException e) 
 		{
 			Log.e("Propinas", "JSON error in payment");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

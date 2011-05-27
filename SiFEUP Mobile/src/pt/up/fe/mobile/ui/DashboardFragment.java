@@ -59,11 +59,11 @@ public class DashboardFragment extends Fragment {
             
         });
 
-        root.findViewById(R.id.home_btn_sessions).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.home_btn_tuition).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Tuition");
                 // Launch sessions list
-               
+                startActivity(new Intent(getActivity(), TuitionHistoryActivity.class));
                //startActivity(new Intent(getActivity(), StudentsSearchActivity.class));
                 
 

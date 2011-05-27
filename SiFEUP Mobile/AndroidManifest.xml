@@ -96,7 +96,17 @@
             android:label="@string/title_friends" />
          
         <activity
-            android:label="@string/title_sessions" android:name=".ui.TuitionActivity">
+            android:label="@string/title_tuition" android:name=".ui.TuitionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.session" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:label="@string/title_tuition_history" android:name=".ui.TuitionHistoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

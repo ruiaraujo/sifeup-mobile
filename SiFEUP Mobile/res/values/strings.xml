@@ -31,7 +31,7 @@
     
     <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Schedule</string>
-    <string name="title_sessions">Sessions</string>
+    <string name="title_tuition">Payments</string>
     <string name="title_session_detail">Session Information</string>
     <string name="title_starred">Starred</string>
     <string name="title_tracks">Tracks</string>
@@ -133,5 +133,6 @@
     <string name="btn_print_reference">Generate Reference</string>
     
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
+    <string name="title_tuition_history">Tuition History</string>
 
 </resources>
