@@ -37,7 +37,7 @@
 
     <string name="btn_schedule">Horário</string>
     <string name="btn_exams">Exames</string>
-    <string name="btn_starred">Starred</string>
+    <string name="btn_sessions">Cadeiras</string>
     <string name="btn_friends">Amigos</string>
     <string name="btn_printing">Saldo</string>
     <string name="btn_tuition">Propinas</string>

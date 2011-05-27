@@ -52,7 +52,7 @@
 
     <string name="btn_schedule">Schedule</string>
     <string name="btn_exams">Exams</string>
-    <string name="btn_starred">Starred</string>
+    <string name="btn_subjects">Subjects</string>
     <string name="btn_friends">Friends</string>
     <string name="btn_printing">Printing Quota</string>
     <string name="btn_tuition">Tuition</string>

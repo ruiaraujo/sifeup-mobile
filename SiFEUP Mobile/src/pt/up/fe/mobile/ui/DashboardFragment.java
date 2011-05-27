@@ -59,22 +59,18 @@ public class DashboardFragment extends Fragment {
             
         });
 
+        root.findViewById(R.id.home_btn_subjects).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                fireTrackerEvent("Subjects");
+            }
+        });
+
+
         root.findViewById(R.id.home_btn_tuition).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Tuition");
                 // Launch sessions list
-                startActivity(new Intent(getActivity(), TuitionMenuActivity.class));
-               //startActivity(new Intent(getActivity(), StudentsSearchActivity.class));
-                
-
-            }
-        });
-
-        root.findViewById(R.id.home_btn_starred).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                fireTrackerEvent("Starred");
-                // Launch list of sessions and vendors the user has starred
-               // startActivity(new Intent(getActivity(), StarredActivity.class));                
+                startActivity(new Intent(getActivity(), TuitionMenuActivity.class));                
             }
         });
 
