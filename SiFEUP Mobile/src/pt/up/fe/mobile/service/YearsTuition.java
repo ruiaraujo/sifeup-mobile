@@ -19,6 +19,8 @@ public class YearsTuition
 	Vector<Payment> payments;
 	double total_paid=0;
 	double total_in_debt=0;
+	Vector<RefMB> references;
+	int selectedReference=-1;
 	
 	public YearsTuition() 
 	{
@@ -43,12 +45,29 @@ public class YearsTuition
 			payments=new Vector<Payment>();
 			for(int i=0; i<jPayments.length(); i++)
 			{
-				payments.add(new Payment(jPayments.getJSONObject(i)));
+				Payment p=new Payment();
+				if(p.load(jPayments.getJSONObject(i)))
+					payments.add(p);
+				else
+					return false;
 			}
 			calculateAmounts();
+			
+			
+			this.references=new Vector<RefMB>();			
+			JSONArray jRefs=yearInfo.optJSONArray("referencias");
+			if(jRefs!=null)
+			{
+				for(int i=0; i<jRefs.length(); i++)
+				{
+					RefMB r=new RefMB();
+					if(r.load(jRefs.getJSONObject(i)))
+						this.references.add(r);
+					else 
+						return false;				
+				}	
+			}
 			return true;
-			//TODO referencias MB
-			//JSONArray jRefs=yearInfo.getJSONArray("referencias");
 		} 
 		catch (JSONException e) 
 		{
@@ -130,5 +149,23 @@ public class YearsTuition
 	public void setTotal_in_debt(double totalInDebt) {
 		total_in_debt = totalInDebt;
 	}
+
+	public Vector<RefMB> getReferences() {
+		return references;
+	}
+
+	public void setReferences(Vector<RefMB> references) {
+		this.references = references;
+	}
+
+	public int getSelectedReference() {
+		return selectedReference;
+	}
+
+	public void setSelectedReference(int selectedReference) {
+		this.selectedReference = selectedReference;
+	}
+	
+	
 	
 }

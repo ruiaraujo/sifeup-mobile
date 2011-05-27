@@ -13,6 +13,8 @@ public class TuitionHistory {
 
 	ArrayList<YearsTuition> history;
 	boolean loaded;
+	int selected_year=-1;
+	public final int currentYear=0;
 
 	public TuitionHistory() 
 	{
@@ -37,6 +39,8 @@ public class TuitionHistory {
 				YearsTuition yT=new YearsTuition();
 				if(yT.load(jHistory.getJSONObject(i)))
 					history.add(yT);
+				else
+					return false;
 				
 			} catch (JSONException e) {
 				Log.e("Propinas", "Error getting the year from the JSON list in tuitions");
@@ -63,5 +67,13 @@ public class TuitionHistory {
 
 	public void setHistory(ArrayList<YearsTuition> history) {
 		this.history = history;
+	}
+	
+	public int getSelected_year() {
+		return selected_year;
+	}
+
+	public void setSelected_year(int selectedYear) {
+		selected_year = selectedYear;
 	}
 }

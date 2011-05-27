@@ -63,7 +63,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Tuition");
                 // Launch sessions list
-                startActivity(new Intent(getActivity(), TuitionHistoryActivity.class));
+                startActivity(new Intent(getActivity(), TuitionMenuActivity.class));
                //startActivity(new Intent(getActivity(), StudentsSearchActivity.class));
                 
 

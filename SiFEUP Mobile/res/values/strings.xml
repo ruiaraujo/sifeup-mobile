@@ -137,5 +137,9 @@
     <string name="lbl_year">Year </string>
     <string name="lbl_paid">Paid</string>
     <string name="lbl_still_to_pay">Still to pay</string>
+    <string name="btn_tuition_history">History</string>
+    <string name="btn_tuition_refs">MB References</string>
+    <string name="title_tuition_menu">Tuition Menu</string>
+    <string name="title_tuition_refs_list">MB References</string>
 
 </resources>

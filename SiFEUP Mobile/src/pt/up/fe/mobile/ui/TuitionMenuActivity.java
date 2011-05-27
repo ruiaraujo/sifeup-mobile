@@ -16,15 +16,13 @@
 
 package pt.up.fe.mobile.ui;
 
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class TuitionDetailActivity extends BaseSinglePaneActivity {
+public class TuitionMenuActivity extends BaseSinglePaneActivity {
     @Override
     protected Fragment onCreatePane() {
-        return new TuitionDetailFragment();
+        return new TuitionMenuFragment();
     }
 
     @Override

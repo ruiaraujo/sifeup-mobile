@@ -47,7 +47,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
     private TabHost mTabHost;
     private TabWidget mTabWidget;
 
-    private TuitionFragment mSessionsFragment;
+    //private TuitionFragment mSessionsFragment;
     private VendorsFragment mVendorsFragment;
 
     @Override
@@ -91,7 +91,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
 
         mTabHost.setCurrentTab(0);
 
-        mSessionsFragment.reloadFromArguments(getSessionsFragmentArguments());
+        //mSessionsFragment.reloadFromArguments(getSessionsFragmentArguments());
         mVendorsFragment.reloadFromArguments(getVendorsFragmentArguments());
     }
 
@@ -108,14 +108,14 @@ public class SearchActivity extends BaseMultiPaneActivity {
         ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (TuitionFragment) fm.findFragmentByTag("sessions");
+        /*mSessionsFragment = (TuitionFragment) fm.findFragmentByTag("sessions");
         if (mSessionsFragment == null) {
             mSessionsFragment = new TuitionFragment();
             mSessionsFragment.setArguments(getSessionsFragmentArguments());
             fm.beginTransaction()
                     .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
                     .commit();
-        }
+        }*/
 
         // Sessions content comes from reused activity
         mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSIONS)
@@ -178,13 +178,13 @@ public class SearchActivity extends BaseMultiPaneActivity {
         if (findViewById(R.id.fragment_container_search_detail) != null) {
             // The layout we currently have has a detail container, we can add fragments there.
             findViewById(android.R.id.empty).setVisibility(View.GONE);
-            if (TuitionDetailActivity.class.getName().equals(activityClassName)) {
+           /* if (TuitionDetailActivity.class.getName().equals(activityClassName)) {
                 clearSelectedItems();
                 return new BaseMultiPaneActivity.FragmentReplaceInfo(
                         TuitionDetailFragment.class,
                         "session_detail",
                         R.id.fragment_container_search_detail);
-            } /*else if (VendorDetailActivity.class.getName().equals(activityClassName)) {
+            } else if (VendorDetailActivity.class.getName().equals(activityClassName)) {
                 clearSelectedItems();
                 return new BaseMultiPaneActivity.FragmentReplaceInfo(
                         VendorDetailFragment.class,
@@ -196,9 +196,9 @@ public class SearchActivity extends BaseMultiPaneActivity {
     }
 
     private void clearSelectedItems() {
-        if (mSessionsFragment != null) {
+        /*if (mSessionsFragment != null) {
             mSessionsFragment.clearCheckedPosition();
-        }
+        }*/
         if (mVendorsFragment != null) {
             mVendorsFragment.clearCheckedPosition();
         }

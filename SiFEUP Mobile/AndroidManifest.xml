@@ -101,7 +101,6 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.TAB" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.session" />
             </intent-filter>
         </activity>
         
@@ -111,15 +110,24 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.TAB" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.session" />
             </intent-filter>
         </activity>
 
-        <activity android:name="ui.TuitionDetailActivity">
+        <activity
+            android:label="@string/title_tuition_menu" android:name=".ui.TuitionMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.iosched.session" />
+                <category android:name="android.intent.category.TAB" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:label="@string/title_tuition_refs_list" android:name=".ui.TuitionRefListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
             </intent-filter>
         </activity>
 

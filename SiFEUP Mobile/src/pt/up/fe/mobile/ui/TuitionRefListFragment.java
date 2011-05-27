@@ -40,46 +40,46 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.*;
 
-public class TuitionHistoryFragment extends ListFragment {
+public class TuitionRefListFragment extends ListFragment {
 
 	SimpleAdapter adapter;
+	YearsTuition currentYear;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionHistory");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionRefsList");
         loadList();
-    }
-    
-    public void loadList()
-    {
-    	String[] from = new String[] {"year", "paid", "to_pay"};
-        int[] to = new int[] { R.id.tuition_history_year, R.id.tuition_history_paid, R.id.tuition_history_to_pay};
-	    //prepare the list of all records
-        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-         
-        for(YearsTuition y: SessionManager.tuitionHistory.getHistory()){
-            HashMap<String, String> map = new HashMap<String, String>();
-            
-            map.put("year", getString(R.string.lbl_year)+" "+y.getYear());
-            map.put("paid", getString(R.string.lbl_paid)+": "+y.getTotal_paid()+"€");
-            if(y.getTotal_in_debt()>0.0)
-            	map.put("to_pay", getString(R.string.lbl_still_to_pay)+": "+y.getTotal_in_debt()+"€");
-            fillMaps.add(map);
-        }
-		 
-        // fill in the grid_item layout
-        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_history, from, to);
-        setListAdapter(adapter);
-        Log.i("Propinas", "List view loaded successfully");
     }
     
     /** {@inheritDoc} */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-    	SessionManager.tuitionHistory.setSelected_year(position);
-    	startActivity(new Intent(getActivity(), TuitionActivity.class));
+    	currentYear.setSelectedReference(position);
+    	//startActivity(new Intent(getActivity(), TuitionActivity.class));
     }
+    
+    private void loadList() 
+    {		
+    	String[] from = new String[] {"name", "amount", "date"};
+        int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount, R.id.tuition_ref_date};
+	    //prepare the list of all records
+        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+        ArrayList<YearsTuition> history=SessionManager.tuitionHistory.getHistory();
+        currentYear=history.get(SessionManager.tuitionHistory.currentYear);
+         
+        for(RefMB r: currentYear.getReferences()){
+            HashMap<String, String> map = new HashMap<String, String>();
+        	map.put("name", r.getName());
+        	map.put("amount", Double.toString(r.getAmount())+"€");
+        	map.put("date", r.getStartDate().format3339(true)+" - "+r.getEndDate().format3339(true));
+            fillMaps.add(map);
+        }
+		 
+        // fill in the grid_item layout
+        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_ref, from, to);
+        setListAdapter(adapter);
+	}
 
-   
+    
 }
