@@ -141,5 +141,11 @@
     <string name="btn_tuition_refs">MB References</string>
     <string name="title_tuition_menu">Tuition Menu</string>
     <string name="title_tuition_refs_list">MB References</string>
+    <string name="interval_separator">to</string>
+    <string name="title_tuition_ref_detail">MB Reference</string>
+    <string name="lbl_tuition_ref_detail_entity">Entity</string>
+    <string name="lbl_tuition_ref_detail_reference">Reference</string>
+    <string name="lbl_tuition_ref_detail_amount">Amount</string>
+    <string name="lbl_tuition_ref_detail_period">Payment period</string>
 
 </resources>

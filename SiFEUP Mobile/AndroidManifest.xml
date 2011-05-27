@@ -130,6 +130,15 @@
                 <category android:name="android.intent.category.TAB" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:label="@string/title_tuition_ref_detail" android:name=".ui.TuitionRefDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
+            </intent-filter>
+        </activity>
 
 
         <!-- Used for install referrer tracking -->

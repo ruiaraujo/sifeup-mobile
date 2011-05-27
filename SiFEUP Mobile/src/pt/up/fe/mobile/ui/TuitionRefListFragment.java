@@ -56,7 +56,7 @@ public class TuitionRefListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
     	currentYear.setSelectedReference(position);
-    	//startActivity(new Intent(getActivity(), TuitionActivity.class));
+    	startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));
     }
     
     private void loadList() 
@@ -72,7 +72,7 @@ public class TuitionRefListFragment extends ListFragment {
             HashMap<String, String> map = new HashMap<String, String>();
         	map.put("name", r.getName());
         	map.put("amount", Double.toString(r.getAmount())+"€");
-        	map.put("date", r.getStartDate().format3339(true)+" - "+r.getEndDate().format3339(true));
+        	map.put("date", r.getStartDate().format3339(true)+" "+getString(R.string.interval_separator)+" "+r.getEndDate().format3339(true));
             fillMaps.add(map);
         }
 		 
