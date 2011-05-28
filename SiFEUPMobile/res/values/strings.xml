@@ -123,6 +123,8 @@
     <string name="lb_login_password">Password:</string>
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
+    <string name="toast_login_error_wrong_password">Your username or password were wrong.</string>
+    <string name="toast_login_error">The Web Service seems to be down. Try again.</string>
     
     
     <!-- Print Activity -->

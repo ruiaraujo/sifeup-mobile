@@ -128,6 +128,10 @@
     <string name="lb_login_password">Senha:</string>
     <string name="toast_login_error_empty_username">Utilizador não pode estar vazio.</string>
     <string name="toast_login_error_empty_password">Senha não pode estar vazia.</string>
+    <string name="toast_login_error_wrong_password">A sua senha ou utilizador estavam incorrectos.</string>
+    <string name="toast_login_error">O serviço Web para estar com dificuldades. Por favor, tente mais tarde.</string>
+    
+    
     
      <string name="lb_data_fetching">Obtendo dados...</string>
     <string name="print_lbl">Saldo</string>

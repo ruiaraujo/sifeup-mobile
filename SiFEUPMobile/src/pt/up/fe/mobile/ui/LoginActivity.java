@@ -204,6 +204,12 @@ public class LoginActivity extends Activity
     	 * @param result The result of the background computation
     	 */
         protected void onPostExecute(Boolean result) {
+        	if ( result == null )
+        	{
+        		Log.e("Login","error page is null");
+				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error), Toast.LENGTH_LONG).show();
+				return;
+        	}
         	if ( result )
         	{
 				SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
@@ -224,7 +230,7 @@ public class LoginActivity extends Activity
 			}
 			else{	
 				Log.e("Login","error");
-				Toast.makeText(LoginActivity.this, "F***", Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
 			}
         	removeDialog(DIALOG_CONNECTING);
         }
@@ -242,6 +248,8 @@ public class LoginActivity extends Activity
 				try {					
 					SessionManager.getInstance().setLoginCode(user);
 					page = SifeupAPI.getAuthenticationReply(user, pass);
+					if ( SifeupAPI.JSONError(page) )
+						return null;
 					JSONObject jObject = new JSONObject(page);
 					return jObject.optBoolean("authenticated");					
 				} catch (JSONException e) {
