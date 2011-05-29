@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.tuition;
 
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
@@ -43,12 +43,8 @@ public class TuitionRefDetailFragment extends Fragment {
 	private TextView entidade;
 	private TextView referencia;
 	private TextView valor;
-	private TextView periodo;
-	
-	
-    private String saldo;
-    private TextView display;
-    private TextView desc;
+	private TextView dataIni;
+	private TextView dataFim;
 
 
     @Override
@@ -66,7 +62,8 @@ public class TuitionRefDetailFragment extends Fragment {
 		entidade.setText(""+ref.getEntity());
 		referencia.setText(""+ref.getRef());
 		valor.setText(ref.getAmount()+"€");
-		periodo.setText(ref.getStartDate().format3339(true)+" "+getString(R.string.interval_separator)+" "+ref.getEndDate().format3339(true));
+		dataIni.setText(ref.getStartDate().format3339(true));
+		dataFim.setText(ref.getEndDate().format3339(true));
 	}
 
 	@Override
@@ -80,7 +77,8 @@ public class TuitionRefDetailFragment extends Fragment {
     	entidade = ((TextView)root.findViewById(R.id.tuition_ref_detail_entity));
     	referencia=(TextView)root.findViewById(R.id.tuition_ref_detail_reference);
     	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
-    	periodo=(TextView)root.findViewById(R.id.tuition_ref_detail_period);
+    	dataIni=(TextView)root.findViewById(R.id.tuition_ref_detail_date_start);
+    	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
     	loadValues();
     	return root;
 

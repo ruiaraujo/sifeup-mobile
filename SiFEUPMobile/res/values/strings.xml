@@ -148,6 +148,7 @@
     <string name="lbl_tuition_ref_detail_entity">Entity</string>
     <string name="lbl_tuition_ref_detail_reference">Reference</string>
     <string name="lbl_tuition_ref_detail_amount">Amount</string>
-    <string name="lbl_tuition_ref_detail_period">Payment period</string>
+    <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
+    <string name="lbl_tuition_ref_detail_date_end">End Date</string>
 
 </resources>

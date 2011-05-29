@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.tuition;
 
 
 import org.json.JSONException;
@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.ui.BaseActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;

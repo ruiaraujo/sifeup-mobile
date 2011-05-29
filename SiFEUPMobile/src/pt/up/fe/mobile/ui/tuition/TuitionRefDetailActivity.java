@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.tuition;
 
 
+import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 

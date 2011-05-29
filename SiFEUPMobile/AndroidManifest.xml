@@ -96,7 +96,7 @@
             android:label="@string/title_friends" />
          
         <activity
-            android:label="@string/title_tuition" android:name=".ui.TuitionActivity">
+            android:label="@string/title_tuition" android:name=".ui.tuition.TuitionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -105,7 +105,7 @@
         </activity>
         
         <activity
-            android:label="@string/title_tuition_history" android:name=".ui.TuitionHistoryActivity">
+            android:label="@string/title_tuition_history" android:name=".ui.tuition.TuitionHistoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -114,7 +114,7 @@
         </activity>
 
         <activity
-            android:label="@string/title_tuition_menu" android:name=".ui.TuitionMenuActivity">
+            android:label="@string/title_tuition_menu" android:name=".ui.tuition.TuitionMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -123,7 +123,7 @@
         </activity>
         
         <activity
-            android:label="@string/title_tuition_refs_list" android:name=".ui.TuitionRefListActivity">
+            android:label="@string/title_tuition_refs_list" android:name=".ui.tuition.TuitionRefListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -132,7 +132,7 @@
         </activity>
         
         <activity
-            android:label="@string/title_tuition_ref_detail" android:name=".ui.TuitionRefDetailActivity">
+            android:label="@string/title_tuition_ref_detail" android:name=".ui.tuition.TuitionRefDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
