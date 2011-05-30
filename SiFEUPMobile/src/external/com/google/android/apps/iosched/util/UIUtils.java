@@ -49,7 +49,7 @@ public class UIUtils {
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
     
-    public static String TIME_REFERENCE = "GMT+00:00";
+    public static String TIME_REFERENCE = TimeZone.getDefault().getDisplayName();
 
     /**
      * Populate the given {@link TextView} with the requested text, formatting

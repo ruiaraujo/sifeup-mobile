@@ -82,6 +82,8 @@ public class PrintFragment extends Fragment {
     	}
 
         protected void onPostExecute(String saldo) {
+        	if ( getActivity() == null )
+        		return;
         	if ( !saldo.equals("") )
         	{
 				Log.e("Login","success");

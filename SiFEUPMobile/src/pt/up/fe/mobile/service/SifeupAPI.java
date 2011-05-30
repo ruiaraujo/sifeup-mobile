@@ -361,9 +361,9 @@ public class SifeupAPI {
  	/** 
 	 * Prints error message on Log.e()
 	 * Returns true in case of a existing error.
-	 * 
-	 * @param page
-	 * @return boolean
+	 *  
+	 * @param page Webpage from the webservice
+	 * @return boolean True in case of error
 	 * @throws JSONException
 	 */
 	public static boolean JSONError(String page) throws JSONException{

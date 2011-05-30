@@ -415,14 +415,23 @@ public class ScheduleFragment extends Fragment implements
        
     }
     
+    /**
+     * 
+     * This function return the  milliseconds of the the first day of the week,
+     * in our case Monday, though if it is past Friday, it will return
+     * the next Monday.
+     * 
+     * @return mondayMillis milliseconds of the the first day of the week
+     */
+    
     private static long firstDayofWeek(){
-    	long mondayMillis = System.currentTimeMillis();
+    	long mondayMillis = UIUtils.getCurrentTime();
   		Time yourDate = new Time(UIUtils.TIME_REFERENCE);
   		yourDate.set(mondayMillis);
   		yourDate.normalize(false);
   		yourDate.minute=0;
   		yourDate.hour=0;
-  		yourDate.second=0;
+  		yourDate.second=1;
   		yourDate.normalize(false);
   		int weekDay = yourDate.weekDay -1;
   		//Our week starts at Monday
@@ -430,6 +439,8 @@ public class ScheduleFragment extends Fragment implements
   			weekDay = 6;
   		mondayMillis = yourDate.toMillis(true);
   		mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
+  		if ( ( mondayMillis  + 5 * DateUtils.DAY_IN_MILLIS ) < UIUtils.getCurrentTime() )
+  			mondayMillis += 7 * DateUtils.DAY_IN_MILLIS;
   		return mondayMillis;
     }
 }
