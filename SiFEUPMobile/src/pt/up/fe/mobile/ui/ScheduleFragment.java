@@ -466,7 +466,7 @@ public class ScheduleFragment extends Fragment implements
     /** Exports the schedule to Google Calendar */
     public boolean calendarExport(){
     	
-    	Context ctx = this.getActivity().getApplicationContext();
+    	Context ctx = this.getActivity();
     	final ContentResolver cr = ctx.getContentResolver();
         Cursor cursor;
         
@@ -508,9 +508,9 @@ public class ScheduleFragment extends Fragment implements
                     cv.put("description", "teste descricao");
                     cv.put("eventLocation", "teste lugar");
                     //cv.put("allDay", 1);
-                    cv.put("dtstart", 20110602 );
+                    cv.put("dtstart", UIUtils.getCurrentTime() );
                     //cv.put("hasAlarm", 1);
-                    cv.put("dtend", 20110603 );
+                    cv.put("dtend", UIUtils.getCurrentTime()+3600000 );
                     
                     // Insert Event
                     Uri newEvent;
