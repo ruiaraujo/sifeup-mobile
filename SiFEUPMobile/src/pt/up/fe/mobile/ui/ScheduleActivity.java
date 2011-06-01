@@ -84,9 +84,10 @@ public class ScheduleActivity extends BaseSinglePaneActivity {
                     else
                         newEvent = cr.insert(Uri.parse("content://calendar/events"), cv);
                     
-                    /* Alert
+                    // Alert
                     if (newEvent != null) {
-                        long id = Long.parseLong( newEvent.getLastPathSegment() );
+                    	Log.e("APPPP", "newEvent != null");
+                    	/*long id = Long.parseLong( newEvent.getLastPathSegment() );
                         ContentValues values = new ContentValues();
                         values.put( "event_id", id );
                         values.put( "method", 1 );
@@ -94,9 +95,8 @@ public class ScheduleActivity extends BaseSinglePaneActivity {
                         if (Integer.parseInt(Build.VERSION.SDK) == 8 )
                             cr.insert( Uri.parse( "content://com.android.calendar/reminders" ), values );
                         else
-                            cr.insert( Uri.parse( "content://calendar/reminders" ), values );
-     
-                    }*/
+                            cr.insert( Uri.parse( "content://calendar/reminders" ), values );*/
+                    }
                     dialog.cancel();
                 }
      
