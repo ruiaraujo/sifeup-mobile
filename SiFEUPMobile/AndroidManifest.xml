@@ -96,6 +96,16 @@
             android:label="@string/title_friends" />
          
         <activity
+            android:name=".ui.NewsActivity"
+            android:label="@string/title_news" />   
+            
+        <activity
+            android:name=".ui.NewsDescActivity"
+            android:label="@string/title_news" />   
+              
+            
+         
+        <activity
             android:label="@string/title_tuition" android:name=".ui.tuition.TuitionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

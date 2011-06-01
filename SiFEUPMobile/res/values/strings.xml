@@ -41,6 +41,7 @@
     <string name="title_friends">Friends</string>
     <string name="title_tagstream">Realtime Stream</string>
     <string name="title_printing">Printing Quota</string>
+    <string name="title_news">News</string>
 
     <string name="title_session_tracks">Session tracks</string>
     <string name="title_vendor_tracks">Sandbox pods</string>
@@ -56,6 +57,7 @@
     <string name="btn_friends">Friends</string>
     <string name="btn_printing">Printing Quota</string>
     <string name="btn_tuition">Tuition</string>
+    <string name="btn_news">News</string>
 
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
@@ -150,5 +152,9 @@
     <string name="lbl_tuition_ref_detail_amount">Amount</string>
     <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
+
+    <string name="news_more_info">More information:</string>
+    <string name="news_error">There was a error fetching the News. Please check your connection.</string>
+
 
 </resources>

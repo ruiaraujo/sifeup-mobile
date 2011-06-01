@@ -50,8 +50,8 @@ public class LoginActivity extends Activity
         SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
         final SharedPreferences.Editor prefEditor = loginSettings.edit();
         //como os objectos sao declarados em xml para termos a referencia deles temos de fazer isto
-        final EditText username = (EditText) findViewById(R.id.username);
-        final EditText password = (EditText) findViewById(R.id.pass);
+        final EditText username = (EditText) findViewById(R.id.login_username);
+        final EditText password = (EditText) findViewById(R.id.login_pass);
         final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
         //verficar se o utilizador carregou no remember me e se sim
         //preencher os campos com as informações gravadas

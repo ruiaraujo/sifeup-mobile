@@ -140,35 +140,7 @@
         <item name="android:paddingBottom">8dp</item>
     </style>
 
-    <!-- What's On section in Home activity -->
-
-    <style name="WhatsOnItemBase">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/body_text_1</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:paddingLeft">@dimen/whats_on_item_padding</item>
-        <item name="android:paddingRight">@dimen/whats_on_item_padding</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="WhatsOnStaticItem" parent="style/WhatsOnItemBase">
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/body_text_1</item>
-        <item name="android:maxLines">2</item>
-    </style>
-
-    <style name="WhatsOnButtonItem" parent="style/WhatsOnStaticItem">
-        <item name="android:textColor">@color/accent_1</item>
-        <item name="android:background">@drawable/whats_on_button</item>
-        <item name="android:paddingRight">@dimen/whats_on_button_right_padding</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
+   
 
     <!-- body content -->
 

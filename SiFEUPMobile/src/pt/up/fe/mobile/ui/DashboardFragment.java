@@ -19,6 +19,7 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
+import external.com.google.android.apps.iosched.ui.widget.Workspace;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
@@ -82,6 +83,14 @@ public class DashboardFragment extends Fragment {
                 startActivity(new Intent(getActivity(),ExamsActivity.class));
             }
         });
+        
+        root.findViewById(R.id.home_btn_news).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Launch map of conference venue
+                fireTrackerEvent("New");
+                startActivity(new Intent(getActivity(),NewsActivity.class));
+            }
+        });
 
         root.findViewById(R.id.home_btn_printing).setOnClickListener(
                 new View.OnClickListener() {
@@ -91,7 +100,8 @@ public class DashboardFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), PrintActivity.class);
                         startActivity(intent);
                     }
-                });
+        });
+        
 
         return root;
     }

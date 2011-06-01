@@ -26,6 +26,7 @@
     <string name="title_exams">Exames</string>
     <string name="title_tagstream">Realtime Stream</string>
     <string name="title_printing">Saldo</string>
+    <string name="title_news">Notícias</string>
 
     <string name="title_session_tracks">Session tracks</string>
     <string name="title_vendor_tracks">Sandbox pods</string>
@@ -41,6 +42,7 @@
     <string name="btn_friends">Amigos</string>
     <string name="btn_printing">Saldo</string>
     <string name="btn_tuition">Propinas</string>
+    <string name="btn_news">Notícias</string>
 
 
     <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
@@ -140,5 +142,7 @@
     <string name="btn_print_reference">Gerar Referência</string>
     
     <string name="toast_auth_error">A sua sessão terminou. Por favor, faça login de novo.</string>
+
+    <string name="news_more_info">Mais informações:</string>
 
 </resources>
