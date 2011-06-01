@@ -474,12 +474,12 @@ public class ScheduleFragment extends Fragment implements
         if (Integer.parseInt(Build.VERSION.SDK) == 8)
             cursor = cr.query(
             		Uri.parse("content://com.android.calendar/calendars"), 
-            		new String[]{ "_id", "displayname" }, 
+            		new String[]{ "_id", "name" }, 
             		null, null, null);
         else
             cursor = cr.query(
             		Uri.parse("content://calendar/calendars"), 
-            		new String[]{ "_id", "displayname" }, 
+            		new String[]{ "_id", "name" }, 
             		null, null, null);
         
         // Iterate over calendars to store names and ids
