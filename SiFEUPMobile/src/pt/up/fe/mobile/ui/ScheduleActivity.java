@@ -23,12 +23,13 @@ public class ScheduleActivity extends BaseSinglePaneActivity {
 
 	@Override
 	protected Fragment onCreatePane() {
+		this.calendarExport(); //////////////////
 		return new ScheduleFragment();
 	}
 	
 	
 	 /** Exports the schedule to Google Calendar */
-    private boolean calendarExport(){
+    public boolean calendarExport(){
     	
     	Context ctx = this.getApplicationContext();
     	final ContentResolver cr = ctx.getContentResolver();
