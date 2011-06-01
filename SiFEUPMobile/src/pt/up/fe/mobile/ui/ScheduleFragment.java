@@ -471,7 +471,7 @@ public class ScheduleFragment extends Fragment implements
         Cursor cursor;
         
         // Creating Queries
-        if (Integer.parseInt(Build.VERSION.SDK) == 8)
+        if ( Build.VERSION.SDK_INT >= 8)
             cursor = cr.query(
             		Uri.parse("content://com.android.calendar/calendars"), 
             		new String[]{ "_id", "name" }, 
@@ -514,7 +514,7 @@ public class ScheduleFragment extends Fragment implements
                     
                     // Insert Event
                     Uri newEvent;
-                    if (Integer.parseInt(Build.VERSION.SDK) == 8 )
+                    if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
                         newEvent = cr.insert(Uri.parse("content://com.android.calendar/events"), cv);
                     else
                         newEvent = cr.insert(Uri.parse("content://calendar/events"), cv);
