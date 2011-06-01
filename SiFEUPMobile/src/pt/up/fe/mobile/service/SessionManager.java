@@ -57,20 +57,7 @@ public class SessionManager {
 	 * @param loginCode
 	 */
 	public void setLoginCode(String loginCode) {
-		this.loginCode = transformer(loginCode);
+		this.loginCode = loginCode;
 	}
 	
-	//TODO: temporary hack, waiting for new feature in the webservice.
-	private String transformer(String login)
-	{
-		if ( login.startsWith("ee") )
-		{
-			return login.substring(2,4) + "0503" + login.substring(4);
-		}
-		if ( login.startsWith("ei") )
-		{
-			return login.substring(2,4) + "0509" + login.substring(4);
-		}
-		return login;
-	}
 }

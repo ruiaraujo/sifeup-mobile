@@ -208,6 +208,7 @@ public class LoginActivity extends Activity
         	{
         		Log.e("Login","error page is null");
 				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error), Toast.LENGTH_LONG).show();
+	        	removeDialog(DIALOG_CONNECTING);
 				return;
         	}
         	if ( result )
@@ -246,12 +247,15 @@ public class LoginActivity extends Activity
 		protected Boolean doInBackground(Void ... theVoid) {
 				String page = "";
 				try {					
-					SessionManager.getInstance().setLoginCode(user);
 					page = SifeupAPI.getAuthenticationReply(user, pass);
-					if ( SifeupAPI.JSONError(page) )
+					if ( page == null )
 						return null;
 					JSONObject jObject = new JSONObject(page);
-					return jObject.optBoolean("authenticated");					
+					if ( jObject.optBoolean("authenticated") )
+					{
+						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
+						return true;					
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

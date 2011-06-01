@@ -26,8 +26,7 @@
     	android:layout_gravity="left"
     	android:textSize="25.0sp"
     	android:id="@+id/print_balance"
-    	android:bufferType="normal"
-    	android:text=""/>
+    	android:bufferType="normal"/>
     <TextView
     	android:layout_height="wrap_content"
     	android:layout_width="wrap_content"
@@ -36,13 +35,13 @@
     	android:layout_gravity="left"
     	android:textSize="20.0sp"
     	android:id="@+id/print_desc"
-    	android:bufferType="normal"
-    	android:text=""/>
+    	android:bufferType="normal"/>
     	<LinearLayout
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 	    	android:gravity="center"
     		android:paddingTop="25dp">
+    		
     		<Button 
 	    		android:text="@string/btn_print_reference"
 	    		android:id="@+id/print_generate_reference"

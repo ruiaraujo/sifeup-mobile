@@ -170,6 +170,11 @@ public class ScheduleFragment extends Fragment implements
             }
             return true;
         }
+        if (item.getItemId() == R.id.menu_export_calendar) {
+        	// export to Calendar (create event)
+    		calendarExport();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
     /**
@@ -256,8 +261,7 @@ public class ScheduleFragment extends Fragment implements
 	    		
 	    		JSONSchedule(page);
 	    		
-	    		// export to Calendar (create event)
-	    		calendarExport();
+	    		
 
 				return page;
 				
