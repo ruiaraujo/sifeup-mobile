@@ -184,6 +184,7 @@
             android:value=".ui.SearchActivity" />
         <activity android:name=".ui.StudentsSearchActivity"></activity>
         <activity android:name=".ui.SubjectsActivity"></activity>
+        <activity android:name=".ui.AcademicPathActivity"></activity>
 
 
     </application>
