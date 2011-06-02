@@ -8,8 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.service.Student;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -17,24 +17,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class StudentsSearchFragment extends ListFragment {
+public class StudentsSearchFragment extends ListFragment implements OnItemClickListener {
 	
-	// query is in StudentsSearchActivity
-	private Student me = new Student();
+	// query is in SearchActivity, sent to here in the arguments
+	private List<Student> results = new ArrayList<Student>();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-        new StudentsSearchTask().execute();
+        new StudentsSearchTask().execute(getArguments().get(SearchManager.QUERY).toString());
 
     }
 	
 	/** Classe privada para a busca de dados ao servidor */
-    private class StudentsSearchTask extends AsyncTask<Void, Void, String> {
+    private class StudentsSearchTask extends AsyncTask<String, Void, String> {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -42,44 +45,34 @@ public class StudentsSearchFragment extends ListFragment {
     	}
 
         protected void onPostExecute(String result) {
+        	if ( getActivity() == null )
+        		return;
+        	if ( results.isEmpty() )
+    		{      
+        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
+				return;
+    		}
         	if ( !result.equals("") )
         	{
-				Log.e("Search","success");
-				String[] from = new String[] {"chair", "time", "room"};
-		        int[] to = new int[] { R.id.exam_chair, R.id.exam_time,R.id.exam_room };
-				
-				List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-				//for(Student s : students){
-		             HashMap<String, String> map = new HashMap<String, String>();
-		             // name
-		             map.put("chair", me.name);
-		             // academic year and course acronym
-		             map.put("time", me.email + ", " + me.academicYear + "º Ano, " + me.courseAcronym);
-		             fillMaps.add(map);
-		         //}
+        		Log.e("Search","success");
+        		
+				String[] from = new String[] {"name", "course"};
+		        int[] to = new int[] { R.id.friend_name, R.id.friend_course };
+			    // prepare the list of all records
+		        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		        for(Student s : results ){
+		            HashMap<String, String> map = new HashMap<String, String>();
+		            map.put("name", s.getName());
+		            map.put("course",s.getCourseAcronym());
+		            fillMaps.add(map);
+		        }
 				
 				// fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
-		         setListAdapter(adapter);
-				/*
-				 String[] from = new String[] {"chair", "time", "room"};
-		         int[] to = new int[] { R.id.exam_chair, R.id.exam_time,R.id.exam_room };
-			         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for(Exam e : exams){
-		             HashMap<String, String> map = new HashMap<String, String>();
-		             String tipo = "( " +  (e.type.contains("Mini teste")?"M":"E") + " ) ";
-		             map.put("chair", tipo + e.courseName);
-		             map.put("time", e.weekDay +", " + e.date + ": " + e.startTime +"-" + e.endTime);
-		             map.put("room", e.rooms );
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
-		         setListAdapter(adapter);
-		         Log.e("JSON", "exams visual list loaded");
-				*/
+		        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, from, to);
+		        setListAdapter(adapter);
+		        getListView().setOnItemClickListener(StudentsSearchFragment.this);
+		         setSelection(0);
     		}
 			else{	
 				Log.e("Search","error");
@@ -96,17 +89,17 @@ public class StudentsSearchFragment extends ListFragment {
         }
 
 		@Override
-		protected String doInBackground(Void ... theVoid) {
+		protected String doInBackground(String ... code) {
 			String page = "";
 		  	try {
-	    			page = SifeupAPI.getStudentReply(
-								SessionManager.getInstance().getLoginCode());
+		  		if ( code.length < 1 )
+		  			return "";
+	    		page = SifeupAPI.getStudentReply(code[0]);
 	    		if(	SifeupAPI.JSONError(page))
 	    		{
 		    		 return "";
 	    		}
 				
-	    		//JSONExams(page);
 	    		JSONStudent(page);
 	    		
 				return page;
@@ -121,24 +114,6 @@ public class StudentsSearchFragment extends ListFragment {
 		}
     }
     
-    
-    /** Stores all User Info */
-	private class Student{
-		private String code; // 090501049
-		private String name; // "Nome do aluno"
-		private String courseAcronym; // "Sigla do Curso"
-		private String courseName; // "Nome do curso"
-		private String registrationYear; // ano lectivo da matrï¿½cula
-		private String state; // "Estado (Frequentar, Interrompido,...)"
-		private String academicYear; // (1|2|3|4|5)
-		private String email; // "xxx@fe.up.pt"
-		
-		private void clearAll() {
-			code = name = courseAcronym = 
-				courseName = registrationYear = 
-					state = academicYear = email = "";
-		}
-	}
 	
 	/**
 	 * Parses a JSON String containing Student info,
@@ -152,46 +127,32 @@ public class StudentsSearchFragment extends ListFragment {
 		
 		if(jObject.has("codigo")){
 			Log.e("JSON", "founded student");
-			
-			// clear old fields
-			//me.clearAll();
-			
-			if(jObject.has("codigo")) me.code = jObject.getString("codigo");
-			if(jObject.has("nome")) me.name = jObject.getString("nome");
-			if(jObject.has("curso_sigla")) me.courseAcronym = jObject.getString("curso_sigla");
-			if(jObject.has("curso_nome")) me.courseName = jObject.getString("curso_nome");
-			if(jObject.has("ano_lect_matricula")) me.registrationYear = jObject.getString("ano_lect_matricula");
-			if(jObject.has("estado")) me.state = jObject.getString("estado");
-			if(jObject.has("ano_curricular")) me.academicYear = jObject.getString("ano_curricular");
-			if(jObject.has("email")) me.email = jObject.getString("email");
+			Student student = new Student();
+			if(jObject.has("codigo")) student.setCode(jObject.getString("codigo"));
+			if(jObject.has("nome")) student.setName(jObject.getString("nome"));
+			if(jObject.has("curso_sigla")) student.setCourseAcronym(jObject.getString("curso_sigla"));
+			if(jObject.has("curso_nome")) student.setCourseName(jObject.getString("curso_nome"));
+			if(jObject.has("ano_lect_matricula")) student.setRegistrationYear(jObject.getString("ano_lect_matricula"));
+			if(jObject.has("estado")) student.setState(jObject.getString("estado"));
+			if(jObject.has("ano_curricular")) student.setAcademicYear(jObject.getString("ano_curricular"));
+			if(jObject.has("email")) student.setEmail(jObject.getString("email"));
 			
 			Log.e("JSON", "loaded student");
+			
+			results.add(student);
 			return true;
 		}
 		Log.e("JSON", "student not found");
 		return false;
 	}
-	
-	/*
-	private String parseStudentCode(String code) {
-		if(code.length()!=9)
-			return null;
-		
-		String year = code.substring(0, 2);
-		String faculty = code.substring(2, 4);
-		String course = code.substring(4, 6);
-		String studentYearNumber = code.substring(6);
-		String studentLogin = "";
-		
-		Log.e("APAPAP", year);
-		Log.e("APAPAP", faculty);
-		Log.e("APAPAP", course);
-		Log.e("APAPAP", studentYearNumber);
-		Log.e("APAPAP", studentLogin);
-		
-		if(course.equals("03")){ studentLogin += "ee"; }
-		if(course.equals("09")){ studentLogin += "ei"; }
-		
-		return studentLogin + year + studentYearNumber;
-	}*/
+
+
+	@Override
+	public void onItemClick(AdapterView<?> adapter, View list, int position, long id ) {
+		if ( getActivity() == null )
+			return;
+		Intent i = new Intent(getActivity() , ProfileActivity.class);
+		i.putExtra("profile", results.get(position));
+		startActivity(i);
+	}
 }

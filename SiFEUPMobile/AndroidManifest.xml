@@ -85,7 +85,8 @@
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/title_search"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />

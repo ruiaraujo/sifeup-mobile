@@ -5,10 +5,11 @@ package pt.up.fe.mobile.ui;
 import pt.up.fe.mobile.R;
 
 
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -22,25 +23,17 @@ import android.widget.TextView;
  * {@link BaseMultiPaneActivity} offers, so we inherit from it instead of
  * {@link BaseSinglePaneActivity}.
  */
-public class SearchActivity extends BaseMultiPaneActivity {
-
-    public static final String TAG_SESSIONS = "sessions";
-    public static final String TAG_VENDORS = "vendors";
+public class SearchActivity extends BaseSinglePaneActivity {
 
     private String mQuery;
-
-    private TabHost mTabHost;
-    private TabWidget mTabWidget;
-
-    //private TuitionFragment mSessionsFragment;
-    private VendorsFragment mVendorsFragment;
+    private StudentsSearchFragment studentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();        
-        mQuery = intent.getStringExtra(SearchManager.QUERY);
+        mQuery = intent.getStringExtra(SearchManager.QUERY).trim();
 
         setContentView(R.layout.activity_search);
 
@@ -48,12 +41,6 @@ public class SearchActivity extends BaseMultiPaneActivity {
         final CharSequence title = getString(R.string.title_search_query, mQuery);
         getActivityHelper().setActionBarTitle(title);
 
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
-        mTabWidget = (TabWidget) findViewById(android.R.id.tabs);
-        mTabHost.setup();
-
-        setupSessionsTab();
-        setupVendorsTab();
     }
 
     @Override
@@ -67,125 +54,21 @@ public class SearchActivity extends BaseMultiPaneActivity {
         }
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        mQuery = intent.getStringExtra(SearchManager.QUERY);
+	@Override
+	protected Fragment onCreatePane() {
+		return studentsFragment = new StudentsSearchFragment();
+	}
 
-        final CharSequence title = getString(R.string.title_search_query, mQuery);
-        getActivityHelper().setActionBarTitle(title);
+	
+	protected void onNewIntent( Intent query) {
+		mQuery = query.getStringExtra(SearchManager.QUERY).trim();
+		final CharSequence title = getString(R.string.title_search_query, mQuery);
+	    getActivityHelper().setActionBarTitle(title);
+	    studentsFragment = new StudentsSearchFragment();
+	    studentsFragment.setArguments(intentToFragmentArguments(query));
+	    getSupportFragmentManager().beginTransaction()
+	        .replace(R.id.root_container, studentsFragment)
+	        .commit();
+	}
 
-        mTabHost.setCurrentTab(0);
-
-        //mSessionsFragment.reloadFromArguments(getSessionsFragmentArguments());
-        mVendorsFragment.reloadFromArguments(getVendorsFragmentArguments());
-    }
-
-    /**
-     * Build and add "sessions" tab.
-     */
-    private void setupSessionsTab() {
-        // TODO: this is very inefficient and messy, clean it up
-        FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_sessions);
-        fragmentContainer.setLayoutParams(
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                        ViewGroup.LayoutParams.FILL_PARENT));
-        ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
-
-        final FragmentManager fm = getSupportFragmentManager();
-        /*mSessionsFragment = (TuitionFragment) fm.findFragmentByTag("sessions");
-        if (mSessionsFragment == null) {
-            mSessionsFragment = new TuitionFragment();
-            mSessionsFragment.setArguments(getSessionsFragmentArguments());
-            fm.beginTransaction()
-                    .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
-                    .commit();
-        }*/
-
-        // Sessions content comes from reused activity
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSIONS)
-                .setIndicator(buildIndicator(R.string.starred_sessions))
-                .setContent(R.id.fragment_sessions));
-    }
-
-    /**
-     * Build and add "vendors" tab.
-     */
-    private void setupVendorsTab() {
-        // TODO: this is very inefficient and messy, clean it up
-        FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_vendors);
-        fragmentContainer.setLayoutParams(
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                        ViewGroup.LayoutParams.FILL_PARENT));
-        ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
-
-        final FragmentManager fm = getSupportFragmentManager();
-        mVendorsFragment = (VendorsFragment) fm.findFragmentByTag("vendors");
-        if (mVendorsFragment == null) {
-            mVendorsFragment = new VendorsFragment();
-            mVendorsFragment.setArguments(getVendorsFragmentArguments());
-            fm.beginTransaction()
-                    .add(R.id.fragment_vendors, mVendorsFragment, "vendors")
-                    .commit();
-        }
-
-        // Vendors content comes from reused activity
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_VENDORS)
-                .setIndicator(buildIndicator(R.string.starred_vendors))
-                .setContent(R.id.fragment_vendors));
-    }
-
-    private Bundle getSessionsFragmentArguments() {
-        return intentToFragmentArguments(
-                new Intent(Intent.ACTION_VIEW, null/*Sessions.buildSearchUri(mQuery)*/));
-    }
-
-    private Bundle getVendorsFragmentArguments() {
-        return intentToFragmentArguments(
-                new Intent(Intent.ACTION_VIEW, null/*Vendors.buildSearchUri(mQuery)*/));
-    }
-
-    /**
-     * Build a {@link View} to be used as a tab indicator, setting the requested string resource as
-     * its label.
-     */
-    private View buildIndicator(int textRes) {
-        final TextView indicator = (TextView) getLayoutInflater().inflate(R.layout.tab_indicator,
-                mTabWidget, false);
-        indicator.setText(textRes);
-        return indicator;
-    }
-
-    @Override
-    public BaseMultiPaneActivity.FragmentReplaceInfo onSubstituteFragmentForActivityLaunch(
-            String activityClassName) {
-        if (findViewById(R.id.fragment_container_search_detail) != null) {
-            // The layout we currently have has a detail container, we can add fragments there.
-            findViewById(android.R.id.empty).setVisibility(View.GONE);
-           /* if (TuitionDetailActivity.class.getName().equals(activityClassName)) {
-                clearSelectedItems();
-                return new BaseMultiPaneActivity.FragmentReplaceInfo(
-                        TuitionDetailFragment.class,
-                        "session_detail",
-                        R.id.fragment_container_search_detail);
-            } else if (VendorDetailActivity.class.getName().equals(activityClassName)) {
-                clearSelectedItems();
-                return new BaseMultiPaneActivity.FragmentReplaceInfo(
-                        VendorDetailFragment.class,
-                        "vendor_detail",
-                        R.id.fragment_container_search_detail);
-            }*/
-        }
-        return null;
-    }
-
-    private void clearSelectedItems() {
-        /*if (mSessionsFragment != null) {
-            mSessionsFragment.clearCheckedPosition();
-        }*/
-        if (mVendorsFragment != null) {
-            mVendorsFragment.clearCheckedPosition();
-        }
-    }
 }
