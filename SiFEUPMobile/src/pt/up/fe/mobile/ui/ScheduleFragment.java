@@ -468,9 +468,10 @@ public class ScheduleFragment extends Fragment implements
     	
     	Context ctx = this.getActivity();
     	final ContentResolver cr = ctx.getContentResolver();
-        Cursor cursor;
+    	Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"),
+                (new String[] { "_id", "displayName", "selected" }), null, null, null);
         
-        // Creating Queries
+        /* Creating Queries
         if ( Build.VERSION.SDK_INT >= 8)
             cursor = cr.query(
             		Uri.parse("content://com.android.calendar/calendars"), 
@@ -480,7 +481,7 @@ public class ScheduleFragment extends Fragment implements
             cursor = cr.query(
             		Uri.parse("content://calendar/calendars"), 
             		new String[]{ "_id", "name" }, 
-            		null, null, null);
+            		null, null, null);*/
         
         // Iterate over calendars to store names and ids
         if ( cursor.moveToFirst() ) {
@@ -543,4 +544,6 @@ public class ScheduleFragment extends Fragment implements
     	
     	return true;
     }
+    
+    
 }
