@@ -53,6 +53,7 @@ public class PrintRefFragment extends Fragment {
             Bundle savedInstanceState) {
     	new PrintRefTask().execute(getArguments().get("value").toString());
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, null);
+    	ref.setName(getString(R.string.lb_print_ref_title));
     	nome=(TextView)root.findViewById(R.id.tuition_ref_detail_name);
     	entidade = ((TextView)root.findViewById(R.id.tuition_ref_detail_entity));
     	referencia=(TextView)root.findViewById(R.id.tuition_ref_detail_reference);
@@ -151,6 +152,7 @@ public class PrintRefFragment extends Fragment {
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
+			
 			return "";
 		}
     }
@@ -165,7 +167,7 @@ public class PrintRefFragment extends Fragment {
 	 */
     public void JSONMBRef(String page) throws JSONException{
     	JSONObject jObject = new JSONObject(page);
-    	ref.setName(getString(R.string.lb_print_ref_title));
+    	
     	ref.setEntity(jObject.getLong("Entidade"));
     	ref.setRef(jObject.getLong("Referencia"));
     	ref.setAmount(jObject.getDouble("Valor"));
