@@ -56,10 +56,9 @@ public class AcademicPathFragment extends ListFragment {
 		
 		@Override
 		protected String doInBackground(Void... theVoid) {
-			/*
 			String page = "";
 		  	try {
-	    			page = SifeupAPI.getExamsReply(
+	    			page = SifeupAPI.getAcademicPathReply(
 								SessionManager.getInstance().getLoginCode());
 	    		if(	SifeupAPI.JSONError(page))
 	    		{
@@ -75,7 +74,6 @@ public class AcademicPathFragment extends ListFragment {
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
-			*/
 			return "";
 		}
 		 
@@ -96,7 +94,7 @@ public class AcademicPathFragment extends ListFragment {
 	private class UC{
 		private int semester; // "reg_d_codigo"
 		private int year; // "a_lectivo"
-		private int grade; // "resultado"
+		private String grade; // "resultado"
 		private String courseAcronym; // "dis_codigo"
 		private int equivalencesNumber; // "n_equiv"
 		private int academicYear; // "ano_curricular"
@@ -131,7 +129,7 @@ public class AcademicPathFragment extends ListFragment {
 				
 				if(jUc.has("reg_d_codigo")) uc.semester = jUc.getInt("reg_d_codigo");
 				if(jUc.has("a_lectivo")) uc.year = jUc.getInt("a_lectivo");
-				if(jUc.has("resultado")) uc.grade = jUc.getInt("resultado");
+				if(jUc.has("resultado")) uc.grade = jUc.getString("resultado");
 				if(jUc.has("dis_codigo")) uc.courseAcronym = jUc.getString("dis_codigo");
 				if(jUc.has("n_equiv")) uc.equivalencesNumber = jUc.getInt("n_equiv");
 				if(jUc.has("ano_curricular")) uc.academicYear = jUc.getInt("ano_curricular");

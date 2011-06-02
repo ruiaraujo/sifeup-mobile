@@ -81,6 +81,11 @@ public class SifeupAPI {
 		String VALUE = "pv_valor";
 	}
 	
+	private interface AcademicPath {
+		String NAME = "ficha_aluno";
+		String CODE = "pv_codigo";
+	}
+	
 	/**
 	 * Authentication Url for Web Service
 	 * @param code student code
@@ -161,6 +166,15 @@ public class SifeupAPI {
 		return WEBSERVICE + PrintingRef.NAME + WEBSERVICE_SEP + PrintingRef.VALUE + EQUALS + value;
 	}
 	
+	/**
+	 * Academic Path Url for Web Service
+	 * @param code
+	 * @return 
+	 */
+	public static String getAcademicPathUrl( String code ){
+		return WEBSERVICE + AcademicPath.NAME + WEBSERVICE_SEP + AcademicPath.CODE + EQUALS + code;
+	}
+	
 
 	/**
 	 * Students Search Url for Web Service
@@ -193,7 +207,31 @@ public class SifeupAPI {
 			e.printStackTrace();
 		}
 		return page;
-	}	
+	}
+	
+	/**
+	 * Get Academic Path Reply
+	 * @param value
+	 * @return
+	 */
+	public static String getAcademicPathReply( String code  ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getAcademicPathUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
 	
 	/**
 	 * Get Subjects Reply
