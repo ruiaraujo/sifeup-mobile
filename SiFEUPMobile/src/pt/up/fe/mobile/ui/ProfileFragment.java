@@ -48,8 +48,8 @@ public class ProfileFragment extends Fragment {
 		if ( me != null )
 		{
 			name.setText(me.getName());
-			code.setText(me.getCode());
-			email.setText(me.getEmail());
+			if(me.getCode() != null) code.setText(me.getCode());
+			if(me.getEmail() != null) email.setText(me.getEmail());
 		}
 		else
 		{

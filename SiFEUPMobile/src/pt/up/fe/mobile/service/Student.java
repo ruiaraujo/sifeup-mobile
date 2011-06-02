@@ -10,6 +10,8 @@ public class Student implements Serializable{
 	private String name;
 	private String courseAcronym;
 	private String courseName;
+	private String courseNameEn;
+	private String courseCode;
 	private String registrationYear;
 	private String state;
 	private String academicYear;
@@ -86,5 +88,21 @@ public class Student implements Serializable{
 		name = courseAcronym = 
 			courseName = registrationYear = 
 				state = academicYear = email = "";
+	}
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
+
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	public void setCourseNameEn(String courseNameEn) {
+		this.courseNameEn = courseNameEn;
+	}
+
+	public String getCourseNameEn() {
+		return courseNameEn;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class StudentsSearchFragment extends ListFragment implements OnItemClickListener {
 	
 	// query is in SearchActivity, sent to here in the arguments
-	private List<Student> results = new ArrayList<Student>();
+	ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,14 +58,15 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         	{
         		Log.e("Search","success");
         		
-				String[] from = new String[] {"name", "course"};
-		        int[] to = new int[] { R.id.friend_name, R.id.friend_course };
+				String[] from = new String[] {"name"};
+		        int[] to = new int[] { R.id.friend_name};
 			    // prepare the list of all records
 		        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		        for(Student s : results ){
+		        
+		        // assumed only one page of results
+		        for(Student s : results.get(0).students ){
 		            HashMap<String, String> map = new HashMap<String, String>();
 		            map.put("name", s.getName());
-		            map.put("course",s.getCourseAcronym());
 		            fillMaps.add(map);
 		        }
 				
@@ -94,13 +96,13 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		  	try {
 		  		if ( code.length < 1 )
 		  			return "";
-	    		page = SifeupAPI.getStudentReply(code[0]);
+	    		page = SifeupAPI.getStudentsSearchReply(code[0]);
 	    		if(	SifeupAPI.JSONError(page))
 	    		{
 		    		 return "";
 	    		}
 				
-	    		JSONStudent(page);
+	    		JSONStudentsSearch(page);
 	    		
 				return page;
 				
@@ -112,7 +114,71 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 
 			return "";
 		}
+
     }
+    
+    /**
+     * 
+     * Holds a Search page
+     * With pageResults number
+     * of students
+     *
+     */
+    private class ResultsPage{
+    	private int searchSize; // "total" : 583
+    	private int page; // "primeiro" : 1
+    	private int pageResults; // "tam_pagina" : 15
+    	private List<Student> students = new ArrayList<Student>();
+    }
+    
+    /**
+	 * Parses a JSON String containing Student Search Info,
+	 * Stores that results page at Collection results.
+	 * @param String page
+	 * @return boolean
+	 * @throws JSONException
+	 */
+    private boolean JSONStudentsSearch(String page) throws JSONException {
+    	JSONObject jObject = new JSONObject(page);
+		
+    	
+    	if(jObject.has("alunos")){
+    		Log.e("JSON", "founded search");
+    		
+    		// new results page
+    		ResultsPage resultsPage = new ResultsPage();
+    		if(jObject.has("total")) resultsPage.searchSize = jObject.getInt("total");
+    		if(jObject.has("primeiro")) resultsPage.page = jObject.getInt("primeiro");
+    		if(jObject.has("tam_pagina")) resultsPage.pageResults = jObject.getInt("tam_pagina");
+    		
+    		JSONArray jArray = jObject.getJSONArray("alunos");
+    		
+    		// iterate over jArray
+    		for(int i = 0; i < jArray.length(); i++){
+    			// new JSONObject
+    			JSONObject jStudent = jArray.getJSONObject(i);
+    			// new Block
+    			Student student = new Student();
+    			
+    			if(jStudent.has("codigo")) student.setCode(""+jStudent.getInt("codigo"));
+    			if(jStudent.has("nome")) student.setName(jStudent.getString("nome"));
+    			if(jStudent.has("cur_codigo")) student.setCourseCode(jStudent.getString("cur_codigo"));
+    			if(jStudent.has("cur_nome")) student.setCourseName(jStudent.getString("cur_nome"));
+    			if(jStudent.has("cur_name")) student.setCourseNameEn(jStudent.getString("nome"));
+    			
+    			// add student to the page results
+    			resultsPage.students.add(student);
+    		}
+    		
+    		// add page to global results
+    		results.add(resultsPage);
+    		
+    		Log.e("JSON", "loaded search");
+    		return true;
+    	}
+    	Log.e("JSON", "search not found");
+    	return false;
+	}
     
 	
 	/**
@@ -122,6 +188,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 	 * @return boolean
 	 * @throws JSONException
 	 */
+    /*
 	public boolean JSONStudent(String page) throws JSONException{
 		JSONObject jObject = new JSONObject(page);
 		
@@ -145,14 +212,17 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		Log.e("JSON", "student not found");
 		return false;
 	}
-
-
+	*/
+    
+    
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View list, int position, long id ) {
 		if ( getActivity() == null )
 			return;
 		Intent i = new Intent(getActivity() , ProfileActivity.class);
-		i.putExtra("profile", results.get(position));
+		
+		// assumed only one page of results
+		i.putExtra("profile", results.get(0).students.get(position));
 		startActivity(i);
 	}
 }
