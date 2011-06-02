@@ -41,7 +41,7 @@ public class RefMB {
 		catch (JSONException e) 
 		{
 			Log.e("Propinas", "JSON error in RefMB");
-			//e.printStackTrace();
+			e.printStackTrace();
 			return false;
 		}
 	}

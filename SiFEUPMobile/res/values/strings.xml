@@ -134,7 +134,13 @@
     <string name="print_lbl">Printing Quota</string>
     <string name="print_balance">7.60 €</string>
     <string name="print_can_print_a4_black">You can print up to <xliff:g id="pages">%1$s</xliff:g> black A4 pages.</string>
+    <string name="print_reference_title">Increase Quota</string>
+    <string name="lb_print_increase">Value (>1€):</string>
     <string name="btn_print_reference">Generate Reference</string>
+    <string name="lb_print_ref_title">Generated Reference</string>
+    <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
+    <string name="print_ref_share_title">Share Reference</string>
+    
     
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
     <string name="title_tuition_history">Tuition History</string>

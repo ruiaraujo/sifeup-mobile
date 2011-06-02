@@ -19,7 +19,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
-import external.com.google.android.apps.iosched.ui.widget.Workspace;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
@@ -55,7 +54,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_friends).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Profile");
-                startActivity(new Intent(getActivity(), ProfileActivity.class));
+                startActivity(new Intent(getActivity(), FriendsActivity.class));
                     
             }
             

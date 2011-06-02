@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.service.Student;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -51,23 +52,7 @@ public class ProfileFragment extends Fragment {
     }
     
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.friends_menu_items, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-    
 
-
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_friends) {
-                Toast.makeText(getActivity(), "Exemplo de Acção",
-                        Toast.LENGTH_SHORT).show();
-            
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
     /** Classe privada para a busca de dados ao servidor */
     private class ProfileTask extends AsyncTask<Void, Void, String> {
 
@@ -80,9 +65,9 @@ public class ProfileFragment extends Fragment {
         	if ( !result.equals("") )
         	{
 				Log.e("Profile","success");
-				name.setText(me.name);
-				code.setText(me.code);
-				email.setText(me.email);
+				name.setText(me.getName());
+				code.setText(me.getCode());
+				email.setText(me.getEmail());
 			}
 			else{	
 				Log.e("Profile","error");
@@ -123,24 +108,7 @@ public class ProfileFragment extends Fragment {
 		}
     }
     
-    /** Stores all User Info */
-	private class Student{
-		private String code; // 090501049
-		private String name; // "Nome do aluno"
-		private String courseAcronym; // "Sigla do Curso"
-		private String courseName; // "Nome do curso"
-		private String registrationYear; // ano lectivo da matr�cula
-		private String state; // "Estado (Frequentar, Interrompido,...)"
-		private String academicYear; // (1|2|3|4|5)
-		private String email; // "xxx@fe.up.pt"
-		
-		private void clearAll() {
-			code = name = courseAcronym = 
-				courseName = registrationYear = 
-					state = academicYear = email = "";
-		}
-	}
-	
+
 	/**
 	 * Parses a JSON String containing Student info,
 	 * Stores that info at Collection me.
@@ -157,14 +125,14 @@ public class ProfileFragment extends Fragment {
 			// clear old fields
 			//me.clearAll();
 			
-			if(jObject.has("codigo")) me.code = jObject.getString("codigo");
-			if(jObject.has("nome")) me.name = jObject.getString("nome");
-			if(jObject.has("curso_sigla")) me.courseAcronym = jObject.getString("curso_sigla");
-			if(jObject.has("curso_nome")) me.courseName = jObject.getString("curso_nome");
-			if(jObject.has("ano_lect_matricula")) me.registrationYear = jObject.getString("ano_lect_matricula");
-			if(jObject.has("estado")) me.state = jObject.getString("estado");
-			if(jObject.has("ano_curricular")) me.academicYear = jObject.getString("ano_curricular");
-			if(jObject.has("email")) me.email = jObject.getString("email");
+			if(jObject.has("codigo")) me.setCode(jObject.getString("codigo"));
+			if(jObject.has("nome")) me.setName(jObject.getString("nome"));
+			if(jObject.has("curso_sigla")) me.setCourseAcronym(jObject.getString("curso_sigla"));
+			if(jObject.has("curso_nome")) me.setCourseName(jObject.getString("curso_nome"));
+			if(jObject.has("ano_lect_matricula")) me.setRegistrationYear(jObject.getString("ano_lect_matricula"));
+			if(jObject.has("estado")) me.setState(jObject.getString("estado"));
+			if(jObject.has("ano_curricular")) me.setAcademicYear(jObject.getString("ano_curricular"));
+			if(jObject.has("email")) me.setEmail(jObject.getString("email"));
 			
 			Log.e("JSON", "loaded student");
 			return true;

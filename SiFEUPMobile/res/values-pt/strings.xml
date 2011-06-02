@@ -83,8 +83,8 @@
     <string name="starred_sessions">Sessions</string>
     <string name="starred_vendors">Sandbox</string>
 
-    <string name="search_label">Google I/O</string>
-    <string name="search_hint">Session keywords</string>
+    <string name="search_label">SiFEUP Mobile</string>
+    <string name="search_hint">Search Students</string>
 
     <string name="share_template">Checking out \'<xliff:g id="title">%1$s</xliff:g>\' at <xliff:g id="hashtags">%2$s</xliff:g> <xliff:g id="url">%3$s</xliff:g></string>
 
@@ -140,6 +140,8 @@
     <string name="print_balance">7.60 €</string>
     <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
     <string name="btn_print_reference">Gerar Referência</string>
+    <string name="print_reference_title">Aumentar Saldo</string>
+    <string name="lb_print_increase">Valor (>1€):</string>
     
     <string name="toast_auth_error">A sua sessão terminou. Por favor, faça login de novo.</string>
 

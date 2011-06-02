@@ -5,6 +5,7 @@ package pt.up.fe.mobile.ui;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +53,23 @@ public class PrintFragment extends Fragment {
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
     	display = ((TextView)root.findViewById(R.id.print_balance));
     	desc = ((TextView)root.findViewById(R.id.print_desc));
+    	final EditText value = (EditText)root.findViewById(R.id.print_value);
     	root.findViewById(R.id.print_generate_reference).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "I do nothing yet", Toast.LENGTH_LONG).show();
+				String newValue = value.getText().toString().trim();
+				try{
+					Double.valueOf(newValue);
+				}
+				catch (NumberFormatException e) {
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					value.requestFocus();
+					return;
+				}
+				newValue = newValue.replace(".",",");
+				Intent i = new Intent(getActivity(), PrintRefActivity.class);
+				i.putExtra("value", newValue);
+				startActivity(i);
 			}
 		});
     	return root;

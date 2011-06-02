@@ -64,6 +64,20 @@ public class SifeupAPI {
 		String END = "pv_semana_fim";
 	}
 	
+
+	private interface Subjects {
+		String NAME = "inscricoes";
+		String CODE = "pv_codigo";
+		/** Not mandatory - if lacking assumed current.*/
+		String YEAR = "pv_a_lectivo";
+	}
+	
+
+	private interface PrintingRef {
+		String NAME = "gerar_propinas_mb";
+		String VALUE = "pv_valor";
+	}
+	
 	/**
 	 * Authentication Url for Web Service
 	 * @param code student code
@@ -123,6 +137,74 @@ public class SifeupAPI {
 	public static String getPrintingUrl( String code ){
 		return WEBSERVICE + Printing.NAME + WEBSERVICE_SEP + Printing.CODE + EQUALS + code ;
 	}
+	
+	/**
+	 * Subjects Url for Web Service
+	 * @param code
+	 * @return 
+	 */
+	public static String getSubjectsUrl( String code , String year){
+		return WEBSERVICE + Subjects.NAME + WEBSERVICE_SEP + Subjects.CODE + EQUALS + code +
+							( year==null?"":LINK_SEP + Subjects.YEAR + EQUALS + year);
+	}
+	
+	
+	/**
+	 * Printing MB Url for Web Service
+	 * @param code
+	 * @return 
+	 */
+	public static String getPrintingRefUrl( String value ){
+		return WEBSERVICE + PrintingRef.NAME + WEBSERVICE_SEP + PrintingRef.VALUE + EQUALS + value;
+	}
+	
+	/**
+	 * GetPrinting MB  Reply
+	 * @param value
+	 * @return
+	 */
+	public static String getPrintingRefReply( String value  ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getPrintingRefUrl(value ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}	
+	
+	/**
+	 * Get Subjects Reply
+	 * @param code
+	 * @return
+	 */
+	public static String getSubjectsReply( String code , String year ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getSubjectsReply(code, year));
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}	
 	
 	/**
 	 * Get Printing Reply

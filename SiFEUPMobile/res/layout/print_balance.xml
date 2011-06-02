@@ -36,17 +36,58 @@
     	android:textSize="20.0sp"
     	android:id="@+id/print_desc"
     	android:bufferType="normal"/>
-    	<LinearLayout
+    	<RelativeLayout
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-	    	android:gravity="center"
     		android:paddingTop="25dp">
-    		
-    		<Button 
-	    		android:text="@string/btn_print_reference"
-	    		android:id="@+id/print_generate_reference"
-	    		android:layout_width="wrap_content"
-	    		android:layout_height="wrap_content"
-	    		android:gravity="center"/>
-    	</LinearLayout>
+    		<LinearLayout android:id="@+id/print_ref_title"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+		    	android:gravity="center">
+		    	<TextView
+			    	android:layout_height="wrap_content"
+			    	android:layout_width="wrap_content"
+		    		android:gravity="center"
+			    	android:layout_gravity="center"
+			    	android:textSize="20.0sp"
+			    	android:bufferType="normal"
+			    	android:text="@string/print_reference_title"/>
+		    </LinearLayout>
+		    <LinearLayout android:id="@+id/print_ref_lb"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+	    		android:paddingTop="15dp"
+	    		android:orientation="horizontal"
+		    	android:layout_below="@id/print_ref_title">
+		    	<TextView
+			    	android:layout_height="wrap_content"
+			    	android:layout_width="wrap_content"
+			    	android:textSize="20.0sp"
+			    	android:paddingLeft="15dp"
+			    	android:paddingRight="5dp"
+			    	android:layout_gravity="left|center_vertical"
+			    	android:gravity="left"
+			    	android:text="@string/lb_print_increase"/>
+			    <EditText android:id="@+id/print_value"
+	    			android:layout_width="100dp"
+	    			android:layout_height="wrap_content"
+	    			android:layout_gravity="right|center_vertical"
+	    			android:inputType="numberDecimal"
+	    			android:text="5"/>
+	    	</LinearLayout>
+		    
+		    <LinearLayout
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+    			android:paddingTop="25dp"
+		    	android:gravity="center"
+		    	android:layout_below="@id/print_ref_lb">
+	    		<Button android:id="@+id/print_generate_reference"
+		    		android:text="@string/btn_print_reference"
+		    		android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:layout_below="@id/print_ref_lb"
+		    		android:gravity="center"/>
+	    	</LinearLayout>
+    	</RelativeLayout>
 </LinearLayout>

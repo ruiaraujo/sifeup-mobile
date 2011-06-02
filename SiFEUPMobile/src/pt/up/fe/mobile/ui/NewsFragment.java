@@ -54,6 +54,8 @@ public class NewsFragment extends ListFragment implements AdapterView.OnItemClic
     	}
 
         protected void onPostExecute(RSSFeed result) {
+        	if ( getActivity() == null ) 
+        		return;
         	if ( result != null )
         	{
 				Log.e("News","success");
