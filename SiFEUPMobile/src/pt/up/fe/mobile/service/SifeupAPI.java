@@ -145,7 +145,7 @@ public class SifeupAPI {
 	 */
 	public static String getSubjectsUrl( String code , String year){
 		return WEBSERVICE + Subjects.NAME + WEBSERVICE_SEP + Subjects.CODE + EQUALS + code +
-							( year==null?"":LINK_SEP + Subjects.YEAR + EQUALS + year);
+							( year==null?"":(LINK_SEP + Subjects.YEAR + EQUALS + year));
 	}
 	
 	

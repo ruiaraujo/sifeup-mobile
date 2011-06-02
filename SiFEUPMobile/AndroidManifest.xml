@@ -182,6 +182,7 @@
             android:name="android.app.default_searchable"
             android:value=".ui.SearchActivity" />
         <activity android:name=".ui.StudentsSearchActivity"></activity>
+        <activity android:name=".ui.SubjectsActivity"></activity>
 
 
     </application>
