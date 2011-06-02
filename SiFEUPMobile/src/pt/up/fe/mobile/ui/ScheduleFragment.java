@@ -490,8 +490,6 @@ public class ScheduleFragment extends Fragment implements
             for (int i = 0; i < calNames.length; i++) {
                 calIds[i] = cursor.getInt(0);
                 calNames[i] = cursor.getString(1);
-                Log.e("CALENDAR id", ""+calIds[i]);
-                Log.e("CALENDAR name", calNames[i]);
                 cursor.moveToNext();
             }
             
@@ -502,7 +500,27 @@ public class ScheduleFragment extends Fragment implements
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                 	
-                	// Set event details
+                	// iterate over schedule and add them to schedule
+                	for(Block b : schedule){
+                		
+                		// new event
+                		ContentValues event = new ContentValues();
+                		event.put("calendar_id", calIds[which]);
+                		event.put("title", b.lectureAcronym + " (" + b.lectureType + ")");
+                		event.put("eventLocation", b.buildingCode+b.roomCode);
+                		event.put("description", "Professor: " + b.teacherAcronym);
+                		// event time
+                		// event recursive
+                		
+                		// insert event
+                		Uri newEvent = cr.insert(Uri.parse("content://calendar/events"), event);
+                		
+                		// check event error
+                		if(newEvent == null) Log.e("ScheduleExport", "error on event");
+                		
+                	}
+                	
+                	/* Set event details
                     ContentValues cv = new ContentValues();
                     cv.put("calendar_id", calIds[which]);
                     cv.put("title", "event android test");
@@ -512,18 +530,18 @@ public class ScheduleFragment extends Fragment implements
                     cv.put("dtstart", UIUtils.getCurrentTime() );
                     //cv.put("hasAlarm", 1);
                     cv.put("dtend", UIUtils.getCurrentTime()+3600000 );
-                    
+                    */
                     // Insert Event
-                    Uri newEvent;
+                    /*Uri newEvent;
                     if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
                         newEvent = cr.insert(Uri.parse("content://com.android.calendar/events"), cv);
                     else
                         newEvent = cr.insert(Uri.parse("content://calendar/events"), cv);
-                    
+                    */
                     // Alert
-                    if (newEvent != null) {
+                	/*if (newEvent != null) {
                     	Log.e("APPPP", "newEvent != null");
-                    	/*long id = Long.parseLong( newEvent.getLastPathSegment() );
+                    	long id = Long.parseLong( newEvent.getLastPathSegment() );
                         ContentValues values = new ContentValues();
                         values.put( "event_id", id );
                         values.put( "method", 1 );
@@ -531,8 +549,8 @@ public class ScheduleFragment extends Fragment implements
                         if (Integer.parseInt(Build.VERSION.SDK) == 8 )
                             cr.insert( Uri.parse( "content://com.android.calendar/reminders" ), values );
                         else
-                            cr.insert( Uri.parse( "content://calendar/reminders" ), values );*/
-                    }
+                            cr.insert( Uri.parse( "content://calendar/reminders" ), values );
+                    }*/
                     dialog.cancel();
                 }
      
