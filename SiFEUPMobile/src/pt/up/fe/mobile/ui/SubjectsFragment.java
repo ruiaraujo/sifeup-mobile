@@ -133,7 +133,7 @@ public class SubjectsFragment extends ListFragment implements OnItemClickListene
     private class Subject{
 		public String acronym; // "EICXXXX"
 		public int year; // 3
-		public String namePt; // Sistemas Distribu�dos
+		public String namePt; // Sistemas Distribuidos
 		public String nameEn; // Distributed Systems
 		public String semester; // 2S
     }
