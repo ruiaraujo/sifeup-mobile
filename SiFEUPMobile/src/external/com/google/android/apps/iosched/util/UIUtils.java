@@ -30,6 +30,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
@@ -106,15 +107,6 @@ public class UIUtils {
         return builder;
     }
 
-    public static String getLastUsedTrackID(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString("last_track_id", null);
-    }
-
-    public static void setLastUsedTrackID(Context context, String trackID) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString("last_track_id", trackID).commit();
-    }
 
     private static final int BRIGHTNESS_THRESHOLD = 130;
 
@@ -146,5 +138,15 @@ public class UIUtils {
         }
         return null;
     }
-
+    
+    
+    public static int secondYearOfSchoolYear(){
+    	Time nowT = new Time(TIME_REFERENCE);
+    	nowT.setToNow();
+    	nowT.normalize(false);
+    	if ( nowT.month >= 8 )
+    		return nowT.year+1;
+    	return nowT.year;
+    }
+    
 }

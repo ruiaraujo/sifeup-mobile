@@ -13,15 +13,21 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class SubjectsFragment extends ListFragment {
+public class SubjectsFragment extends ListFragment implements OnItemClickListener {
 	
 	/** Contains all subscribed subjects */
 	ArrayList<Subject> subjects = new ArrayList<Subject>();
@@ -31,6 +37,8 @@ public class SubjectsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+        
+
         new SubjectsTask().execute();
 
     }
@@ -44,27 +52,36 @@ public class SubjectsFragment extends ListFragment {
     	}
 
         protected void onPostExecute(String result) {
+			if ( getActivity() == null )
+				 return;
         	if ( !result.equals("") )
         	{
 				Log.e("Subjects","success");
 				
-				 String[] from = new String[] {"chair", "time", "room"};
-		         int[] to = new int[] { R.id.exam_chair, R.id.exam_time, R.id.exam_room};
-			     // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for(Subject s : subjects){
-		             HashMap<String, String> map = new HashMap<String, String>();
-		             map.put("chair", s.namePt);
-		             map.put("time", s.acronym + " (" + s.nameEn + ")");
-		             map.put("room", s.year + "º Ano - " + s.semester + "º Semestre");
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
-		         setListAdapter(adapter);
-		         Log.e("JSON", "subjects visual list loaded");
+				 try {
+					 String[] from = new String[] {"chair", "time", "room"};
+			         int[] to = new int[] { R.id.exam_chair, R.id.exam_time, R.id.exam_room};
+				     // prepare the list of all records
+			         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+			         for(Subject s : subjects){
+			             HashMap<String, String> map = new HashMap<String, String>();
+			             map.put("chair", s.namePt);
+			             map.put("time", s.acronym + " (" + s.nameEn + ")");
+			             map.put("room", getString(R.string.subjects_year,s.year, s.semester));
+			             fillMaps.add(map);
+			         }
+			         // fill in the grid_item layout
+			         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
+			         setListAdapter(adapter);
+			         getListView().setOnItemClickListener(SubjectsFragment.this);
+			         Log.e("JSON", "subjects visual list loaded");
+				 }
+				 catch (Exception ex){
+					 ex.printStackTrace();
+					 if ( getActivity() != null )
+							Toast.makeText(getActivity(), "F*** Fragments", Toast.LENGTH_LONG).show();
 
+				 }
     		}
 			else{	
 				Log.e("Login","error");
@@ -116,7 +133,7 @@ public class SubjectsFragment extends ListFragment {
     private class Subject{
 		public String acronym; // "EICXXXX"
 		public int year; // 3
-		public String namePt; // Sistemas Distribuídos
+		public String namePt; // Sistemas Distribuï¿½dos
 		public String nameEn; // Distributed Systems
 		public String semester; // 2S
     }
@@ -166,5 +183,17 @@ public class SubjectsFragment extends ListFragment {
     	Log.e("JSON", "disciplines not found");
     	return false;
     }
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+		StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
+		url.append("p_cad_codigo="+subjects.get(position).acronym);
+		int secondYear = UIUtils.secondYearOfSchoolYear();
+		int firstYear = secondYear -1;
+		url.append("&p_ano_lectivo=" + firstYear +"/" + secondYear);
+		url.append("&p_periodo=" +subjects.get(position).semester );
+		Uri uri = Uri.parse( url.toString() );
+		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
+	}
 	
 }

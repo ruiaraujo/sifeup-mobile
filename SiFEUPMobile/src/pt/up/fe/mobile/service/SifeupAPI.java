@@ -192,7 +192,7 @@ public class SifeupAPI {
 		try {
 			do {
 				HttpsURLConnection httpConn = getUncheckedConnection(
-											getSubjectsReply(code, year));
+											getSubjectsUrl(code, year));
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 				httpConn.connect();
 				page = getPage(httpConn.getInputStream());

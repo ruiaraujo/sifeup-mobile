@@ -141,6 +141,7 @@
     <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
     <string name="print_ref_share_title">Share Reference</string>
     
+     <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semestre">%2$s</xliff:g></string>
     
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
     <string name="title_tuition_history">Tuition History</string>
