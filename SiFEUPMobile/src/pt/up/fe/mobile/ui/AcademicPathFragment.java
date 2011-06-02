@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 public class AcademicPathFragment extends ListFragment {
 
+	/** All info about the student Academic Path */
 	AcademicPath academicPath = new AcademicPath();
 	
 	@Override
@@ -79,6 +80,12 @@ public class AcademicPathFragment extends ListFragment {
 		 
 	}
 	
+	/**
+	 * 
+	 * Holds All Info about 
+	 * Academic Path
+	 *
+	 */
 	private class AcademicPath{
 		private String code; // "numero"
 		private String state; // "estado"
@@ -91,10 +98,17 @@ public class AcademicPathFragment extends ListFragment {
 		ArrayList<UC> ucs = new ArrayList<UC>();
 	}
 	
+	/**
+	 * 
+	 * Represents a Course, and
+	 * holds all data about the course
+	 * like, grade, name, semester, etc
+	 *
+	 */
 	private class UC{
 		private int semester; // "reg_d_codigo"
 		private int year; // "a_lectivo"
-		private String grade; // "resultado"
+		private String grade; // "resultado" (int or string)
 		private String courseAcronym; // "dis_codigo"
 		private int equivalencesNumber; // "n_equiv"
 		private int academicYear; // "ano_curricular"
@@ -104,6 +118,13 @@ public class AcademicPathFragment extends ListFragment {
 		private String nameEn; // "name"
 	}
 	
+	/**
+	 * Parses a JSON String containing Academic Path info,
+	 * Stores that info at Object academicPath.
+	 * @param String page
+	 * @return boolean
+	 * @throws JSONException
+	 */
 	private boolean JSONAcademicPath(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
 		
