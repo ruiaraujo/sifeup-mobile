@@ -21,24 +21,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
-
+import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.service.YearsTuition;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.*;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 public class TuitionHistoryFragment extends ListFragment {
 

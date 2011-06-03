@@ -39,6 +39,8 @@ import android.widget.Toast;
 
 public class TuitionMenuFragment extends Fragment {
 	
+	//TODO botao de refresh daqui para baixo
+	
 	SimpleAdapter adapter;
 
     public void fireTrackerEvent(String label) {

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:orderInCategory="1"
+        android:showAsAction="ifRoom" android:id="@+id/menu_friends_delete" android:title="@string/description_delete" android:icon="@drawable/ic_title_share" android:enabled="true" android:visible="true"/>
+</menu>

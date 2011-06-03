@@ -2,7 +2,7 @@
     style="@style/SimpleListItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background">
+    android:background="@android:drawable/list_selector_background" android:id="@+id/list_item_friend">
     <ImageView android:id="@+id/friend_pic"
     	android:layout_height="wrap_content"
     	android:src="@drawable/speaker_image_empty"

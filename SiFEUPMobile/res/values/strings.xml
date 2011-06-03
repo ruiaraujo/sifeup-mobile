@@ -165,6 +165,7 @@
 
     <string name="news_more_info">More information:</string>
     <string name="news_error">There was a error fetching the News. Please check your connection.</string>
+    <string name="description_delete">Remove Friend</string>
 
 
 </resources>

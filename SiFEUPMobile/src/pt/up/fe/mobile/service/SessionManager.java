@@ -1,5 +1,7 @@
 package pt.up.fe.mobile.service;
 
+import java.util.ArrayList;
+
 /**
  * Singleton class that holds the active Session cookie.
  */
@@ -8,6 +10,7 @@ public class SessionManager {
 	private String cookie;
 	private String loginCode;
 	public static TuitionHistory tuitionHistory=new TuitionHistory();
+	public static FriendsData friends=new FriendsData();
 
 	private SessionManager() {
 	}
