@@ -463,26 +463,34 @@ public class ScheduleFragment extends Fragment implements
     
     
     
-    /** Exports the schedule to Google Calendar */
+    /** Exports the schedule to Google Calendar
+     * WARNING: This is done against Google recomendations.
+     * TODO: Change to access the GData API directly.
+     * 		 Produce an ICAL file which can be imported by most calendars.*/
     public boolean calendarExport(){
     	
     	Context ctx = this.getActivity();
     	final ContentResolver cr = ctx.getContentResolver();
-    	Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"),
-                (new String[] { "_id", "displayName", "selected" }), null, null, null);
-        
-        /* Creating Queries
+    	//Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"),
+         //       (new String[] { "_id", "displayName", "selected" }), null, null, null);
+    	Cursor cursor = null;
+        //Creating Queries
         if ( Build.VERSION.SDK_INT >= 8)
             cursor = cr.query(
             		Uri.parse("content://com.android.calendar/calendars"), 
-            		new String[]{ "_id", "name" }, 
+            		new String[]{ "_id", "displayName", "selected"  }, 
             		null, null, null);
         else
             cursor = cr.query(
             		Uri.parse("content://calendar/calendars"), 
-            		new String[]{ "_id", "name" }, 
-            		null, null, null);*/
-        
+            		new String[]{ "_id","displayName", "selected"  }, 
+            		null, null, null);
+        if ( cursor == null )
+        {
+        	if ( getActivity() != null ) 
+        		Toast.makeText(getActivity(), R.string.toast_export_calendar_error, Toast.LENGTH_LONG).show();
+        	return false;
+        }
         // Iterate over calendars to store names and ids
         if ( cursor.moveToFirst() ) {
             final String[] calNames = new String[cursor.getCount()];
@@ -501,24 +509,30 @@ public class ScheduleFragment extends Fragment implements
                 public void onClick(DialogInterface dialog, int which) {
                 	
                 	// iterate over schedule and add them to schedule
-                	for(Block b : schedule){
-                		
+                //	for(Block b : schedule){
+                	Block b = schedule.get(0);//not using loops while testing. a  single block is enough.
                 		// new event
                 		ContentValues event = new ContentValues();
                 		event.put("calendar_id", calIds[which]);
                 		event.put("title", b.lectureAcronym + " (" + b.lectureType + ")");
                 		event.put("eventLocation", b.buildingCode+b.roomCode);
                 		event.put("description", "Professor: " + b.teacherAcronym);
-                		// event time
+                		long date =  firstDayofWeek() + b.weekDay * DateUtils.DAY_IN_MILLIS + b.startTime*1000;
+                		event.put("dtstart", date );
+                		event.put("dtend", date + b.lectureDuration*3600000 );
+                		
+                		// TODO: event time
                 		// event recursive
-                		
+                		Uri newEvent = null;
                 		// insert event
-                		Uri newEvent = cr.insert(Uri.parse("content://calendar/events"), event);
-                		
+                		if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
+                			newEvent =cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+                		else
+                			newEvent = cr.insert(Uri.parse("content://calendar/events"), event);
                 		// check event error
                 		if(newEvent == null) Log.e("ScheduleExport", "error on event");
                 		
-                	}
+                	//}
                 	
                 	/* Set event details
                     ContentValues cv = new ContentValues();
@@ -552,6 +566,9 @@ public class ScheduleFragment extends Fragment implements
                             cr.insert( Uri.parse( "content://calendar/reminders" ), values );
                     }*/
                     dialog.cancel();
+                    if ( getActivity() != null ) 
+                		Toast.makeText(getActivity(), R.string.toast_export_calendar_finished, Toast.LENGTH_LONG).show();
+
                 }
      
             });

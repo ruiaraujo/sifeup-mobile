@@ -362,6 +362,7 @@ public class SifeupAPI {
 		String page = null;
 		try {
 			do {
+				query = query.replace(" ", "%20");
 				HttpsURLConnection httpConn = getUncheckedConnection(
 											getStudentsSearchUrl( query ) );
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());

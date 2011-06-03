@@ -48,7 +48,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         protected void onPostExecute(String result) {
         	if ( getActivity() == null )
         		return;
-        	if ( results.isEmpty() )
+        	if ( result == null )
     		{      
         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
@@ -58,8 +58,8 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         	{
         		Log.e("Search","success");
         		
-				String[] from = new String[] {"name"};
-		        int[] to = new int[] { R.id.friend_name};
+				String[] from = new String[] {"name", "course"};
+		        int[] to = new int[] { R.id.friend_name,  R.id.friend_course};
 			    // prepare the list of all records
 		        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		        
@@ -67,6 +67,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		        for(Student s : results.get(0).students ){
 		            HashMap<String, String> map = new HashMap<String, String>();
 		            map.put("name", s.getName());
+		            map.put("course", s.getCourseName());
 		            fillMaps.add(map);
 		        }
 				
@@ -97,10 +98,10 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		  		if ( code.length < 1 )
 		  			return "";
 	    		page = SifeupAPI.getStudentsSearchReply(code[0]);
+	    		if ( page == null  )
+	    			return null;
 	    		if(	SifeupAPI.JSONError(page))
-	    		{
 		    		 return "";
-	    		}
 				
 	    		JSONStudentsSearch(page);
 	    		
@@ -153,7 +154,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     		
     		JSONArray jArray = jObject.getJSONArray("alunos");
     		
-    		// iterate over jArray
+    		// iterate over jArray	
     		for(int i = 0; i < jArray.length(); i++){
     			// new JSONObject
     			JSONObject jStudent = jArray.getJSONObject(i);
@@ -180,40 +181,6 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     	return false;
 	}
     
-	
-	/**
-	 * Parses a JSON String containing Student info,
-	 * Stores that info at Collection me.
-	 * @param String page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-    /*
-	public boolean JSONStudent(String page) throws JSONException{
-		JSONObject jObject = new JSONObject(page);
-		
-		if(jObject.has("codigo")){
-			Log.e("JSON", "founded student");
-			Student student = new Student();
-			if(jObject.has("codigo")) student.setCode(jObject.getString("codigo"));
-			if(jObject.has("nome")) student.setName(jObject.getString("nome"));
-			if(jObject.has("curso_sigla")) student.setCourseAcronym(jObject.getString("curso_sigla"));
-			if(jObject.has("curso_nome")) student.setCourseName(jObject.getString("curso_nome"));
-			if(jObject.has("ano_lect_matricula")) student.setRegistrationYear(jObject.getString("ano_lect_matricula"));
-			if(jObject.has("estado")) student.setState(jObject.getString("estado"));
-			if(jObject.has("ano_curricular")) student.setAcademicYear(jObject.getString("ano_curricular"));
-			if(jObject.has("email")) student.setEmail(jObject.getString("email"));
-			
-			Log.e("JSON", "loaded student");
-			
-			results.add(student);
-			return true;
-		}
-		Log.e("JSON", "student not found");
-		return false;
-	}
-	*/
-    
     
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View list, int position, long id ) {
@@ -222,7 +189,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		Intent i = new Intent(getActivity() , ProfileActivity.class);
 		
 		// assumed only one page of results
-		i.putExtra("profile", results.get(0).students.get(position));
+		i.putExtra("profile", results.get(0).students.get(position).getCode());
 		startActivity(i);
 	}
 }

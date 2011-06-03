@@ -68,12 +68,10 @@ public class FriendsListFragment extends ListFragment {
 		         int[] to = new int[] { R.id.friend_name, R.id.friend_course };
 			         // prepare the list of all records
 		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		       //  for(Exam e : exams){
 		             HashMap<String, String> map = new HashMap<String, String>();
 		             map.put("name", "Rui");
 		             map.put("course","MIEEC");
 		             fillMaps.add(map);
-		       //  }*/
 				 
 		         // fill in the grid_item layout
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,

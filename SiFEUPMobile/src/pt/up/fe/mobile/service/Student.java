@@ -1,6 +1,11 @@
 package pt.up.fe.mobile.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import android.content.res.Resources;
 
 public class Student implements Serializable{
 
@@ -16,7 +21,11 @@ public class Student implements Serializable{
 	private String state;
 	private String academicYear;
 	private String email;
+	private String emailAlt;
 
+	public interface Type {
+		String EMAIL = "email";
+		String MOBILE = "mobile"; }
 	public Student() {
 	}
 
@@ -104,5 +113,25 @@ public class Student implements Serializable{
 
 	public String getCourseNameEn() {
 		return courseNameEn;
+	}
+	
+	public void setEmailAlt(String emailAlt) {
+		this.emailAlt = emailAlt;
+	}
+
+	public String getEmailAlt() {
+		return emailAlt;
+	}
+
+	public class StudentDetail{
+		public String title;
+		public String content;
+		public Type type;
+	}
+	
+	//TODO : finishing adding details to these class and then finishing this function
+	public List<StudentDetail> getStudentContents( Resources res ){
+		return new ArrayList<StudentDetail>();
+		
 	}
 }

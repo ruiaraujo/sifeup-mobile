@@ -98,9 +98,9 @@
     <string name="starred_sessions">Sessions</string>
     <string name="starred_vendors">Sandbox</string>
 
-    <string name="search_label">Google I/O</string>
-    <string name="search_hint">Session keywords</string>
-
+    <string name="search_label">SiFEUP Mobile</string>
+    <string name="search_hint">Search Students</string>
+    
     <string name="permission_write">Modify Google I/O schedule data</string>
 
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
@@ -141,9 +141,11 @@
     <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
     <string name="print_ref_share_title">Share Reference</string>
     
-     <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
-     <string name="toast_search_error">There were no results for your search.</string>
-    
+    <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="toast_search_error">There were no results for your search.</string>
+    <string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
+    <string name="toast_export_calendar_finished">Calendar Exported.</string>
+   
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
     <string name="title_tuition_history">Tuition History</string>
     <string name="lbl_year">Year </string>
