@@ -18,6 +18,7 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -44,6 +45,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_schedule).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Schedule");
+                SessionManager.getInstance().resetLogin();
                 startActivity(new Intent(getActivity(), ScheduleActivity.class));
                     
             }

@@ -8,6 +8,7 @@ import java.util.List;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 public class FriendsListFragment extends ListFragment {
@@ -32,15 +34,20 @@ public class FriendsListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Friends");
-        new FriendsTask().execute();
-        registerForContextMenu(getActivity().findViewById(android.R.id.list));
+        new FriendsTask().execute();        
+    }
+    
+    @Override
+    public void onStart()
+    {
+    	super.onStart();
+    	registerForContextMenu(getActivity().findViewById(android.R.id.list));
     }
     
     @Override
     public void onCreateContextMenu (ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
     	super.onCreateContextMenu(menu, v, menuInfo);
-    	menu.add("Teste");
     	MenuInflater inflater = getActivity().getMenuInflater();
     	inflater.inflate(R.menu.friends_menu_context, menu);
     }
@@ -48,10 +55,24 @@ public class FriendsListFragment extends ListFragment {
     @Override
     public boolean onContextItemSelected (MenuItem item)
     {
+    	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+    	switch(item.getItemId())
+    	{
+    	case R.id.menu_friends_delete:
+    		SessionManager.friends.removeFriend((int)info.id);
+    		SessionManager.friends.saveToFile(getActivity().getApplicationContext());
+    		new FriendsTask().execute();  
+    		break;
+    	case R.id.menu_friends_timetable:
+    		String loginCode=SessionManager.friends.getList().get((int)info.id).getCode();
+    		SessionManager.getInstance().setLoginCodeToShow(loginCode);
+    		startActivity(new Intent(getActivity(), ScheduleActivity.class));
+    		break;
+    	}
 		return false;    	
     }
-    
-    @Override
+
+	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.friends_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -61,6 +82,7 @@ public class FriendsListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//TODO
+    	SessionManager.friends.setSelectedFriend(position);
     	//startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));
     }
     
@@ -71,9 +93,9 @@ public class FriendsListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_friends) 
         {
-        	SessionManager.friends.addFriend(new Friend("0558520555","Angela","MIEIC"));         
-        	SessionManager.friends.addFriend(new Friend("0558520555","Gaspar","MIEIC"));
-        	SessionManager.friends.addFriend(new Friend("0558520555","Andre","MIEIC"));
+        	SessionManager.friends.addFriend(new Friend("080509139","Angela","MIEIC"));         
+        	SessionManager.friends.addFriend(new Friend("080509072","Gaspar","MIEIC"));
+        	SessionManager.friends.addFriend(new Friend("080509150","Andre","MIEIC"));
         	SessionManager.friends.saveToFile(getActivity().getApplicationContext());
         	SessionManager.friends.setList(new ArrayList<Friend>());
             return true;
@@ -143,7 +165,8 @@ public class FriendsListFragment extends ListFragment {
 	    			if(SessionManager.friends.loadFromFile(getActivity().getApplicationContext()))
 	    				return "Sucess";
 	    		}
-	    					
+	    		else
+	    			return "Sucess";		
 				
 			/*} catch (JSONException e) {
 				if ( getActivity() != null ) 

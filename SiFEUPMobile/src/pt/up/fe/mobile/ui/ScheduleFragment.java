@@ -252,7 +252,7 @@ public class ScheduleFragment extends Fragment implements
 		  		String lastDay = monday.format("%Y%m%d");
 		  		
 	    		page = SifeupAPI.getScheduleReply(
-								SessionManager.getInstance().getLoginCode(), 
+								SessionManager.getInstance().getLoginCodeToShow(), 
 								firstDay, 
 								lastDay);
 	    		

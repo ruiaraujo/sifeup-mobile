@@ -19,21 +19,7 @@ public class FriendsData {
 	int selectedFriend=-1;
 	boolean loaded=false;
 	
-	public boolean isLoaded() {
-		return loaded;
-	}
-
-	public void setLoaded(boolean loaded) {
-		this.loaded = loaded;
-	}
-
-	public int getSelectedFriend() {
-		return selectedFriend;
-	}
-
-	public void setSelectedFriend(int selectedFriend) {
-		this.selectedFriend = selectedFriend;
-	}
+	//TODO rever como guardar bytes no ficheiro
 
 	public FriendsData() 
 	{
@@ -42,6 +28,7 @@ public class FriendsData {
 	
 	public boolean loadFromFile(Context con)
 	{
+		String file="";
 		byte[] buf=new byte[bufSize];
 		try 
 		{
@@ -49,15 +36,26 @@ public class FriendsData {
 			while(fis.read(buf)>0)
 			{
 				String friendStr=new String(buf);
-				String[] strArr=friendStr.split(",");
+				Log.i(TAG, "read: "+friendStr);
+				file+=friendStr;
+			}
+			fis.close();
+			String[] allFr=file.split("\n");
+			for(int i=0; i<allFr.length; i++)
+			{
+				String[] strArr=allFr[i].split(",");
 				if(strArr.length!=3)
 				{
 					Log.e(TAG, "string parsed incorrectly from file");
 				}
-				Friend fr=new Friend(strArr[0], strArr[1], strArr[2]);
-				list.add(fr);
+				else
+				{
+					Friend fr=new Friend(strArr[0], strArr[1], strArr[2]);
+					list.add(fr);
+				}				
 			}
 			Log.i(TAG, "friends loaded from file successfully");
+			loaded=true;
 			return true;
 		} 
 		catch (FileNotFoundException e) 
@@ -87,6 +85,11 @@ public class FriendsData {
 		return true;
 	}
 	
+	public void removeFriend(int pos)
+	{
+		list.remove(pos);
+	}
+	
 	public boolean saveToFile(Context con)
 	{
 		try 
@@ -94,7 +97,7 @@ public class FriendsData {
 			FileOutputStream fos = con.openFileOutput(filename, Context.MODE_PRIVATE);
 			for(Friend f: list)
 			{
-				String toWrite=f.getCode()+","+f.getName()+","+f.getCourse()+",";
+				String toWrite=f.getCode()+","+f.getName()+","+f.getCourse()+"\n";
 				byte[] buf=new byte[bufSize];
 				byte[] buf2=toWrite.getBytes();
 				for(int i=0; i<bufSize; i++)
@@ -104,8 +107,8 @@ public class FriendsData {
 					else
 						buf[i]=0;
 				}
-				Log.i(TAG,"buf: "+new String(buf));
-				fos.write(buf);
+				Log.i(TAG,"write: "+toWrite);
+				fos.write(toWrite.getBytes());
 			}
 			fos.close();
 			Log.i(TAG, "Saved successfully");
@@ -120,5 +123,21 @@ public class FriendsData {
 			Log.e(TAG, "Error writing to friends file in save");	
 		}
 		return false;
+	}
+	
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+
+	public int getSelectedFriend() {
+		return selectedFriend;
+	}
+
+	public void setSelectedFriend(int selectedFriend) {
+		this.selectedFriend = selectedFriend;
 	}
 }
