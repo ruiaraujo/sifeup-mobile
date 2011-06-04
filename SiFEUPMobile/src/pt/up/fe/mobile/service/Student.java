@@ -2,8 +2,9 @@ package pt.up.fe.mobile.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import pt.up.fe.mobile.R;
 
 import android.content.res.Resources;
 
@@ -13,19 +14,24 @@ public class Student implements Serializable{
 	private static final long serialVersionUID = 1727093503991901167L;
 	private String code;
 	private String name;
-	private String courseAcronym;
-	private String courseName;
-	private String courseNameEn;
-	private String courseCode;
+	private String programmeAcronym;
+	private String programmeName;
+	private String programmeNameEn;
+	private String programmeCode;
 	private String registrationYear;
 	private String state;
 	private String academicYear;
 	private String email;
 	private String emailAlt;
+	private String mobile;
+	private String telephone;
+	private String branch;
+
 
 	public interface Type {
 		String EMAIL = "email";
-		String MOBILE = "mobile"; }
+		String MOBILE = "mobile"; 
+	}
 	public Student() {
 	}
 
@@ -45,20 +51,20 @@ public class Student implements Serializable{
 		this.name = name;
 	}
 
-	public String getCourseAcronym() {
-		return courseAcronym;
+	public String getProgrammeAcronym() {
+		return programmeAcronym;
 	}
 
-	public void setCourseAcronym(String courseAcronym) {
-		this.courseAcronym = courseAcronym;
+	public void setProgrammeAcronym(String programmeAcronym) {
+		this.programmeAcronym = programmeAcronym;
 	}
 
-	public String getCourseName() {
-		return courseName;
+	public String getProgrammeName() {
+		return programmeName;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	public void setProgrammeName(String programmeName) {
+		this.programmeName = programmeName;
 	}
 
 	public String getRegistrationYear() {
@@ -92,27 +98,21 @@ public class Student implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	private void clearAll() {
-		name = courseAcronym = 
-			courseName = registrationYear = 
-				state = academicYear = email = "";
+
+	public void setProgrammeCode(String programmeCode) {
+		this.programmeCode = programmeCode;
 	}
 
-	public void setCourseCode(String courseCode) {
-		this.courseCode = courseCode;
+	public String getProgrammeCode() {
+		return programmeCode;
 	}
 
-	public String getCourseCode() {
-		return courseCode;
+	public void setProgrammeNameEn(String programmeNameEn) {
+		this.programmeNameEn = programmeNameEn;
 	}
 
-	public void setCourseNameEn(String courseNameEn) {
-		this.courseNameEn = courseNameEn;
-	}
-
-	public String getCourseNameEn() {
-		return courseNameEn;
+	public String getProgrammeNameEn() {
+		return programmeNameEn;
 	}
 	
 	public void setEmailAlt(String emailAlt) {
@@ -126,12 +126,76 @@ public class Student implements Serializable{
 	public class StudentDetail{
 		public String title;
 		public String content;
-		public Type type;
-	}
-	
-	//TODO : finishing adding details to these class and then finishing this function
-	public List<StudentDetail> getStudentContents( Resources res ){
-		return new ArrayList<StudentDetail>();
+		public String type;
+		public StudentDetail(String title, String content, String type) {
+			this.title = title;
+			this.content = content;
+			this.type = type;
+		}
 		
 	}
+	
+	
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public List<StudentDetail> getStudentContents( Resources res ){
+		List<StudentDetail> result = new ArrayList<StudentDetail>();
+		if ( email != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_email), email, Type.EMAIL));
+		}
+		if ( emailAlt != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_email_alt), emailAlt, Type.EMAIL));
+		}
+		if ( mobile != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_mobile), mobile, Type.MOBILE));
+		}
+		if ( telephone != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_telephone), telephone, Type.MOBILE));
+		}
+		if ( programmeName != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_programme), programmeName, null));
+		}
+		if ( branch != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_branch), branch, null));
+		}
+		if ( state != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_status), state, null));
+		}
+		if ( academicYear != null )
+		{
+			result.add(new StudentDetail(res.getString(R.string.profile_title_year), academicYear, null));
+		}
+		return result;
+		
+	}
+
 }

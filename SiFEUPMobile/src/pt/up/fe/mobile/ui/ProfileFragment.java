@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.service.Student.StudentDetail;
@@ -55,6 +56,8 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 		{
 			new ProfileTask().execute(code);
 		}
+		else
+			new ProfileTask().execute(SessionManager.getInstance().getLoginCode());
         return root;
     }
     
@@ -157,9 +160,9 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 			if(jObject.has("nome"))
 				me.setName(jObject.getString("nome"));
 			if(jObject.has("curso_sigla"))
-				me.setCourseAcronym(jObject.getString("curso_sigla"));
+				me.setProgrammeAcronym(jObject.getString("curso_sigla"));
 			if(jObject.has("curso_nome"))
-				me.setCourseName(jObject.getString("curso_nome"));
+				me.setProgrammeName(jObject.getString("curso_nome"));
 			if(jObject.has("ano_lect_matricula"))
 				me.setRegistrationYear(jObject.getString("ano_lect_matricula"));
 			if(jObject.has("estado"))
@@ -170,8 +173,12 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 				me.setEmail(jObject.getString("email"));
 			if(jObject.has("email_alternativo"))
 				me.setEmailAlt(jObject.getString("email_alternativo"));
-			
-
+			if(jObject.has("telemovel"))
+				me.setMobile(jObject.getString("telemovel"));
+			if(jObject.has("telefone"))
+				me.setTelephone(jObject.getString("telefone"));
+			if(jObject.has("ramo"))
+				me.setBranch(jObject.getString("ramo"));
 			Log.e("JSON", "loaded student");
 			return true;
 		}

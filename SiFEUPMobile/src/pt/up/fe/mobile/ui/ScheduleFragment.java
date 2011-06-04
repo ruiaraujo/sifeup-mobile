@@ -56,7 +56,7 @@ public class ScheduleFragment extends Fragment implements
     private View mRightIndicator;
     private ArrayList<Block> schedule = new ArrayList<Block>();
     private List<Day> mDays = new ArrayList<Day>();
-
+    final public static String PROFILE_CODE  = "profile";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,14 @@ public class ScheduleFragment extends Fragment implements
   		setupDay(inflater , mondayMillis + (2 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (3 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
-  		new ScheduleTask().execute();
+  		String code = getArguments().get(PROFILE_CODE).toString();
+		if ( code != null )
+		{
+			new ScheduleTask().execute(code);
+		}
+		else
+			new ScheduleTask().execute(SessionManager.getInstance().getLoginCode());
+
 
        
         mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
@@ -208,7 +215,7 @@ public class ScheduleFragment extends Fragment implements
     }
 
     /** Classe privada para a busca de dados ao servidor */
-    private class ScheduleTask extends AsyncTask<Void, Void, String> {
+    private class ScheduleTask extends AsyncTask<String, Void, String> {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -238,9 +245,11 @@ public class ScheduleFragment extends Fragment implements
         }
 
 		@Override
-		protected String doInBackground(Void ... theVoid) {
+		protected String doInBackground(String ...  code) {
 			String page = "";
 		  	try {
+		  		if ( code.length < 1 )
+		  			return "";
 		  		long mondayMillis = firstDayofWeek();
 		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
 		  		monday.set(mondayMillis);
@@ -251,8 +260,8 @@ public class ScheduleFragment extends Fragment implements
 		  		monday.normalize(false);
 		  		String lastDay = monday.format("%Y%m%d");
 		  		
-	    		page = SifeupAPI.getScheduleReply(
-								SessionManager.getInstance().getLoginCodeToShow(), 
+	    		page = SifeupAPI.getScheduleReply(code[0], 
+
 								firstDay, 
 								lastDay);
 	    		

@@ -65,8 +65,11 @@ public class FriendsListFragment extends ListFragment {
     		break;
     	case R.id.menu_friends_timetable:
     		String loginCode=SessionManager.friends.getList().get((int)info.id).getCode();
-    		SessionManager.getInstance().setLoginCodeToShow(loginCode);
-    		startActivity(new Intent(getActivity(), ScheduleActivity.class));
+    		if ( getActivity() == null )
+    			return true;
+    		Intent i = new Intent(getActivity(), ScheduleActivity.class);
+    		i.putExtra(ScheduleFragment.PROFILE_CODE, loginCode);
+    		startActivity(i);
     		break;
     	}
 		return false;    	

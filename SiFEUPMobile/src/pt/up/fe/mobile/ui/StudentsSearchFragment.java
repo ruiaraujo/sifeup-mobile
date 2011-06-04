@@ -18,31 +18,56 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class StudentsSearchFragment extends ListFragment implements OnItemClickListener {
 	
 	// query is in SearchActivity, sent to here in the arguments
 	ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
-	
+    List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+    SimpleAdapter adapter;
+	String query;
+	View loading;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-        new StudentsSearchTask().execute(getArguments().get(SearchManager.QUERY).toString());
+        query = getArguments().get(SearchManager.QUERY).toString();
+        new StudentsSearchTask().execute();
 
     }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
+		loading = root.findViewById(R.id.search_itemLoading);
+			
+    	return  super.onCreateView(inflater, container, savedInstanceState);
+
+    } 
+	
 	
 	/** Classe privada para a busca de dados ao servidor */
-    private class StudentsSearchTask extends AsyncTask<String, Void, String> {
+    public class StudentsSearchTask extends AsyncTask<Integer, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		if ( getActivity() != null  )
+    		{
+    			if (results.isEmpty())
+        			getActivity().showDialog(BaseActivity.DIALOG_FETCHING); 
+    			else
+    			{
+    				getListView().addFooterView(loading);
+    			}
+    		}
+    			 
     	}
 
         protected void onPostExecute(String result) {
@@ -58,24 +83,28 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         	{
         		Log.e("Search","success");
         		
-				String[] from = new String[] {"name", "course"};
-		        int[] to = new int[] { R.id.friend_name,  R.id.friend_course};
-			    // prepare the list of all records
-		        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		        
+	        
 		        // assumed only one page of results
-		        for(Student s : results.get(0).students ){
+		        for(Student s : results.get(results.size()-1).students ){
 		            HashMap<String, String> map = new HashMap<String, String>();
 		            map.put("name", s.getName());
-		            map.put("course", s.getCourseName());
+		            map.put("course", s.getProgrammeName());
 		            fillMaps.add(map);
 		        }
 				
 				// fill in the grid_item layout
-		        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, from, to);
-		        setListAdapter(adapter);
-		        getListView().setOnItemClickListener(StudentsSearchFragment.this);
-		         setSelection(0);
+		        if ( results.size() == 1 )
+		        {
+			        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, 
+			        		new String[] {"name", "course"}, new int[] { R.id.friend_name,  R.id.friend_course});
+			        setListAdapter(adapter);
+			        getListView().setOnItemClickListener(StudentsSearchFragment.this);
+			        getListView().setOnScrollListener(new EndlessScrollListener(14));
+			        setSelection(0);
+		        }
+		        else
+		        	adapter.notifyDataSetChanged();
+		        
     		}
 			else{	
 				Log.e("Search","error");
@@ -87,17 +116,27 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        	if ( getActivity() != null )
+        	{
+        		if ( !results.isEmpty() )
+        			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        		else
+        			getListView().removeFooterView(loading);
+        	}
         }
 
 		@Override
-		protected String doInBackground(String ... code) {
+		protected String doInBackground(Integer ... pages) {
 			String page = "";
 		  	try {
-		  		if ( code.length < 1 )
+		  		if ( pages.length < 1 )
+		  		{
+		  			pages = new Integer[1];
+		  			pages[0] = 1;
+		  		}
+		  		if ( query == null )
 		  			return "";
-	    		page = SifeupAPI.getStudentsSearchReply(code[0]);
+	    		page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
 	    		if ( page == null  )
 	    			return null;
 	    		if(	SifeupAPI.JSONError(page))
@@ -129,6 +168,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     	private int searchSize; // "total" : 583
     	private int page; // "primeiro" : 1
     	private int pageResults; // "tam_pagina" : 15
+    	private int numPages;
     	private List<Student> students = new ArrayList<Student>();
     }
     
@@ -151,7 +191,8 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     		if(jObject.has("total")) resultsPage.searchSize = jObject.getInt("total");
     		if(jObject.has("primeiro")) resultsPage.page = jObject.getInt("primeiro");
     		if(jObject.has("tam_pagina")) resultsPage.pageResults = jObject.getInt("tam_pagina");
-    		
+    		if ( resultsPage.searchSize - resultsPage.page < 15 )
+    			resultsPage.pageResults = resultsPage.searchSize - resultsPage.page;
     		JSONArray jArray = jObject.getJSONArray("alunos");
     		
     		// iterate over jArray	
@@ -163,9 +204,9 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     			
     			if(jStudent.has("codigo")) student.setCode(""+jStudent.getInt("codigo"));
     			if(jStudent.has("nome")) student.setName(jStudent.getString("nome"));
-    			if(jStudent.has("cur_codigo")) student.setCourseCode(jStudent.getString("cur_codigo"));
-    			if(jStudent.has("cur_nome")) student.setCourseName(jStudent.getString("cur_nome"));
-    			if(jStudent.has("cur_name")) student.setCourseNameEn(jStudent.getString("nome"));
+    			if(jStudent.has("cur_codigo")) student.setProgrammeCode(jStudent.getString("cur_codigo"));
+    			if(jStudent.has("cur_nome")) student.setProgrammeName(jStudent.getString("cur_nome"));
+    			if(jStudent.has("cur_name")) student.setProgrammeNameEn(jStudent.getString("nome"));
     			
     			// add student to the page results
     			resultsPage.students.add(student);
@@ -187,9 +228,46 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		if ( getActivity() == null )
 			return;
 		Intent i = new Intent(getActivity() , ProfileActivity.class);
-		
 		// assumed only one page of results
-		i.putExtra("profile", results.get(0).students.get(position).getCode());
+		i.putExtra("profile", results.get(position/15).students.get(position%15).getCode());
 		startActivity(i);
 	}
+	
+	public class EndlessScrollListener implements OnScrollListener {
+		 
+	    private int visibleThreshold = 12;
+	    private int currentPage = 1;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	    public EndlessScrollListener() {
+	    }
+	    public EndlessScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem,
+	            int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage++;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	        	if ( results.size() > 1 )
+	        	{ //Stop trying to load after having loaded them all.
+	        		if ( results.get(0).pageResults >= totalItemCount )
+	        			return;
+	        	}
+	            new StudentsSearchTask().execute(results.size() * 15 + 1);
+	            loading = true;
+	        }
+	    }
+	 
+	    @Override
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    }
+	}
+
 }

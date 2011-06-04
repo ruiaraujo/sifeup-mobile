@@ -45,7 +45,6 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_schedule).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Schedule");
-                SessionManager.getInstance().resetLogin();
                 startActivity(new Intent(getActivity(), ScheduleActivity.class));
                     
             }

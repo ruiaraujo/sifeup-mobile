@@ -1,8 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/friend_content" xmlns:android="http://schemas.android.com/apk/res/android" 
     style="@style/SimpleListItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background" android:id="@+id/list_item_friend">
+    android:background="@android:drawable/list_selector_background">
     <ImageView android:id="@+id/friend_pic"
     	android:layout_height="wrap_content"
     	android:src="@drawable/speaker_image_empty"
@@ -23,5 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/friend_name"
         android:layout_toRightOf="@id/friend_pic"
-        style="@style/ListItemSubtitle"/>  
+        style="@style/ListItemSubtitle"/> 
 </RelativeLayout>
+
+

@@ -9,7 +9,6 @@ public class SessionManager {
 	
 	private String cookie;
 	private String loginCode;
-	private String loginCodeToShow;
 	public static TuitionHistory tuitionHistory=new TuitionHistory();
 	public static FriendsData friends=new FriendsData();
 
@@ -62,20 +61,6 @@ public class SessionManager {
 	 */
 	public void setLoginCode(String loginCode) {
 		this.loginCode = loginCode;
-		this.loginCodeToShow = loginCode;
-	}
-	
-	public String getLoginCodeToShow() {
-		return loginCodeToShow;
-	}
-
-	public void setLoginCodeToShow(String loginCodeToShow) {
-		this.loginCodeToShow = loginCodeToShow;
-	}
-
-	public void resetLogin() 
-	{
-		this.loginCodeToShow = this.loginCode;		
 	}
 	
 }

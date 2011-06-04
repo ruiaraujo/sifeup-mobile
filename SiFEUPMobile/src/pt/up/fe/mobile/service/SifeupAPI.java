@@ -74,6 +74,7 @@ public class SifeupAPI {
 	private interface StudentsSearch {
 		String NAME = "alunos_pesquisa";
 		String QUERY = "pv_nome";
+		String PAGE = "pv_primeiro";
 	}
 	
 	private interface PrintingRef {
@@ -178,11 +179,13 @@ public class SifeupAPI {
 
 	/**
 	 * Students Search Url for Web Service
+	 * @param numPage 
 	 * @param name
 	 * @return 
 	 */
-	public static String getStudentsSearchUrl( String query ){
-		return WEBSERVICE + StudentsSearch.NAME + WEBSERVICE_SEP + StudentsSearch.QUERY + EQUALS + query;
+	public static String getStudentsSearchUrl( String query, Integer numPage ){
+		return WEBSERVICE + StudentsSearch.NAME + WEBSERVICE_SEP + StudentsSearch.QUERY + EQUALS + query + 
+						LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
 		
 	/**
@@ -355,16 +358,19 @@ public class SifeupAPI {
 	
 	/**
 	 * Students Search query Reply from web service
+	 * @param numPage 
 	 * @param code
 	 * @return
 	 */
-	public static String getStudentsSearchReply( String query ){
+	public static String getStudentsSearchReply( String query, Integer numPage ){
 		String page = null;
 		try {
 			do {
 				query = query.replace(" ", "%20");
+				if ( numPage == null )
+					numPage = 1;
 				HttpsURLConnection httpConn = getUncheckedConnection(
-											getStudentsSearchUrl( query ) );
+											getStudentsSearchUrl( query, numPage ) );
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 				httpConn.connect();
 				page = getPage(httpConn.getInputStream());
