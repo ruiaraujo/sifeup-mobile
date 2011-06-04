@@ -89,10 +89,11 @@ public class ExamsFragment extends ListFragment {
 		  	try {
 	    			page = SifeupAPI.getExamsReply(
 								SessionManager.getInstance().getLoginCode());
-	    		if(	SifeupAPI.JSONError(page))
-	    		{
-		    		 return "";
-	    		}
+	    			int error =	SifeupAPI.JSONError(page);
+		    		switch (error)
+		    		{
+		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    		}
 				
 	    		JSONExams(page);
 	    		

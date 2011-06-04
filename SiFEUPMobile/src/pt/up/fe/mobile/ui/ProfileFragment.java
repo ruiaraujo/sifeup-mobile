@@ -119,9 +119,10 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 		  		if ( code.length < 1 )
 		  			return "";
 	    			page = SifeupAPI.getStudentReply(code[0]);
-	    		if(	SifeupAPI.JSONError(page))
+	    		int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
 	    		{
-		    		 return "";
+	    		case SifeupAPI.Errors.NO_AUTH: return "";
 	    		}
 				
 	    		JSONStudent(page);

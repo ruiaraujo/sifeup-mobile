@@ -61,9 +61,10 @@ public class AcademicPathFragment extends ListFragment {
 		  	try {
 	    			page = SifeupAPI.getAcademicPathReply(
 								SessionManager.getInstance().getLoginCode());
-	    		if(	SifeupAPI.JSONError(page))
+    			int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
 	    		{
-		    		 return "";
+	    		case SifeupAPI.Errors.NO_AUTH: return "";
 	    		}
 				
 	    		JSONAcademicPath(page);

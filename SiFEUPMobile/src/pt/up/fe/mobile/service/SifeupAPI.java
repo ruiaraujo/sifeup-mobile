@@ -87,6 +87,12 @@ public class SifeupAPI {
 		String CODE = "pv_codigo";
 	}
 	
+	public interface Errors{
+		int NULL_PAGE = 0;
+		int NO_AUTH = 1;
+		int NO_ERROR = 2;
+	}
+	
 	/**
 	 * Authentication Url for Web Service
 	 * @param code student code
@@ -404,6 +410,7 @@ public class SifeupAPI {
 				if ( page == null )
 					return null;
 			} while (page.equals(""));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -530,11 +537,11 @@ public class SifeupAPI {
 	 * @return boolean True in case of error
 	 * @throws JSONException
 	 */
-	public static boolean JSONError(String page) throws JSONException{
+	public static int JSONError(String page) throws JSONException{
 		if ( page == null )
 		{
 			Log.e("JSON", "null page");
-			return true;
+			return Errors.NULL_PAGE;
 		}
 		JSONObject jObject = new JSONObject(page);
 		String erro = null;
@@ -547,9 +554,9 @@ public class SifeupAPI {
 				erro_msg = (String) jObject.get("erro_msg");
 				Log.e("JSON", erro_msg);
 			}
-			return true;
+			return Errors.NO_AUTH;
 		}
 		
-		return false;
+		return Errors.NO_ERROR;
 	}
 }

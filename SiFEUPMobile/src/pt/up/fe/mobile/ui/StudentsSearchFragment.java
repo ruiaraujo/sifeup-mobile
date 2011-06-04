@@ -139,9 +139,11 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 	    		page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
 	    		if ( page == null  )
 	    			return null;
-	    		if(	SifeupAPI.JSONError(page))
-		    		 return "";
-				
+	    		int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
+	    		{
+	    		case SifeupAPI.Errors.NO_AUTH: return "";
+	    		}
 	    		JSONStudentsSearch(page);
 	    		
 				return page;
@@ -202,7 +204,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     			// new Block
     			Student student = new Student();
     			
-    			if(jStudent.has("codigo")) student.setCode(""+jStudent.getInt("codigo"));
+    			if(jStudent.has("codigo")) student.setCode(""+jStudent.getString("codigo"));
     			if(jStudent.has("nome")) student.setName(jStudent.getString("nome"));
     			if(jStudent.has("cur_codigo")) student.setProgrammeCode(jStudent.getString("cur_codigo"));
     			if(jStudent.has("cur_nome")) student.setProgrammeName(jStudent.getString("cur_nome"));

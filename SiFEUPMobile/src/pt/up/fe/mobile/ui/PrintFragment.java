@@ -114,8 +114,11 @@ public class PrintFragment extends Fragment {
 	    			page = SifeupAPI.getPrintingReply(
 								SessionManager.getInstance().getLoginCode());
 	    		
-    			if(	SifeupAPI.JSONError(page))
-    				return "";
+	    			int error =	SifeupAPI.JSONError(page);
+		    		switch (error)
+		    		{
+		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    		}
 
 	    		JSONObject jObject = new JSONObject(page);			
 				return jObject.optString("saldo");

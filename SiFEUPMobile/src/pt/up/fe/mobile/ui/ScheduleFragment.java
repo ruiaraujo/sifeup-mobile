@@ -265,9 +265,11 @@ public class ScheduleFragment extends Fragment implements
 								firstDay, 
 								lastDay);
 	    		
-	    		if(SifeupAPI.JSONError(page))
-	    			return "";
-	    		
+	    		int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
+	    		{
+	    		case SifeupAPI.Errors.NO_AUTH: return "";
+	    		}
 	    		JSONSchedule(page);
 	    		
 	    		

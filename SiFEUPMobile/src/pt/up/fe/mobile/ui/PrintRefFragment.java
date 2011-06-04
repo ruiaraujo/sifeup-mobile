@@ -140,9 +140,11 @@ public class PrintRefFragment extends Fragment {
 					return "";
 	    			page = SifeupAPI.getPrintingRefReply(value[0]);
 	    		
-    			if(	SifeupAPI.JSONError(page))
-    				return "";
-
+	    			int error =	SifeupAPI.JSONError(page);
+		    		switch (error)
+		    		{
+		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    		}
 	    		JSONMBRef(page);			
 				return "Success";
 				

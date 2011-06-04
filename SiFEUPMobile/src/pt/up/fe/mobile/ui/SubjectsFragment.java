@@ -104,10 +104,11 @@ public class SubjectsFragment extends ListFragment implements OnItemClickListene
 	    			page = SifeupAPI.getSubjectsReply(
 								SessionManager.getInstance().getLoginCode(),
 								"2010");
-	    		if(	SifeupAPI.JSONError(page))
-	    		{
-		    		 return "";
-	    		}
+	    			int error =	SifeupAPI.JSONError(page);
+		    		switch (error)
+		    		{
+		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    		}
 	    		
 	    		JSONSubjects(page);
 	    		

@@ -119,9 +119,10 @@ public class TuitionMenuFragment extends Fragment {
 			  			String page = "";
 		    			page = SifeupAPI.getTuitionReply(
 									SessionManager.getInstance().getLoginCode());
-			    		if(SifeupAPI.JSONError(page))
+		    			int error =	SifeupAPI.JSONError(page);
+			    		switch (error)
 			    		{
-				    		 return "";
+			    		case SifeupAPI.Errors.NO_AUTH: return "";
 			    		}
 						
 			    		JSONObject jHistory=new JSONObject(page);
