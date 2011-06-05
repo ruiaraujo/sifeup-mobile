@@ -21,39 +21,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.*;
 
-import external.com.google.android.apps.iosched.util.ActivityHelper;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
-import external.com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
-import external.com.google.android.apps.iosched.util.UIUtils;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
-import android.text.Spannable;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import static external.com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
 
 
 /**

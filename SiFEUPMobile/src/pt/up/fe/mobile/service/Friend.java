@@ -5,6 +5,8 @@ import java.util.StringTokenizer;
 
 public class Friend implements Serializable , Comparable<Friend>
 {
+
+	private static final long serialVersionUID = 8493032318077234968L;
 	String code;
 	String name;
 	String course;
