@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.service;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

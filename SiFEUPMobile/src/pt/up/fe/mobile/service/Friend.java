@@ -1,11 +1,14 @@
 package pt.up.fe.mobile.service;
 
-public class Friend 
+import java.io.Serializable;
+import java.util.StringTokenizer;
+
+public class Friend implements Serializable , Comparable<Friend>
 {
 	String code;
 	String name;
 	String course;
-	
+	final private static String SEPARATOR = "|";
 	public Friend(String code, String name, String course)
 	{
 		this.code=code;
@@ -13,6 +16,15 @@ public class Friend
 		this.course=course;
 	}
 	
+	public Friend(String untokenizedString)
+	{
+		StringTokenizer reader = new StringTokenizer(untokenizedString , SEPARATOR);
+		if ( reader.countTokens() < 3 )
+			throw new IllegalArgumentException("There must be three tokens");
+		this.code=reader.nextToken();
+		this.name=reader.nextToken();
+		this.course=reader.nextToken();;
+	}
 	public String getCode() {
 		return code;
 	}
@@ -30,6 +42,27 @@ public class Friend
 	}
 	public void setCourse(String course) {
 		this.course = course;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if ( o instanceof Friend )
+			return code.equals(((Friend)o).code);
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return code.hashCode();
+	}
+
+	public String toString(){
+		return code + SEPARATOR + name + SEPARATOR + course;
+	}
+
+	@Override
+	public int compareTo(Friend another) {
+		return code.compareTo(another.code);
 	}
 	
 	

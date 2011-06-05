@@ -207,7 +207,7 @@ public class LoginActivity extends Activity
         	if ( result == null )
         	{
         		Log.e("Login","error page is null");
-				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error), Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 	        	removeDialog(DIALOG_CONNECTING);
 				return;
         	}

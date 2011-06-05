@@ -73,13 +73,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         protected void onPostExecute(String result) {
         	if ( getActivity() == null )
         		return;
-        	if ( result == null )
-    		{      
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
-				return;
-    		}
-        	if ( !result.equals("") )
+        	if ( result.equals("") )
         	{
         		Log.e("Search","success");
         		
@@ -106,7 +100,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		        	adapter.notifyDataSetChanged();
 		        
     		}
-			else{	
+			else if ( result.equals("Error") ){	
 				Log.e("Search","error");
 				if ( getActivity() != null ) 
 				{
@@ -116,6 +110,19 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 					return;
 				}
 			}
+			else if ( result.equals("") )
+			{
+				getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+				Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+				getActivity().finish();
+				return;
+			}
+			else if ( result.equals("Empty") )
+			{      
+        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
+				return;
+    		}
         	if ( getActivity() != null )
         	{
         		if ( !results.isEmpty() )
@@ -142,9 +149,17 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
-	    		case SifeupAPI.Errors.NO_AUTH: return "";
+	    			case SifeupAPI.Errors.NO_AUTH:
+	    				return "Error";
+	    			case SifeupAPI.Errors.NO_ERROR:
+	    	    		JSONStudentsSearch(page);
+	    	    		if ( results.isEmpty())
+	    	    			return "Empty";
+	    	    		else
+	    	    			return "Success";
+	    			case SifeupAPI.Errors.NULL_PAGE:
+	    				return "";
 	    		}
-	    		JSONStudentsSearch(page);
 	    		
 				return page;
 				

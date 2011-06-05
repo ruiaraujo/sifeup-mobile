@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
@@ -22,7 +23,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -33,6 +36,7 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 	
 	private TextView name;
 	private ListView details;
+	private CheckBox friend;
 	private TextView code;
 
 	/** User Info */
@@ -53,7 +57,21 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 		name = ((TextView)root.findViewById(R.id.profile_name));
 		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
+		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
 		String code = getArguments().get("profile").toString();
+		
+		friend.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Friend fr = new Friend(me.getCode(),me.getName(), me.getProgrammeAcronym());
+				if ( friend.isChecked())
+					SessionManager.friends.addFriend(fr);
+				else
+					SessionManager.friends.removeFriend(fr);
+				SessionManager.friends.saveToFile(getActivity());
+			}
+		});
 		if ( code != null )
 		{
 			new ProfileTask().execute(code);
@@ -82,6 +100,10 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 				contents = me.getStudentContents(getResources());
 				name.setText(me.getName());
 				code.setText(me.getCode());
+				if ( SessionManager.friends.isFriend(me.getCode()) )
+					friend.setChecked(true);
+				else
+					friend.setChecked(false);
 				String[] from = new String[] { "title", "content" };
 		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
 			         // prepare the list of all records
@@ -108,6 +130,7 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
+					getActivity().finish();
 					return;
 				}
 			}
@@ -116,8 +139,8 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 				if ( getActivity() != null ) 	
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).mActivityHelper.goHome();
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
 					return;
 				}
 			}

@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.ui;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class SubjectsFragment extends ListFragment implements OnItemClickListene
         protected void onPostExecute(String result) {
 			if ( getActivity() == null )
 				 return;
-        	if ( !result.equals("") )
+        	if ( result.equals("Success") )
         	{
 				Log.e("Subjects","success");
 				
@@ -83,13 +84,23 @@ public class SubjectsFragment extends ListFragment implements OnItemClickListene
 
 				 }
     		}
-			else{	
+			else if ( result.equals("Error") ){	
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
+					return;
+				}
+			}
+			else if ( result.equals("") )
+			{
+				if ( getActivity() != null ) 	
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
 					return;
 				}
 			}
@@ -107,13 +118,16 @@ public class SubjectsFragment extends ListFragment implements OnItemClickListene
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
-		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    			case SifeupAPI.Errors.NO_AUTH:
+		    				return "Error";
+		    			case SifeupAPI.Errors.NO_ERROR:
+		    				JSONSubjects(page);
+		    				return "Success";
+		    			case SifeupAPI.Errors.NULL_PAGE:
+		    				return "";	
 		    		}
-	    		
-	    		JSONSubjects(page);
-	    		
-				return "Success";
-				
+
+				return "";
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();

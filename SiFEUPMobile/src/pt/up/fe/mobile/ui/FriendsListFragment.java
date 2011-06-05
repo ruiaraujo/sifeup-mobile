@@ -33,8 +33,8 @@ public class FriendsListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    	new FriendsTask().execute();
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Friends");
-        new FriendsTask().execute();        
     }
     
     @Override
@@ -50,6 +50,10 @@ public class FriendsListFragment extends ListFragment {
     	super.onCreateContextMenu(menu, v, menuInfo);
     	MenuInflater inflater = getActivity().getMenuInflater();
     	inflater.inflate(R.menu.friends_menu_context, menu);
+    }
+    public void onResume(){
+        super.onResume();
+    	new FriendsTask().execute();
     }
     
     @Override
@@ -74,6 +78,10 @@ public class FriendsListFragment extends ListFragment {
     	}
 		return false;    	
     }
+    
+    public void onStop(){
+    	super.onStop();
+    }
 
 	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -86,7 +94,9 @@ public class FriendsListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//TODO
     	SessionManager.friends.setSelectedFriend(position);
-    	//startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));
+    	Intent i = new Intent(getActivity(), ProfileActivity.class);
+    	i.putExtra("profile", SessionManager.friends.getFriend(position).getCode());
+    	startActivity(i);
     }
     
     
@@ -96,12 +106,9 @@ public class FriendsListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_friends) 
         {
-        	SessionManager.friends.addFriend(new Friend("080509139","Angela","MIEIC"));         
-        	SessionManager.friends.addFriend(new Friend("080509072","Gaspar","MIEIC"));
-        	SessionManager.friends.addFriend(new Friend("080509150","Andre","MIEIC"));
-        	SessionManager.friends.saveToFile(getActivity().getApplicationContext());
-        	SessionManager.friends.setList(new ArrayList<Friend>());
-            return true;
+			Toast.makeText(getActivity(), "ola", Toast.LENGTH_LONG).show();
+
+        	return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -165,7 +172,7 @@ public class FriendsListFragment extends ListFragment {
 	    		}*/
 	    		if(!SessionManager.friends.isLoaded())
 	    		{
-	    			if(SessionManager.friends.loadFromFile(getActivity().getApplicationContext()))
+	    			if(SessionManager.friends.loadFromFile(getActivity()))
 	    				return "Sucess";
 	    		}
 	    		else

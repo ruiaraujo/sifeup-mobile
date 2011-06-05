@@ -293,6 +293,16 @@ public class ScheduleFragment extends Fragment implements
 					return;
 				}
 			}
+			else if ( result.equals("") )
+			{
+				if ( getActivity() != null ) 	
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
+					return;
+				}
+			}
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
@@ -325,7 +335,6 @@ public class ScheduleFragment extends Fragment implements
 		    		case SifeupAPI.Errors.NULL_PAGE:
 		    			return "";
 	    		}
-				return null;
 				
 			} catch (JSONException e) {
 				Looper.prepare();

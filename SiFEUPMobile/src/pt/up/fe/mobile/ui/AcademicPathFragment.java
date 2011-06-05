@@ -6,6 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import external.com.google.android.apps.iosched.ui.widget.Workspace;
+import external.com.google.android.apps.iosched.ui.widget.Workspace.OnScreenChangeListener;
+import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.MotionEventUtils;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
@@ -13,22 +18,102 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AcademicPathFragment extends ListFragment {
-
+	
+    private Workspace mWorkspace;
+    private TextView mTitle;
+    private int mTitleCurrentDayIndex = -1;
+    private View mLeftIndicator;
+    private View mRightIndicator;
 	/** All info about the student Academic Path */
 	AcademicPath academicPath = new AcademicPath();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Academic Path");
         new AcademicPathTask().execute();
 
     }
-	
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	            Bundle savedInstanceState) {
+			ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
+			mWorkspace = (Workspace) root.findViewById(R.id.workspace);
+
+	        mTitle = (TextView) root.findViewById(R.id.block_title);
+
+	        mLeftIndicator = root.findViewById(R.id.indicator_left);
+	        mLeftIndicator.setOnTouchListener(new View.OnTouchListener() {
+	            public boolean onTouch(View view, MotionEvent motionEvent) {
+	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
+	                        == MotionEvent.ACTION_DOWN) {
+	                	mWorkspace.scrollLeft();
+	                    return true;
+	                }
+	                return false;
+	            }
+	        });
+	        mLeftIndicator.setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View view) {
+	            	mWorkspace.scrollLeft();
+	            }
+	        });
+
+	        mRightIndicator = root.findViewById(R.id.indicator_right);
+	        mRightIndicator.setOnTouchListener(new View.OnTouchListener() {
+	            public boolean onTouch(View view, MotionEvent motionEvent) {
+	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
+	                        == MotionEvent.ACTION_DOWN) {
+	                	mWorkspace.scrollRight();
+	                    return true;
+	                }
+	                return false;
+	            }
+	        });
+	        mRightIndicator.setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View view) {
+	            		mWorkspace.scrollRight();
+	            }
+	        });
+			mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
+				
+				@Override
+				public void onScreenChanging(View newScreen, int newScreenIndex) {				
+				}
+				
+				@Override
+				public void onScreenChanged(View newScreen, int newScreenIndex) {
+					mTitleCurrentDayIndex = newScreenIndex;
+				}
+			});
+	       
+	        mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
+	            public void onScroll(float screenFraction) {
+	                updateWorkspaceHeader(Math.round(screenFraction));
+	            }
+	        }, true);
+
+	        return root;
+	    }
+	 
+	    public void updateWorkspaceHeader(int yearIndex) {
+	     /*   if (mTitleCurrentDayIndex == yearIndex) {
+	            return;
+	        }
+	        if (yearIndex >= mDays.size())
+	        	return;
+	        mTitleCurrentDayIndex = yearIndex;
+	        Day day = mDays.get(yearIndex);
+	        mTitle.setText(day.label);*/
+	    }
 	private class AcademicPathTask extends AsyncTask<Void, Void, String> {
 		
 		protected void onPreExecute (){
@@ -80,6 +165,8 @@ public class AcademicPathFragment extends ListFragment {
 		}
 		 
 	}
+	
+	
 	
 	/**
 	 * 

@@ -31,12 +31,16 @@ public class ExamsFragment extends ListFragment {
 
     /** Stores all exams from Student */
 	private ArrayList<Exam> exams = new ArrayList<Exam>();
+    final public static String PROFILE_CODE  = "profile";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-        new ExamsTask().execute();
+        String personCode = (String) getArguments().get(PROFILE_CODE);
+		if ( personCode == null )
+			personCode = SessionManager.getInstance().getLoginCode();
+        new ExamsTask().execute(personCode);
 
     }
     
@@ -59,7 +63,7 @@ public class ExamsFragment extends ListFragment {
     }
 
     /** Classe privada para a busca de dados ao servidor */
-    private class ExamsTask extends AsyncTask<Void, Void, String> {
+    private class ExamsTask extends AsyncTask<String, Void, String> {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -67,7 +71,7 @@ public class ExamsFragment extends ListFragment {
     	}
 
         protected void onPostExecute(String result) {
-        	if ( !result.equals("") )
+        	if ( result.equals("Success") )
         	{
 				Log.e("Login","success");
 				
@@ -90,13 +94,24 @@ public class ExamsFragment extends ListFragment {
 		         Log.e("JSON", "exams visual list loaded");
 
     		}
-			else{	
+			else if ( result.equals("Error") ){	
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
+					getActivity().finish();
+					return;
+				}
+			}
+			else if ( result.equals("")  )
+			{
+				if ( getActivity() != null ) 	
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
 					return;
 				}
 			}
@@ -105,21 +120,26 @@ public class ExamsFragment extends ListFragment {
         }
 
 		@Override
-		protected String doInBackground(Void ... theVoid) {
+		protected String doInBackground(String ... code) {
 			String page = "";
 		  	try {
-	    			page = SifeupAPI.getExamsReply(
-								SessionManager.getInstance().getLoginCode());
+		  			if ( code.length < 1)
+		  				return "";
+	    			page = SifeupAPI.getExamsReply(code[0]);
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
-		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    			case SifeupAPI.Errors.NO_AUTH:
+		    				return "Error";
+		    			case SifeupAPI.Errors.NO_ERROR:
+		    	    		JSONExams(page);
+		    				return "Sucess";
+		    			case SifeupAPI.Errors.NULL_PAGE:
+		    				return "";
 		    		}
 				
-	    		JSONExams(page);
 	    		
-				return "Sucess";
-				
+				return "";
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();

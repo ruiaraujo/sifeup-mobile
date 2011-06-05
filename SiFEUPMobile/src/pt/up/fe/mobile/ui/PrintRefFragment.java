@@ -3,8 +3,6 @@
 package pt.up.fe.mobile.ui;
 
 
-import java.util.Iterator;
-
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
@@ -19,8 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +41,7 @@ public class PrintRefFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Printing");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Printing Ref");
     }
 
     @Override
@@ -111,7 +107,7 @@ public class PrintRefFragment extends Fragment {
         protected void onPostExecute(String saldo) {
         	if ( getActivity() == null )
         		return;
-        	if ( !saldo.equals("") )
+        	if ( saldo.equals("Success") )
         	{
         		nome.setText(ref.getName());
         		entidade.setText(""+ref.getEntity());
@@ -119,12 +115,22 @@ public class PrintRefFragment extends Fragment {
         		valor.setText(ref.getAmount()+"€");
         		dataFim.setText(ref.getEndDate().format3339(true));
 			}
-			else{	
+			else if ( saldo.equals("Error") )  {	
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
+					getActivity().finish();
+					return;
+				}
+			}
+			else if ( saldo.equals("") ){
+				if ( getActivity() != null ) 	
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
 					return;
 				}
 			}
@@ -143,10 +149,16 @@ public class PrintRefFragment extends Fragment {
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
-		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    			case SifeupAPI.Errors.NO_AUTH:
+		    				return "Error";
+		    			case SifeupAPI.Errors.NO_ERROR:
+		    	    		JSONMBRef(page);
+		    				return "Success";
+		    			case SifeupAPI.Errors.NULL_PAGE:
+		    				return "";
 		    		}
-	    		JSONMBRef(page);			
-				return "Success";
+		    		
+				return "";
 				
 				
 			} catch (JSONException e) {

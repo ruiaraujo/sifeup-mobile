@@ -48,10 +48,10 @@ public class SearchActivity extends BaseSinglePaneActivity {
         super.onPostCreate(savedInstanceState);
         getActivityHelper().setupSubActivity();
 
-        ViewGroup detailContainer = (ViewGroup) findViewById(R.id.fragment_container_search_detail);
+       /* ViewGroup detailContainer = (ViewGroup) findViewById(R.id.fragment_container_search_detail);
         if (detailContainer != null && detailContainer.getChildCount() > 1) {
             findViewById(android.R.id.empty).setVisibility(View.GONE);
-        }
+        }*/
     }
 
 	@Override

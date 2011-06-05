@@ -1,139 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SiFEUP Mobile</string>
-
+    
     <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
-    <string name="description_search">Search</string>
-    <string name="description_map">Map</string>
+    <string name="description_search">Pesquisar</string>
+    <string name="description_map">Mapa</string>
     <string name="description_refresh">Refresh</string>
-    <string name="description_share">Share</string>
-    <string name="description_logout">Log Out</string>
+    <string name="description_share">Partilhar</string>
+    <string name="description_logout">Fechar Sessão</string>
     <string name="description_export">Exportar</string>
-    <string name="description_star">Star</string>
     <string name="description_now">Go to Now</string>
     <string name="description_add">Adicionar Amigo</string>
 
-    <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Horário</string>
-    <string name="title_sessions">Sessions</string>
-    <string name="title_session_detail">Session Information</string>
-    <string name="title_starred">Starred</string>
-    <string name="title_tracks">Tracks</string>
-    <string name="title_vendors">Sandbox</string>
-    <string name="title_vendor_detail">Company Information</string>
+    <string name="title_tuition">Pagamentos</string>
+    <string name="title_subjects">Disciplinas</string>
     <string name="title_exams">Exames</string>
-    <string name="title_tagstream">Realtime Stream</string>
+    <string name="title_friends">Amigos</string>     
+    <string name="title_academic_path">Percurso Académico</string>
     <string name="title_printing">Saldo</string>
     <string name="title_news">Notícias</string>
 
-    <string name="title_session_tracks">Session tracks</string>
-    <string name="title_vendor_tracks">Sandbox pods</string>
 
-    <string name="title_share">Share using</string>
+    <string name="title_share">Partilhar usando</string>
 
-    <string name="title_search">Search</string>
-    <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
+    <string name="title_search">Pesquisar</string>
+    <string name="title_search_query">Pesquisar por \'<xliff:g id="query">%1$s</xliff:g>\'</string>
 
     <string name="btn_schedule">Horário</string>
     <string name="btn_exams">Exames</string>
-    <string name="btn_sessions">Cadeiras</string>
+    <string name="btn_subjects">Disciplinas</string>
     <string name="btn_friends">Amigos</string>
     <string name="btn_printing">Saldo</string>
     <string name="btn_tuition">Propinas</string>
     <string name="btn_news">Notícias</string>
 
-
-    <string name="toast_sync_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
-
-    <string name="session_subtitle"><xliff:g id="time">%1$s</xliff:g> in <xliff:g id="room">%2$s</xliff:g></string>
-    <string name="session_moderator_status"><xliff:g id="questions">%1$s</xliff:g> questions submitted and <xliff:g id="votes">%2$s</xliff:g> votes cast.</string>
-
-    <string name="all_sandbox_title">All companies</string>
-    <string name="all_sandbox_subtitle">Tap to filter by sandbox companies by pod.</string>
-
-    <string name="all_sessions_title">All sessions</string>
-    <string name="all_sessions_subtitle">Tap to filter sessions by track.</string>
-
-    <string name="empty_sessions">No sessions found</string>
-    <string name="empty_session_detail">No session details found</string>
-    <string name="empty_vendors">No sandbox results found</string>
-    <string name="empty_search">No search results found</string>
-    <string name="empty_links">No links available</string>
-
-    <string name="session_summary">Summary</string>
-    <string name="session_notes">Notes</string>
-    <string name="session_links">Links</string>
-    <string name="session_requirements">Requirements</string>
-    <string name="session_speakers">Speakers</string>
-
-    <string name="tag_stream">Realtime stream for</string>
-    
-    <string name="session_link_main">Web link</string>
-    <string name="session_link_moderator">Ask questions</string>
-    <string name="session_link_youtube">YouTube video</string>
-    <string name="session_link_pdf">Slides (PDF)</string>
-    <string name="session_link_feedback">Feedback on this session</string>
-    <string name="session_link_notes">Official notes</string>
-
-    <string name="search_sessions">Sessions</string>
-    <string name="search_vendors">Sandbox</string>
-
-    <string name="starred_sessions">Sessions</string>
-    <string name="starred_vendors">Sandbox</string>
-
     <string name="search_label">SiFEUP Mobile</string>
-    <string name="search_hint">Procurar Estudantes</string>
-
-    <string name="share_template">Checking out \'<xliff:g id="title">%1$s</xliff:g>\' at <xliff:g id="hashtags">%2$s</xliff:g> <xliff:g id="url">%3$s</xliff:g></string>
-
-    <string name="moderator_header">Moderator</string>
-
-    <string name="dialog_moderator_title">Google Moderator</string>
-    <string name="dialog_moderator_message">The official Google Moderator app is available in Market, would you like to install it or continue using a normal browser?</string>
-
-    <string name="dialog_moderator_web">Use Browser</string>
-    <string name="dialog_moderator_market">Visit Market</string>
-
-    <plurals name="whats_on_countdown_title">
-        <item quantity="zero"><xliff:g id="remaining_time">%2$s</xliff:g>\nuntil Google I/O</item>
-        <item quantity="one"><xliff:g id="number_of_days">%1$s</xliff:g> day, <xliff:g id="remaining_time">%2$s</xliff:g>\nuntil Google I/O</item>
-        <item quantity="other"><xliff:g id="number_of_days">%1$s</xliff:g> days, <xliff:g id="remaining_time">%2$s</xliff:g>\nuntil Google I/O</item>
-    </plurals>
-
-    <string name="whats_on_stream_title">Realtime\nStream</string>
-    <string name="whats_on_now_playing_title">Now Playing</string>
-    <string name="whats_on_thank_you_title">See you next year!</string>
-
-    <string name="permission_write">Modify Google I/O schedule data</string>
-
-    <string name="toast_now_not_visible">Pressione este botão durante os dias da semana para mostrar o tempo actual.</string>
-
-    <!-- Notes integration -->
-    <string name="notes_catch_powered_by">Notes are powered by <a href="http://www.catch.com/">Catch.com</a>.</string>
-    <string name="notes_catch_market_title">Install Catch Notes</string>
-    <string name="notes_catch_market_subtitle">You can take notes for Google I/O sessions using the latest version of Catch Notes, available from Android Market.</string>
-    <string name="notes_catch_new_title">Create a new note</string>
-    <string name="notes_catch_view_title">View track notes</string>
-    <string name="toast_notes_error_invoking">Error invoking Catch Notes.</string>
-
-    <string name="note_template">Session: <xliff:g id="title">%1$s</xliff:g>\n\n\n\n__________\nTags: <xliff:g id="hashtags">%2$s</xliff:g></string>
+    <string name="search_hint">Pesquisar Estudantes</string>
+    
+    <string name="toast_now_not_visible">Pressione este botão durante a semana actual para ver a hora.</string>
 
     <!-- Login -->
    	<string name="bt_cancel">Sair</string>
     <string name="lb_login_cancel">Conectando...</string>
-    <string name="bt_login">Entrar</string>
+    <string name="bt_login">Login</string>
     <string name="bt_reset">Limpar</string>
-    <string name="lb_login_remember">Remember Me</string>
+    <string name="lb_login_remember">Lembrar-se de mim</string>
     <string name="lb_login_username">Utilizador:</string>
     <string name="lb_login_password">Senha:</string>
-    <string name="toast_login_error_empty_username">Utilizador não pode estar vazio.</string>
-    <string name="toast_login_error_empty_password">Senha não pode estar vazia.</string>
-    <string name="toast_login_error_wrong_password">A sua senha ou utilizador estavam incorrectos.</string>
-    <string name="toast_login_error">O serviço Web para estar com dificuldades. Por favor, tente mais tarde.</string>
+    <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
+    <string name="toast_login_error_empty_password">Senha tem de estar preenchido.</string>
+    <string name="toast_login_error_wrong_password">O utlizador ou senha estão incorrectos.</string>
     
-       	<!-- Profile -->
+    <string name="toast_server_error">O servidor parece estar com dificuldades. Por favor, tente outra vez.</string>
+    
+    <!-- Print Activity -->
+    <string name="lb_data_fetching">Fetching data...</string>
+    <string name="print_balance">Saldo: <xliff:g id="quota">%1$s</xliff:g> €</string>
+    <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
+    <string name="print_reference_title">Aumentar Saldo</string>
+    <string name="lb_print_increase">Valor (>1€):</string>
+    <string name="btn_print_reference">Gerar Referência</string>
+    <string name="lb_print_ref_title">Referência Gerada</string>
+    <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
+    <string name="print_ref_share_title">Partilhar Referência</string>
+    
+    <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="toast_search_error">Não houve resultados para a sua pesquisa.</string>
+    <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
+    <string name="toast_export_calendar_finished">Calendário Exportado.</string>
+   
+   	<!-- Profile -->
 	<string name="profile_title_email">Email</string>
 	<string name="profile_title_email_alt">Email Alternativo</string>
    	<string name="profile_title_mobile">Telemóvel</string>
@@ -143,17 +81,28 @@
     <string name="profile_title_code">Código</string>
     <string name="profile_title_status">Estado</string>
     <string name="profile_title_year">Ano</string>
+   
+    <string name="toast_auth_error">A sua sessão terminou. Por favor faça login outra vez.</string>
     
-     <string name="lb_data_fetching">Obtendo dados...</string>
-    <string name="print_lbl">Saldo</string>
-    <string name="print_balance">7.60 €</string>
-    <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
-    <string name="btn_print_reference">Gerar Referência</string>
-    <string name="print_reference_title">Aumentar Saldo</string>
-    <string name="lb_print_increase">Valor (>1€):</string>
-    
-    <string name="toast_auth_error">A sua sessão terminou. Por favor, faça login de novo.</string>
+    <!-- Tuition -->
+    <string name="title_tuition_history">Histórico de Propinas</string>
+    <string name="lbl_year">Ano </string>
+    <string name="lbl_paid">Pago</string>
+    <string name="lbl_still_to_pay">Falta pagar</string>
+    <string name="btn_tuition_history">História</string>
+    <string name="btn_tuition_refs">Referências MB</string>
+    <string name="title_tuition_menu">Menu de Propinas</string>
+    <string name="title_tuition_refs_list">Referências MB</string>
+    <string name="interval_separator">até</string>
+    <string name="title_tuition_ref_detail">Referência MB</string>
+    <string name="lbl_tuition_ref_detail_entity">Entidade</string>
+    <string name="lbl_tuition_ref_detail_reference">Referência</string>
+    <string name="lbl_tuition_ref_detail_amount">Montante</string>
+    <string name="lbl_tuition_ref_detail_date_start">Data de Início</string>
+    <string name="lbl_tuition_ref_detail_date_end">Data de Fim</string>
 
     <string name="news_more_info">Mais informações:</string>
-
+    <string name="news_error">Houve um erro a ler as notícias. Por favor verifique a sua ligação de internet.</string>
+    <string name="friends_context_delete">Remover Amigo</string>
+    <string name="friends_context_timetable">Ver Horário</string>
 </resources>

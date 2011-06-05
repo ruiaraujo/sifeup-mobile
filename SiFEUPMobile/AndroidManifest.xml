@@ -24,12 +24,6 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="11" />
 
-    <permission
-        android:name="com.google.android.apps.iosched.permission.WRITE_SCHEDULE"
-        android:protectionLevel="normal"
-        android:label="@string/permission_write"
-        android:description="@string/permission_write" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -49,14 +43,15 @@
             android:name=".ui.HomeActivity"
             android:theme="@style/Theme.IOSched.Home"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
 
         <activity
             android:name=".ui.LoginActivity"
             android:theme="@style/Theme.IOSched.Home"
             android:noHistory="true"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -78,9 +73,6 @@
             android:label="@string/title_exams"
             android:configChanges="orientation|keyboardHidden"/>
 
-        <activity
-            android:name="com.google.android.apps.iosched.ui.StarredActivity"
-            android:label="@string/title_starred" />
 
         <activity
             android:name=".ui.SearchActivity"
@@ -123,7 +115,9 @@
             
          
         <activity
-            android:label="@string/title_tuition" android:name=".ui.tuition.TuitionActivity">
+            android:label="@string/title_tuition"
+            android:name=".ui.tuition.TuitionActivity"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -132,7 +126,9 @@
         </activity>
         
         <activity
-            android:label="@string/title_tuition_history" android:name=".ui.tuition.TuitionHistoryActivity">
+            android:label="@string/title_tuition_history"
+            android:name=".ui.tuition.TuitionHistoryActivity"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -141,7 +137,9 @@
         </activity>
 
         <activity
-            android:label="@string/title_tuition_menu" android:name=".ui.tuition.TuitionMenuActivity">
+            android:label="@string/title_tuition_menu" 
+            android:name=".ui.tuition.TuitionMenuActivity"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -150,7 +148,9 @@
         </activity>
         
         <activity
-            android:label="@string/title_tuition_refs_list" android:name=".ui.tuition.TuitionRefListActivity">
+            android:label="@string/title_tuition_refs_list" 
+            android:name=".ui.tuition.TuitionRefListActivity"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -181,10 +181,20 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".ui.SearchActivity" />
-        <activity android:name=".ui.StudentsSearchActivity"></activity>
-        <activity android:name=".ui.SubjectsActivity"></activity>
-        <activity android:name=".ui.AcademicPathActivity"></activity>
+            android:value=".ui.SearchActivity"
+            android:configChanges="orientation|keyboardHidden"  />
+        <activity 
+            android:label="@string/title_search"
+            android:name=".ui.StudentsSearchActivity"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity 
+            android:label="@string/title_subjects"
+            android:name=".ui.SubjectsActivity"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity 
+            android:label="@string/title_academic_path"
+            android:name=".ui.AcademicPathActivity"
+            android:configChanges="orientation|keyboardHidden" />
 
 
     </application>

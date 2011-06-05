@@ -85,16 +85,17 @@ public class PrintFragment extends Fragment {
         protected void onPostExecute(String saldo) {
         	if ( getActivity() == null )
         		return;
-        	if ( !saldo.equals("") )
+        	if ( saldo.equals("") )
         	{
-				Log.e("Login","success");
-				display.setText(getString(R.string.print_lbl) + ": "+ saldo+" €");
-				PrintFragment.this.saldo = saldo;
-				long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
-				if ( pagesA4Black > 0 )
-					desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
-								}
-			else{	
+        		if ( getActivity() != null ) 
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
+					return;
+				}
+			}
+			else if ( saldo.equals("Error") ){	
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
@@ -103,6 +104,15 @@ public class PrintFragment extends Fragment {
 					return;
 				}
 			}
+			else{
+				Log.e("Login","success");
+				display.setText(getString(R.string.print_balance, saldo));
+				PrintFragment.this.saldo = saldo;
+				long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
+				if ( pagesA4Black > 0 )
+					desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
+			}
+				
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
@@ -117,11 +127,17 @@ public class PrintFragment extends Fragment {
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
-		    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    			case SifeupAPI.Errors.NO_AUTH:
+		    				return "Error";
+		    			case SifeupAPI.Errors.NO_ERROR:
+		    				new JSONObject(page).optString("saldo");
+		    			case SifeupAPI.Errors.NULL_PAGE:
+		    				return "";
+		    		
 		    		}
 
-	    		JSONObject jObject = new JSONObject(page);			
-				return jObject.optString("saldo");
+				
+	    		return "";
 				
 				
 			} catch (JSONException e) {

@@ -1,17 +1,14 @@
 package pt.up.fe.mobile.service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
 
 public class FriendsData {
 	
-	final String TAG="FriendsData";
+	public final static String TAG="FriendsData";
 	final String filename="friends.lst";
 	final int bufSize=1024;
 	
@@ -19,7 +16,6 @@ public class FriendsData {
 	int selectedFriend=-1;
 	boolean loaded=false;
 	
-	//TODO rever como guardar bytes no ficheiro
 
 	public FriendsData() 
 	{
@@ -27,8 +23,18 @@ public class FriendsData {
 	}
 	
 	public boolean loadFromFile(Context con)
-	{
-		String file="";
+	{        
+		if ( con == null )
+			return false;
+		SharedPreferences friends = con.getSharedPreferences(TAG,Context.MODE_PRIVATE);  
+		String friendSet = friends.getString(TAG,null );
+		if ( friendSet == null )
+			return true;
+		StringTokenizer s = new StringTokenizer(friendSet , SEPARATOR);
+		while(s.hasMoreTokens())
+			addFriend(new Friend(s.nextToken()));
+		return true;
+		/*String file="";
 		byte[] buf=new byte[bufSize];
 		try 
 		{
@@ -68,7 +74,7 @@ public class FriendsData {
 		{
 			Log.e(TAG, "Error reading friends from file in load");	
 			return false;
-		}	
+		}	*/
 	}
 	
 	public ArrayList<Friend> getList() {
@@ -81,7 +87,10 @@ public class FriendsData {
 
 	public boolean addFriend(Friend fr)
 	{
-		list.add(fr);
+		if (  !list.contains(fr))
+			list.add(fr);
+		else
+			return false;
 		return true;
 	}
 	
@@ -90,9 +99,23 @@ public class FriendsData {
 		list.remove(pos);
 	}
 	
+	public boolean isFriend( String code ){
+		Friend fr = new Friend(code, "", "");
+		return list.contains(fr);
+	}
+
+	public void removeFriend(Friend fr)
+	{
+		list.remove(fr);
+	}
 	public boolean saveToFile(Context con)
 	{
-		try 
+		SharedPreferences friends = con.getSharedPreferences(TAG,Context.MODE_PRIVATE);  
+        SharedPreferences.Editor prefEditor = friends.edit();
+        prefEditor.putString(TAG, getTokenizedFriends());
+        prefEditor.commit();
+        return true;
+		/*try 
 		{
 			FileOutputStream fos = con.openFileOutput(filename, Context.MODE_PRIVATE);
 			for(Friend f: list)
@@ -122,7 +145,7 @@ public class FriendsData {
 		{
 			Log.e(TAG, "Error writing to friends file in save");	
 		}
-		return false;
+		return false;*/
 	}
 	
 	public boolean isLoaded() {
@@ -140,4 +163,18 @@ public class FriendsData {
 	public void setSelectedFriend(int selectedFriend) {
 		this.selectedFriend = selectedFriend;
 	}
+
+	public Friend getFriend( int pos ) {
+		return list.get(pos);
+	}
+	
+	public String getTokenizedFriends (){
+		StringBuilder s  =new StringBuilder();
+		for ( Friend f : list )
+			s.append(f.toString() + SEPARATOR );
+		return s.toString();
+	}
+	
+	final public static String SEPARATOR = "?";
+	
 }
