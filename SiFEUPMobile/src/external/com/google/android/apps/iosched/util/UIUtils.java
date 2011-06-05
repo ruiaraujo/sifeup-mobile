@@ -18,14 +18,12 @@ package external.com.google.android.apps.iosched.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -122,11 +120,22 @@ public class UIUtils {
                 11 * Color.blue(color)) / 100) <= BRIGHTNESS_THRESHOLD;
     }
 
-    public static long getCurrentTime() {
+    public static long getCurrentTime(boolean utc) {
     	long now = System.currentTimeMillis (); //Gets current local time in ms
-        TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
+        if ( !utc )
+        {
+	        TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
+	        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
+	        now += tz_offset_gmt*3600000;
+        }
+        return now;
+    }
+    
+    public static long convertToUtc(long now) {
+    	TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
         long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
-        now += tz_offset_gmt*3600000;
+        now -= tz_offset_gmt*3600000;
+        
         return now;
     }
 

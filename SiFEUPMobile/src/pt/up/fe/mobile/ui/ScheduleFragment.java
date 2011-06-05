@@ -17,6 +17,7 @@ import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.ui.widget.Workspace;
+import external.com.google.android.apps.iosched.ui.widget.Workspace.OnScreenChangeListener;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
 import external.com.google.android.apps.iosched.util.UIUtils;
@@ -32,6 +33,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.text.format.Time;
@@ -47,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScheduleFragment extends Fragment implements
-			ObservableScrollView.OnScrollListener{
+			ObservableScrollView.OnScrollListener {
 	
     private Workspace mWorkspace;
     private TextView mTitle;
@@ -56,6 +58,9 @@ public class ScheduleFragment extends Fragment implements
     private View mRightIndicator;
     private ArrayList<Block> schedule = new ArrayList<Block>();
     private List<Day> mDays = new ArrayList<Day>();
+    private long mondayMillis;
+    private String personCode;
+    private boolean goingLeft = false;
     final public static String PROFILE_CODE  = "profile";
 
     @Override
@@ -78,7 +83,11 @@ public class ScheduleFragment extends Fragment implements
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
-                    mWorkspace.scrollLeft();
+                	mTitleCurrentDayIndex--;
+                	if ( mTitleCurrentDayIndex >= 0 )
+                		mWorkspace.scrollLeft();
+                	else
+                		movetoPreviousWeek();
                     return true;
                 }
                 return false;
@@ -86,7 +95,11 @@ public class ScheduleFragment extends Fragment implements
         });
         mLeftIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                mWorkspace.scrollLeft();
+            	mTitleCurrentDayIndex--;
+            	if ( mTitleCurrentDayIndex >= 0 )
+            		mWorkspace.scrollLeft();
+            	else
+            		movetoPreviousWeek();
             }
         });
 
@@ -95,7 +108,11 @@ public class ScheduleFragment extends Fragment implements
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
-                    mWorkspace.scrollRight();
+                	mTitleCurrentDayIndex++;
+                	if ( mTitleCurrentDayIndex < mDays.size() )
+                		mWorkspace.scrollRight();
+                	else
+                		movetoNextWeek();
                     return true;
                 }
                 return false;
@@ -103,24 +120,36 @@ public class ScheduleFragment extends Fragment implements
         });
         mRightIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                mWorkspace.scrollRight();
+            	mTitleCurrentDayIndex++;
+            	if ( mTitleCurrentDayIndex >= mDays.size() )
+            		mWorkspace.scrollRight();
+            	else
+            		movetoNextWeek();
             }
         });
-        long mondayMillis = firstDayofWeek();
+        mondayMillis = firstDayofWeek(false);
         setupDay(inflater , mondayMillis);
   		setupDay(inflater , mondayMillis + (1 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (2 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (3 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
-  		String code = getArguments().get(PROFILE_CODE).toString();
-		if ( code != null )
-		{
-			new ScheduleTask().execute(code);
-		}
-		else
-			new ScheduleTask().execute(SessionManager.getInstance().getLoginCode());
+  		updateWorkspaceHeader(0);
+  		personCode = (String) getArguments().get(PROFILE_CODE);
+		if ( personCode == null )
+			personCode = SessionManager.getInstance().getLoginCode();
+		new ScheduleTask().execute();
 
-
+		mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
+			
+			@Override
+			public void onScreenChanging(View newScreen, int newScreenIndex) {				
+			}
+			
+			@Override
+			public void onScreenChanged(View newScreen, int newScreenIndex) {
+				mTitleCurrentDayIndex = newScreenIndex;
+			}
+		});
        
         mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
             public void onScroll(float screenFraction) {
@@ -140,11 +169,6 @@ public class ScheduleFragment extends Fragment implements
         mTitleCurrentDayIndex = dayIndex;
         Day day = mDays.get(dayIndex);
         mTitle.setText(day.label);
-
-        mLeftIndicator
-                .setVisibility((dayIndex != 0) ? View.VISIBLE : View.INVISIBLE);
-        mRightIndicator
-                .setVisibility((dayIndex < mDays.size() - 1) ? View.VISIBLE : View.INVISIBLE);
     }
 
     
@@ -184,11 +208,28 @@ public class ScheduleFragment extends Fragment implements
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    private void movetoNextWeek(){
+    	goingLeft = false;
+    	mondayMillis += 7 * DateUtils.DAY_IN_MILLIS;
+    	for ( int i = 0 ; i < mDays.size() ; ++i )
+    		updateDay(i, mondayMillis + i * DateUtils.DAY_IN_MILLIS );
+    	new ScheduleTask().execute();
+    }
+    
+    private void movetoPreviousWeek(){
+    	goingLeft = true;
+    	mondayMillis -= 7 * DateUtils.DAY_IN_MILLIS;
+    	for ( int i = 0 ; i < mDays.size() ; ++i )
+    		updateDay(i, mondayMillis + i * DateUtils.DAY_IN_MILLIS );
+    	new ScheduleTask().execute();
+    }
+    
     /**
      * Update position and visibility of "now" view.
      */
     private boolean updateNowView(boolean forceScroll) {
-        final long now = UIUtils.getCurrentTime();
+        final long now = UIUtils.getCurrentTime(false);
 
         Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
@@ -215,7 +256,7 @@ public class ScheduleFragment extends Fragment implements
     }
 
     /** Classe privada para a busca de dados ao servidor */
-    private class ScheduleTask extends AsyncTask<String, Void, String> {
+    private class ScheduleTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -223,14 +264,26 @@ public class ScheduleFragment extends Fragment implements
     	}
 
         protected void onPostExecute(String result) {
-        	if ( !result.equals("") )
+        	if ( result.equals("Success") )
         	{
+        		if ( goingLeft ){
+					updateWorkspaceHeader(mDays.size()-1);
+					for ( int i = 0 ; i < mDays.size() ; ++i )
+						mWorkspace.scrollRight();
+				}
+				else
+				{
+					updateWorkspaceHeader(0);
+					for ( int i = 0 ; i < mDays.size() ; ++i )
+						mWorkspace.scrollLeft();
+				}
+        		cleanBlocks();
 				Log.e("Schedule","success");
 				for ( Block block : schedule)
 					addBlock(block.weekDay, block);
-				 updateWorkspaceHeader(0);
+				
 			}
-			else{	
+			else if ( result.equals("Error") ){
 				Log.e("Schedule","fail");
 				if ( getActivity() != null ) 
 				{
@@ -245,12 +298,9 @@ public class ScheduleFragment extends Fragment implements
         }
 
 		@Override
-		protected String doInBackground(String ...  code) {
+		protected String doInBackground(Void ...  code) {
 			String page = "";
 		  	try {
-		  		if ( code.length < 1 )
-		  			return "";
-		  		long mondayMillis = firstDayofWeek();
 		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
 		  		monday.set(mondayMillis);
 		  		monday.normalize(false);
@@ -260,23 +310,25 @@ public class ScheduleFragment extends Fragment implements
 		  		monday.normalize(false);
 		  		String lastDay = monday.format("%Y%m%d");
 		  		
-	    		page = SifeupAPI.getScheduleReply(code[0], 
-
+	    		page = SifeupAPI.getScheduleReply(personCode, 
 								firstDay, 
 								lastDay);
 	    		
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
-	    		case SifeupAPI.Errors.NO_AUTH: return "";
+		    		case SifeupAPI.Errors.NO_AUTH:
+		    			return "Error";
+		    		case SifeupAPI.Errors.NO_ERROR:
+		    			JSONSchedule(page);
+		    			return "Success";
+		    		case SifeupAPI.Errors.NULL_PAGE:
+		    			return "";
 	    		}
-	    		JSONSchedule(page);
-	    		
-	    		
-
-				return page;
+				return null;
 				
 			} catch (JSONException e) {
+				Looper.prepare();
 				if ( getActivity() != null ) 
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
@@ -315,6 +367,20 @@ public class ScheduleFragment extends Fragment implements
         			date.format("%d-%m");
         mWorkspace.addView(day.rootView);
         mDays.add(day);
+    }
+    
+    private void updateDay( int index , long millis ){
+    	
+    	Time date = new Time(UIUtils.TIME_REFERENCE);
+  		date.set(millis);
+  		date.normalize(false);
+        mDays.get(index).label =DateUtils.getDayOfWeekString(date.weekDay+1, DateUtils.LENGTH_LONG) +", " +
+        			date.format("%d-%m");
+    }
+    
+    private void cleanBlocks(){
+    	for (int i = 0 ; i < mDays.size() ; ++i )
+    		mDays.get(i).blocksView.removeAllBlocks();
     }
 
     /**
@@ -449,8 +515,8 @@ public class ScheduleFragment extends Fragment implements
      * @return mondayMillis milliseconds of the the first day of the week
      */
     
-    private static long firstDayofWeek(){
-    	long mondayMillis = UIUtils.getCurrentTime();
+    private static long firstDayofWeek(boolean utc){
+    	long mondayMillis = UIUtils.getCurrentTime(utc);
   		Time yourDate = new Time(UIUtils.TIME_REFERENCE);
   		yourDate.set(mondayMillis);
   		yourDate.normalize(false);
@@ -464,7 +530,7 @@ public class ScheduleFragment extends Fragment implements
   			weekDay = 6;
   		mondayMillis = yourDate.toMillis(true);
   		mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
-  		if ( ( mondayMillis  + 5 * DateUtils.DAY_IN_MILLIS ) < UIUtils.getCurrentTime() )
+  		if ( ( mondayMillis  + 5 * DateUtils.DAY_IN_MILLIS ) < UIUtils.getCurrentTime(false) )
   			mondayMillis += 7 * DateUtils.DAY_IN_MILLIS;
   		return mondayMillis;
     }
@@ -528,12 +594,13 @@ public class ScheduleFragment extends Fragment implements
                 		event.put("title", b.lectureAcronym + " (" + b.lectureType + ")");
                 		event.put("eventLocation", b.buildingCode+b.roomCode);
                 		event.put("description", "Professor: " + b.teacherAcronym);
-                		long date =  firstDayofWeek() + b.weekDay * DateUtils.DAY_IN_MILLIS + b.startTime*1000;
+                		long date =  UIUtils.convertToUtc(mondayMillis) + 
+                					b.weekDay * DateUtils.DAY_IN_MILLIS + 
+                					b.startTime*1000;
                 		event.put("dtstart", date );
                 		event.put("dtend", date + b.lectureDuration*3600000 );
                 		
-                		// TODO: event time
-                		// event recursive
+                		// TODO:event recursive
                 		Uri newEvent = null;
                 		// insert event
                 		if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
@@ -545,37 +612,7 @@ public class ScheduleFragment extends Fragment implements
                 		
                 	//}
                 	
-                	/* Set event details
-                    ContentValues cv = new ContentValues();
-                    cv.put("calendar_id", calIds[which]);
-                    cv.put("title", "event android test");
-                    cv.put("description", "teste descricao");
-                    cv.put("eventLocation", "teste lugar");
-                    //cv.put("allDay", 1);
-                    cv.put("dtstart", UIUtils.getCurrentTime() );
-                    //cv.put("hasAlarm", 1);
-                    cv.put("dtend", UIUtils.getCurrentTime()+3600000 );
-                    */
-                    // Insert Event
-                    /*Uri newEvent;
-                    if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
-                        newEvent = cr.insert(Uri.parse("content://com.android.calendar/events"), cv);
-                    else
-                        newEvent = cr.insert(Uri.parse("content://calendar/events"), cv);
-                    */
-                    // Alert
-                	/*if (newEvent != null) {
-                    	Log.e("APPPP", "newEvent != null");
-                    	long id = Long.parseLong( newEvent.getLastPathSegment() );
-                        ContentValues values = new ContentValues();
-                        values.put( "event_id", id );
-                        values.put( "method", 1 );
-                        values.put( "minutes", 15 ); // 15 minutes
-                        if (Integer.parseInt(Build.VERSION.SDK) == 8 )
-                            cr.insert( Uri.parse( "content://com.android.calendar/reminders" ), values );
-                        else
-                            cr.insert( Uri.parse( "content://calendar/reminders" ), values );
-                    }*/
+                	
                     dialog.cancel();
                     if ( getActivity() != null ) 
                 		Toast.makeText(getActivity(), R.string.toast_export_calendar_finished, Toast.LENGTH_LONG).show();

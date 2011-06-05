@@ -13,6 +13,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -35,6 +38,24 @@ public class ExamsFragment extends ListFragment {
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
         new ExamsTask().execute();
 
+    }
+    
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.schedule_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_export_calendar) {
+        	// export to Calendar (create event)
+    		//calendarExport();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /** Classe privada para a busca de dados ao servidor */

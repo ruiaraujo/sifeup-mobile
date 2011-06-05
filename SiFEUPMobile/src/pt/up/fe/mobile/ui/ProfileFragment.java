@@ -33,7 +33,8 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 	
 	private TextView name;
 	private ListView details;
-	
+	private TextView code;
+
 	/** User Info */
     private Student me = new Student();
     private List<StudentDetail> contents;
@@ -50,6 +51,7 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
             Bundle savedInstanceState) {
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, null);
 		name = ((TextView)root.findViewById(R.id.profile_name));
+		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
 		String code = getArguments().get("profile").toString();
 		if ( code != null )
@@ -74,20 +76,21 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
         protected void onPostExecute(String result) {
         	if ( getActivity() == null ) 
         		return;
-        	if ( !result.equals("") )
+        	if ( result.equals("Success") )
         	{
 				Log.e("Profile","success");
 				contents = me.getStudentContents(getResources());
 				name.setText(me.getName());
+				code.setText(me.getCode());
 				String[] from = new String[] { "title", "content" };
-		         int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
+		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
 			         // prepare the list of all records
 		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		         for ( StudentDetail s : contents )   
-		         {
+		         { 
 		        	 HashMap<String, String> map = new HashMap<String, String>();
-		             map.put("title", s.title);
-		             map.put("content",s.content);
+		             map.put(from[0], s.title);
+		             map.put(from[1],s.content);
 		             fillMaps.add(map);
 		         }
 				 
@@ -98,13 +101,23 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 		         details.setOnItemClickListener(ProfileFragment.this);
 		         details.setSelection(0);
 			}
-			else{	
+			else if ( result.equals("Error")) {	
 				Log.e("Profile","error");
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
+					return;
+				}
+			}
+			else if ( result.equals("")) {	
+				Log.e("Profile","error");
+				if ( getActivity() != null ) 	
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).mActivityHelper.goHome();
 					return;
 				}
 			}
@@ -122,10 +135,16 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
-	    		case SifeupAPI.Errors.NO_AUTH: return "";
+	    			case SifeupAPI.Errors.NO_AUTH:
+	    				return "Error";
+	    			case SifeupAPI.Errors.NO_ERROR:
+	    				JSONStudent(page);
+	    				return "Success";
+	    			case SifeupAPI.Errors.NULL_PAGE:
+	    				return "";	
 	    		}
 				
-	    		JSONStudent(page);
+	
 	    		
 				return page;
 				

@@ -126,7 +126,7 @@ public class BlocksLayout extends ViewGroup {
 
         // Align now view to match current time
         final View nowView = mNowView;
-        final long now = UIUtils.getCurrentTime();
+        final long now = UIUtils.getCurrentTime(false);
 
         final int top = rulerView.getTimeVerticalOffset(now);
         final int bottom = top + nowView.getMeasuredHeight();
