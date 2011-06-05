@@ -106,4 +106,11 @@
     <string name="news_error">Houve um erro a ler as notícias. Por favor verifique a sua ligação de internet.</string>
     <string name="friends_context_delete">Remover Amigo</string>
     <string name="friends_context_timetable">Ver Horário</string>
+    
+    <!-- Academic Path --> 
+    <string name="path_year"><b>Ano:</b> <xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Média:</b> <xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Número de Inscrições:</b> <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_grade">Nota : <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_link_sifeup"><u>Página Web SiFEUP</u></string>
 </resources>

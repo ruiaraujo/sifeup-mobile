@@ -113,5 +113,4 @@
     <string name="path_entries"><b>Number of Entries:</b> <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Grade : <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>SiFEUP WebPage</u></string>
-    
 </resources>
