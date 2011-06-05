@@ -1,5 +1,4 @@
 package pt.up.fe.mobile.service;
-import java.io.Serializable;
 
 
 public class iCalTimezone {
