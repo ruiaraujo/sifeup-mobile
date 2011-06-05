@@ -49,6 +49,7 @@ public class RSSHandler extends DefaultHandler
 	public void endDocument() throws SAXException
 	{
 	}
+	
 	public void startElement(String namespaceURI, String localName,String qName, Attributes atts) throws SAXException
 	{
 		depth++;
