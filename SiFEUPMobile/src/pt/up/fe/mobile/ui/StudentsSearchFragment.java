@@ -73,7 +73,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         protected void onPostExecute(String result) {
         	if ( getActivity() == null )
         		return;
-        	if ( result.equals("") )
+        	if ( result.equals("Success") )
         	{
         		Log.e("Search","success");
         		
@@ -144,8 +144,6 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		  		if ( query == null )
 		  			return "";
 	    		page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
-	    		if ( page == null  )
-	    			return null;
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{

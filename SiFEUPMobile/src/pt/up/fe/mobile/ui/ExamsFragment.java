@@ -133,7 +133,7 @@ public class ExamsFragment extends ListFragment {
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
 		    	    		JSONExams(page);
-		    				return "Sucess";
+		    				return "Success";
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";
 		    		}

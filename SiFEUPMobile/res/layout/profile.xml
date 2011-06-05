@@ -51,7 +51,17 @@
 			    android:layout_gravity="center"
 	    		android:paddingRight="10dip"/>     
 		</LinearLayout>  
-     </LinearLayout>
+    </LinearLayout>
+	<Button android:id="@+id/profile_link_schedule"
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"
+    	android:layout_gravity="center"
+    	android:textSize="14.0sp"
+    	android:focusable="true"
+    	android:clickable="true"
+    	android:paddingTop="10dip"
+    	android:paddingBottom="5dip"
+    	android:text="@string/friends_context_timetable"/>	
      <ListView android:id="@+id/profile_details"
 	     android:layout_height="wrap_content" 
 	     android:layout_width="fill_parent"/>

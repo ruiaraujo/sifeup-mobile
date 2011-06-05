@@ -130,7 +130,7 @@ public class PrintFragment extends Fragment {
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-		    				new JSONObject(page).optString("saldo");
+		    				return new JSONObject(page).optString("saldo");
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";
 		    		

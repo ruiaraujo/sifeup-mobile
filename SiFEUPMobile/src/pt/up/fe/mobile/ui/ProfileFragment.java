@@ -16,6 +16,7 @@ import pt.up.fe.mobile.service.Student.StudentDetail;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -72,6 +74,16 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 				SessionManager.friends.saveToFile(getActivity());
 			}
 		});
+		((Button)root.findViewById(R.id.profile_link_schedule)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(), ScheduleActivity.class);
+	    		i.putExtra(ScheduleFragment.PROFILE_CODE, me.getCode());
+	    		startActivity(i);
+			}
+		});
+		
 		if ( code != null )
 		{
 			new ProfileTask().execute(code);
@@ -166,9 +178,7 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 	    			case SifeupAPI.Errors.NULL_PAGE:
 	    				return "";	
 	    		}
-				
-	
-	    		
+
 				return page;
 				
 			} catch (JSONException e) {

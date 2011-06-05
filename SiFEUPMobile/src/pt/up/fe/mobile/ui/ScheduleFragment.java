@@ -28,7 +28,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -293,16 +292,7 @@ public class ScheduleFragment extends Fragment implements
 					return;
 				}
 			}
-			else if ( result.equals("") )
-			{
-				if ( getActivity() != null ) 	
-				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-					getActivity().finish();
-					return;
-				}
-			}
+			
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
@@ -353,9 +343,6 @@ public class ScheduleFragment extends Fragment implements
         day.index = mDays.size();
         day.timeStart = startMillis;
         day.timeEnd = startMillis + DateUtils.DAY_IN_MILLIS;
-       /* day.blocksUri = ScheduleContract.Blocks.buildBlocksBetweenDirUri(
-                day.timeStart, day.timeEnd);
-*/
         // Setup views
         day.rootView = (ViewGroup) inflater.inflate(R.layout.blocks_content, null);
 
@@ -428,7 +415,6 @@ public class ScheduleFragment extends Fragment implements
 
         private int index = -1;
         private String label = null;
-        private Uri blocksUri = null;
         private long timeStart = -1;
         private long timeEnd = -1;
     }
@@ -557,8 +543,6 @@ public class ScheduleFragment extends Fragment implements
     	
     	Context ctx = this.getActivity();
     	final ContentResolver cr = ctx.getContentResolver();
-    	//Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"),
-         //       (new String[] { "_id", "displayName", "selected" }), null, null, null);
     	Cursor cursor = null;
         //Creating Queries
         if ( Build.VERSION.SDK_INT >= 8)
@@ -595,8 +579,7 @@ public class ScheduleFragment extends Fragment implements
                 public void onClick(DialogInterface dialog, int which) {
                 	
                 	// iterate over schedule and add them to schedule
-                //	for(Block b : schedule){
-                	Block b = schedule.get(0);//not using loops while testing. a  single block is enough.
+                	for(Block b : schedule){
                 		// new event
                 		ContentValues event = new ContentValues();
                 		event.put("calendar_id", calIds[which]);
@@ -609,7 +592,7 @@ public class ScheduleFragment extends Fragment implements
                 		event.put("dtstart", date );
                 		event.put("dtend", date + b.lectureDuration*3600000 );
                 		
-                		// TODO:event recursive
+                		// TODO:  event recursive - this will not be done.
                 		Uri newEvent = null;
                 		// insert event
                 		if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
@@ -619,7 +602,7 @@ public class ScheduleFragment extends Fragment implements
                 		// check event error
                 		if(newEvent == null) Log.e("ScheduleExport", "error on event");
                 		
-                	//}
+                	}
                 	
                 	
                     dialog.cancel();
