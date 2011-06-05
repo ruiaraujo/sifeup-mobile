@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="15dip"
+		android:orientation="vertical">	
+		<TextView android:id="@+id/path_average"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+		 	android:layout_gravity="left|center_vertical"
+		 	android:textSize="16.0sp"/>	
+		<TextView android:id="@+id/path_entries"
+			android:layout_height="wrap_content"
+		 	android:layout_width="wrap_content"
+		 	android:layout_gravity="left|center_vertical"
+		 	android:textSize="16.0sp"/>
+		 <TextView android:id="@+id/path_year"
+			android:layout_height="wrap_content"
+		 	android:layout_width="wrap_content"
+		 	android:layout_gravity="left|center_vertical"
+		 	android:textSize="16.0sp"/>	
+		 <TextView android:id="@+id/path_link_sifeup"
+			android:layout_height="wrap_content"
+		 	android:layout_width="wrap_content"
+		 	android:layout_gravity="center"
+			android:paddingTop="10dip"
+		 	android:textSize="16.0sp"
+		 	android:textColor="@color/hyperlink"
+		 	android:text="@string/path_link_sifeup"
+		 	/>		
+		 	
+	</LinearLayout>
+    <ListView android:id="@+id/path_ucs_grade"
+		android:layout_height="wrap_content" 
+		android:layout_width="fill_parent"/>
+</LinearLayout>

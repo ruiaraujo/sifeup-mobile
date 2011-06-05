@@ -3,23 +3,15 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/list_selector_background">
-    
-    <TextView android:id="@+id/exam_chair"
+    <TextView android:id="@+id/grade_subject_name"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ListItemTitle" />
-     <TextView android:id="@+id/exam_time"
+     <TextView android:id="@+id/grade_number"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/exam_chair"
-        style="@style/ListItemSubtitle"/>   
-     <TextView android:id="@+id/exam_room"
-        android:layout_gravity="left|center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/exam_time"
-        style="@style/ListItemSubtitle"
-        />   
+        android:layout_below="@id/grade_subject_name"
+        style="@style/ListItemTitle"/>  
 </RelativeLayout>

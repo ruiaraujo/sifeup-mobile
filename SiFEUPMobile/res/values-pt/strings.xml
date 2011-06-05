@@ -33,6 +33,7 @@
     <string name="btn_subjects">Disciplinas</string>
     <string name="btn_friends">Amigos</string>
     <string name="btn_printing">Saldo</string>
+    <string name="btn_academicpath">Academic Path</string>
     <string name="btn_tuition">Propinas</string>
     <string name="btn_news">Notícias</string>
 

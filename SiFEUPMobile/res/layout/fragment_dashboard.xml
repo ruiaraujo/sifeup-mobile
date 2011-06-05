@@ -58,11 +58,14 @@
 	   	android:id="@+id/home_dash2"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent">
-
-	  <Button android:id="@+id/home_btn_printing"
+		<Button android:id="@+id/home_btn_printing"
 	        style="@style/DashboardButton"
 	        android:drawableTop="@drawable/home_btn_printer"
 	        android:text="@string/btn_printing"/>
+	 	<Button android:id="@+id/home_btn_academicpath"
+	        style="@style/DashboardButton"
+	        android:drawableTop="@drawable/home_btn_sessions"
+	        android:text="@string/btn_academicpath"/>
 	
 	</external.com.google.android.apps.iosched.ui.widget.DashboardLayout>
 </external.com.google.android.apps.iosched.ui.widget.Workspace>

@@ -33,6 +33,7 @@
     <string name="btn_subjects">Subjects</string>
     <string name="btn_friends">Friends</string>
     <string name="btn_printing">Printing Quota</string>
+    <string name="btn_academicpath">Academic Path</string>
     <string name="btn_tuition">Tuition</string>
     <string name="btn_news">News</string>
 
@@ -105,4 +106,12 @@
     <string name="news_error">There was a error fetching the News. Please check your connection.</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
+    
+    <!-- Academic Path --> 
+    <string name="path_year"><b>Year:</b> <xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Average:</b> <xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Number of Entries:</b> <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_grade">Grade : <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_link_sifeup"><u>SiFEUP WebPage</u></string>
+    
 </resources>

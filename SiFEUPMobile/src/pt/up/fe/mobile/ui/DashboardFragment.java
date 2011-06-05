@@ -104,7 +104,15 @@ public class DashboardFragment extends Fragment {
                     }
         });
         
-
+        root.findViewById(R.id.home_btn_academicpath).setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        // splicing in tag streamer
+                        fireTrackerEvent("Printing");
+                        Intent intent = new Intent(getActivity(), AcademicPathActivity.class);
+                        startActivity(intent);
+                    }
+        });
         return root;
     }
 }

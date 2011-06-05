@@ -1,119 +1,69 @@
 package pt.up.fe.mobile.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import external.com.google.android.apps.iosched.ui.widget.Workspace;
-import external.com.google.android.apps.iosched.ui.widget.Workspace.OnScreenChangeListener;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
-import external.com.google.android.apps.iosched.util.MotionEventUtils;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.View.OnClickListener;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AcademicPathFragment extends ListFragment {
+public class AcademicPathFragment extends Fragment {
 	
-    private Workspace mWorkspace;
-    private TextView mTitle;
-    private int mTitleCurrentDayIndex = -1;
-    private View mLeftIndicator;
-    private View mRightIndicator;
 	/** All info about the student Academic Path */
 	AcademicPath academicPath = new AcademicPath();
+	TextView average;
+	TextView year;
+	TextView entries;
+	ListView grades;
 	
-	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Academic Path");
-        new AcademicPathTask().execute();
 
     }
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
-			ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
-			mWorkspace = (Workspace) root.findViewById(R.id.workspace);
-
-	        mTitle = (TextView) root.findViewById(R.id.block_title);
-
-	        mLeftIndicator = root.findViewById(R.id.indicator_left);
-	        mLeftIndicator.setOnTouchListener(new View.OnTouchListener() {
-	            public boolean onTouch(View view, MotionEvent motionEvent) {
-	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
-	                        == MotionEvent.ACTION_DOWN) {
-	                	mWorkspace.scrollLeft();
-	                    return true;
-	                }
-	                return false;
-	            }
-	        });
-	        mLeftIndicator.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View view) {
-	            	mWorkspace.scrollLeft();
-	            }
-	        });
-
-	        mRightIndicator = root.findViewById(R.id.indicator_right);
-	        mRightIndicator.setOnTouchListener(new View.OnTouchListener() {
-	            public boolean onTouch(View view, MotionEvent motionEvent) {
-	                if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
-	                        == MotionEvent.ACTION_DOWN) {
-	                	mWorkspace.scrollRight();
-	                    return true;
-	                }
-	                return false;
-	            }
-	        });
-	        mRightIndicator.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View view) {
-	            		mWorkspace.scrollRight();
-	            }
-	        });
-			mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
+			ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, null);
+			grades = (ListView) root.findViewById(R.id.path_ucs_grade);
+			year = (TextView) root.findViewById(R.id.path_year);
+			average = (TextView) root.findViewById(R.id.path_average);
+			entries = (TextView) root.findViewById(R.id.path_entries);
+			((TextView) root.findViewById(R.id.path_link_sifeup)).setOnClickListener(new OnClickListener() {
 				
 				@Override
-				public void onScreenChanging(View newScreen, int newScreenIndex) {				
-				}
-				
-				@Override
-				public void onScreenChanged(View newScreen, int newScreenIndex) {
-					mTitleCurrentDayIndex = newScreenIndex;
+				public void onClick(View v) {
+					String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod=" +
+								SessionManager.getInstance().getLoginCode();
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(url));
+					startActivity(i);
 				}
 			});
-	       
-	        mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
-	            public void onScroll(float screenFraction) {
-	                updateWorkspaceHeader(Math.round(screenFraction));
-	            }
-	        }, true);
-
-	        return root;
+	        new AcademicPathTask().execute();
+			return root;
 	    }
 	 
-	    public void updateWorkspaceHeader(int yearIndex) {
-	     /*   if (mTitleCurrentDayIndex == yearIndex) {
-	            return;
-	        }
-	        if (yearIndex >= mDays.size())
-	        	return;
-	        mTitleCurrentDayIndex = yearIndex;
-	        Day day = mDays.get(yearIndex);
-	        mTitle.setText(day.label);*/
-	    }
+
 	private class AcademicPathTask extends AsyncTask<Void, Void, String> {
 		
 		protected void onPreExecute (){
@@ -122,9 +72,29 @@ public class AcademicPathFragment extends ListFragment {
     	}
 
         protected void onPostExecute(String result) {
+        	if ( getActivity() == null )
+        		return;
         	if ( result.equals("Success") )
         	{
 				Log.e("AcademicPath","success");
+				average.setText(getString(R.string.path_average, academicPath.average));
+				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
+				year.setText(getString(R.string.path_year, academicPath.courseYears));
+				String[] from = new String[] {"name", "number"};
+		         int[] to = new int[] { R.id.grade_subject_name, R.id.grade_number };
+			         // prepare the list of all records
+		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		         for(UC e : academicPath.ucs){
+		             HashMap<String, String> map = new HashMap<String, String>();
+		             map.put(from[0], e.name);
+		             map.put(from[1], getString(R.string.path_grade , e.grade));
+		             fillMaps.add(map);
+		         }
+				 
+		         // fill in the grid_item layout
+		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_grade, from, to);
+		         grades.setAdapter(adapter);
+		         
     		}
 			else if ( result.equals("Error")){	
 				Log.e("AcademicPath","error");
@@ -230,7 +200,7 @@ public class AcademicPathFragment extends ListFragment {
 			if(jObject.has("cur_name")) academicPath.courseNameEn = jObject.getString("cur_name");
 			if(jObject.has("media")) academicPath.average = jObject.getString("media");
 			if(jObject.has("anos_curso")) academicPath.courseYears = jObject.getInt("anos_curso");
-			if(jObject.has("inscricoes_ucs")) academicPath.courseYears = jObject.getInt("inscricoes_ucs");
+			if(jObject.has("inscricoes_ucs")) academicPath.numberEntries = jObject.getInt("inscricoes_ucs");
 			
 			// iterate over ucs
 			JSONArray jArray = jObject.getJSONArray("ucs");
