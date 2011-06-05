@@ -46,7 +46,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     }
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.list_item_loading, null);
 		loading = root.findViewById(R.id.search_itemLoading);
 			
     	return  super.onCreateView(inflater, container, savedInstanceState);
@@ -143,7 +143,11 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		  		}
 		  		if ( query == null )
 		  			return "";
-	    		page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
+		  		boolean isNumber = query.matches(".*[0-9].*");
+		  		if ( isNumber )
+		  			page = SifeupAPI.getStudentReply(query);
+		  		else
+		  			page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
@@ -183,7 +187,6 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     	private int searchSize; // "total" : 583
     	private int page; // "primeiro" : 1
     	private int pageResults; // "tam_pagina" : 15
-    	private int numPages;
     	private List<Student> students = new ArrayList<Student>();
     }
     
@@ -197,6 +200,27 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     private boolean JSONStudentsSearch(String page) throws JSONException {
     	JSONObject jObject = new JSONObject(page);
 		
+    	if (  query.matches(".*[0-9].*") )
+    	{
+    		ResultsPage resultsPage = new ResultsPage();
+    		resultsPage.searchSize = resultsPage.page = resultsPage.pageResults = 1;
+    		Student student = new Student();
+    		if(jObject.has("codigo"))
+    			student.setCode(jObject.getString("codigo"));
+			if(jObject.has("nome"))
+				student.setName(jObject.getString("nome"));
+			if(jObject.has("curso_sigla"))
+				student.setProgrammeAcronym(jObject.getString("curso_sigla"));
+			if(jObject.has("curso_nome"))
+				student.setProgrammeName(jObject.getString("curso_nome"));
+
+			// add student to the page results
+			resultsPage.students.add(student);
+			// add page to global results
+    		results.add(resultsPage);
+    		Log.e("JSON", "loaded search");
+    		return true;
+    	}
     	
     	if(jObject.has("alunos")){
     		Log.e("JSON", "founded search");
@@ -270,7 +294,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 	            }
 	        }
 	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-	        	if ( results.size() > 1 )
+	        	if ( results.size() >= 1 )
 	        	{ //Stop trying to load after having loaded them all.
 	        		if ( results.get(0).pageResults >= totalItemCount )
 	        			return;
