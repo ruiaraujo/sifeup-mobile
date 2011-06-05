@@ -133,10 +133,8 @@ public class PrintFragment extends Fragment {
 		    				return new JSONObject(page).optString("saldo");
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";
-		    		
 		    		}
 
-				
 	    		return "";
 				
 				

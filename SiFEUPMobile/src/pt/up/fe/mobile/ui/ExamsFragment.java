@@ -6,12 +6,24 @@ package pt.up.fe.mobile.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.format.DateUtils;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +48,7 @@ public class ExamsFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
         String personCode = (String) getArguments().get(PROFILE_CODE);
 		if ( personCode == null )
@@ -47,7 +60,7 @@ public class ExamsFragment extends ListFragment {
     
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.schedule_menu_items, menu);
+        inflater.inflate(R.menu.exams_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
     
@@ -56,7 +69,7 @@ public class ExamsFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_export_calendar) {
         	// export to Calendar (create event)
-    		//calendarExport();
+    		calendarExport();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -203,5 +216,112 @@ public class ExamsFragment extends ListFragment {
 		
 	}
 	
+	  /** Exports the schedule to Google Calendar
+     * WARNING: This is done against Google recomendations.
+     * TODO: Change to access the GData API directly.
+     * 		 Produce an ICAL file which can be imported by most calendars.*/
+    public boolean calendarExport(){
+    	
+    	Context ctx = this.getActivity();
+    	final ContentResolver cr = ctx.getContentResolver();
+    	Cursor cursor = null;
+        //Creating Queries
+        if ( Build.VERSION.SDK_INT >= 8)
+            cursor = cr.query(
+            		Uri.parse("content://com.android.calendar/calendars"), 
+            		new String[]{ "_id", "displayName", "selected"  }, 
+            		null, null, null);
+        else
+            cursor = cr.query(
+            		Uri.parse("content://calendar/calendars"), 
+            		new String[]{ "_id","displayName", "selected"  }, 
+            		null, null, null);
+        if ( cursor == null )
+        {
+        	if ( getActivity() != null ) 
+        		Toast.makeText(getActivity(), R.string.toast_export_calendar_error, Toast.LENGTH_LONG).show();
+        	return false;
+        }
+        // Iterate over calendars to store names and ids
+        if ( cursor.moveToFirst() ) {
+            final String[] calNames = new String[cursor.getCount()];
+            final int[] calIds = new int[cursor.getCount()];
+            for (int i = 0; i < calNames.length; i++) {
+                calIds[i] = cursor.getInt(0);
+                calNames[i] = cursor.getString(1);
+                cursor.moveToNext();
+            }
+            
+            // Throw a Calendar chooser menu
+            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+            builder.setSingleChoiceItems(calNames, -1, new DialogInterface.OnClickListener() {
+     
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                	
+                	// iterate over schedule and add them to schedule
+                	for(Exam b : exams){
+                		// new event
+                		ContentValues event = new ContentValues();
+                		event.put("calendar_id", calIds[which]);
+                		event.put("title", b.courseName);
+                		event.put("eventLocation", b.rooms);
+                		event.put("description", b.type);
+                		long time = UIUtils.convertToUtc(getDate(b.date , b.startTime).toMillis(false));
+                		event.put("dtstart",time );
+                		event.put("dtend", time + timeDifference(b.startTime, b.endTime)*60000 );
+                		
+                		Uri newEvent = null;
+                		// insert event
+                		if (Integer.parseInt(Build.VERSION.SDK) >= 8 )
+                			newEvent =cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+                		else
+                			newEvent = cr.insert(Uri.parse("content://calendar/events"), event);
+                		// check event error
+                		if(newEvent == null) Log.e("ScheduleExport", "error on event");
+                		
+                	}
+                	
+                	
+                    dialog.cancel();
+                    if ( getActivity() != null ) 
+                		Toast.makeText(getActivity(), R.string.toast_export_calendar_finished, Toast.LENGTH_LONG).show();
+
+                }
+     
+            });
+     
+            builder.create().show();
+        }
+        cursor.close();
+    	
+    	return true;
+    }
+    
+    private int timeDifference( String begin , String end ){
+    	StringTokenizer s = new StringTokenizer(begin, ":");
+    	String hour = s.nextToken();
+    	String minute  = s.nextToken();
+    	int beginInt = Integer.valueOf(hour) * 60 + Integer.valueOf(minute);
+    	s = new StringTokenizer(end, ":");
+    	hour = s.nextToken();
+    	minute  = s.nextToken();
+    	int endInt = Integer.valueOf(hour) * 60 + Integer.valueOf(minute);
+    	return endInt - beginInt;
+    }
+    
+    private Time getDate(String dateStr , String time){
+    	Time date = new Time(UIUtils.TIME_REFERENCE);
+    	StringTokenizer s = new StringTokenizer(dateStr, "-");
+    	String year = s.nextToken();
+    	String month = s.nextToken();
+    	String day = s.nextToken();
+    	s = new StringTokenizer(time, ":");
+    	String hour = s.nextToken();
+    	String minute  = s.nextToken();
+    	date.set(0,Integer.valueOf(minute), Integer.valueOf(hour), 
+    			Integer.valueOf(day), Integer.valueOf(month)-1, Integer.valueOf(year));
+    	return date;
+    }
 	
 }

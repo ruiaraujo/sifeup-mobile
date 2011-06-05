@@ -83,12 +83,7 @@ public class FriendsListFragment extends ListFragment {
     	super.onStop();
     }
 
-	@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.friends_menu_items, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -99,19 +94,6 @@ public class FriendsListFragment extends ListFragment {
     	startActivity(i);
     }
     
-    
-    
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_friends) 
-        {
-			Toast.makeText(getActivity(), "ola", Toast.LENGTH_LONG).show();
-
-        	return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /** Classe privada para a busca de dados ao servidor */
     private class FriendsTask extends AsyncTask<Void, Void, String> {

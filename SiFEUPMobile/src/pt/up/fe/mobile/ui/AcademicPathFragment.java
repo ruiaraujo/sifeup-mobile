@@ -122,11 +122,11 @@ public class AcademicPathFragment extends ListFragment {
     	}
 
         protected void onPostExecute(String result) {
-        	if ( !result.equals("") )
+        	if ( result.equals("Success") )
         	{
 				Log.e("AcademicPath","success");
     		}
-			else{	
+			else if ( result.equals("Error")){	
 				Log.e("AcademicPath","error");
 				if ( getActivity() != null ) 
 				{
@@ -135,6 +135,9 @@ public class AcademicPathFragment extends ListFragment {
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
+			}
+			else if ( result.equals("")){
+				
 			}
         	if ( getActivity() != null ) 
         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
@@ -149,13 +152,14 @@ public class AcademicPathFragment extends ListFragment {
     			int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
-	    		case SifeupAPI.Errors.NO_AUTH: return "";
+	    			case SifeupAPI.Errors.NO_AUTH:
+	    				return "Error";
+	    			case SifeupAPI.Errors.NO_ERROR:
+	    	    		JSONAcademicPath(page);
+	    				return "Success";
+	    			case SifeupAPI.Errors.NULL_PAGE:
+	    				return "";	
 	    		}
-				
-	    		JSONAcademicPath(page);
-	    		
-				return "Sucess";
-				
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();

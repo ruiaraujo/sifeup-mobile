@@ -168,6 +168,7 @@ public class ScheduleFragment extends Fragment implements
         mTitleCurrentDayIndex = dayIndex;
         Day day = mDays.get(dayIndex);
         mTitle.setText(day.label);
+        
     }
 
     
