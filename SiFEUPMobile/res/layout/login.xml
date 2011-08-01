@@ -85,26 +85,31 @@
 		>
 		<Button
 			android:id="@+id/login_confirm"
-			android:layout_width="65.0dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="8.0dp"
 			android:text="@string/bt_login"
-			>
-		</Button>
+			/>
 		<Button
 			android:id="@+id/login_reset"
-			android:layout_width="65.0dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="8.0dp"
 			android:text="@string/bt_reset"
-			>
-		</Button>
+			/>
 		<Button
 			android:id="@+id/login_cancel"
-			android:layout_width="65.0dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginRight="8.0dp"
 			android:text="@string/bt_cancel"
-			>
-		</Button>
+			/>
+		<Button
+			android:id="@+id/login_about"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="8.0dp"
+			android:text="@string/bt_about"
+			/>	
 	</LinearLayout>
 </LinearLayout>

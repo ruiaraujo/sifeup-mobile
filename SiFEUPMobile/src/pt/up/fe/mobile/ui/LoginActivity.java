@@ -7,19 +7,26 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity 
@@ -53,6 +60,7 @@ public class LoginActivity extends Activity
         final EditText username = (EditText) findViewById(R.id.login_username);
         final EditText password = (EditText) findViewById(R.id.login_pass);
         final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
+        final Button about = (Button) findViewById(R.id.login_about);
         //verficar se o utilizador carregou no remember me e se sim
         //preencher os campos com as informações gravadas
         rememberUser = loginSettings.getBoolean(PREF_REMEMBER, false);
@@ -124,7 +132,18 @@ public class LoginActivity extends Activity
 				prefEditor.commit(); 
 			}
 		});
-      
+        
+        about.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				showDialog(DIALOG_ABOUT);
+			}
+		});
+        
+        
+        
         // A actividade de login pode ser chamada no launcher ou caso a pessoa faça logout
         // In case of a logout.
         Intent i = getIntent();
@@ -159,7 +178,8 @@ public class LoginActivity extends Activity
     }
 
     private static final int DIALOG_CONNECTING = 3000;
-	
+    private static final int DIALOG_ABOUT = 3001;
+
     protected Dialog onCreateDialog(int id ) {
 		switch (id) {
 			case DIALOG_CONNECTING: {
@@ -178,13 +198,28 @@ public class LoginActivity extends Activity
 				progressDialog.setIndeterminate(false);
 				return progressDialog;
 			}
+			case DIALOG_ABOUT:{
+				AlertDialog.Builder aboutDialog =  new Builder(this);
+				aboutDialog.setTitle(R.string.bt_about_title)
+				.setNegativeButton(R.string.bt_cancel, new  DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_ABOUT);
+					}
+				})
+				.setMessage(R.string.bt_about_message); 
+				AlertDialog welcomeAlert = aboutDialog.create();
+		        welcomeAlert.show();
+		        // Make the textview clickable. Must be called after show()
+		        ((TextView)welcomeAlert.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+				return welcomeAlert;
+			}	
 		}
 		return null;
 	}
 	
     /**
      * AsyncTask for login functionality.
-     * Background class that checkes the authentication on 
+     * Background class that checks the authentication on 
      * the server and saves the session cookie for later use.
      * @author angela
      */
@@ -211,6 +246,7 @@ public class LoginActivity extends Activity
 	        	removeDialog(DIALOG_CONNECTING);
 				return;
         	}
+        	
         	if ( result )
         	{
 				SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  

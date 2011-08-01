@@ -113,4 +113,5 @@
     <string name="path_entries"><b>Número de Inscrições:</b> <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Nota : <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>Página Web SiFEUP</u></string>
+    <string name="bt_about">Sobre</string>
 </resources>
