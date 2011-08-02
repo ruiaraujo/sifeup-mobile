@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
+import pt.up.fe.mobile.ui.friends.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.app.SearchManager;
 import android.content.Intent;

@@ -1,6 +1,6 @@
 
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.news;
 
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;

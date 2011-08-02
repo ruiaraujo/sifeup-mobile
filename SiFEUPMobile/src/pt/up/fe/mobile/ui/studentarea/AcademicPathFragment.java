@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.ui.BaseActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;

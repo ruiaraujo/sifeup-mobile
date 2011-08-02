@@ -1,15 +1,16 @@
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.studentservices;
 
 
+import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class NewsDescActivity extends BaseSinglePaneActivity {
+public class PrintRefActivity extends BaseSinglePaneActivity {
 	@Override
     protected Fragment onCreatePane() {
     	
-        return new NewsDescFragment();
+        return new PrintRefFragment();
     }
 
     @Override

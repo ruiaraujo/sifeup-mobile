@@ -44,16 +44,16 @@
         
         <activity 
         	android:label="@string/title_printing"
-        	android:name=".ui.PrintActivity" 
+        	android:name=".ui.studentservices.PrintActivity" 
             android:configChanges="orientation|keyboardHidden"/>
 
         <activity 
         	android:label="@string/title_printing"
-        	android:name=".ui.PrintRefActivity"
+        	android:name=".ui.studentservices.PrintRefActivity"
             android:configChanges="orientation|keyboardHidden" />
         	
         <activity
-        	android:name=".ui.ExamsActivity"
+        	android:name=".ui.studentarea.ExamsActivity"
             android:label="@string/title_exams"
             android:configChanges="orientation|keyboardHidden"/>
 
@@ -71,29 +71,49 @@
         </activity>
 
         <!-- Phone-only activities -->
+        
+        <activity
+            android:name=".ui.studentarea.StudentAreaActivity"
+            android:label="@string/title_student_area"
+            android:configChanges="orientation|keyboardHidden" />
+            
+        <activity
+           android:name=".ui.studentservices.StudentServicesActivity"
+           android:label="@string/title_student_services"
+           android:configChanges="orientation|keyboardHidden" />
+           
+        <activity
+          android:name=".ui.map.MapActivity"
+          android:label="@string/title_map"
+          android:configChanges="orientation|keyboardHidden" />
+                  
+        <activity
+          android:name=".ui.map.SettingsActivity"
+          android:label="@string/title_settings"
+          android:configChanges="orientation|keyboardHidden" />
 
         <activity
-            android:name=".ui.ScheduleActivity"
+            android:name=".ui.studentarea.ScheduleActivity"
             android:label="@string/title_schedule"
             android:configChanges="orientation|keyboardHidden" />
 
         <activity
-            android:name=".ui.ProfileActivity"
+            android:name=".ui.friends.ProfileActivity"
             android:label="@string/title_friends"
             android:configChanges="orientation|keyboardHidden" />
          
         <activity
-            android:name=".ui.NewsActivity"
+            android:name=".ui.news.NewsActivity"
             android:label="@string/title_news"
             android:configChanges="orientation|keyboardHidden" />   
             
         <activity
-            android:name=".ui.NewsDescActivity"
+            android:name=".ui.news.NewsDescActivity"
             android:label="@string/title_news" 
             android:configChanges="orientation|keyboardHidden"/>   
         
         <activity
-            android:name=".ui.FriendsActivity"
+            android:name=".ui.friends.FriendsActivity"
             android:label="@string/title_friends"
             android:configChanges="orientation|keyboardHidden" />      
             
@@ -173,11 +193,11 @@
             android:configChanges="orientation|keyboardHidden" />
         <activity 
             android:label="@string/title_subjects"
-            android:name=".ui.SubjectsActivity"
+            android:name=".ui.studentarea.SubjectsActivity"
             android:configChanges="orientation|keyboardHidden" />
         <activity 
             android:label="@string/title_academic_path"
-            android:name=".ui.AcademicPathActivity"
+            android:name=".ui.studentarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden" />
 
 

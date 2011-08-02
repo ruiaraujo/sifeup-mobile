@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.friends;
 
 
 import java.util.ArrayList;
@@ -8,6 +8,9 @@ import java.util.List;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
+import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -115,8 +118,8 @@ public class FriendsListFragment extends ListFragment {
 		         for(Friend f : SessionManager.friends.getList()){
 
 		             HashMap<String, String> map = new HashMap<String, String>();
-		             map.put("name", f.getName());
-		             map.put("course",f.getCourse());
+		             map.put(from[0], f.getName());
+		             map.put(from[1],f.getCourse());
 		             fillMaps.add(map);
 		         }
 

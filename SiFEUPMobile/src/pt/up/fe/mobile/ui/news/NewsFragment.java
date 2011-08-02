@@ -1,6 +1,6 @@
 
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.news;
 
 
 import java.net.URL;
@@ -31,6 +31,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.rss.RSSFeed;
 import pt.up.fe.mobile.rss.RSSHandler;
 import pt.up.fe.mobile.rss.RSSItem;
+import pt.up.fe.mobile.ui.BaseActivity;
 
 public class NewsFragment extends ListFragment implements AdapterView.OnItemClickListener {
 

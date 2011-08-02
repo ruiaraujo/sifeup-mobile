@@ -1,6 +1,6 @@
 
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.studentarea;
 
 
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.ui.BaseActivity;
 
 public class ExamsFragment extends ListFragment {
 

@@ -13,6 +13,8 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.service.Student.StudentDetail;
+import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
+import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 

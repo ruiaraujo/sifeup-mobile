@@ -1,24 +1,20 @@
+package pt.up.fe.mobile.ui.studentarea;
 
-package pt.up.fe.mobile.ui;
-
-
+import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class PrintActivity extends BaseSinglePaneActivity {
+public class StudentAreaActivity extends BaseSinglePaneActivity {
+
 	@Override
     protected Fragment onCreatePane() {
-    	
-        return new PrintFragment();
+        return new StudentAreaFragment();
     }
-
+	
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getActivityHelper().setupSubActivity();
-        
-    }    
-
+    } 
 	
-
 }

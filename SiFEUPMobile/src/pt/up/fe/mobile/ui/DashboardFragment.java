@@ -19,6 +19,10 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.ui.friends.FriendsActivity;
+import pt.up.fe.mobile.ui.news.NewsActivity;
+import pt.up.fe.mobile.ui.studentarea.StudentAreaActivity;
+import pt.up.fe.mobile.ui.studentservices.StudentServicesActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -42,15 +46,23 @@ public class DashboardFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_dashboard, container);
 
         // Attach event handlers
-        root.findViewById(R.id.home_btn_schedule).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.home_btn_student_area).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                fireTrackerEvent("Schedule");
-                startActivity(new Intent(getActivity(), ScheduleActivity.class));
+                fireTrackerEvent("Student Area");
+                startActivity(new Intent(getActivity(), StudentAreaActivity.class));
                     
             }
             
         });
         
+        root.findViewById(R.id.home_btn_student_services).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                fireTrackerEvent("Student Services");
+                startActivity(new Intent(getActivity(), StudentServicesActivity.class));
+                    
+            }
+            
+        });
      
         root.findViewById(R.id.home_btn_friends).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -61,16 +73,16 @@ public class DashboardFragment extends Fragment {
             
         });
 
-        root.findViewById(R.id.home_btn_subjects).setOnClickListener(new View.OnClickListener() {
+    /*    root.findViewById(R.id.home_btn_subjects).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Subjects");
                 // Launch sessions list
                 startActivity(new Intent(getActivity(), SubjectsActivity.class));
             }
-        });
+        });*/
 
 
-        root.findViewById(R.id.home_btn_tuition).setOnClickListener(new View.OnClickListener() {
+       /* root.findViewById(R.id.home_btn_tuition).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Tuition");
                 // Launch sessions list
@@ -78,13 +90,13 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        root.findViewById(R.id.home_btn_exams).setOnClickListener(new View.OnClickListener() {
+      /*  root.findViewById(R.id.home_btn_exams).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue
                 fireTrackerEvent("Exams");
                 startActivity(new Intent(getActivity(),ExamsActivity.class));
             }
-        });
+        });*/
         
         root.findViewById(R.id.home_btn_news).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -93,8 +105,25 @@ public class DashboardFragment extends Fragment {
                 startActivity(new Intent(getActivity(),NewsActivity.class));
             }
         });
+        
+        
+        root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Launch map of conference venue
+                fireTrackerEvent("Map");
+                startActivity(new Intent(getActivity(),NewsActivity.class));
+            }
+        });
+        
+        root.findViewById(R.id.home_btn_settings).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Launch map of conference venue
+                fireTrackerEvent("Settings");
+                startActivity(new Intent(getActivity(),NewsActivity.class));
+            }
+        });
 
-        root.findViewById(R.id.home_btn_printing).setOnClickListener(
+    /*    root.findViewById(R.id.home_btn_printing).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         // splicing in tag streamer
@@ -102,9 +131,9 @@ public class DashboardFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), PrintActivity.class);
                         startActivity(intent);
                     }
-        });
+        }); */
         
-        root.findViewById(R.id.home_btn_academicpath).setOnClickListener(
+      /*  root.findViewById(R.id.home_btn_academicpath).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         // splicing in tag streamer
@@ -112,7 +141,7 @@ public class DashboardFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), AcademicPathActivity.class);
                         startActivity(intent);
                     }
-        });
+        });*/
         return root;
     }
 }
