@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.rss;
+package pt.up.fe.mobile.ui.news;
 
 public class RSSItem 
 {

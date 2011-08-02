@@ -1,7 +1,8 @@
-package pt.up.fe.mobile.rss;
+package pt.up.fe.mobile.ui.news;
 
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.*;
+
 import android.util.Log;
 
 

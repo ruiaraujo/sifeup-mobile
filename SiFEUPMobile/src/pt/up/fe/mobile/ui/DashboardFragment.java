@@ -20,6 +20,7 @@ package pt.up.fe.mobile.ui;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.ui.friends.FriendsActivity;
+import pt.up.fe.mobile.ui.map.FeupMapActivity;
 import pt.up.fe.mobile.ui.news.NewsActivity;
 import pt.up.fe.mobile.ui.studentarea.StudentAreaActivity;
 import pt.up.fe.mobile.ui.studentservices.StudentServicesActivity;
@@ -111,7 +112,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 // Launch map of conference venue
                 fireTrackerEvent("Map");
-                startActivity(new Intent(getActivity(),NewsActivity.class));
+                startActivity(new Intent(getActivity(),FeupMapActivity.class));
             }
         });
         

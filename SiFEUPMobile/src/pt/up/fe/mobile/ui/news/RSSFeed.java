@@ -1,10 +1,9 @@
-package pt.up.fe.mobile.rss;
+package pt.up.fe.mobile.ui.news;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.mobile.rss.RSSItem;
 
 public class RSSFeed 
 {

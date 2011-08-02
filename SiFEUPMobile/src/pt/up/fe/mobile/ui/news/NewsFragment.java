@@ -28,9 +28,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.rss.RSSFeed;
-import pt.up.fe.mobile.rss.RSSHandler;
-import pt.up.fe.mobile.rss.RSSItem;
 import pt.up.fe.mobile.ui.BaseActivity;
 
 public class NewsFragment extends ListFragment implements AdapterView.OnItemClickListener {

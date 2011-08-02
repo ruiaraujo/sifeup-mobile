@@ -83,7 +83,7 @@
            android:configChanges="orientation|keyboardHidden" />
            
         <activity
-          android:name=".ui.map.MapActivity"
+          android:name=".ui.map.FeupMapActivity"
           android:label="@string/title_map"
           android:configChanges="orientation|keyboardHidden" />
                   
@@ -200,6 +200,10 @@
             android:name=".ui.studentarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden" />
 
-
+		<uses-library android:name="com.google.android.maps" />  
+ 
+        
     </application>
+ 
+
 </manifest>
