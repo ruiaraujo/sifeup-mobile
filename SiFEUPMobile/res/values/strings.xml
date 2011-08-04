@@ -25,7 +25,8 @@
     <string name="title_uc_inscriptions">UCs Inscriptions</string> 
     <string name="title_change_password">Change Password</string>
     <string name="title_card_request">Card Request</string>
-    <string name="title_requirements">Requirements</string>            
+    <string name="title_requirements">Requirements</string>
+    <string name="title_scholar_profit">Scholar Profit</string>              
     <string name="title_academic_path">Academic Path</string>
     <string name="title_printing">Printing Quota</string>
     <string name="title_news">News</string>
@@ -50,6 +51,7 @@
     <string name="btn_change_password">Change Password</string>
     <string name="btn_card_request">Card Request</string>
     <string name="btn_requirements">Requirements</string>
+    <string name="btn_scholar_profit">Scholar Profit</string>
     <string name="btn_news">News</string>
 	<string name="btn_map">Map</string>
     <string name="btn_settings">Settings</string>
