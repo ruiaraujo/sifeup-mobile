@@ -47,6 +47,10 @@ public class StudentServicesFragment extends ListFragment
         changePassword.put(from[0],getString(R.string.btn_change_password));
         fillMaps.add(changePassword);
         
+        HashMap<String, String> cardRequest = new HashMap<String, String>();
+        cardRequest.put(from[0],getString(R.string.btn_card_request));
+        fillMaps.add(cardRequest);
+        
         // fill in the grid_item layout
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
        		 							R.layout.list_item_menu, from, to);
@@ -62,23 +66,26 @@ public class StudentServicesFragment extends ListFragment
     
 
     /** {@inheritDoc} */
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) 
+    {
     	//TODO
-    	switch( position ){
-    	case 0:
-    		 startActivity(new Intent(getActivity(),PrintActivity.class));
-    		 return;
-    	case 1:
-	   		 startActivity(new Intent(getActivity(),TuitionMenuActivity.class));
-			 return;
-    	case 2:
-	   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
-			 return;
-    	case 3:
-	   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
-			 return;
-			 
-   
+    	switch( position )
+    	{
+	    	case 0:
+	    		 startActivity(new Intent(getActivity(),PrintActivity.class));
+	    		 return;
+	    	case 1:
+		   		 startActivity(new Intent(getActivity(),TuitionMenuActivity.class));
+				 return;
+	    	case 2:
+		   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
+				 return;
+	    	case 3:
+		   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
+				 return;
+	    	case 4:
+		   		 startActivity(new Intent(getActivity(),CardRequestActivity.class));
+				 return;
     	}
     }
     
