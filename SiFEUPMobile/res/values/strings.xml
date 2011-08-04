@@ -22,7 +22,8 @@
     <string name="title_map">Map</string>
     <string name="title_settings">Settings</string>
     <string name="title_friends">Friends</string>  
-    <string name="title_ucinscriptions">UCs Inscriptions</string>     
+    <string name="title_ucinscriptions">UCs Inscriptions</string> 
+    <string name="title_changepassword">Change Password</string>       
     <string name="title_academic_path">Academic Path</string>
     <string name="title_printing">Printing Quota</string>
     <string name="title_news">News</string>
@@ -43,7 +44,8 @@
     <string name="btn_printing">Printing Quota</string>
     <string name="btn_academicpath">Academic Path</string>
     <string name="btn_tuition">Tuition</string>
-    <string name="btn_ucinscriptions">UCs Inscriptions</string>
+    <string name="btn_uc_inscriptions">UCs Inscriptions</string>
+    <string name="btn_change_password">Change Password</string>
     <string name="btn_news">News</string>
 	<string name="btn_map">Map</string>
     <string name="btn_settings">Settings</string>

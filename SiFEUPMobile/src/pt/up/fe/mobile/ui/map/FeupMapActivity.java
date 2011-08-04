@@ -1,36 +1,18 @@
 package pt.up.fe.mobile.ui.map;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-import pt.up.fe.mobile.ui.studentarea.ExamsFragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.location.Address;
-import android.location.Geocoder;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 
-import com.google.android.maps.MapView.LayoutParams;  
 
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
- 
 
 public class FeupMapActivity extends MapActivity {
 	

@@ -120,7 +120,12 @@
        <activity
             android:name=".ui.studentservices.UCsInscriptionsActivity"
             android:label="@string/title_ucinscriptions"
-            android:configChanges="orientation|keyboardHidden" />         
+            android:configChanges="orientation|keyboardHidden" />  
+            
+       <activity
+          android:name=".ui.studentservices.ChangePasswordActivity"
+          android:label="@string/title_changepassword"
+          android:configChanges="orientation|keyboardHidden" />         
             
          
         <activity

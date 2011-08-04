@@ -40,8 +40,12 @@ public class StudentServicesFragment extends ListFragment
         fillMaps.add(tuition);
         
         HashMap<String, String> ucInscriptions = new HashMap<String, String>();
-        ucInscriptions.put(from[0],getString(R.string.btn_ucinscriptions));
+        ucInscriptions.put(from[0],getString(R.string.btn_uc_inscriptions));
         fillMaps.add(ucInscriptions);
+        
+        HashMap<String, String> changePassword = new HashMap<String, String>();
+        changePassword.put(from[0],getString(R.string.btn_change_password));
+        fillMaps.add(changePassword);
         
         // fill in the grid_item layout
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
@@ -70,6 +74,10 @@ public class StudentServicesFragment extends ListFragment
     	case 2:
 	   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
 			 return;
+    	case 3:
+	   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
+			 return;
+			 
    
     	}
     }
