@@ -51,6 +51,10 @@ public class StudentServicesFragment extends ListFragment
         cardRequest.put(from[0],getString(R.string.btn_card_request));
         fillMaps.add(cardRequest);
         
+        HashMap<String, String> requirements = new HashMap<String, String>();
+        requirements.put(from[0],getString(R.string.btn_requirements));
+        fillMaps.add(requirements);
+        
         // fill in the grid_item layout
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
        		 							R.layout.list_item_menu, from, to);
@@ -85,6 +89,9 @@ public class StudentServicesFragment extends ListFragment
 				 return;
 	    	case 4:
 		   		 startActivity(new Intent(getActivity(),CardRequestActivity.class));
+				 return;
+	    	case 5:
+		   		 startActivity(new Intent(getActivity(), RequirementsActivity.class));
 				 return;
     	}
     }

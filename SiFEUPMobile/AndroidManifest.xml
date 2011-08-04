@@ -130,9 +130,13 @@
        <activity
          android:name=".ui.studentservices.CardRequestActivity"
          android:label="@string/title_card_request"
-         android:configChanges="orientation|keyboardHidden" />          
-            
+         android:configChanges="orientation|keyboardHidden" />  
          
+       <activity
+         android:name=".ui.studentservices.RequirementsActivity"
+         android:label="@string/title_requirements"
+         android:configChanges="orientation|keyboardHidden" />           
+            
         <activity
             android:label="@string/title_tuition"
             android:name=".ui.tuition.TuitionActivity"
