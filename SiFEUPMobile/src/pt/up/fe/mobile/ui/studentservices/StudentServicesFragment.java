@@ -22,7 +22,8 @@ public class StudentServicesFragment extends ListFragment
 {
 		
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+	{
         super.onCreate(savedInstanceState);
         String[] from = new String[] {"title"};
         int[] to = new int[] { R.id.list_menu_title};
@@ -37,6 +38,10 @@ public class StudentServicesFragment extends ListFragment
         HashMap<String, String> tuition = new HashMap<String, String>();
         tuition.put(from[0],getString(R.string.btn_tuition));
         fillMaps.add(tuition);
+        
+        HashMap<String, String> ucInscriptions = new HashMap<String, String>();
+        ucInscriptions.put(from[0],getString(R.string.btn_ucinscriptions));
+        fillMaps.add(ucInscriptions);
         
         // fill in the grid_item layout
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
@@ -61,6 +66,9 @@ public class StudentServicesFragment extends ListFragment
     		 return;
     	case 1:
 	   		 startActivity(new Intent(getActivity(),TuitionMenuActivity.class));
+			 return;
+    	case 2:
+	   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
 			 return;
    
     	}

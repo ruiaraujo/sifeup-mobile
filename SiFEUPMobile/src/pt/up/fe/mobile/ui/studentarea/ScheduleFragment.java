@@ -35,6 +35,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -45,12 +47,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScheduleFragment extends Fragment implements
 			ObservableScrollView.OnScrollListener {
-	
+	private ViewPager hi;
+	private PagerAdapter ola;
     private Workspace mWorkspace;
     private TextView mTitle;
     private int mTitleCurrentDayIndex = -1;

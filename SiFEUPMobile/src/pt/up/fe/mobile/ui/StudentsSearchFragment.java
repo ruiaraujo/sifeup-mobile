@@ -45,6 +45,7 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
         new StudentsSearchTask().execute();
 
     }
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.list_item_loading, null);
