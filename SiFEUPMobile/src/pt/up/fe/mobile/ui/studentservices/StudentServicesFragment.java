@@ -52,7 +52,7 @@ public class StudentServicesFragment extends ListFragment
         fillMaps.add(cardRequest);
         
         HashMap<String, String> requirements = new HashMap<String, String>();
-        requirements.put(from[0],getString(R.string.btn_requirements));
+        requirements.put(from[0],getString(R.string.btn_requests));
         fillMaps.add(requirements);
         
         HashMap<String, String> scholarProfit = new HashMap<String, String>();
