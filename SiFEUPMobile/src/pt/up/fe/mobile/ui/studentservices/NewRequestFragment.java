@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
-public class RequirementsFragment extends Fragment
+public class NewRequestFragment extends Fragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState) 

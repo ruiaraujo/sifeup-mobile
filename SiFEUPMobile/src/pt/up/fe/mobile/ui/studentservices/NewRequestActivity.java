@@ -4,7 +4,7 @@ import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class RequirementsActivity extends BaseSinglePaneActivity
+public class NewRequestActivity extends BaseSinglePaneActivity
 {
 	@Override
     protected Fragment onCreatePane() 

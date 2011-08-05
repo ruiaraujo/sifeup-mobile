@@ -133,10 +133,15 @@
          android:configChanges="orientation|keyboardHidden" />  
          
        <activity
-         android:name=".ui.studentservices.RequirementsActivity"
-         android:label="@string/title_requirements"
+         android:name=".ui.studentservices.NewRequestActivity"
+         android:label="@string/title_new_request"
          android:configChanges="orientation|keyboardHidden" /> 
       
+       <activity
+         android:name=".ui.studentservices.AllRequestsActivity"
+         android:label="@string/title_all_requests"
+         android:configChanges="orientation|keyboardHidden" /> 
+         
        <activity
          android:name=".ui.studentservices.ScholarProfitActivity"
          android:label="@string/title_scholar_profit"
