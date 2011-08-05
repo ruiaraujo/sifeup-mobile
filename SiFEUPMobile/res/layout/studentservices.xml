@@ -3,5 +3,6 @@
     android:layout_height="match_parent">
 	<ExpandableListView  android:id="@+id/studentservices_menu"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"/>
+	    android:layout_height="match_parent"
+	    android:groupIndicator="@null"/>
 </LinearLayout>

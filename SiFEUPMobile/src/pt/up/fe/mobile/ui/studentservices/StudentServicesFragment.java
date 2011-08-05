@@ -156,6 +156,10 @@ public class StudentServicesFragment extends Fragment
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
             TextView textView = getGenericView();
+            textView.setPadding( textView.getPaddingLeft() + 32 , 
+			            		textView.getPaddingTop(),
+			            		textView.getPaddingRight(),
+			            		textView.getPaddingBottom());
             textView.setText(getChild(groupPosition, childPosition).toString());
             return textView;
         }
