@@ -154,4 +154,5 @@
                                  <li>Distributed Systems course</li> \n
                                  </ul>
                                  </string>
+	<string name="btn_ok">Ok</string>
 </resources>
