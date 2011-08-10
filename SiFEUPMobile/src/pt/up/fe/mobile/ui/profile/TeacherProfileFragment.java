@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.service.Student.StudentDetail;
+import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
@@ -36,8 +37,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ProfileFragment extends Fragment  implements OnItemClickListener{
-	
+/**
+ * Teacher Profile Fragment
+ * @author Ângela Igreja
+ */
+public class TeacherProfileFragment extends Fragment implements OnItemClickListener
+{
 	private TextView name;
 	private ListView details;
 	private CheckBox friend;
@@ -134,7 +139,7 @@ public class ProfileFragment extends Fragment  implements OnItemClickListener{
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
 		        		 							R.layout.list_item_profile, from, to);
 		         details.setAdapter(adapter);
-		         details.setOnItemClickListener(ProfileFragment.this);
+		         details.setOnItemClickListener(TeacherProfileFragment.this);
 		         details.setSelection(0);
 			}
 			else if ( result.equals("Error")) {	

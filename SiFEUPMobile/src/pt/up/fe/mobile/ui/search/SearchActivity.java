@@ -1,8 +1,10 @@
 
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.search;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.BaseMultiPaneActivity;
+import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 
 
 import android.app.FragmentTransaction;

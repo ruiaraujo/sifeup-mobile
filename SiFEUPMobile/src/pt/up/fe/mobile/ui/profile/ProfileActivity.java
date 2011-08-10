@@ -1,8 +1,7 @@
-package pt.up.fe.mobile.ui.friends;
+package pt.up.fe.mobile.ui.profile;
 
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-import pt.up.fe.mobile.ui.ProfileFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -14,7 +13,7 @@ public class ProfileActivity extends BaseSinglePaneActivity {
 	
     protected Fragment onCreatePane() {
     	
-        return new ProfileFragment();
+        return new StudentProfileFragment();
     }
     
     /** Called when the activity is first created. */

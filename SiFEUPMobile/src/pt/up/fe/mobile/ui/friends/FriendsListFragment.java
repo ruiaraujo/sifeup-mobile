@@ -9,6 +9,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 import android.content.Intent;

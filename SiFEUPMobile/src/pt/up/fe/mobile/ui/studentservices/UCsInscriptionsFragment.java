@@ -52,7 +52,7 @@ public class UCsInscriptionsFragment extends Fragment
          List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
          
          HashMap<String, String> map = new HashMap<String, String>();
-         map.put("uc", "Comp" );
+         map.put("uc", "COMP" );
          fillMaps.add(map);
          map = new HashMap<String, String>();
          map.put("uc", "IELE" );

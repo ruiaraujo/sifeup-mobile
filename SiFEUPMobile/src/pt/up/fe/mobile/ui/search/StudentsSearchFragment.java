@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui;
+package pt.up.fe.mobile.ui.search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,8 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
-import pt.up.fe.mobile.ui.friends.ProfileActivity;
+import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.app.SearchManager;
 import android.content.Intent;
