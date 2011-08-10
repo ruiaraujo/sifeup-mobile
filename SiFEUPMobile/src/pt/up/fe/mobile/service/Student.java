@@ -121,6 +121,12 @@ public class Student implements Serializable
 	public String getEmailAlt() {
 		return emailAlt;
 	}
+	
+	/**
+	 * 
+	 * @author Rui Araújo
+	 *
+	 */
 
 	public class StudentDetail{
 		public String title;

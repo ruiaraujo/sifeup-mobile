@@ -6,12 +6,15 @@ import java.util.List;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.TuitionHistory;
 import pt.up.fe.mobile.ui.studentarea.AcademicPathActivity;
 import pt.up.fe.mobile.ui.studentarea.ExamsActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.SubjectsActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionActivity;
+import pt.up.fe.mobile.ui.tuition.TuitionHistoryActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
+import pt.up.fe.mobile.ui.tuition.TuitionRefListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,7 +57,7 @@ public class StudentServicesFragment extends Fragment
 			    		 startActivity(new Intent(getActivity(),PrintActivity.class));
 			    		 break;
 			    	case 1:
-				   		 startActivity(new Intent(getActivity(),TuitionMenuActivity.class));
+			    		// has children;
 				   		 break;
 			    	case 2:
 				   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
@@ -82,6 +85,17 @@ public class StudentServicesFragment extends Fragment
 					int groupPosition, int childPosition, long id) {
 				switch( groupPosition )
 		    	{
+				case 1:
+					switch( childPosition )
+					{
+					case 0:
+				   		 startActivity(new Intent(getActivity(), TuitionHistoryActivity.class));
+				   		 break;
+					case 1:
+				   		 startActivity(new Intent(getActivity(), TuitionRefListActivity.class));
+				   		 break;	
+					}
+					break;
 					case 5:
 						switch( childPosition )
 						{
@@ -116,7 +130,7 @@ public class StudentServicesFragment extends Fragment
         		getString(R.string.btn_scholar_profit)};
         private String[][] children = {
                 {  },
-                {  },
+                { getString(R.string.btn_tuition_history)  , getString(R.string.btn_tuition_refs) },
                 {  },
                 {  },
                 {  },
@@ -156,6 +170,7 @@ public class StudentServicesFragment extends Fragment
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
             TextView textView = getGenericView();
+            //Insert a extra padding to the children
             textView.setPadding( textView.getPaddingLeft() + 32 , 
 			            		textView.getPaddingTop(),
 			            		textView.getPaddingRight(),
