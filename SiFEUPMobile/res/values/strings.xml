@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
     <string name="app_name">SiFEUP Mobile</string>
 
     <string name="description_logo">SiFEUP Mobile</string>
@@ -12,8 +13,9 @@
     <string name="description_export">Export</string>
     <string name="description_now">Go to Now</string>
     <string name="description_add">Add Friend</string>
-    
+   
     <string name="title_schedule">Schedule</string>
+    <string name="title_lunch_menu">Lunch Menu</string>
     <string name="title_tuition">Payments</string>
     <string name="title_subjects">Subjects</string>
     <string name="title_exams">Exams</string>
@@ -44,7 +46,7 @@
     <string name="btn_schedule">Schedule</string>
     <string name="btn_exams">Exams</string>
     <string name="btn_subjects">Subjects</string>
-    <string name="btn_food">Food</string>
+    <string name="btn_lunch_menu">Lunch Menu</string>
     <string name="btn_friends">Friends</string>
     <string name="btn_printing">Printing Quota</string>
     <string name="btn_academicpath">Academic Path</string>

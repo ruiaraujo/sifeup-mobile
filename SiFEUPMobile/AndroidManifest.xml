@@ -96,6 +96,11 @@
             android:name=".ui.studentarea.ScheduleActivity"
             android:label="@string/title_schedule"
             android:configChanges="orientation|keyboardHidden" />
+            
+       <activity
+            android:name=".ui.studentarea.LunchMenuActivity"
+            android:label="@string/title_lunch_menu"
+            android:configChanges="orientation|keyboardHidden" />
 
         <activity
             android:name=".ui.profile.ProfileActivity"

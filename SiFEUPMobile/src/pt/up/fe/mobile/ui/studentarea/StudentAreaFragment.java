@@ -41,7 +41,7 @@ public class StudentAreaFragment extends ListFragment{
         fillMaps.add(subjects);
         
         HashMap<String, String> food = new HashMap<String, String>();
-        food.put(from[0],getString(R.string.btn_subjects));//TODO: create string
+        food.put(from[0],getString(R.string.btn_lunch_menu));
         fillMaps.add(food);
         
         HashMap<String, String> academic = new HashMap<String, String>();
@@ -80,7 +80,7 @@ public class StudentAreaFragment extends ListFragment{
 		   		 startActivity(new Intent(getActivity(),SubjectsActivity.class));
 				 return;
 	   		case 3:
-		   		 startActivity(new Intent(getActivity(),SubjectsActivity.class));
+		   		 startActivity(new Intent(getActivity(),LunchMenuActivity.class));
 				 return;
 	   		case 4:
 		   		 startActivity(new Intent(getActivity(), AcademicPathActivity.class));

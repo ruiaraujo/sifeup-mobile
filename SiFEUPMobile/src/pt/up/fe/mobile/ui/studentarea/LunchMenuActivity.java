@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui.lunchmenu;
+package pt.up.fe.mobile.ui.studentarea;
 
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;

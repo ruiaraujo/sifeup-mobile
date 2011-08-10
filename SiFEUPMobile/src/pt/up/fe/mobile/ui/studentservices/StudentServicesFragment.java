@@ -13,7 +13,6 @@ import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.SubjectsActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionHistoryActivity;
-import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionRefListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,10 +25,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 

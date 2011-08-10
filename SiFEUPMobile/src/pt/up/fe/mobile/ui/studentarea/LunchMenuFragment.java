@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui.lunchmenu;
+package pt.up.fe.mobile.ui.studentarea;
 
 
 

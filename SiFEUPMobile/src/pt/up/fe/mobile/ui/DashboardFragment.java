@@ -18,13 +18,12 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.ui.friends.FriendsActivity;
 import pt.up.fe.mobile.ui.map.FeupMapActivity;
 import pt.up.fe.mobile.ui.news.NewsActivity;
 import pt.up.fe.mobile.ui.studentarea.StudentAreaActivity;
 import pt.up.fe.mobile.ui.studentservices.StudentServicesActivity;
-import pt.up.fe.mobile.ui.tuition.TuitionMenuActivity;
+
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
