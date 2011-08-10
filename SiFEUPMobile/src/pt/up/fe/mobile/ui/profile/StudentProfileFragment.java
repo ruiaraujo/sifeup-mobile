@@ -67,7 +67,7 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
 		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
 		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
-		String code = getArguments().get("profile").toString();
+		String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
 		
 		friend.setOnClickListener(new OnClickListener() {
 			

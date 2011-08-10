@@ -271,7 +271,9 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 			return;
 		Intent i = new Intent(getActivity() , ProfileActivity.class);
 		// assumed only one page of results
-		i.putExtra("profile", results.get(position/15).students.get(position%15).getCode());
+		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT);
+		i.putExtra(ProfileActivity.PROFILE_CODE, 
+					results.get(position/15).students.get(position%15).getCode());
 		startActivity(i);
 	}
 	

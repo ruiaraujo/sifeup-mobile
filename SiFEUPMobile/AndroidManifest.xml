@@ -214,11 +214,11 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".ui.SearchActivity"
+            android:value=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden"  />
         <activity 
             android:label="@string/title_search"
-            android:name=".ui.StudentsSearchActivity"
+            android:name=".ui.search.StudentsSearchActivity"
             android:configChanges="orientation|keyboardHidden" />
         <activity 
             android:label="@string/title_subjects"
