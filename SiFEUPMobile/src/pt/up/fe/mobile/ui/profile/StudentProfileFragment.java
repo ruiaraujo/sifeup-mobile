@@ -37,8 +37,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class StudentProfileFragment extends Fragment  implements OnItemClickListener{
-	
+/**
+ * Student Profile Fragment
+ * @author Ângela Igreja
+ */
+public class StudentProfileFragment extends Fragment  implements OnItemClickListener
+{
 	private TextView name;
 	private ListView details;
 	private CheckBox friend;
@@ -52,7 +56,7 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Profile");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/StudentProfile");
     }
 
     @Override

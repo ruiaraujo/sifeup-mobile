@@ -7,13 +7,16 @@ import android.support.v4.app.Fragment;
 
 /**
  * Profile Activity
- * @author angela
+ * @author Ângela Igreja
  */
-public class ProfileActivity extends BaseSinglePaneActivity {
+public abstract class ProfileActivity extends BaseSinglePaneActivity {
 	
-    protected Fragment onCreatePane() {
-    	
-        return new StudentProfileFragment();
+    protected Fragment onCreatePane(String param) 
+    {
+    	if(param.equalsIgnoreCase("TEACHER"))
+    		return new TeacherProfileFragment();
+    	else
+    		return new StudentProfileFragment();
     }
     
     /** Called when the activity is first created. */
@@ -21,7 +24,7 @@ public class ProfileActivity extends BaseSinglePaneActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getActivityHelper().setupSubActivity();
-    }  
+    }
 
 }
 

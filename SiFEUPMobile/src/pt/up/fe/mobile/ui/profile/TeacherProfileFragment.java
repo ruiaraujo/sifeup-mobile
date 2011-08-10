@@ -1,25 +1,17 @@
 package pt.up.fe.mobile.ui.profile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Friend;
-import pt.up.fe.mobile.service.SessionManager;
+
 import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.Student;
-import pt.up.fe.mobile.service.Student.StudentDetail;
+import pt.up.fe.mobile.service.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
-import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
-import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,12 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,65 +33,39 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 {
 	private TextView name;
 	private ListView details;
-	private CheckBox friend;
 	private TextView code;
 
-	/** User Info */
-    private Student me = new Student();
-    private List<StudentDetail> contents;
-    
+	/** Teacher Info */
+    private Teacher teacher = new Teacher();
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Profile");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TeacherProfile");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+            Bundle savedInstanceState) 
+    {
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, null);
+		
 		name = ((TextView)root.findViewById(R.id.profile_name));
+		
 		code = ((TextView)root.findViewById(R.id.profile_code));
+		
 		details = ((ListView)root.findViewById(R.id.profile_details));
-		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
-		String code = getArguments().get("profile").toString();
-		
-		friend.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Friend fr = new Friend(me.getCode(),me.getName(), me.getProgrammeAcronym());
-				if ( friend.isChecked())
-					SessionManager.friends.addFriend(fr);
-				else
-					SessionManager.friends.removeFriend(fr);
-				SessionManager.friends.saveToFile(getActivity());
-			}
-		});
-		((Button)root.findViewById(R.id.profile_link_schedule)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), ScheduleActivity.class);
-	    		i.putExtra(ScheduleFragment.PROFILE_CODE, me.getCode());
-	    		startActivity(i);
-			}
-		});
-		
-		if ( code != null )
-		{
-			new ProfileTask().execute(code);
-		}
-		else
-			new ProfileTask().execute(SessionManager.getInstance().getLoginCode());
+				
         return root;
     }
     
 
 
     /** Classe privada para a busca de dados ao servidor */
-    private class ProfileTask extends AsyncTask<String, Void, String> {
+    private class TeacherProfileTask extends AsyncTask<String, Void, String> 
+    {
 
     	protected void onPreExecute (){
     		if ( getActivity() != null ) 
@@ -113,37 +75,16 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
         protected void onPostExecute(String result) {
         	if ( getActivity() == null ) 
         		return;
+        	
         	if ( result.equals("Success") )
         	{
-				Log.e("Profile","success");
-				contents = me.getStudentContents(getResources());
-				name.setText(me.getName());
-				code.setText(me.getCode());
-				if ( SessionManager.friends.isFriend(me.getCode()) )
-					friend.setChecked(true);
-				else
-					friend.setChecked(false);
-				String[] from = new String[] { "title", "content" };
-		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
-			         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for ( StudentDetail s : contents )   
-		         { 
-		        	 HashMap<String, String> map = new HashMap<String, String>();
-		             map.put(from[0], s.title);
-		             map.put(from[1],s.content);
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-		        		 							R.layout.list_item_profile, from, to);
-		         details.setAdapter(adapter);
-		         details.setOnItemClickListener(TeacherProfileFragment.this);
-		         details.setSelection(0);
+				Log.e("TeacherProfile","success");
+				name.setText(teacher.getName());
+				code.setText(teacher.getCode());
 			}
-			else if ( result.equals("Error")) {	
-				Log.e("Profile","error");
+			else if ( result.equals("Error")) 
+			{	
+				Log.e("TeacherProfile","error");
 				if ( getActivity() != null ) 
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
@@ -153,8 +94,9 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 					return;
 				}
 			}
-			else if ( result.equals("")) {	
-				Log.e("Profile","error");
+			else if ( result.equals("")) 
+			{	
+				Log.e("TeacherProfile","error");
 				if ( getActivity() != null ) 	
 				{
 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
@@ -168,13 +110,15 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
         }
 
 		@Override
-		protected String doInBackground(String ... code) {
+		protected String doInBackground(String ... code) 
+		{
 			String page = "";
 		  	try {
 		  		if ( code.length < 1 )
 		  			return "";
 	    			page = SifeupAPI.getStudentReply(code[0]);
 	    		int error =	SifeupAPI.JSONError(page);
+	    		
 	    		switch (error)
 	    		{
 	    			case SifeupAPI.Errors.NO_AUTH:
@@ -216,29 +160,29 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 			//me.clearAll();
 			
 			if(jObject.has("codigo"))
-				me.setCode(jObject.getString("codigo"));
+				teacher.setCode(jObject.getString("codigo"));
 			if(jObject.has("nome"))
-				me.setName(jObject.getString("nome"));
+				teacher.setName(jObject.getString("nome"));
 			if(jObject.has("curso_sigla"))
-				me.setProgrammeAcronym(jObject.getString("curso_sigla"));
+				teacher.setProgrammeAcronym(jObject.getString("curso_sigla"));
 			if(jObject.has("curso_nome"))
-				me.setProgrammeName(jObject.getString("curso_nome"));
+				teacher.setProgrammeName(jObject.getString("curso_nome"));
 			if(jObject.has("ano_lect_matricula"))
-				me.setRegistrationYear(jObject.getString("ano_lect_matricula"));
+				teacher.setRegistrationYear(jObject.getString("ano_lect_matricula"));
 			if(jObject.has("estado"))
-				me.setState(jObject.getString("estado"));
+				teacher.setState(jObject.getString("estado"));
 			if(jObject.has("ano_curricular"))
-				me.setAcademicYear(jObject.getString("ano_curricular"));
+				teacher.setAcademicYear(jObject.getString("ano_curricular"));
 			if(jObject.has("email"))
-				me.setEmail(jObject.getString("email"));
+				teacher.setEmail(jObject.getString("email"));
 			if(jObject.has("email_alternativo"))
-				me.setEmailAlt(jObject.getString("email_alternativo"));
+				teacher.setEmailAlt(jObject.getString("email_alternativo"));
 			if(jObject.has("telemovel"))
-				me.setMobile(jObject.getString("telemovel"));
+				teacher.setMobile(jObject.getString("telemovel"));
 			if(jObject.has("telefone"))
-				me.setTelephone(jObject.getString("telefone"));
+				teacher.setTelephone(jObject.getString("telefone"));
 			if(jObject.has("ramo"))
-				me.setBranch(jObject.getString("ramo"));
+				teacher.setBranch(jObject.getString("ramo"));
 			Log.e("JSON", "loaded student");
 			return true;
 		}

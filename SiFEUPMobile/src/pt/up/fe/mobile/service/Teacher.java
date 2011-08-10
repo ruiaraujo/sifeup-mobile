@@ -8,9 +8,10 @@ import pt.up.fe.mobile.R;
 
 import android.content.res.Resources;
 
-public class Student implements Serializable
+public class Teacher implements Serializable
 {
-	private static final long serialVersionUID = 1727093503991901167L;
+	private static final long serialVersionUID = -4575384072712726492L;
+	
 	private String code;
 	private String name;
 	private String programmeAcronym;
@@ -31,7 +32,8 @@ public class Student implements Serializable
 		String EMAIL = "email";
 		String MOBILE = "mobile"; 
 	}
-	public Student() {
+	
+	public Teacher() {
 	}
 
 	public String getCode() {
@@ -122,7 +124,9 @@ public class Student implements Serializable
 		return emailAlt;
 	}
 
-	public class StudentDetail{
+	//???????
+	public class StudentDetail
+	{
 		public String title;
 		public String content;
 		public String type;
