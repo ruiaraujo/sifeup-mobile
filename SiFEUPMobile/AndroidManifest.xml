@@ -233,6 +233,10 @@
             android:label="@string/title_academic_path"
             android:name=".ui.studentarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden" />
+        <activity 
+            android:label="@string/title_classes_selection"
+            android:name=".ui.studentservices.ClassesSelectionActivity"
+            android:configChanges="orientation|keyboardHidden" />
 
 		<uses-library android:name="com.google.android.maps" />  
  

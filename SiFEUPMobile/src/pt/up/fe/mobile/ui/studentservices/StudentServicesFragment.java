@@ -70,6 +70,9 @@ public class StudentServicesFragment extends Fragment
 			    	case 6:
 				   		 startActivity(new Intent(getActivity(), ScholarProfitActivity.class));
 				   		 break;
+			    	case 7:
+			    		 startActivity(new Intent(getActivity(),ClassesSelectionActivity.class));
+			    		 break;
 		    	}
 				return false;
 			}
@@ -123,7 +126,8 @@ public class StudentServicesFragment extends Fragment
         		getString(R.string.btn_change_password),
         		getString(R.string.btn_card_request),
         		getString(R.string.btn_requests),
-        		getString(R.string.btn_scholar_profit)};
+        		getString(R.string.btn_scholar_profit),
+        		getString(R.string.btn_classes_selection)};
         private String[][] children = {
                 {  },
                 { getString(R.string.btn_tuition_history)  , getString(R.string.btn_tuition_refs) },
@@ -132,6 +136,7 @@ public class StudentServicesFragment extends Fragment
                 {  },
                 {getString(R.string.btn_new_request), getString(R.string.btn_all_request) },
                 {  },
+                {  }
         };
         
          
