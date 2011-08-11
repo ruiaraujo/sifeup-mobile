@@ -6,41 +6,36 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class ClassesSelectionOption extends Fragment implements OnClickListener{
+public class ClassesSelectionOption extends Fragment {
 
 	// These can be static as they are common between different options
 	private static String [] subjects;
 	private static String [] classes;
     private int [] selectedClasses;
-    private static onSubmitClickListener parent;
     private LayoutInflater mInflater;
 	final static private String STATE = "pt.up.fe.mobile.ui.studentservices.STATE";
 
 	
-	public static ClassesSelectionOption getInstance( String [] subjects , String [] classes , onSubmitClickListener p){
+	public static ClassesSelectionOption getInstance( String [] subjects , String [] classes ){
 		ClassesSelectionOption f = new ClassesSelectionOption();
 		// we have to init this fragment in case the user 
 		// wants to submit its choice without visiting every option.
-		f.init(subjects, classes, p);
+		f.init(subjects, classes);
 		return f;
 	}
 	
-	public void init( String [] s , String [] c , onSubmitClickListener p) {
+	public void init( String [] s , String [] c ) {
 		subjects= s;
 		classes = c;
-		parent = p;
 		selectedClasses = new int[subjects.length];
 	}
 	
@@ -51,17 +46,11 @@ public class ClassesSelectionOption extends Fragment implements OnClickListener{
 		 	View root = inflater.inflate(R.layout.classes_selection_option ,null);
 	        ListView list = (ListView) root.findViewById(R.id.classes_selection_list);
 	        list.setAdapter(new ClassesOptionAdapter());
-	        Button bt = (Button) root.findViewById(R.id.classes_selection_submit);
-	        bt.setOnClickListener(this);
+	       // 
 	        return root;
 	    }
 	
-		@Override
-		public void onClick(View v) {
-			if ( parent == null )
-				return;
-			Toast.makeText(getActivity(),parent.onSubmitClick() , Toast.LENGTH_LONG).show();
-		}
+	
 		
 		public String getChoiceStatus(){
 			StringBuilder st = new StringBuilder();
@@ -137,10 +126,5 @@ public class ClassesSelectionOption extends Fragment implements OnClickListener{
 		}
 
     }
-
-    public interface onSubmitClickListener{
-    	public String onSubmitClick() ;
-    }
-
 
 }
