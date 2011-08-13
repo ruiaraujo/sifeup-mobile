@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
@@ -103,6 +102,8 @@ public class ExamsFragment extends ListFragment {
 		         }
 				 
 		         // fill in the grid_item layout
+		         if ( getActivity() == null ) 
+		        	 return;
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
 		         setListAdapter(adapter);
 		         Log.e("JSON", "exams visual list loaded");

@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.ui.studentarea;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import external.com.google.android.apps.iosched.ui.widget.Workspace.OnScreenChan
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
 import external.com.google.android.apps.iosched.util.UIUtils;
+import external.com.zylinc.view.ViewPagerIndicator;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -29,14 +31,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -66,10 +74,11 @@ import android.widget.Toast;
  *
  */
 public class ScheduleFragment extends Fragment implements
-			ObservableScrollView.OnScrollListener {
+			ObservableScrollView.OnScrollListener, OnPageChangeListener {
 	private ViewPager hi;
 	private PagerAdapter ola;
     private Workspace mWorkspace;
+    private ViewPager mPager;
     private TextView mTitle;
     private int mTitleCurrentDayIndex = -1;
     private View mLeftIndicator;
@@ -92,20 +101,22 @@ public class ScheduleFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
-		mWorkspace = (Workspace) root.findViewById(R.id.workspace);
-
+		mPager = (ViewPager) root.findViewById(R.id.pager);
         mTitle = (TextView) root.findViewById(R.id.block_title);
-
+        
+        mPager.setOnPageChangeListener(this);
+        
         mLeftIndicator = root.findViewById(R.id.indicator_left);
         mLeftIndicator.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
                 	mTitleCurrentDayIndex--;
-                	if ( mTitleCurrentDayIndex >= 0 )
+                	mPager.setCurrentItem(mTitleCurrentDayIndex);
+                	/*if ( mTitleCurrentDayIndex >= 0 )
                 		mWorkspace.scrollLeft();
                 	else
-                		movetoPreviousWeek();
+                		movetoPreviousWeek();*/
                     return true;
                 }
                 return false;
@@ -114,10 +125,11 @@ public class ScheduleFragment extends Fragment implements
         mLeftIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	mTitleCurrentDayIndex--;
-            	if ( mTitleCurrentDayIndex >= 0 )
+            	mPager.setCurrentItem(mTitleCurrentDayIndex);
+            	/*if ( mTitleCurrentDayIndex >= 0 )
             		mWorkspace.scrollLeft();
             	else
-            		movetoPreviousWeek();
+            		movetoPreviousWeek();*/
             }
         });
 
@@ -127,10 +139,11 @@ public class ScheduleFragment extends Fragment implements
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
                 	mTitleCurrentDayIndex++;
-                	if ( mTitleCurrentDayIndex < mDays.size() )
+                	mPager.setCurrentItem(mTitleCurrentDayIndex);
+                	/*if ( mTitleCurrentDayIndex < mDays.size() )
                 		mWorkspace.scrollRight();
                 	else
-                		movetoNextWeek();
+                		movetoNextWeek();*/
                     return true;
                 }
                 return false;
@@ -139,10 +152,11 @@ public class ScheduleFragment extends Fragment implements
         mRightIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	mTitleCurrentDayIndex++;
-            	if ( mTitleCurrentDayIndex >= mDays.size() )
+            	mPager.setCurrentItem(mTitleCurrentDayIndex);
+            	/*if ( mTitleCurrentDayIndex >= mDays.size() )
             		mWorkspace.scrollRight();
             	else
-            		movetoNextWeek();
+            		movetoNextWeek();*/
             }
         });
         mondayMillis = firstDayofWeek(false);
@@ -151,13 +165,14 @@ public class ScheduleFragment extends Fragment implements
   		setupDay(inflater , mondayMillis + (2 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (3 * DateUtils.DAY_IN_MILLIS));
   		setupDay(inflater , mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
-  		updateWorkspaceHeader(0);
+        onPageSelected(0);
+
   		personCode = (String) getArguments().get(PROFILE_CODE);
 		if ( personCode == null )
 			personCode = SessionManager.getInstance().getLoginCode();
 		new ScheduleTask().execute();
 
-		mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
+		/*mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
 			
 			@Override
 			public void onScreenChanging(View newScreen, int newScreenIndex) {				
@@ -173,22 +188,11 @@ public class ScheduleFragment extends Fragment implements
             public void onScroll(float screenFraction) {
                 updateWorkspaceHeader(Math.round(screenFraction));
             }
-        }, true);
+        }, true);*/
 
         return root;
     }
     
-    public void updateWorkspaceHeader(int dayIndex) {
-        if (mTitleCurrentDayIndex == dayIndex) {
-            return;
-        }
-        if (dayIndex >= mDays.size())
-        	return;
-        mTitleCurrentDayIndex = dayIndex;
-        Day day = mDays.get(dayIndex);
-        mTitle.setText(day.label);
-        
-    }
 
     
 
@@ -227,7 +231,7 @@ public class ScheduleFragment extends Fragment implements
         }
         return super.onOptionsItemSelected(item);
     }
-    
+   /* 
     private void movetoNextWeek(){
     	goingLeft = false;
     	mondayMillis += 7 * DateUtils.DAY_IN_MILLIS;
@@ -250,7 +254,7 @@ public class ScheduleFragment extends Fragment implements
     private boolean updateNowView(boolean forceScroll) {
         final long now = UIUtils.getCurrentTime(false);
 
-        Day nowDay = null; // effectively Day corresponding to today
+       Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
             if (now >= day.timeStart && now <= day.timeEnd) {
                 nowDay = day;
@@ -264,13 +268,12 @@ public class ScheduleFragment extends Fragment implements
         	double timeOffset =  (double)(hours -nowDay.blocksView.getTimeRulerStartHour() ) 
         					/ (double)nowDay.blocksView.getTimeRulerHours();
             // Scroll to show "now" in center
-            mWorkspace.setCurrentScreen(nowDay.index);
+            mPager.setCurrentItem(nowDay.index);
             final int offset = (int) (nowDay.scrollView.getHeight()* timeOffset);
             nowDay.scrollView.scrollTo(0, offset);
             nowDay.blocksView.requestLayout();
             return true;
         }
-
         return false;
     }
 
@@ -283,9 +286,9 @@ public class ScheduleFragment extends Fragment implements
     	}
 
         protected void onPostExecute(String result) {
-        	if ( result.equals("Success") )
+        	if ( result.equals("Success") || result.equals("") )
         	{
-        		if ( goingLeft ){
+        		/*if ( goingLeft ){
 					updateWorkspaceHeader(mDays.size()-1);
 					for ( int i = 0 ; i < mDays.size() ; ++i )
 						mWorkspace.scrollRight();
@@ -295,11 +298,13 @@ public class ScheduleFragment extends Fragment implements
 					updateWorkspaceHeader(0);
 					for ( int i = 0 ; i < mDays.size() ; ++i )
 						mWorkspace.scrollLeft();
-				}
+				}*/
         		cleanBlocks();
 				Log.e("Schedule","success");
 				for ( Block block : schedule)
 					addBlock(block.weekDay, block);
+				mPager.setAdapter(new DayAdapter());
+				mPager.setCurrentItem(0);
 				
 			}
 			else if ( result.equals("Error") ){
@@ -381,7 +386,6 @@ public class ScheduleFragment extends Fragment implements
   		date.normalize(false);
         day.label =DateUtils.getDayOfWeekString(date.weekDay+1, DateUtils.LENGTH_LONG) +", " +
         			date.format("%d-%m");
-        mWorkspace.addView(day.rootView);
         mDays.add(day);
     }
     
@@ -406,7 +410,7 @@ public class ScheduleFragment extends Fragment implements
      * (time, place, teacher)
      *
      */
-    private class Block{
+    private class Block implements Serializable{
     	private int weekDay; // [1 ... 6]
     	private int startTime; // seconds from midnight
     	
@@ -427,7 +431,7 @@ public class ScheduleFragment extends Fragment implements
     /**
      * A helper class containing object references related to a particular day in the schedule.
      */
-    private class Day {
+    private class Day implements Serializable{
         private ViewGroup rootView;
         private ObservableScrollView scrollView;
         private View nowView;
@@ -639,6 +643,59 @@ public class ScheduleFragment extends Fragment implements
     	
     	return true;
     }
+    
+    class DayAdapter extends PagerAdapter
+	{
+		public void destroyItem(View collection, int position, Object view) {
+            ((ViewPager) collection).removeView((View) view);
+			
+		}
+
+		public void finishUpdate(View arg0) {}
+
+		public int getCount() {
+			return mDays.size();
+		}
+
+		public Object instantiateItem(View collection, int position) {
+			((ViewPager) collection).addView(mDays.get(position).rootView,0);
+			return mDays.get(position).rootView;
+		}
+
+		public boolean isViewFromObject(View view, Object object) {
+            return view==((View)object);
+		}
+
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+
+		public Parcelable saveState() {
+			return null;
+		}
+
+		public void startUpdate(View arg0) {}
+
+		
+
+
+	}
+	public void onPageScrollStateChanged(int state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onPageSelected(int position) {
+        if (position >= mDays.size())
+        	return;
+        mTitleCurrentDayIndex = position;
+        Day day = mDays.get(position);
+        mTitle.setText(day.label);
+        		
+	}
     
     
 }
