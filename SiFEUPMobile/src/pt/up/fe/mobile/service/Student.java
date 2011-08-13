@@ -8,6 +8,12 @@ import pt.up.fe.mobile.R;
 
 import android.content.res.Resources;
 
+/**
+ * Class that represents the Object Student
+ * 
+ * @author Ângela Igreja
+ * 
+ */
 public class Student implements Serializable
 {
 	private static final long serialVersionUID = 1727093503991901167L;

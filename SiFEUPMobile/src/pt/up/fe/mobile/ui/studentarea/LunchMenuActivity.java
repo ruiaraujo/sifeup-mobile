@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 /**
  * Lunch Menu Activity
+ * 
  * @author Ângela Igreja
  */
 public class LunchMenuActivity extends BaseSinglePaneActivity 

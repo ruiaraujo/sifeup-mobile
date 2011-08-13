@@ -39,6 +39,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * Student Profile Fragment
+ * This interface is responsible for fetching the student's profile information 
+ * to the server and shows it. Have one argument that is the number of student. 
+ * 
  * @author Ângela Igreja
  */
 public class StudentProfileFragment extends Fragment  implements OnItemClickListener

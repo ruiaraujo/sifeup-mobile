@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import android.text.format.Time;
 import android.util.Log;
 
-public class RefMB {
-	
+public class RefMB 
+{	
 	String name;
 	long entity;
 	long ref;
@@ -93,6 +93,5 @@ public class RefMB {
 	public void setEndDate(Time endDate) {
 		this.endDate = endDate;
 	}
-	
-	
+		
 }

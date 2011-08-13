@@ -1,7 +1,5 @@
 package pt.up.fe.mobile.ui.map;
 
-
-
 import pt.up.fe.mobile.R;
 
 import android.os.Bundle;
@@ -13,11 +11,17 @@ import com.google.android.maps.MapView;
 
 
 
-
+/**
+ * Class that creates the FEUP Map Activity  
+ *
+ * @author Ângela Igreja
+ */
 public class FeupMapActivity extends MapActivity {
 	
 	 MapView mapView; 
+	 
 	 MapController mc;
+	 
 	 GeoPoint p;
 	
 	/** Called when the activity is first created. */
@@ -32,7 +36,6 @@ public class FeupMapActivity extends MapActivity {
         mapView.displayZoomControls(true);
         
         mapView.setSatellite(true);
-        
         
         mc = mapView.getController();
         
@@ -57,6 +60,4 @@ public class FeupMapActivity extends MapActivity {
         return false;
     }
     
-  
-
 }

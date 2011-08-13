@@ -33,6 +33,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Launch the activity's available from the main menu.
+ * 
+ * @author Ângela Igreja 
+ *
+ */
 public class DashboardFragment extends Fragment {
 
     public void fireTrackerEvent(String label) {
@@ -73,31 +79,6 @@ public class DashboardFragment extends Fragment {
             
         });
 
-    /*    root.findViewById(R.id.home_btn_subjects).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                fireTrackerEvent("Subjects");
-                // Launch sessions list
-                startActivity(new Intent(getActivity(), SubjectsActivity.class));
-            }
-        });*/
-
-
-       /* root.findViewById(R.id.home_btn_tuition).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                fireTrackerEvent("Tuition");
-                // Launch sessions list
-                startActivity(new Intent(getActivity(), TuitionMenuActivity.class));                
-            }
-        });
-
-      /*  root.findViewById(R.id.home_btn_exams).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                // Launch map of conference venue
-                fireTrackerEvent("Exams");
-                startActivity(new Intent(getActivity(),ExamsActivity.class));
-            }
-        });*/
-        
         root.findViewById(R.id.home_btn_news).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue

@@ -24,16 +24,23 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-
+/**
+ * Classes Selection Fragment
+ * @author Ângela Igreja
+ *
+ */
 public class ClassesSelectionFragment extends Fragment implements OnClickListener
 {
 	PagerAdapter mPagerAdapter;
     ViewPager  mViewPager; 
     ViewPagerIndicator indicator;
+    
+    /** Number of options to choose the classes */
  	final static private int NUMBER_OPTIONS = 10;
 
 	private String [] subjects;
 	private String [] classes;
+
 	private ClassesSelectionOption [] options = new ClassesSelectionOption[NUMBER_OPTIONS];
 
  	@Override
@@ -41,13 +48,15 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
             Bundle savedInstanceState)
     {
         View root = inflater.inflate(R.layout.classes_selection ,null);
+        
         Button bt = (Button) root.findViewById(R.id.classes_selection_submit);
 	    bt.setOnClickListener(this);
 
         mViewPager = (ViewPager)root.findViewById(R.id.pager);
 
-		 // Create our custom adapter to supply pages to the viewpager.
+		// Create our custom adapter to supply pages to the viewpager.
         mPagerAdapter = new PagerAdapter(getActivity().getSupportFragmentManager());
+        
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator);
         
@@ -56,6 +65,7 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
         // * How many pages are there in total
         // * A callback to get page titles
 		indicator.init(0, mPagerAdapter.getCount(), mPagerAdapter);
+		
 		Resources res = getResources();
 		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
 		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
@@ -67,15 +77,18 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
         mViewPager.setOnPageChangeListener(indicator);
         
         new ClassesSelectionTask().execute();
+        
 		return root;
     }
  	
+ 	/**
+ 	 * TODO: what is this?
+ 	 */
  	private void buildPages(){
         mViewPager.setAdapter(mPagerAdapter);
         
         // Start at a custom position
         mViewPager.setCurrentItem(0);
-
  	}
  	
  	@Override
@@ -83,8 +96,13 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 		Toast.makeText(getActivity(),onSubmitClick() , Toast.LENGTH_LONG).show();
 	}
 	
+ 	/**
+ 	 * Action when Submit Button is clicked.
+ 	 * @return
+ 	 */
  	public String onSubmitClick() {
 		StringBuilder bt = new StringBuilder();
+		
 		for ( ClassesSelectionOption f : options )
 		{
 			if ( f == null )
@@ -96,48 +114,53 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 			bt.append(f.getChoiceStatus());
 			bt.append("\n\n");
 		}
+		
 		return bt.toString();
 	}
  	
+ 	/**
+ 	 * Classes Selection Task
+ 	 * 
+ 	 */
  	 private class ClassesSelectionTask extends AsyncTask<Void, Void, String> {
 
-     	protected void onPreExecute (){
-     		if ( getActivity() != null ) 
-     			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
-     	}
+		protected void onPreExecute (){
+			if ( getActivity() != null ) 
+				getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+		}
 
-         protected void onPostExecute(String ret) {
-         	if ( getActivity() == null )
-         		return;
-         	if ( ret.equals("") )
-         	{
-         		if ( getActivity() != null ) 
- 				{
- 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
- 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
- 					getActivity().finish();
- 					return;
- 				}
- 			}
- 			else if ( ret.equals("Error") ){	
- 				if ( getActivity() != null ) 
- 				{
- 					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
- 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
- 					((BaseActivity)getActivity()).goLogin(true);
- 					return;
- 				}
- 			}
- 			else{
- 				Log.e("Login","success");
- 				subjects = new String []{"EIND", "IELE", "SINF","OLA"};
- 		        classes = new String []{"Sem Turma" , "Turma 1", "Turma 2", "Turma 3","Turma 4"};
- 		        buildPages();
-  			}
- 				
-         	if ( getActivity() != null ) 
-         		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-         }
+		 protected void onPostExecute(String ret) {
+		 	if ( getActivity() == null )
+		 		return;
+		 	if ( ret.equals("") )
+			{
+				if ( getActivity() != null ) 
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+					getActivity().finish();
+					return;
+				}
+			}
+			else if ( ret.equals("Error") ){	
+				if ( getActivity() != null ) 
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
+					return;
+				}
+			}
+			else{
+				Log.e("Login","success");
+				subjects = new String []{"EIND", "IELE", "SINF","OLA"};
+			    classes = new String []{"Sem Turma" , "Turma 1", "Turma 2", "Turma 3","Turma 4"};
+			        buildPages();
+				}
+					
+			 	if ( getActivity() != null ) 
+			 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+		}
 
  		@Override
  		protected String doInBackground(Void ... theVoid) {
@@ -169,9 +192,14 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
  		}
      }
 
- 	
+ 	/**
+ 	 * Pager Adapter
+ 	 * 
+ 	 * @author angela
+ 	 *
+ 	 */
     class PagerAdapter extends FragmentStatePagerAdapter implements ViewPagerIndicator.PageInfoProvider 
-    																	{
+    {
     	
     	public PagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -192,13 +220,6 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 		@Override
 		public String getTitle(int pos){
 			return getString(R.string.classes_selection_option,pos+1);
-		}
-		
-		
+		}	
     }
-
-
-    
-
-    
 }

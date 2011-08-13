@@ -26,6 +26,21 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 
+/**
+ * Esta interface está responsável por ir buscar a informação
+   do saldo de impressão ao servidor e mostra-la. Existe um
+   campo para inserção de um valor e um botão que inicia a
+     actividade PrintRefActivity.
+     
+    TODO
+ * This interface is responsible for fetching the information
+ *   the balance to the print server and shows it. There is a
+ *   field to insert a value and a button that starts
+ *    PrintRefActivity activity.
+ *    
+ * @author Ângela Igreja
+ *
+ */
 public class PrintFragment extends Fragment {
 
     private String saldo;

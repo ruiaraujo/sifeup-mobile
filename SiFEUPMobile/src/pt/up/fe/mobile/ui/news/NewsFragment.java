@@ -30,6 +30,20 @@ import org.xml.sax.XMLReader;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseActivity;
 
+/**
+ * Esta interface está responsável por ir buscar as notícias ao
+ * servidor através dos feeds RSS e mostra-las em forma de
+ * lista. Carregando num item da lista, é iniciada uma
+ * Actividade NewsDescActivity.
+ * TODO
+ * 
+ * This interface is responsible for fetching the news from the
+ * server through the RSS feeds and displays them in the form of
+ * list. Loading a list item starts a  Activity NewsDescActivity.
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class NewsFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     /** News Feed from FEUP */

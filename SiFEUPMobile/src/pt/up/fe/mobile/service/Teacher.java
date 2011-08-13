@@ -8,6 +8,12 @@ import pt.up.fe.mobile.R;
 
 import android.content.res.Resources;
 
+/**
+ * Class that represents the Object Teacher
+ * 
+ * @author Ângela Igreja
+ * 
+ */
 public class Teacher implements Serializable
 {
 	private static final long serialVersionUID = -4575384072712726492L;
@@ -124,7 +130,10 @@ public class Teacher implements Serializable
 		return emailAlt;
 	}
 
-	//???????
+	/**
+	 * TODO: It is necessary to...?
+	 * 
+	 */
 	public class StudentDetail
 	{
 		public String title;

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 /**
  * Profile Activity
  * 
- * 
  * @author Ângela Igreja
  */
 public class ProfileActivity extends BaseSinglePaneActivity {
@@ -20,6 +19,7 @@ public class ProfileActivity extends BaseSinglePaneActivity {
 	public final static String PROFILE_TEACHER = "pt.up.fe.mobile.ui.profile.TEACHER";
 	public final static String PROFILE_STUDENT = "pt.up.fe.mobile.ui.profile.STUDENT";
 	
+	@Override
 	protected Fragment onCreatePane() 
     {
     	Intent i = getIntent();

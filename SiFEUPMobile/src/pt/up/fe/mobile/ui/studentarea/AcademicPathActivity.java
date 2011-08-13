@@ -4,6 +4,12 @@ import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+/**
+ * Academic Path Activity and launch the object {@link AcademicPathFragment}.
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class AcademicPathActivity extends BaseSinglePaneActivity {
 
 	/** Called when the activity is first created. */

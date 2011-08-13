@@ -153,9 +153,10 @@
                                  \n\n
                                  <b>Credits:</b>\n
                                  <ul>
-                                 <li>Faculty of Engineering of University of Porto</li> \n
-                                 <li>Master in Informatics and Computing Engineering</li> \n
-                                 <li>Distributed Systems course</li> \n
+	                                 <li>Faculty of Engineering of University of Porto</li> \n
+	                                 <li>Master in Informatics and Computing Engineering</li> \n
+	                                 <li>Distributed Systems course</li> \n
+	                                 <li>CICA</li> \n
                                  </ul>
                                  </string>
 	<string name="btn_ok">Ok</string>

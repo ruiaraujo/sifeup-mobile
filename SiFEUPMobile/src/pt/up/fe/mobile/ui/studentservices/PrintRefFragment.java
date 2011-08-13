@@ -28,6 +28,14 @@ import pt.up.fe.mobile.service.RefMB;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 
+/**
+ * This interface is responsible for fetching information from
+ * ATM reference generated to charge the account
+ * printing and shows it.
+ *    
+ * @author Ângela Igreja
+ *
+ */
 public class PrintRefFragment extends Fragment {
 	
 	RefMB ref = new RefMB();

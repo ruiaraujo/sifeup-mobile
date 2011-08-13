@@ -24,6 +24,7 @@ import android.widget.TextView;
  * or multi-pane, depending on the device configuration. We want the multi-pane support that
  * {@link BaseMultiPaneActivity} offers, so we inherit from it instead of
  * {@link BaseSinglePaneActivity}.
+ * 
  */
 public class SearchActivity extends BaseSinglePaneActivity {
 

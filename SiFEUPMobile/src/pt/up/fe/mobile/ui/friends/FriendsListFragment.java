@@ -1,3 +1,4 @@
+
 package pt.up.fe.mobile.ui.friends;
 
 
@@ -28,6 +29,14 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+/**
+ * Fragment of the Friends Activity, communication with 
+ * graphical interface. Loading a list item, is initiated 
+ * {@link ProfileActivity} activity. 
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class FriendsListFragment extends ListFragment {
 	
 	final String TAG="FriendsListFragment";

@@ -4,6 +4,11 @@ import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+/**
+ * Classes Selection Activity
+ * @author Ângela Igreja
+ *
+ */
 public class ClassesSelectionActivity extends BaseSinglePaneActivity
 {
 	@Override

@@ -4,6 +4,12 @@ import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+/**
+ * Schedule Activity
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class ScheduleActivity extends BaseSinglePaneActivity {
 	
 	/** Called when the activity is first created. */

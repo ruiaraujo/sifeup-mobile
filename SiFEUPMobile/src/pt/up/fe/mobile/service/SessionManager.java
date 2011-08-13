@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 /**
  * Singleton class that holds the active Session cookie.
+ * 
+ * @author Ângela Igreja
+ *  
  */
-public class SessionManager {
-	
+public class SessionManager 
+{	
 	private String cookie;
 	private String loginCode;
 	public static TuitionHistory tuitionHistory=new TuitionHistory();
@@ -15,10 +18,6 @@ public class SessionManager {
 	private SessionManager() {
 	}
 	 
-	/**
-	 * 
-	 * @author angela
-	 */
 	private static class SessionCookieHolder { 
 		public static final SessionManager INSTANCE = new SessionManager();
 	}

@@ -15,6 +15,14 @@ import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
 
+/**
+* This interface is responsible for displaying information 
+* detailed of a report. Contains a link that allows see
+* a full story in browser.
+* 
+* @author Ângela Igreja
+* 
+*/
 public class NewsDescFragment extends Fragment {
 
 

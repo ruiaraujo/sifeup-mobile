@@ -15,16 +15,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+/**
+ * Classes Selection Option
+ * @author Ângela Igreja
+ *
+ */
 public class ClassesSelectionOption extends Fragment {
 
 	// These can be static as they are common between different options
 	private static String [] subjects;
 	private static String [] classes;
+	
     private int [] selectedClasses;
+    
     private LayoutInflater mInflater;
+    
 	final static private String STATE = "pt.up.fe.mobile.ui.studentservices.STATE";
 
-	
 	public static ClassesSelectionOption getInstance( String [] subjects , String [] classes ){
 		ClassesSelectionOption f = new ClassesSelectionOption();
 		// we have to init this fragment in case the user 
@@ -33,56 +40,69 @@ public class ClassesSelectionOption extends Fragment {
 		return f;
 	}
 	
+	/**
+	 * Init parameters subjects and classes
+	 * @param s
+	 * @param c
+	 */
 	public void init( String [] s , String [] c ) {
 		subjects= s;
 		classes = c;
 		selectedClasses = new int[subjects.length];
 	}
 	
+	@Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState)
-	    {
-	        mInflater = inflater;
-		 	View root = inflater.inflate(R.layout.classes_selection_option ,null);
-	        ListView list = (ListView) root.findViewById(R.id.classes_selection_list);
-	        list.setAdapter(new ClassesOptionAdapter());
-	       // 
-	        return root;
-	    }
-	
-	
-		
-		public String getChoiceStatus(){
-			StringBuilder st = new StringBuilder();
-			for ( int i = 0 ; i < subjects.length ; ++i )
-			{
-				st.append(subjects[i]);
-				st.append(": ");
-				st.append(classes[selectedClasses[i]]);
-				st.append(" , ");
-			}
-			return st.toString();
+	{
+	    mInflater = inflater;
+	 	View root = inflater.inflate(R.layout.classes_selection_option ,null);
+	    ListView list = (ListView) root.findViewById(R.id.classes_selection_list);
+	    list.setAdapter(new ClassesOptionAdapter());
+	   // 
+	    return root;
+	}
+
+	/**
+	 * Get Status of Classes Selection	
+	 * @return
+	 */
+	public String getChoiceStatus(){
+		StringBuilder st = new StringBuilder();
+		for ( int i = 0 ; i < subjects.length ; ++i )
+		{
+			st.append(subjects[i]);
+			st.append(": ");
+			st.append(classes[selectedClasses[i]]);
+			st.append(" , ");
 		}
-    
-		//We save here the current selection state
-		public void onSaveInstanceState (Bundle outState){
-			if ( outState == null )
-				return;
-			super.onSaveInstanceState(outState);
-			outState.putIntArray(STATE,selectedClasses);
-		}
-		
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            if ( savedInstanceState == null )
-            	return;
-            int [] tmp = savedInstanceState.getIntArray(STATE);
-            if ( tmp != null )
-            	selectedClasses = tmp;
-        }
+		return st.toString();
+	}
+	
+	//We save here the current selection state
+	@Override
+	public void onSaveInstanceState (Bundle outState){
+		if ( outState == null )
+			return;
+		super.onSaveInstanceState(outState);
+		outState.putIntArray(STATE,selectedClasses);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+	    super.onActivityCreated(savedInstanceState);
+	    if ( savedInstanceState == null )
+	    	return;
+	    int [] tmp = savedInstanceState.getIntArray(STATE);
+	    if ( tmp != null )
+	    	selectedClasses = tmp;
+	}
         
-        //This adapter creates the views for the main list.
+    /**
+     * This class create a Classes Option Adapter.
+     * This adapter creates the views for the main list.
+     *
+     */
     private class ClassesOptionAdapter extends BaseAdapter {
 
 		@Override

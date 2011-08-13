@@ -29,21 +29,33 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+/**
+ * Academic Path Fragment
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class AcademicPathFragment extends Fragment {
 	
 	/** All info about the student Academic Path */
 	AcademicPath academicPath = new AcademicPath();
+	
 	TextView average;
 	TextView year;
 	TextView entries;
+	
 	ListView grades;
 	
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Academic Path");
 
     }
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 			ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, null);
 			grades = (ListView) root.findViewById(R.id.path_ucs_grade);
@@ -66,6 +78,9 @@ public class AcademicPathFragment extends Fragment {
 	    }
 	 
 
+	/**
+	 * Academic Path Task
+	 */
 	private class AcademicPathTask extends AsyncTask<Void, Void, String> {
 		
 		protected void onPreExecute (){

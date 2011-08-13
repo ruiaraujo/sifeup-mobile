@@ -30,6 +30,14 @@ import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * This interface is responsible for fetching the results of 
+ * research to the server and shows them a list. 
+ * When loading a list item launches the activity ProfileActivity.
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class StudentsSearchFragment extends ListFragment implements OnItemClickListener {
 	
 	// query is in SearchActivity, sent to here in the arguments

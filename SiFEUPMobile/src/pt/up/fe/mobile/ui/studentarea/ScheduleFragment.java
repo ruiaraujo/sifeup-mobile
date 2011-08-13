@@ -51,6 +51,20 @@ import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * This interface is responsible to fetching a schedule of the student, 
+ * that your student number is passed as argument. 
+ *  Also export the schedule for Google Calendar.
+ *
+ *TODO
+   Esta interface está responsável por ir buscar o horário de um
+    dado aluno cujo número é passado como argumento. Está
+    também responsável por exportar o horário para o Google
+      Calendar.
+      
+ * @author Ângela Igreja
+ *
+ */
 public class ScheduleFragment extends Fragment implements
 			ObservableScrollView.OnScrollListener {
 	private ViewPager hi;
