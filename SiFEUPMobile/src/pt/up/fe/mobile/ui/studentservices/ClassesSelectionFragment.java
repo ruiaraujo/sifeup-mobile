@@ -26,14 +26,15 @@ import android.widget.Toast;
 
 /**
  * Classes Selection Fragment
+ * 
  * @author Ângela Igreja
  *
  */
 public class ClassesSelectionFragment extends Fragment implements OnClickListener
 {
-	PagerAdapter mPagerAdapter;
-    ViewPager  mViewPager; 
-    ViewPagerIndicator indicator;
+	private PagerAdapter mPagerAdapter;
+    private ViewPager  mViewPager; 
+    private ViewPagerIndicator indicator;
     
     /** Number of options to choose the classes */
  	final static private int NUMBER_OPTIONS = 10;
@@ -195,7 +196,7 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
  	/**
  	 * Pager Adapter
  	 * 
- 	 * @author angela
+     * @author Ângela Igreja
  	 *
  	 */
     class PagerAdapter extends FragmentStatePagerAdapter implements ViewPagerIndicator.PageInfoProvider 

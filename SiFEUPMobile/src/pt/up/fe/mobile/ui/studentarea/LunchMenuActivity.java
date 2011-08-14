@@ -17,7 +17,7 @@ public class LunchMenuActivity extends BaseSinglePaneActivity
 	@Override
     protected Fragment onCreatePane() 
 	{
-		LunchMenuFragment lunchMenu =new LunchMenuFragment();
+		LunchMenuFragment lunchMenu = new LunchMenuFragment();
 	
         return lunchMenu;
     }
@@ -26,7 +26,6 @@ public class LunchMenuActivity extends BaseSinglePaneActivity
     protected void onPostCreate(Bundle savedInstanceState) 
     {
         super.onPostCreate(savedInstanceState);
-
         getActivityHelper().setupSubActivity();
     } 
 }
