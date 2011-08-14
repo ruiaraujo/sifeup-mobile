@@ -5,7 +5,9 @@
     <string name="app_name">SiFEUP Mobile</string>
     <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
-        
+    <string name="description_refresh">Refresh</string>
+    <string name="description_share">Share</string>
+
     <!-- *************************************************************************************** -->
    	<!-- LOGIN -->
    	
