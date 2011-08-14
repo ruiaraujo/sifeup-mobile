@@ -18,8 +18,6 @@ import pt.up.fe.mobile.ui.BaseActivity;
 import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
-import external.com.google.android.apps.iosched.ui.widget.Workspace;
-import external.com.google.android.apps.iosched.ui.widget.Workspace.OnScreenChangeListener;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
 import external.com.google.android.apps.iosched.util.UIUtils;
@@ -58,6 +56,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 /**
  * This interface is responsible to fetching a schedule of the student, 
@@ -77,7 +76,6 @@ public class ScheduleFragment extends Fragment implements
 			ObservableScrollView.OnScrollListener, OnPageChangeListener {
 	private ViewPager hi;
 	private PagerAdapter ola;
-    private Workspace mWorkspace;
     private ViewPager mPager;
     private TextView mTitle;
     private int mTitleCurrentDayIndex = -1;
@@ -88,6 +86,7 @@ public class ScheduleFragment extends Fragment implements
     private long mondayMillis;
     private String personCode;
     private boolean goingLeft = false;
+    ViewSwitcher switcher;
     final public static String PROFILE_CODE  = "profile";
 
     @Override
@@ -100,7 +99,11 @@ public class ScheduleFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	
+    	switcher = new ViewSwitcher(getActivity());
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
+		switcher.addView(inflater.inflate(R.layout.loading_view, null));
+		switcher.addView(root);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
         mTitle = (TextView) root.findViewById(R.id.block_title);
         
@@ -172,25 +175,15 @@ public class ScheduleFragment extends Fragment implements
 			personCode = SessionManager.getInstance().getLoginCode();
 		new ScheduleTask().execute();
 
-		/*mWorkspace.setOnScreenChangeListener(new OnScreenChangeListener() {
-			
-			@Override
-			public void onScreenChanging(View newScreen, int newScreenIndex) {				
-			}
-			
-			@Override
-			public void onScreenChanged(View newScreen, int newScreenIndex) {
-				mTitleCurrentDayIndex = newScreenIndex;
-			}
-		});
+
        
-        mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
+/*        mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
             public void onScroll(float screenFraction) {
                 updateWorkspaceHeader(Math.round(screenFraction));
             }
         }, true);*/
 
-        return root;
+        return switcher;
     }
     
 
@@ -281,8 +274,11 @@ public class ScheduleFragment extends Fragment implements
     private class ScheduleTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		//if ( getActivity() != null ) 
+    			//getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+    		if ( switcher.getCurrentView() != switcher.getChildAt(0) ) 
+    			switcher.showNext();
+
     	}
 
         protected void onPostExecute(String result) {
@@ -305,6 +301,7 @@ public class ScheduleFragment extends Fragment implements
 					addBlock(block.weekDay, block);
 				mPager.setAdapter(new DayAdapter());
 				mPager.setCurrentItem(0);
+				switcher.showNext();
 				
 			}
 			else if ( result.equals("Error") ){
