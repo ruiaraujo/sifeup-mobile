@@ -13,12 +13,12 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,16 +36,16 @@ import android.widget.Toast;
  * @author Ângela Igreja
  *
  */
-public class AcademicPathFragment extends Fragment {
+public class AcademicPathFragment extends BaseFragment {
 	
 	/** All info about the student Academic Path */
-	AcademicPath academicPath = new AcademicPath();
+	private AcademicPath academicPath = new AcademicPath();
 	
-	TextView average;
-	TextView year;
-	TextView entries;
+	private TextView average;
+	private TextView year;
+	private TextView entries;
 	
-	ListView grades;
+	private ListView grades;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,109 +57,28 @@ public class AcademicPathFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
-			ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, null);
-			grades = (ListView) root.findViewById(R.id.path_ucs_grade);
-			year = (TextView) root.findViewById(R.id.path_year);
-			average = (TextView) root.findViewById(R.id.path_average);
-			entries = (TextView) root.findViewById(R.id.path_entries);
-			((TextView) root.findViewById(R.id.path_link_sifeup)).setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod=" +
-								SessionManager.getInstance().getLoginCode();
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setData(Uri.parse(url));
-					startActivity(i);
-				}
-			});
-	        new AcademicPathTask().execute();
-			return root;
-	    }
+		super.onCreateView(inflater, container, savedInstanceState);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, null);
+		switcher.addView(root);
+		grades = (ListView) root.findViewById(R.id.path_ucs_grade);
+		year = (TextView) root.findViewById(R.id.path_year);
+		average = (TextView) root.findViewById(R.id.path_average);
+		entries = (TextView) root.findViewById(R.id.path_entries);
+		((TextView) root.findViewById(R.id.path_link_sifeup)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod=" +
+							SessionManager.getInstance().getLoginCode();
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		});
+        new AcademicPathTask().execute();
+		return switcher; //mandatory
+    }
 	 
-
-	/**
-	 * Academic Path Task
-	 */
-	private class AcademicPathTask extends AsyncTask<Void, Void, String> {
-		
-		protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
-    	}
-
-        protected void onPostExecute(String result) {
-        	if ( getActivity() == null )
-        		return;
-        	if ( result.equals("Success") )
-        	{
-				Log.e("AcademicPath","success");
-				average.setText(getString(R.string.path_average, academicPath.average));
-				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
-				year.setText(getString(R.string.path_year, academicPath.courseYears));
-				String[] from = new String[] {"name", "number"};
-		         int[] to = new int[] { R.id.grade_subject_name, R.id.grade_number };
-			         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for(UC e : academicPath.ucs){
-		             HashMap<String, String> map = new HashMap<String, String>();
-		             map.put(from[0], e.name);
-		             map.put(from[1], getString(R.string.path_grade , e.grade));
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_grade, from, to);
-		         grades.setAdapter(adapter);
-		         
-    		}
-			else if ( result.equals("Error")){	
-				Log.e("AcademicPath","error");
-				if ( getActivity() != null ) 
-				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
-					return;
-				}
-			}
-			else if ( result.equals("")){
-				
-			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-        } 
-		
-		@Override
-		protected String doInBackground(Void... theVoid) {
-			String page = "";
-		  	try {
-	    			page = SifeupAPI.getAcademicPathReply(
-								SessionManager.getInstance().getLoginCode());
-    			int error =	SifeupAPI.JSONError(page);
-	    		switch (error)
-	    		{
-	    			case SifeupAPI.Errors.NO_AUTH:
-	    				return "Error";
-	    			case SifeupAPI.Errors.NO_ERROR:
-	    	    		JSONAcademicPath(page);
-	    				return "Success";
-	    			case SifeupAPI.Errors.NULL_PAGE:
-	    				return "";	
-	    		}
-			} catch (JSONException e) {
-				Looper.prepare();
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}
-			return "";
-		}
-		 
-	}
-	
-	
-	
 	/**
 	 * 
 	 * Holds All Info about 
@@ -247,6 +166,82 @@ public class AcademicPathFragment extends Fragment {
 		}
 		Log.e("JSON", "academic path not found");
 		return false;
+	}
+	
+	/**
+	 * Academic Path Task
+	 */
+	private class AcademicPathTask extends AsyncTask<Void, Void, String> {
+		
+		protected void onPreExecute (){
+			showLoadingScreen();
+    	}
+
+        protected void onPostExecute(String result) {
+        	if ( getActivity() == null )
+        		return;
+        	if ( result.equals("Success") )
+        	{
+				Log.e("AcademicPath","success");
+				average.setText(getString(R.string.path_average, academicPath.average));
+				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
+				year.setText(getString(R.string.path_year, academicPath.courseYears));
+				String[] from = new String[] {"name", "number"};
+		         int[] to = new int[] { R.id.grade_subject_name, R.id.grade_number };
+			         // prepare the list of all records
+		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		         for(UC e : academicPath.ucs){
+		             HashMap<String, String> map = new HashMap<String, String>();
+		             map.put(from[0], e.name);
+		             map.put(from[1], getString(R.string.path_grade , e.grade));
+		             fillMaps.add(map);
+		         }
+				 
+		         // fill in the grid_item layout
+		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_grade, from, to);
+		         grades.setAdapter(adapter);
+		         showMainScreen();
+    		}
+			else if ( result.equals("Error")){	
+				Log.e("AcademicPath","error");
+				if ( getActivity() != null ) 
+				{
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
+					return;
+				}
+			}
+			else if ( result.equals("")){
+				
+			}
+        } 
+		
+		@Override
+		protected String doInBackground(Void... theVoid) {
+			String page = "";
+		  	try {
+	    			page = SifeupAPI.getAcademicPathReply(
+								SessionManager.getInstance().getLoginCode());
+    			int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
+	    		{
+	    			case SifeupAPI.Errors.NO_AUTH:
+	    				return "Error";
+	    			case SifeupAPI.Errors.NO_ERROR:
+	    	    		JSONAcademicPath(page);
+	    				return "Success";
+	    			case SifeupAPI.Errors.NULL_PAGE:
+	    				return "";	
+	    		}
+			} catch (JSONException e) {
+				Looper.prepare();
+				if ( getActivity() != null ) 
+					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}
+			return "";
+		}
+		 
 	}
 	
 }

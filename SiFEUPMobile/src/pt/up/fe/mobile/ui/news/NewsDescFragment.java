@@ -38,8 +38,6 @@ public class NewsDescFragment extends Fragment {
             Bundle savedInstanceState) {
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.news_item, null);
     	String theStory = null;
-         
-         
         
     	Bundle b = getArguments();
     	if (b == null)

@@ -24,9 +24,13 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -38,26 +42,35 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
-public class ExamsFragment extends ListFragment {
+public class ExamsFragment extends BaseFragment {
 
     /** Stores all exams from Student */
 	private ArrayList<Exam> exams = new ArrayList<Exam>();
     final public static String PROFILE_CODE  = "profile";
+    private ListView list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+    }
+    
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	            Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
+    	
+		list = new ListView(getActivity());
+		switcher.addView(list);
         String personCode = (String) getArguments().get(PROFILE_CODE);
 		if ( personCode == null )
 			personCode = SessionManager.getInstance().getLoginCode();
         new ExamsTask().execute(personCode);
-
-    }
-    
-    
+		return switcher; //this is mandatory.
+	 }
+	 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.exams_menu_items, menu);
@@ -78,9 +91,8 @@ public class ExamsFragment extends ListFragment {
     /** Classe privada para a busca de dados ao servidor */
     private class ExamsTask extends AsyncTask<String, Void, String> {
 
-    	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    	protected void onPreExecute (){ 
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -105,7 +117,9 @@ public class ExamsFragment extends ListFragment {
 		         if ( getActivity() == null ) 
 		        	 return;
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
-		         setListAdapter(adapter);
+		         list.setAdapter(adapter);
+		         list.setClickable(false);
+		         showMainScreen();
 		         Log.e("JSON", "exams visual list loaded");
 
     		}
@@ -113,7 +127,6 @@ public class ExamsFragment extends ListFragment {
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					getActivity().finish();
@@ -124,14 +137,11 @@ public class ExamsFragment extends ListFragment {
 			{
 				if ( getActivity() != null ) 	
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override

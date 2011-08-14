@@ -12,6 +12,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 
 
@@ -59,23 +60,15 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 /**
- * This interface is responsible to fetching a schedule of the student, 
- * that your student number is passed as argument. 
- *  Also export the schedule for Google Calendar.
+ * This fragment is responsible of fetching a schedule of the student, 
+ * which number is passed as argument. 
+ *  Also it can export the schedule for Google Calendar.
  *
- *TODO
-   Esta interface está responsável por ir buscar o horário de um
-    dado aluno cujo número é passado como argumento. Está
-    também responsável por exportar o horário para o Google
-      Calendar.
-      
  * @author Ângela Igreja
  *
  */
-public class ScheduleFragment extends Fragment implements
+public class ScheduleFragment extends BaseFragment implements
 			ObservableScrollView.OnScrollListener, OnPageChangeListener {
-	private ViewPager hi;
-	private PagerAdapter ola;
     private ViewPager mPager;
     private TextView mTitle;
     private int mTitleCurrentDayIndex = -1;
@@ -85,9 +78,11 @@ public class ScheduleFragment extends Fragment implements
     private List<Day> mDays = new ArrayList<Day>();
     private long mondayMillis;
     private String personCode;
-    private boolean goingLeft = false;
-    ViewSwitcher switcher;
-    final public static String PROFILE_CODE  = "profile";
+    
+    /**
+     * The key for the student code in the intent.
+     */
+    final public static String PROFILE_CODE  = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,10 +94,8 @@ public class ScheduleFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-    	
-    	switcher = new ViewSwitcher(getActivity());
+    	super.onCreateView(inflater, container, savedInstanceState);
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule, null);
-		switcher.addView(inflater.inflate(R.layout.loading_view, null));
 		switcher.addView(root);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
         mTitle = (TextView) root.findViewById(R.id.block_title);
@@ -114,8 +107,7 @@ public class ScheduleFragment extends Fragment implements
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
-                	mTitleCurrentDayIndex--;
-                	mPager.setCurrentItem(mTitleCurrentDayIndex);
+                	decreaseDay();
                 	/*if ( mTitleCurrentDayIndex >= 0 )
                 		mWorkspace.scrollLeft();
                 	else
@@ -127,8 +119,7 @@ public class ScheduleFragment extends Fragment implements
         });
         mLeftIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	mTitleCurrentDayIndex--;
-            	mPager.setCurrentItem(mTitleCurrentDayIndex);
+            	decreaseDay();
             	/*if ( mTitleCurrentDayIndex >= 0 )
             		mWorkspace.scrollLeft();
             	else
@@ -141,8 +132,7 @@ public class ScheduleFragment extends Fragment implements
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
-                	mTitleCurrentDayIndex++;
-                	mPager.setCurrentItem(mTitleCurrentDayIndex);
+                	increaseDay();
                 	/*if ( mTitleCurrentDayIndex < mDays.size() )
                 		mWorkspace.scrollRight();
                 	else
@@ -154,8 +144,7 @@ public class ScheduleFragment extends Fragment implements
         });
         mRightIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	mTitleCurrentDayIndex++;
-            	mPager.setCurrentItem(mTitleCurrentDayIndex);
+            	increaseDay();
             	/*if ( mTitleCurrentDayIndex >= mDays.size() )
             		mWorkspace.scrollRight();
             	else
@@ -186,7 +175,18 @@ public class ScheduleFragment extends Fragment implements
         return switcher;
     }
     
-
+    private void increaseDay(){
+    	if ( mTitleCurrentDayIndex + 1 >= mDays.size() )
+    		return ;
+    	mTitleCurrentDayIndex++;
+    	mPager.setCurrentItem(mTitleCurrentDayIndex);
+    }
+    private void decreaseDay(){
+    	if ( mTitleCurrentDayIndex - 1 <= 0 )
+    		return ;
+    	mTitleCurrentDayIndex--;
+    	mPager.setCurrentItem(mTitleCurrentDayIndex);
+    }
     
 
     public void onScrollChanged(ObservableScrollView view) {
@@ -274,11 +274,7 @@ public class ScheduleFragment extends Fragment implements
     private class ScheduleTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		//if ( getActivity() != null ) 
-    			//getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
-    		if ( switcher.getCurrentView() != switcher.getChildAt(0) ) 
-    			switcher.showNext();
-
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -301,22 +297,17 @@ public class ScheduleFragment extends Fragment implements
 					addBlock(block.weekDay, block);
 				mPager.setAdapter(new DayAdapter());
 				mPager.setCurrentItem(0);
-				switcher.showNext();
-				
+				showMainScreen();
 			}
 			else if ( result.equals("Error") ){
 				Log.e("Schedule","fail");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
 			}
-			
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override

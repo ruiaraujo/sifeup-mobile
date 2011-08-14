@@ -8,14 +8,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        style="?android:attr/progressBarStyleLarge" />
+        android:gravity="center"/>
     <TextView android:id="@+id/loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lb_data_fetching"
         android:layout_gravity="center"
+        android:paddingLeft="10dip"
         android:gravity="center"
-        android:textSize="24dip"/>
-
+        android:textSize="20dip"/>
 </LinearLayout>

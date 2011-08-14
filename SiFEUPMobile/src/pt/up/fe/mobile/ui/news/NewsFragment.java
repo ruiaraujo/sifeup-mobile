@@ -19,8 +19,11 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import org.xml.sax.XMLReader;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 /**
  * Esta interface está responsável por ir buscar as notícias ao
@@ -44,25 +48,34 @@ import pt.up.fe.mobile.ui.BaseActivity;
  * @author Ângela Igreja
  *
  */
-public class NewsFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class NewsFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     /** News Feed from FEUP */
-	public final String RSSFEEDOFCHOICE = "http://www.fe.up.pt/si/noticias_web.rss";
+	private final String RSSFEEDOFCHOICE = "http://www.fe.up.pt/si/noticias_web.rss";
+	private ListView list;
 	private RSSFeed feed;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/News");
-        new NewsTask().execute(RSSFEEDOFCHOICE);
 
     }
-
+    
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	            Bundle savedInstanceState) {
+		 super.onCreateView(inflater, container, savedInstanceState);
+   	
+		 list = new ListView(getActivity());
+		 switcher.addView(list);
+		 new NewsTask().execute(RSSFEEDOFCHOICE);
+		 return switcher; //this is mandatory.
+	 }
+	 
     /** Classe privada para a busca de dados ao servidor */
     private class NewsTask extends AsyncTask<String, Void, RSSFeed> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(RSSFeed result) {
@@ -87,9 +100,9 @@ public class NewsFragment extends ListFragment implements AdapterView.OnItemClic
 		         // fill in the grid_item layout		         
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_news, from, to);
 
-		         setListAdapter(adapter); 
-		         getListView().setOnItemClickListener(NewsFragment.this);
-		         setSelection(0);
+		         list.setAdapter(adapter); 
+		         list.setOnItemClickListener(NewsFragment.this);
+		         list.setSelection(0);
 		         Log.e("JSON", "news visual list loaded");
 
     		}
@@ -97,14 +110,11 @@ public class NewsFragment extends ListFragment implements AdapterView.OnItemClic
 				Log.e("News","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.news_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -153,8 +163,6 @@ public class NewsFragment extends ListFragment implements AdapterView.OnItemClic
     	itemintent.putExtra("description", feed.getItem(position).getDescription());
     	itemintent.putExtra("link", feed.getItem(position).getLink());
     	itemintent.putExtra("pubdate", feed.getItem(position).getPubDate());
-    	
-         
         startActivity(itemintent);
 	}
 	

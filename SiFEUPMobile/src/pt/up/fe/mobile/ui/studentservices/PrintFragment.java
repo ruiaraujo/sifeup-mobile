@@ -25,6 +25,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 /**
  * Esta interface está responsável por ir buscar a informação
@@ -41,7 +42,7 @@ import pt.up.fe.mobile.ui.BaseActivity;
  * @author Ângela Igreja
  *
  */
-public class PrintFragment extends Fragment {
+public class PrintFragment extends BaseFragment {
 
     private String saldo;
     private TextView display;
@@ -65,8 +66,10 @@ public class PrintFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
     	new PrintTask().execute();
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
+    	switcher.addView(root);
     	display = ((TextView)root.findViewById(R.id.print_balance));
     	desc = ((TextView)root.findViewById(R.id.print_desc));
     	final EditText value = (EditText)root.findViewById(R.id.print_value);
@@ -88,14 +91,13 @@ public class PrintFragment extends Fragment {
 				startActivity(i);
 			}
 		});
-    	return root;
+    	return switcher; //mandatory
 
     }
     private class PrintTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String saldo) {
@@ -105,7 +107,6 @@ public class PrintFragment extends Fragment {
         	{
         		if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
@@ -114,7 +115,6 @@ public class PrintFragment extends Fragment {
 			else if ( saldo.equals("Error") ){	
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
@@ -127,10 +127,8 @@ public class PrintFragment extends Fragment {
 				long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
 				if ( pagesA4Black > 0 )
 					desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
+				showMainScreen();
 			}
-				
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override

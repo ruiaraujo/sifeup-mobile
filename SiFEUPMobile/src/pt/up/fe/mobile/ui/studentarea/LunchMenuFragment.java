@@ -25,6 +25,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.res.Resources;
@@ -50,9 +51,9 @@ import android.widget.Toast;
  * @author Ângela Igreja
  * 
  */
-public class LunchMenuFragment extends Fragment 
+public class LunchMenuFragment extends BaseFragment 
 {
-	private PagerAdapter PagerAdapter;
+	private PagerMenuAdapter pagerAdapter;
     private ViewPager  ViewPager; 
     private ViewPagerIndicator indicator;
    
@@ -81,27 +82,41 @@ public class LunchMenuFragment extends Fragment
 	{
 		super.onCreate(savedInstanceState);
 	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Lunch Menu");
+	    canteens = new ArrayList<Canteen>();
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
+		super.onCreateView(inflater, container, savedInstanceState);
 		View root = inflater.inflate(R.layout.menus_canteens, null);
-
+		switcher.addView(root);
         ViewPager = (ViewPager)root.findViewById(R.id.pager_menu);
 
-		// Create our custom adapter to supply pages to the viewpager.
-        PagerAdapter = new PagerMenuAdapter(getActivity().getSupportFragmentManager());
-        
+		        
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_menu);
+       
+        new LunchMenusTask().execute();
+        
+		return switcher;//mandatory
+	}
+	
+	/**
+ 	 * TODO: what is this?
+ 	 */
+ 	private void buildPages(){
+ 	// Create our custom adapter to supply pages to the viewpager.
+        pagerAdapter = new PagerMenuAdapter(getActivity().getSupportFragmentManager());
+
+        ViewPager.setAdapter(pagerAdapter);
         
         // Initialize the indicator. We need some information here:
         // * What page do we start on.
         // * How many pages are there in total
         // * A callback to get page titles
         //TODO
-		//indicator.init(0, PagerAdapter.getCount(), PagerAdapter);
+		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
 		
 		Resources res = getResources();
 		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
@@ -112,17 +127,6 @@ public class LunchMenuFragment extends Fragment
 		
         // Set the indicator as the pageChangeListener
         ViewPager.setOnPageChangeListener(indicator);
-        
-        new LunchMenusTask().execute();
-        
-		return root;
-	}
-	
-	/**
- 	 * TODO: what is this?
- 	 */
- 	private void buildPages(){
-        ViewPager.setAdapter(PagerAdapter);
         
         // Start at a custom position
         ViewPager.setCurrentItem(0);
@@ -136,8 +140,7 @@ public class LunchMenuFragment extends Fragment
  	 private class LunchMenusTask extends AsyncTask<Void, Void, String> {
 
 		protected void onPreExecute (){
-			if ( getActivity() != null ) 
-				getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+			showLoadingScreen();
 		}
 
 		 protected void onPostExecute(String ret) {
@@ -147,7 +150,6 @@ public class LunchMenuFragment extends Fragment
 			{
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
@@ -156,7 +158,6 @@ public class LunchMenuFragment extends Fragment
 			else if ( ret.equals("Error") ){	
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
@@ -169,10 +170,8 @@ public class LunchMenuFragment extends Fragment
 				Canteen b = new Canteen("Canteen", "null");
 				canteens.add(b);
 			    buildPages();
-				}
-					
-			 	if ( getActivity() != null ) 
-			 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+			    showMainScreen();
+			}
 		}
 
  		@Override
@@ -181,7 +180,7 @@ public class LunchMenuFragment extends Fragment
  			try {
  	    			page = SifeupAPI.getPrintingReply(
  								SessionManager.getInstance().getLoginCode());
- 	    		
+ 	    			
  	    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
  		    		switch (error)
  		    		{
@@ -222,7 +221,7 @@ public class LunchMenuFragment extends Fragment
 
 		@Override
 		public Fragment getItem(int pos) {
-			return null;
+			return new Fragment();
 		}
 
 		@Override

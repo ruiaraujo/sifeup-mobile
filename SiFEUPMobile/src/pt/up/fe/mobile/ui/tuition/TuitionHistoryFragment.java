@@ -29,28 +29,42 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.YearsTuition;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
-public class TuitionHistoryFragment extends ListFragment {
+public class TuitionHistoryFragment extends BaseFragment implements OnItemClickListener {
 
-	SimpleAdapter adapter;
+    private ListView list;
+    private SimpleAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionHistory");
-        new TuitionTask().execute();
     }
     
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	            Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+   	
+		list = new ListView(getActivity());
+		switcher.addView(list);
+        new TuitionTask().execute();
+		return switcher; //this is mandatory.
+	 }
     public void loadList()
     {
     	String[] from = new String[] {"year", "paid", "to_pay"};
@@ -70,24 +84,16 @@ public class TuitionHistoryFragment extends ListFragment {
 		 
         // fill in the grid_item layout
         adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_history, from, to);
-        setListAdapter(adapter);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(this);
         Log.i("Propinas", "List view loaded successfully");
     }
     
-    /** {@inheritDoc} */
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-    	SessionManager.tuitionHistory.setSelected_year(position);
-    	startActivity(new Intent(getActivity(), TuitionActivity.class));
-    }
-
 	 /** Classe privada para a busca de dados ao servidor */
     private class TuitionTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null && !SessionManager.tuitionHistory.isLoaded()) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING); 
-
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -95,6 +101,8 @@ public class TuitionHistoryFragment extends ListFragment {
         	{
 				Log.i("Propinas","Propinas Loaded successfully");
 	            loadList();
+	            showMainScreen();
+
     		}
 			else
 			{	
@@ -142,5 +150,10 @@ public class TuitionHistoryFragment extends ListFragment {
 					return "";
 				}
 		}
-    }	
+    }
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    	SessionManager.tuitionHistory.setSelected_year(position);
+    	startActivity(new Intent(getActivity(), TuitionActivity.class));		
+	}	
 }

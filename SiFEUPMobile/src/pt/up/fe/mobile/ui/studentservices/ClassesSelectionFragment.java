@@ -7,6 +7,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -30,7 +31,7 @@ import android.widget.Toast;
  * @author Ângela Igreja
  *
  */
-public class ClassesSelectionFragment extends Fragment implements OnClickListener
+public class ClassesSelectionFragment extends BaseFragment implements OnClickListener
 {
 	private PagerAdapter mPagerAdapter;
     private ViewPager  mViewPager; 
@@ -48,8 +49,9 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
+ 		super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.classes_selection ,null);
-        
+        switcher.addView(root);
         Button bt = (Button) root.findViewById(R.id.classes_selection_submit);
 	    bt.setOnClickListener(this);
 
@@ -79,7 +81,7 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
         
         new ClassesSelectionTask().execute();
         
-		return root;
+		return switcher;
     }
  	
  	/**
@@ -126,8 +128,7 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
  	 private class ClassesSelectionTask extends AsyncTask<Void, Void, String> {
 
 		protected void onPreExecute (){
-			if ( getActivity() != null ) 
-				getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+			showLoadingScreen();
 		}
 
 		 protected void onPostExecute(String ret) {
@@ -137,7 +138,6 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 			{
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
@@ -146,7 +146,6 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 			else if ( ret.equals("Error") ){	
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
@@ -156,11 +155,9 @@ public class ClassesSelectionFragment extends Fragment implements OnClickListene
 				Log.e("Login","success");
 				subjects = new String []{"EIND", "IELE", "SINF","OLA"};
 			    classes = new String []{"Sem Turma" , "Turma 1", "Turma 2", "Turma 3","Turma 4"};
-			        buildPages();
-				}
-					
-			 	if ( getActivity() != null ) 
-			 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+			    buildPages();
+			    showMainScreen();    
+			}
 		}
 
  		@Override
