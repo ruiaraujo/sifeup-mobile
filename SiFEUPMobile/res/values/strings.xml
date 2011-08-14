@@ -56,9 +56,10 @@
                                  <b>Credits:</b>\n
                                  <ul>
 	                                 <li>Faculty of Engineering of University of Porto</li> \n
+	                                 <li>CICA</li> \n
 	                                 <li>Master in Informatics and Computing Engineering</li> \n
 	                                 <li>Distributed Systems course</li> \n
-	                                 <li>CICA</li> \n
+	                  
                                  </ul>
                                  </string>
    	
@@ -93,7 +94,7 @@
     <string name="path_year"><b>Year:</b> <xliff:g id="year">%1$s</xliff:g></string>
     <string name="path_average"><b>Average:</b> <xliff:g id="average">%1$s</xliff:g></string>
     <string name="path_entries"><b>Number of Entries:</b> <xliff:g id="entries">%1$s</xliff:g></string>
-    <string name="path_grade">Grade : <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_grade">Grade: <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>SiFEUP WebPage</u></string>
    
     <!-- Profile -->
