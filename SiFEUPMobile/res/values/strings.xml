@@ -5,17 +5,7 @@
     <string name="app_name">SiFEUP Mobile</string>
     <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
-    
-    <string name="description_refresh">Refresh</string>
-    <string name="description_share">Share</string>
-    
-    <string name="description_now">Go to Now</string>
-    
-    <string name="title_share">Share using</string>   
-    <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
-    
-    <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
-    
+        
     <!-- *************************************************************************************** -->
    	<!-- LOGIN -->
    	
@@ -85,6 +75,8 @@
   	<string name="description_export">Export</string>	
   	<string name="toast_export_calendar_finished">Calendar Exported.</string>
   	<string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
+  	<string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
+  	<string name="description_now">Go to Now</string>
   	
   	<!-- Exams -->
   	<string name="title_exams">Exams</string>
@@ -93,6 +85,7 @@
   	<!-- Subjects -->
 	<string name="btn_subjects">Subjects</string>
 	<string name="title_subjects">Subjects</string>   
+	<string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Academic Path</string>
