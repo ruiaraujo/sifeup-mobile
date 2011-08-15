@@ -34,7 +34,6 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,10 +61,10 @@ public class TuitionRefListFragment extends BaseFragment implements OnItemClickL
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		 super.onCreateView(inflater, container, savedInstanceState);
-	 	 list = new ListView(getActivity());
-	 	 switcher.addView(list);
-         new TuitionTask().execute();
-		 return switcher; //this is mandatory.
+		 View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		 list = (ListView) root.findViewById(R.id.generic_list);
+		 new TuitionTask().execute();
+		 return getParentContainer(); //this is mandatory.
 	 }
     
     private void loadList() 
@@ -90,6 +89,12 @@ public class TuitionRefListFragment extends BaseFragment implements OnItemClickL
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
 	}
+    
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    	currentYear.setSelectedReference(position);
+    	startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));		
+	}	
 
     /** Classe privada para a busca de dados ao servidor */
     private class TuitionTask extends AsyncTask<Void, Void, String> {
@@ -151,8 +156,4 @@ public class TuitionRefListFragment extends BaseFragment implements OnItemClickL
 		}
     }
 
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-    	currentYear.setSelectedReference(position);
-    	startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));		
-	}	
 }

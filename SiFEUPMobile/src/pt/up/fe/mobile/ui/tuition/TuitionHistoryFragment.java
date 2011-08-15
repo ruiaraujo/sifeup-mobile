@@ -59,13 +59,13 @@ public class TuitionHistoryFragment extends BaseFragment implements OnItemClickL
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-   	
-		list = new ListView(getActivity());
-		switcher.addView(list);
-        new TuitionTask().execute();
-		return switcher; //this is mandatory.
+		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+		new TuitionTask().execute();
+		return getParentContainer(); //this is mandatory.
 	 }
-    public void loadList()
+	
+    private void loadList()
     {
     	String[] from = new String[] {"year", "paid", "to_pay"};
         int[] to = new int[] { R.id.tuition_history_year, R.id.tuition_history_paid, R.id.tuition_history_to_pay};

@@ -14,6 +14,7 @@ import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.service.Student.StudentDetail;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
@@ -44,7 +45,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  * @author Ângela Igreja
  */
-public class StudentProfileFragment extends Fragment  implements OnItemClickListener
+public class StudentProfileFragment extends BaseFragment  implements OnItemClickListener
 {
 	private TextView name;
 	private ListView details;
@@ -65,7 +66,8 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, null);
+    	super.onCreateView(inflater, container, savedInstanceState);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, getParentContainer(), true);
 		name = ((TextView)root.findViewById(R.id.profile_name));
 		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
@@ -100,7 +102,7 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
 		}
 		else
 			new ProfileTask().execute(SessionManager.getInstance().getLoginCode());
-        return root;
+        return getParentContainer();
     }
     
 
@@ -109,8 +111,7 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
     private class ProfileTask extends AsyncTask<String, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -144,12 +145,12 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
 		         details.setAdapter(adapter);
 		         details.setOnItemClickListener(StudentProfileFragment.this);
 		         details.setSelection(0);
+		         showMainScreen();
 			}
 			else if ( result.equals("Error")) {	
 				Log.e("Profile","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					getActivity().finish();
@@ -166,8 +167,6 @@ public class StudentProfileFragment extends Fragment  implements OnItemClickList
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override

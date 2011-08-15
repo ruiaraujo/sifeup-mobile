@@ -64,11 +64,10 @@ public class NewsFragment extends BaseFragment implements AdapterView.OnItemClic
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		 super.onCreateView(inflater, container, savedInstanceState);
-   	
-		 list = new ListView(getActivity());
-		 switcher.addView(list);
+		 View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+         list = (ListView) root.findViewById(R.id.generic_list);
 		 new NewsTask().execute(RSSFEEDOFCHOICE);
-		 return switcher; //this is mandatory.
+		 return getParentContainer(); //this is mandatory.
 	 }
 	 
     /** Classe privada para a busca de dados ao servidor */

@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.ui.studentservices;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
  * @author Ângela Igreja
  *
  */
-public class ChangePasswordFragment extends Fragment
+public class ChangePasswordFragment extends BaseFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -27,11 +28,12 @@ public class ChangePasswordFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.change_password, null);
+    	//TODO: missing file
+    	//ViewGroup root = (ViewGroup) inflater.inflate(R.layout.change_password, getParent(), true);
 		
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-		return root;
+		return getParentContainer();
 	} 
 	    
 	      

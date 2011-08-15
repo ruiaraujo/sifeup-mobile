@@ -61,14 +61,13 @@ public class ExamsFragment extends BaseFragment {
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
-    	
-		list = new ListView(getActivity());
-		switcher.addView(list);
-        String personCode = (String) getArguments().get(PROFILE_CODE);
+    	View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+		String personCode = (String) getArguments().get(PROFILE_CODE);
 		if ( personCode == null )
 			personCode = SessionManager.getInstance().getLoginCode();
         new ExamsTask().execute(personCode);
-		return switcher; //this is mandatory.
+		return getParentContainer(); //this is mandatory.
 	 }
 	 
     @Override

@@ -10,6 +10,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
@@ -19,14 +20,18 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 /**
@@ -37,24 +42,32 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
  * @author Ângela Igreja
  *
  */
-public class FriendsListFragment extends ListFragment {
+public class FriendsListFragment extends BaseFragment implements OnItemClickListener {
 	
 	final String TAG="FriendsListFragment";
-	
+    private ListView list;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    	new FriendsTask().execute();
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Friends");
     }
     
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+    	new FriendsTask().execute();
+		return getParentContainer(); //this is mandatory.
+	 }
     @Override
     public void onStart()
     {
     	super.onStart();
-    	registerForContextMenu(getActivity().findViewById(android.R.id.list));
+    	registerForContextMenu(list);
     }
     
     @Override
@@ -92,31 +105,26 @@ public class FriendsListFragment extends ListFragment {
 		return false;    	
     }
     
-    public void onStop(){
-    	super.onStop();
-    }
 
-
-    /** {@inheritDoc} */
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+	public void onItemClick(AdapterView<?> arg0, View v, int position, long id)  {
     	//TODO
     	SessionManager.friends.setSelectedFriend(position);
     	Intent i = new Intent(getActivity(), ProfileActivity.class);
     	i.putExtra("profile", SessionManager.friends.getFriend(position).getCode());
     	startActivity(i);
-    }
-    
+	}
+	
 
     /** Classe privada para a busca de dados ao servidor */
     private class FriendsTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
+        	if ( getActivity() == null )
+        		return;
         	if ( !result.equals("") )
         	{
 				Log.i(TAG,"loading list...");
@@ -137,7 +145,9 @@ public class FriendsListFragment extends ListFragment {
 		         // fill in the grid_item layout
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
 		        		 							R.layout.list_item_friend, from, to);
-		         setListAdapter(adapter);
+		         list.setAdapter(adapter);
+		         list.setOnItemClickListener(FriendsListFragment.this);
+		         showMainScreen();
 		         Log.i(TAG, "list loaded successfully");
 
     		}
@@ -145,14 +155,11 @@ public class FriendsListFragment extends ListFragment {
 				Log.e("Login","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -182,10 +189,6 @@ public class FriendsListFragment extends ListFragment {
 			return "";
 		}
     }
-	
 
-	
 
-	
-	
 }

@@ -50,10 +50,10 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
-		list = new ListView(getActivity());
-		switcher.addView(list);
+    	View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);		
         new SubjectsTask().execute();
-		return switcher; //this is mandatory.
+		return getParentContainer(); //this is mandatory.
 	}
  
     

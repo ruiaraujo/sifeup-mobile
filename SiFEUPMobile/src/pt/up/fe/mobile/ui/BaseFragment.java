@@ -14,11 +14,10 @@ import android.widget.ViewSwitcher;
  */
 public class BaseFragment extends Fragment {
 
-    protected ViewSwitcher switcher;
+    private ViewSwitcher switcher;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-    	
 		switcher = (ViewSwitcher) inflater.inflate(R.layout.loading_view, container, false);
 		return switcher;
     }
@@ -34,7 +33,9 @@ public class BaseFragment extends Fragment {
 			switcher.showNext();
     }
     
-    protected ViewGroup getParent(){
+    protected ViewGroup getParentContainer(){
+    	if ( switcher == null )
+    		throw new RuntimeException("onCreateView must be called before from super");
     	return switcher;
     }
 }

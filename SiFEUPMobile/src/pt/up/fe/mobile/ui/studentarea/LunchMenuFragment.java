@@ -88,8 +88,7 @@ public class LunchMenuFragment extends BaseFragment
 	            Bundle savedInstanceState) 
 	{
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.menus_canteens, null);
-		switcher.addView(root);
+		View root = inflater.inflate(R.layout.menus_canteens, getParentContainer(), true);
         ViewPager = (ViewPager)root.findViewById(R.id.pager_menu);
        
         // Find the indicator from the layout
@@ -97,7 +96,7 @@ public class LunchMenuFragment extends BaseFragment
        
         new LunchMenusTask().execute();
         
-		return switcher;//mandatory
+		return getParentContainer();//mandatory
 	}
 	
 	/**

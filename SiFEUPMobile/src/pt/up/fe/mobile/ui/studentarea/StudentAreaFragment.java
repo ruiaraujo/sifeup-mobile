@@ -90,7 +90,7 @@ public class StudentAreaFragment extends ListFragment{
 		   		 startActivity(new Intent(getActivity(), AcademicPathActivity.class));
 				 return;
 	   		case 5:
-		   		 startActivity(new Intent(getActivity(), ParkOccupationActivity.class));
+		   		//TODO: miising file startActivity(new Intent(getActivity(), ParkOccupationActivity.class));
 				 return;
     	}
     }

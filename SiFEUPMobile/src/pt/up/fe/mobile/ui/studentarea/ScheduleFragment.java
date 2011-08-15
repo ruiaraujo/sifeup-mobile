@@ -95,7 +95,7 @@ public class ScheduleFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule,getParent(),true);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule,getParentContainer(),true);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
         mTitle = (TextView) root.findViewById(R.id.block_title);
         
@@ -171,7 +171,7 @@ public class ScheduleFragment extends BaseFragment implements
             }
         }, true);*/
 
-        return getParent();
+        return getParentContainer();
     }
     
     private void increaseDay(){

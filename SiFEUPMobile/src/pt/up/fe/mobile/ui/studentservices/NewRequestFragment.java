@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.ui.studentservices;
 
+import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
-public class NewRequestFragment extends Fragment
+public class NewRequestFragment extends BaseFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState) 

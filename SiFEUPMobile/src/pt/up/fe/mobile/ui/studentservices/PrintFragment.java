@@ -68,8 +68,7 @@ public class PrintFragment extends BaseFragment {
             Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
     	new PrintTask().execute();
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, null);
-    	switcher.addView(root);
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.print_balance, getParentContainer(), true);
     	display = ((TextView)root.findViewById(R.id.print_balance));
     	desc = ((TextView)root.findViewById(R.id.print_desc));
     	final EditText value = (EditText)root.findViewById(R.id.print_value);
@@ -91,7 +90,7 @@ public class PrintFragment extends BaseFragment {
 				startActivity(i);
 			}
 		});
-    	return switcher; //mandatory
+    	return getParentContainer(); //mandatory
 
     }
     private class PrintTask extends AsyncTask<Void, Void, String> {

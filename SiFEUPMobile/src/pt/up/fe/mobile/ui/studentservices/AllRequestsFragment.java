@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.ui.studentservices;
 
+import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
-public class AllRequestsFragment extends Fragment
+public class AllRequestsFragment extends BaseFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -20,7 +21,6 @@ public class AllRequestsFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
-		//ViewGroup root = (ViewGroup) inflater.inflate(R.layout.list_ucs_inscriptions, null);
 		
 		return  super.onCreateView(inflater, container, savedInstanceState);
 	} 

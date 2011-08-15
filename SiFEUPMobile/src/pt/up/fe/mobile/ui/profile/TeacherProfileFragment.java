@@ -9,6 +9,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -29,7 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * Teacher Profile Fragment
  * @author Ângela Igreja
  */
-public class TeacherProfileFragment extends Fragment implements OnItemClickListener
+public class TeacherProfileFragment extends BaseFragment implements OnItemClickListener
 {
 	private TextView name;
 	private ListView details;
@@ -50,7 +51,8 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) 
     {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, null);
+    	super.onCreateView(inflater, container, savedInstanceState);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, getParentContainer() , true);
 		
 		name = ((TextView)root.findViewById(R.id.profile_name));
 		
@@ -58,7 +60,7 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 		
 		details = ((ListView)root.findViewById(R.id.profile_details));
 				
-        return root;
+        return getParentContainer();
     }
     
 
@@ -68,8 +70,7 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
     {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -87,7 +88,6 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 				Log.e("TeacherProfile","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					getActivity().finish();
@@ -99,14 +99,11 @@ public class TeacherProfileFragment extends Fragment implements OnItemClickListe
 				Log.e("TeacherProfile","error");
 				if ( getActivity() != null ) 	
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override

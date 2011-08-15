@@ -50,8 +50,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
             Bundle savedInstanceState)
     {
  		super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.classes_selection ,null);
-        switcher.addView(root);
+        View root = inflater.inflate(R.layout.classes_selection ,getParentContainer(), true);
         Button bt = (Button) root.findViewById(R.id.classes_selection_submit);
 	    bt.setOnClickListener(this);
 
@@ -81,7 +80,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
         
         new ClassesSelectionTask().execute();
         
-		return switcher;
+		return getParentContainer();
     }
  	
  	/**

@@ -58,8 +58,7 @@ public class AcademicPathFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, null);
-		switcher.addView(root);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, getParentContainer(), true);
 		grades = (ListView) root.findViewById(R.id.path_ucs_grade);
 		year = (TextView) root.findViewById(R.id.path_year);
 		average = (TextView) root.findViewById(R.id.path_average);
@@ -76,7 +75,7 @@ public class AcademicPathFragment extends BaseFragment {
 			}
 		});
         new AcademicPathTask().execute();
-		return switcher; //mandatory
+		return getParentContainer(); //mandatory
     }
 	 
 	/**

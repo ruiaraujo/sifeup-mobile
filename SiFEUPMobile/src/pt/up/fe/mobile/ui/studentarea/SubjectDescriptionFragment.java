@@ -43,13 +43,11 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnItemCl
     }
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
-		
-		
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.subject_description, null);
+		super.onCreateView(inflater, container, savedInstanceState);
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		descriptionList = (ExpandableListView) root.findViewById(R.id.subject_description_list);
-  
         new SubjectDescriptionTask().execute();
-		return root;
+		return getParentContainer();
 	}
  
     /**
