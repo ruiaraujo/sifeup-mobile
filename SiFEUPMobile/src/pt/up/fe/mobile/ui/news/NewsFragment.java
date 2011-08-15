@@ -102,6 +102,7 @@ public class NewsFragment extends BaseFragment implements AdapterView.OnItemClic
 		         list.setAdapter(adapter); 
 		         list.setOnItemClickListener(NewsFragment.this);
 		         list.setSelection(0);
+		         showMainScreen();
 		         Log.e("JSON", "news visual list loaded");
 
     		}
