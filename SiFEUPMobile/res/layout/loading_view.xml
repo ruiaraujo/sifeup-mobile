@@ -1,21 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:paddingTop="200.0dp">
-    <ProgressBar android:id="@+id/loading_spinner"
-        android:indeterminate="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"/>
-    <TextView android:id="@+id/loading_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lb_data_fetching"
-        android:layout_gravity="center"
-        android:paddingLeft="10dip"
-        android:gravity="center"
-        android:textSize="20dip"/>
-</LinearLayout>
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="center">
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_gravity="center"
+	    android:gravity="center">
+	    <ProgressBar android:id="@+id/loading_spinner"
+	        android:indeterminate="true"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:gravity="center"/>
+	    <TextView android:id="@+id/loading_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/lb_data_fetching"
+	        android:layout_gravity="center"
+	        android:paddingLeft="10dip"
+	        android:gravity="center"
+	        android:textSize="20dip"/>
+	</LinearLayout>
+</ViewSwitcher>

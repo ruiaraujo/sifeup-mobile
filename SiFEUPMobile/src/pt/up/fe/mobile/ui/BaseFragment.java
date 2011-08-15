@@ -19,8 +19,7 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	
-    	switcher = new ViewSwitcher(getActivity());
-		switcher.addView(inflater.inflate(R.layout.loading_view, null));
+		switcher = (ViewSwitcher) inflater.inflate(R.layout.loading_view, container, false);
 		return switcher;
     }
     
@@ -33,5 +32,9 @@ public class BaseFragment extends Fragment {
     protected void showMainScreen(){
     	if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
 			switcher.showNext();
+    }
+    
+    protected ViewGroup getParent(){
+    	return switcher;
     }
 }
