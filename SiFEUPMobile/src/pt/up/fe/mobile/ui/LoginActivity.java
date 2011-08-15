@@ -221,6 +221,7 @@ public class LoginActivity extends Activity
      * AsyncTask for login functionality.
      * Background class that checks the authentication on 
      * the server and saves the session cookie for later use.
+     * 
      * @author angela
      */
     private class LoginTask extends AsyncTask<Void, Void, Boolean> {

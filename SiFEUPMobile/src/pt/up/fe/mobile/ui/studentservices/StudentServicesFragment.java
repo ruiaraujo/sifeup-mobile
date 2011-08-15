@@ -1,23 +1,12 @@
 package pt.up.fe.mobile.ui.studentservices;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.TuitionHistory;
-import pt.up.fe.mobile.ui.studentarea.AcademicPathActivity;
-import pt.up.fe.mobile.ui.studentarea.ExamsActivity;
-import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
-import pt.up.fe.mobile.ui.studentarea.SubjectsActivity;
-import pt.up.fe.mobile.ui.tuition.TuitionActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionHistoryActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionRefListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,14 +146,14 @@ public class StudentServicesFragment extends Fragment
         public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 64);
+                  ViewGroup.LayoutParams.MATCH_PARENT, 84);
 
             TextView textView = new TextView(getActivity());
             textView.setLayoutParams(lp);
             // Center the text vertically
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             // Set the text starting position
-            textView.setPadding(64, 0, 0, 0);
+            textView.setPadding(84, 0, 0, 0);
             
             return textView;
         }

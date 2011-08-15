@@ -8,6 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+/**
+ * Change Password Fragment
+ * 
+ * @author Ângela Igreja
+ *
+ */
 public class ChangePasswordFragment extends Fragment
 {
     @Override
@@ -21,9 +27,11 @@ public class ChangePasswordFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
-		//ViewGroup root = (ViewGroup) inflater.inflate(R.layout.list_ucs_inscriptions, null);
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.change_password, null);
 		
-		return  super.onCreateView(inflater, container, savedInstanceState);
+		super.onCreateView(inflater, container, savedInstanceState);
+		
+		return root;
 	} 
 	    
 	      
