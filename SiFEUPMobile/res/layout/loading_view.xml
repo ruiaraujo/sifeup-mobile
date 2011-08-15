@@ -2,7 +2,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
-    android:gravity="center">
+    android:gravity="center"
+    android:paddingTop="200.0dp">
     <ProgressBar android:id="@+id/loading_spinner"
         android:indeterminate="true"
         android:layout_width="wrap_content"

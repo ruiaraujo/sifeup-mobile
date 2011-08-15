@@ -138,6 +138,11 @@
          android:configChanges="orientation|keyboardHidden" />  
          
        <activity
+         android:name=".ui.studentarea.ParkOccupationActivity"
+         android:label="@string/title_park_occupation"
+         android:configChanges="orientation|keyboardHidden" /> 
+       
+      <activity
          android:name=".ui.studentservices.NewRequestActivity"
          android:label="@string/title_new_request"
          android:configChanges="orientation|keyboardHidden" /> 
