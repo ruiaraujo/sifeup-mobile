@@ -35,7 +35,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +57,7 @@ public class LunchMenuFragment extends BaseFragment
     private ViewPagerIndicator indicator;
    
  	/**
- 	 * Cass Canteen. Save the name and menus of the canteen.
+ 	 * Class Canteen. Save the name and menus of the canteen.
      *
  	 * @author Ângela Igreja
  	 *
@@ -92,8 +91,7 @@ public class LunchMenuFragment extends BaseFragment
 		View root = inflater.inflate(R.layout.menus_canteens, null);
 		switcher.addView(root);
         ViewPager = (ViewPager)root.findViewById(R.id.pager_menu);
-
-		        
+       
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_menu);
        
@@ -103,7 +101,7 @@ public class LunchMenuFragment extends BaseFragment
 	}
 	
 	/**
- 	 * TODO: what is this?
+ 	 * Build Pages
  	 */
  	private void buildPages(){
  	// Create our custom adapter to supply pages to the viewpager.
@@ -115,7 +113,6 @@ public class LunchMenuFragment extends BaseFragment
         // * What page do we start on.
         // * How many pages are there in total
         // * A callback to get page titles
-        //TODO
 		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
 		
 		Resources res = getResources();

@@ -152,6 +152,7 @@ public class StudentServicesFragment extends Fragment
         public int getChildrenCount(int groupPosition) {
             return children[groupPosition].length;
         }
+        
         //TODO: move to xml
         public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
