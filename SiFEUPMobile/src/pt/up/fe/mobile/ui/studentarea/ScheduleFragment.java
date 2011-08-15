@@ -78,7 +78,10 @@ public class ScheduleFragment extends BaseFragment implements
     private List<Day> mDays = new ArrayList<Day>();
     private long mondayMillis;
     private String personCode;
-    
+    private LayoutInflater mInflater;
+    private boolean fetchingPreviousWeek = false;
+    private boolean fetchingNextWeek = false;
+    private int blockOffset = 0;
     /**
      * The key for the student code in the intent.
      */
@@ -95,6 +98,7 @@ public class ScheduleFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
+    	mInflater  = inflater;
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule,getParentContainer(),true);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
         mTitle = (TextView) root.findViewById(R.id.block_title);
@@ -107,10 +111,6 @@ public class ScheduleFragment extends BaseFragment implements
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
                 	decreaseDay();
-                	/*if ( mTitleCurrentDayIndex >= 0 )
-                		mWorkspace.scrollLeft();
-                	else
-                		movetoPreviousWeek();*/
                     return true;
                 }
                 return false;
@@ -119,10 +119,6 @@ public class ScheduleFragment extends BaseFragment implements
         mLeftIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	decreaseDay();
-            	/*if ( mTitleCurrentDayIndex >= 0 )
-            		mWorkspace.scrollLeft();
-            	else
-            		movetoPreviousWeek();*/
             }
         });
 
@@ -132,10 +128,6 @@ public class ScheduleFragment extends BaseFragment implements
                 if ((motionEvent.getAction() & MotionEventUtils.ACTION_MASK)
                         == MotionEvent.ACTION_DOWN) {
                 	increaseDay();
-                	/*if ( mTitleCurrentDayIndex < mDays.size() )
-                		mWorkspace.scrollRight();
-                	else
-                		movetoNextWeek();*/
                     return true;
                 }
                 return false;
@@ -144,19 +136,17 @@ public class ScheduleFragment extends BaseFragment implements
         mRightIndicator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	increaseDay();
-            	/*if ( mTitleCurrentDayIndex >= mDays.size() )
-            		mWorkspace.scrollRight();
-            	else
-            		movetoNextWeek();*/
             }
         });
         mondayMillis = firstDayofWeek(false);
-        setupDay(inflater , mondayMillis);
-  		setupDay(inflater , mondayMillis + (1 * DateUtils.DAY_IN_MILLIS));
-  		setupDay(inflater , mondayMillis + (2 * DateUtils.DAY_IN_MILLIS));
-  		setupDay(inflater , mondayMillis + (3 * DateUtils.DAY_IN_MILLIS));
-  		setupDay(inflater , mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
-        onPageSelected(0);
+        setupDay(mondayMillis - (3 * DateUtils.DAY_IN_MILLIS),0);
+        setupDay(mondayMillis,1);
+  		setupDay(mondayMillis + (1 * DateUtils.DAY_IN_MILLIS),2);
+  		setupDay(mondayMillis + (2 * DateUtils.DAY_IN_MILLIS),3);
+  		setupDay(mondayMillis + (3 * DateUtils.DAY_IN_MILLIS),4);
+  		setupDay(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS),5);
+  		setupDay(mondayMillis + (7 * DateUtils.DAY_IN_MILLIS),6);
+        onPageSelected(1);
 
   		personCode = (String) getArguments().get(PROFILE_CODE);
 		if ( personCode == null )
@@ -175,16 +165,16 @@ public class ScheduleFragment extends BaseFragment implements
     }
     
     private void increaseDay(){
-    	if ( mTitleCurrentDayIndex + 1 >= mDays.size() )
-    		return ;
     	mTitleCurrentDayIndex++;
     	mPager.setCurrentItem(mTitleCurrentDayIndex);
+       	if ( mTitleCurrentDayIndex >= mDays.size() )
+       		mTitleCurrentDayIndex = 1 ;
     }
     private void decreaseDay(){
-    	if ( mTitleCurrentDayIndex - 1 <= 0 )
-    		return ;
     	mTitleCurrentDayIndex--;
     	mPager.setCurrentItem(mTitleCurrentDayIndex);
+    	if ( mTitleCurrentDayIndex <= 0 )
+    		mTitleCurrentDayIndex = mDays.size()-2 ;
     }
     
 
@@ -223,18 +213,19 @@ public class ScheduleFragment extends BaseFragment implements
         }
         return super.onOptionsItemSelected(item);
     }
-   /* 
+   
     private void movetoNextWeek(){
-    	goingLeft = false;
-    	mondayMillis += 7 * DateUtils.DAY_IN_MILLIS;
+    	fetchingNextWeek = true;
+    	mondayMillis = mDays.get(mDays.size()-1).timeStart;
     	for ( int i = 0 ; i < mDays.size() ; ++i )
     		updateDay(i, mondayMillis + i * DateUtils.DAY_IN_MILLIS );
     	new ScheduleTask().execute();
     }
     
     private void movetoPreviousWeek(){
-    	goingLeft = true;
-    	mondayMillis -= 7 * DateUtils.DAY_IN_MILLIS;
+    	fetchingPreviousWeek = true;
+    	mondayMillis = mDays.get(0).timeStart;
+    	mondayMillis -= 4 * DateUtils.DAY_IN_MILLIS;
     	for ( int i = 0 ; i < mDays.size() ; ++i )
     		updateDay(i, mondayMillis + i * DateUtils.DAY_IN_MILLIS );
     	new ScheduleTask().execute();
@@ -269,86 +260,7 @@ public class ScheduleFragment extends BaseFragment implements
         return false;
     }
 
-    /** Classe privada para a busca de dados ao servidor */
-    private class ScheduleTask extends AsyncTask<Void, Void, String> {
-
-    	protected void onPreExecute (){
-    		showLoadingScreen();
-    	}
-
-        protected void onPostExecute(String result) {
-        	if ( result.equals("Success") || result.equals("") )
-        	{
-        		/*if ( goingLeft ){
-					updateWorkspaceHeader(mDays.size()-1);
-					for ( int i = 0 ; i < mDays.size() ; ++i )
-						mWorkspace.scrollRight();
-				}
-				else
-				{
-					updateWorkspaceHeader(0);
-					for ( int i = 0 ; i < mDays.size() ; ++i )
-						mWorkspace.scrollLeft();
-				}*/
-        		cleanBlocks();
-				Log.e("Schedule","success");
-				for ( Block block : schedule)
-					addBlock(block.weekDay, block);
-				mPager.setAdapter(new DayAdapter());
-				mPager.setCurrentItem(0);
-				showMainScreen();
-			}
-			else if ( result.equals("Error") ){
-				Log.e("Schedule","fail");
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
-					return;
-				}
-			}
-        }
-
-		@Override
-		protected String doInBackground(Void ...  code) {
-			String page = "";
-		  	try {
-		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
-		  		monday.set(mondayMillis);
-		  		monday.normalize(false);
-		  		String firstDay = monday.format("%Y%m%d");
-		  		//Friday 
-		  		monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
-		  		monday.normalize(false);
-		  		String lastDay = monday.format("%Y%m%d");
-		  		
-	    		page = SifeupAPI.getScheduleReply(personCode, 
-								firstDay, 
-								lastDay);
-	    		
-	    		int error =	SifeupAPI.JSONError(page);
-	    		switch (error)
-	    		{
-		    		case SifeupAPI.Errors.NO_AUTH:
-		    			return "Error";
-		    		case SifeupAPI.Errors.NO_ERROR:
-		    			JSONSchedule(page);
-		    			return "Success";
-		    		case SifeupAPI.Errors.NULL_PAGE:
-		    			return "";
-	    		}
-				
-			} catch (JSONException e) {
-				Looper.prepare();
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}
-
-			return "";
-		}
-    } 
-    private void setupDay(LayoutInflater inflater, long startMillis) {
+    private void setupDay(long startMillis, int i) {
         Day day = new Day();
 
         // Setup data
@@ -356,7 +268,7 @@ public class ScheduleFragment extends BaseFragment implements
         day.timeStart = startMillis;
         day.timeEnd = startMillis + DateUtils.DAY_IN_MILLIS;
         // Setup views
-        day.rootView = (ViewGroup) inflater.inflate(R.layout.blocks_content, null);
+        day.rootView = (ViewGroup) mInflater.inflate(R.layout.blocks_content, null);
 
         day.scrollView = (ObservableScrollView) day.rootView.findViewById(R.id.blocks_scroll);
         day.scrollView.setOnScrollListener(this);
@@ -373,7 +285,7 @@ public class ScheduleFragment extends BaseFragment implements
   		date.normalize(false);
         day.label =DateUtils.getDayOfWeekString(date.weekDay+1, DateUtils.LENGTH_LONG) +", " +
         			date.format("%d-%m");
-        mDays.add(day);
+        mDays.add(i, day);
     }
     
     private void updateDay( int index , long millis ){
@@ -383,6 +295,8 @@ public class ScheduleFragment extends BaseFragment implements
   		date.normalize(false);
         mDays.get(index).label =DateUtils.getDayOfWeekString(date.weekDay+1, DateUtils.LENGTH_LONG) +", " +
         			date.format("%d-%m");
+        mDays.get(index).timeStart = millis;
+        mDays.get(index).timeEnd = millis + DateUtils.DAY_IN_MILLIS;
     }
     
     private void cleanBlocks(){
@@ -486,12 +400,12 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
 
-    public void addBlock(int dayIndex ,Block block ) {
+    private void addBlock(int dayIndex ,Block block ) {
         if (getActivity() == null) {
             return;
         }
-
-        Day day = mDays.get(dayIndex);
+        // Plus one because mDays.at(0) is a day of the previous week
+        Day day = mDays.get(dayIndex+1);
 
         final String blockId = block.lectureAcronym;
         final String title = block.lectureAcronym + " (" + block.lectureType + ")" 
@@ -550,7 +464,7 @@ public class ScheduleFragment extends BaseFragment implements
      * WARNING: This is done against Google recomendations.
      * TODO: Change to access the GData API directly.
      * 		 Produce an ICAL file which can be imported by most calendars.*/
-    public boolean calendarExport(){
+    private boolean calendarExport(){
     	
     	Context ctx = this.getActivity();
     	final ContentResolver cr = ctx.getContentResolver();
@@ -681,8 +595,107 @@ public class ScheduleFragment extends BaseFragment implements
         mTitleCurrentDayIndex = position;
         Day day = mDays.get(position);
         mTitle.setText(day.label);
-        		
+        if ( position == 0)
+        	movetoPreviousWeek();
+        else if (position == mDays.size()-1)
+        	movetoNextWeek();
 	}
     
+    /** Classe privada para a busca de dados ao servidor */
+    private class ScheduleTask extends AsyncTask<Void, Void, String> {
+
+    	protected void onPreExecute (){
+    		if ( fetchingNextWeek || fetchingPreviousWeek )
+    		{
+    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+    			return;
+    		}
+    		showLoadingScreen();
+    		
+    	}
+
+        protected void onPostExecute(String result) {
+        	if ( getActivity() == null )
+        		return;
+        	if ( result.equals("Success") || result.equals("") )
+        	{        		
+        		if  ( fetchingNextWeek || fetchingPreviousWeek )
+        		{
+        			updateDay(0, mondayMillis - 3 * DateUtils.DAY_IN_MILLIS ); // previous friday
+        			for ( int i = 1; i < mDays.size() -1 ; ++i )
+            			updateDay(i, mondayMillis +  (i -1 ) * DateUtils.DAY_IN_MILLIS );
+        			updateDay( mDays.size() -1, mondayMillis + 7 * DateUtils.DAY_IN_MILLIS ); //next monday
+        			cleanBlocks();
+        		}
+        		
+        				
+				Log.e("Schedule","success");
+				for ( Block block : schedule)
+					addBlock(block.weekDay, block);
+				mPager.setAdapter(new DayAdapter());
+				if ( fetchingPreviousWeek )
+				{
+					mPager.setCurrentItem(mDays.size()-2);
+				}
+				else
+					mPager.setCurrentItem(1);
+				if  ( fetchingNextWeek || fetchingPreviousWeek )
+				{
+					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+					fetchingNextWeek = false;
+					fetchingPreviousWeek = false;
+				}
+				showMainScreen();
+			}
+			else if ( result.equals("Error") ){
+				Log.e("Schedule","fail");
+				if ( getActivity() != null ) 
+				{
+					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+					((BaseActivity)getActivity()).goLogin(true);
+					return;
+				}
+			}
+        }
+
+		@Override
+		protected String doInBackground(Void ...  code) {
+			String page = "";
+		  	try {
+		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
+		  		monday.set(mondayMillis);
+		  		monday.normalize(false);
+		  		String firstDay = monday.format("%Y%m%d");
+		  		//Friday 
+		  		monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+		  		monday.normalize(false);
+		  		String lastDay = monday.format("%Y%m%d");
+		  		
+	    		page = SifeupAPI.getScheduleReply(personCode, 
+								firstDay, 
+								lastDay);
+	    		
+	    		int error =	SifeupAPI.JSONError(page);
+	    		switch (error)
+	    		{
+		    		case SifeupAPI.Errors.NO_AUTH:
+		    			return "Error";
+		    		case SifeupAPI.Errors.NO_ERROR:
+		    			JSONSchedule(page);
+		    			return "Success";
+		    		case SifeupAPI.Errors.NULL_PAGE:
+		    			return "";
+	    		}
+				
+			} catch (JSONException e) {
+				Looper.prepare();
+				if ( getActivity() != null ) 
+					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}
+
+			return "";
+		}
+    }
     
 }

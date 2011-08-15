@@ -12,6 +12,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.app.SearchManager;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
@@ -38,29 +40,31 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author Ângela Igreja
  *
  */
-public class StudentsSearchFragment extends ListFragment implements OnItemClickListener {
+public class StudentsSearchFragment extends BaseFragment implements OnItemClickListener {
 	
 	// query is in SearchActivity, sent to here in the arguments
-	ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
-    List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-    SimpleAdapter adapter;
-	String query;
-	View loading;
+	private ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
+	private List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+    private SimpleAdapter adapter;
+    private String query;
+    private ListView list;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
         query = getArguments().get(SearchManager.QUERY).toString();
-        new StudentsSearchTask().execute();
 
     }
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.list_item_loading, null);
-		loading = root.findViewById(R.id.search_itemLoading);
-			
-    	return  super.onCreateView(inflater, container, savedInstanceState);
+            Bundle savedInstanceState) { 
+		super.onCreateView(inflater, container, savedInstanceState);
+		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+        new StudentsSearchTask().execute();
+    	return getParentContainer();
+    	
 
     } 
 	
@@ -69,16 +73,8 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
     public class StudentsSearchTask extends AsyncTask<Integer, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null  )
-    		{
     			if (results.isEmpty())
-        			getActivity().showDialog(BaseActivity.DIALOG_FETCHING); 
-    			else
-    			{
-    				getListView().addFooterView(loading);
-    			}
-    		}
-    			 
+    				showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -102,13 +98,14 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 		        {
 			        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, 
 			        		new String[] {"name", "course"}, new int[] { R.id.friend_name,  R.id.friend_course});
-			        setListAdapter(adapter);
-			        getListView().setOnItemClickListener(StudentsSearchFragment.this);
-			        getListView().setOnScrollListener(new EndlessScrollListener(14));
-			        setSelection(0);
+			        list.setAdapter(adapter);
+			        list.setOnItemClickListener(StudentsSearchFragment.this);
+			        list.setOnScrollListener(new EndlessScrollListener(14));
+			        list.setSelection(0);
 		        }
 		        else
 		        	adapter.notifyDataSetChanged();
+		        showMainScreen();
 		        
     		}
 			else if ( result.equals("Error") ){	
@@ -123,24 +120,15 @@ public class StudentsSearchFragment extends ListFragment implements OnItemClickL
 			}
 			else if ( result.equals("") )
 			{
-				getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 				Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 				getActivity().finish();
 				return;
 			}
 			else if ( result.equals("Empty") )
 			{      
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
 				return;
     		}
-        	if ( getActivity() != null )
-        	{
-        		if ( !results.isEmpty() )
-        			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-        		else
-        			getListView().removeFooterView(loading);
-        	}
         }
 
 		@Override
