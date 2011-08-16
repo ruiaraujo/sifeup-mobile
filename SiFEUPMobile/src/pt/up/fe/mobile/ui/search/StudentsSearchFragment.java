@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.commonsware.cwac.endless.EndlessAdapter;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
@@ -16,6 +18,7 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,9 +28,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,7 +53,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
 	private List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-    private SimpleAdapter adapter;
+    private ListAdapter adapter;
     private String query;
     private ListView list;
 
@@ -65,16 +73,21 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
         new StudentsSearchTask().execute();
     	return getParentContainer();
     	
-
     } 
 	
+	private boolean hasMoreResults(){
+		if ( results.isEmpty() )
+			return true;
+		if ( totalItemLoaded() >= results.get(0).searchSize )
+			return false;
+		return true;
+	}
 	
 	/** Classe privada para a busca de dados ao servidor */
     public class StudentsSearchTask extends AsyncTask<Integer, Void, String> {
 
     	protected void onPreExecute (){
-    			if (results.isEmpty())
-    				showLoadingScreen();
+			showLoadingScreen();
     	}
 
         protected void onPostExecute(String result) {
@@ -84,7 +97,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
         	{
         		Log.e("Search","success");
         		
-	        
+	        /*
 		        // assumed only one page of results
 		        for(Student s : results.get(results.size()-1).students ){
 		            HashMap<String, String> map = new HashMap<String, String>();
@@ -92,19 +105,24 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 		            map.put("course", s.getProgrammeName());
 		            fillMaps.add(map);
 		        }
-				
+		*/		
 				// fill in the grid_item layout
-		        if ( results.size() == 1 )
+		        if ( hasMoreResults() )
 		        {
-			        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, 
-			        		new String[] {"name", "course"}, new int[] { R.id.friend_name,  R.id.friend_course});
-			        list.setAdapter(adapter);
-			        list.setOnItemClickListener(StudentsSearchFragment.this);
-			        list.setOnScrollListener(new EndlessScrollListener(14));
-			        list.setSelection(0);
+			      //  adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, 
+			        //		new String[] {"name", "course"}, new int[] { R.id.friend_name,  R.id.friend_course});
+		        	adapter = new EndlessSearchAdapter(getActivity(), 
+		        			 new SearchCustomAdapter(getActivity(), R.layout.list_item_friend, new Student[0]),
+		        			 R.layout.list_item_loading);
 		        }
 		        else
-		        	adapter.notifyDataSetChanged();
+		        {
+			        adapter = new SearchCustomAdapter(getActivity(), R.layout.list_item_friend, new Student[0]);
+
+		        }
+		        list.setAdapter(adapter);
+		        list.setOnItemClickListener(StudentsSearchFragment.this);
+		        list.setSelection(0);
 		        showMainScreen();
 		        
     		}
@@ -112,7 +130,6 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 				Log.e("Search","error");
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					return;
@@ -135,18 +152,13 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 		protected String doInBackground(Integer ... pages) {
 			String page = "";
 		  	try {
-		  		if ( pages.length < 1 )
-		  		{
-		  			pages = new Integer[1];
-		  			pages[0] = 1;
-		  		}
 		  		if ( query == null )
 		  			return "";
 		  		boolean isNumber = query.matches(".*[0-9].*");
 		  		if ( isNumber )
 		  			page = SifeupAPI.getStudentReply(query);
 		  		else
-		  			page = SifeupAPI.getStudentsSearchReply(query , pages[0]);
+		  			page = SifeupAPI.getStudentsSearchReply(query , 1);
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
@@ -272,7 +284,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 					results.get(position/15).students.get(position%15).getCode());
 		startActivity(i);
 	}
-	
+	/*
 	public class EndlessScrollListener implements OnScrollListener {
 		 
 	    private int visibleThreshold = 12;
@@ -308,6 +320,73 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	    @Override
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    }
+	}*/
+	
+	public class EndlessSearchAdapter extends EndlessAdapter{
+
+		public EndlessSearchAdapter(Context context, ListAdapter wrapped,
+				int pendingResource) {
+			super(context, wrapped, pendingResource);
+		}
+		@Override
+		protected boolean cacheInBackground() throws Exception {
+			String page = SifeupAPI.getStudentsSearchReply(query ,results.size() * 15 + 1 );
+    		int error =	SifeupAPI.JSONError(page);
+    		switch (error)
+    		{
+    			case SifeupAPI.Errors.NO_AUTH:
+    				return false;
+    			case SifeupAPI.Errors.NO_ERROR:
+    	    		JSONStudentsSearch(page);
+    	    		if ( results.isEmpty() || !hasMoreResults() )
+    	    			return false;
+    	    		else
+    	    			return true;
+    			case SifeupAPI.Errors.NULL_PAGE:
+    				return false;
+    		}
+			return true;
+		}
+		
+		@Override
+		protected void appendCachedData() {
+			SearchCustomAdapter adapter = (SearchCustomAdapter)getWrappedAdapter();
+			adapter.notifyDataSetChanged();
+		}
+	}
+
+	public class SearchCustomAdapter extends ArrayAdapter<Student> {
+
+		public SearchCustomAdapter(Context context, int textViewResourceId,
+		  Student[] objects) {
+			super(context, textViewResourceId, objects);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+		
+			if(row==null){
+				LayoutInflater inflater=getActivity().getLayoutInflater();
+				row=inflater.inflate(R.layout.list_item_friend, parent, false);
+			} 
+			TextView name = (TextView) row.findViewById(R.id.friend_name);
+			name.setText(results.get(position/15).students.get(position%15).getName());
+			TextView course =  (TextView) row.findViewById(R.id.friend_course);
+			course.setText(results.get(position/15).students.get(position%15).getProgrammeAcronym());
+			return row;
+		}
+		
+		public int getCount(){
+			return totalItemLoaded();
+		}
+	}
+	
+	private int totalItemLoaded(){
+		int total =0;
+		for ( ResultsPage result : results )
+			total += result.students.size();
+		return total;
 	}
 
 }

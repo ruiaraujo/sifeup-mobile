@@ -28,11 +28,8 @@ public class ChangePasswordFragment extends BaseFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
-    	//TODO: missing file
-    	//ViewGroup root = (ViewGroup) inflater.inflate(R.layout.change_password, getParent(), true);
-		
 		super.onCreateView(inflater, container, savedInstanceState);
-		
+    	inflater.inflate(R.layout.change_password, getParentContainer(), true);
 		return getParentContainer();
 	} 
 	    
