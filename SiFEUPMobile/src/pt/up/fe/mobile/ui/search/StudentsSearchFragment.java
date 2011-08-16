@@ -254,7 +254,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
     			
     			if(jStudent.has("codigo")) student.setCode(""+jStudent.getString("codigo"));
     			if(jStudent.has("nome")) student.setName(jStudent.getString("nome"));
-    			if(jStudent.has("cur_codigo")) student.setProgrammeCode(jStudent.getString("cur_codigo"));
+    			if(jStudent.has("cur_sigla")) student.setProgrammeCode(jStudent.getString("cur_sigla"));
     			if(jStudent.has("cur_nome")) student.setProgrammeName(jStudent.getString("cur_nome"));
     			if(jStudent.has("cur_name")) student.setProgrammeNameEn(jStudent.getString("nome"));
     			
@@ -373,7 +373,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
 			name.setText(results.get(position/15).students.get(position%15).getName());
 			TextView course =  (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position/15).students.get(position%15).getProgrammeAcronym());
+			course.setText(results.get(position/15).students.get(position%15).getProgrammeName());
 			return row;
 		}
 		

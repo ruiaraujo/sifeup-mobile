@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/friend_name"
         android:layout_toRightOf="@id/friend_pic"
+        android:text="ola"
         style="@style/ListItemSubtitle"/> 
 </RelativeLayout>
 
