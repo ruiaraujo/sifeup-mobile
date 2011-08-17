@@ -19,13 +19,21 @@ package pt.up.fe.mobile.ui.studentarea;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import external.com.google.android.apps.iosched.ui.widget.BlockView;
+import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
+import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.res.Resources;
@@ -55,26 +63,7 @@ public class LunchMenuFragment extends BaseFragment
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  ViewPager; 
     private ViewPagerIndicator indicator;
-   
- 	/**
- 	 * Class Canteen. Save the name and menus of the canteen.
-     *
- 	 * @author Ângela Igreja
- 	 *
- 	 */
- 	class Canteen
- 	{
- 		
- 		public String name;
- 		public String menu;
- 		
- 		Canteen(String n, String m)
- 		{
- 			this.name = n;
- 			this.menu = m;
- 		}
- 	}
- 	
+    	
 	private ArrayList<Canteen> canteens;
     
 	public void onCreate(Bundle savedInstanceState) 
@@ -161,10 +150,10 @@ public class LunchMenuFragment extends BaseFragment
 			}
 			else{
 				Log.e("Login","success");
-				Canteen a = new Canteen("Grill", "null");
-				canteens.add(a);
-				Canteen b = new Canteen("Canteen", "null");
-				canteens.add(b);
+				//Canteen a = new Canteen("Grill", "null");
+				//canteens.add(a);
+				//Canteen b = new Canteen("Canteen", "null");
+				//canteens.add(b);
 			    buildPages();
 			    showMainScreen();
 			}
@@ -200,12 +189,128 @@ public class LunchMenuFragment extends BaseFragment
  		}
      }
 
-	
+  	/**
+  	 * Class Canteen. Save the name and menus of the canteen.
+     *
+  	 * @author Ângela Igreja
+  	 *
+  	 */
+  	private class Canteen implements Serializable
+  	{
+  		private int code;
+  		private String description;
+  		private String timetable;
+  		private Menu[] menus;
+  	}
+  	
+	/**
+  	 * Class Menu. Save the information of menu.
+     *
+  	 * @author Ângela Igreja
+  	 *
+  	 */
+  	private class Menu implements Serializable
+  	{
+  		private String state;
+  		private String date;
+  		private Dish[] dishs;  		
+  	}
+  	
+  	
+  	/**
+  	 * Class Dish. Save the information of dish.
+     *
+  	 * @author Ângela Igreja
+  	 *
+  	 */
+  	private class Dish implements Serializable
+  	{
+  		private String state;
+  		private String description;
+  		private int type;
+  		private String descriptionType;
+  	}
+     
+     /** 
+ 	 * Canteens Parser.
+ 	 * Returns true in case of correct parsing.
+ 	 * 
+ 	 * @param page
+ 	 * @return boolean
+ 	 * @throws JSONException
+ 	 */
+     public boolean JSONLunchMenu(String page) throws JSONException
+     {
+     	JSONObject jObject = new JSONObject(page);
+     	     	
+     	if(jObject.has("cantinas"))
+     	{
+     		Log.e("JSON", "founded cantinas");
+     		JSONArray jArray = jObject.getJSONArray("cantinas");
+
+     		for(int i = 0; i < jArray.length(); i++)
+     		{
+    
+     			JSONObject jBlock = jArray.getJSONObject(i);
+     
+     			Canteen canteen = new Canteen();
+     			
+     			if(jBlock.has("codigo")) canteen.code = jBlock.getInt("codico"); 
+     			
+     			if(jBlock.has("descricao")) canteen.description = jBlock.getString("descricao");
+     			
+     			if(jBlock.has("horario")) canteen.timetable = jBlock.getString("horario");
+     			
+     			if(jBlock.has("ementas"))
+     			{
+     				JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
+     				
+     				for(int j = 0; j < jArrayMenus.length(); j++)
+     	     		{
+     					JSONObject jMenu = jArrayMenus.getJSONObject(j);
+     					
+     					Menu menu = new Menu();
+     					
+     					if(jMenu.has("estado")) menu.state = jMenu.getString("estado"); 
+     					
+     					if(jMenu.has("data")) menu.date = jMenu.getString("data"); 
+     					
+     					if(jMenu.has("pratos"))
+     					{
+     						JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
+     						
+     						for(int k = 0; k < jArrayDishs.length(); k++)
+     	     	     		{
+     	     					JSONObject jDish = jArrayMenus.getJSONObject(k);
+     	     					
+     	     					Dish dish = new Dish();
+     	     					
+     	     					if(jDish.has("estado")) dish.state = jDish.getString("estado"); 
+     	     					
+     	     					if(jDish.has("descricao")) dish.description = jDish.getString("descricao");
+     	     					
+     	     					if(jDish.has("tipo")) dish.type = jDish.getInt("tipo"); 
+     	     					
+     	     					if(jDish.has("tipo_descr")) dish.descriptionType = jDish.getString("tipo_descr"); 
+     	     	     		}
+     					}
+     	     		}
+     				
+     			}
+     			// add canteen to canteens
+     			this.canteens.add(canteen);
+     		}
+     		Log.e("JSON", "loaded canteens");
+     		return true;
+     	}
+     	Log.e("JSON", "canteens not found");
+     	return false;
+    }
 	
 	/**
  	 * Pager Menu Adapter
  	 * 
- 	 * @author angela
+ 	 * @author Ângela Igreja
  	 *
  	 */
     class PagerMenuAdapter extends FragmentStatePagerAdapter implements ViewPagerIndicator.PageInfoProvider 
@@ -227,7 +332,7 @@ public class LunchMenuFragment extends BaseFragment
 		
 		@Override
 		public String getTitle(int pos){
-			return canteens.get(pos).name;
+			return canteens.get(pos).description;
 		}	
     }
 }
