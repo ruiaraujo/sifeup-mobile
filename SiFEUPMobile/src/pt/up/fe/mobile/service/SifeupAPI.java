@@ -35,7 +35,12 @@ public class SifeupAPI {
 		String NAME = "aluno";
 		String CODE = "pv_codigo";
 	}
-
+	
+	private interface Employee{
+		String NAME = "ficha_func";
+		String CODE = "pv_codigo";
+	}
+	
 	private interface Tuition {
 		String NAME = "propinas";
 		String CODE = "pv_codigo";
@@ -168,6 +173,17 @@ public class SifeupAPI {
 	public static String getStudentUrl( String code ){
 		return WEBSERVICE + Student.NAME + WEBSERVICE_SEP + Student.CODE + EQUALS + code ;
 	}
+	
+	
+	/**
+	 * Employee Url for Web Service
+	 * @param code
+	 * @return Student Url
+	 */
+	public static String getEmployeeUrl( String code ){
+		return WEBSERVICE + Employee.NAME + WEBSERVICE_SEP +  Employee.CODE + EQUALS + code ;
+	}
+	
 	
 	/**
 	 * Printing Url for Web Service
@@ -425,7 +441,7 @@ public class SifeupAPI {
 	}	
 	
 	/**
-	 * Printing query Reply from web service
+	 * Student query Reply from web service
 	 * @param code
 	 * @return
 	 */
@@ -447,6 +463,30 @@ public class SifeupAPI {
 		}
 		return page;
 	}	
+	
+	/**
+	 * Employee query Reply from web service
+	 * @param code
+	 * @return
+	 */
+	public static String getEmployeeReply( String code ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getEmployeeUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
 	
 	/**
 	 * Tuition query Reply from web service

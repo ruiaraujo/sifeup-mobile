@@ -174,7 +174,7 @@ public class LunchMenuFragment extends BaseFragment
  	    		return "";
  			} catch (/*JSONException*/Exception e) {
  				if ( getActivity() != null ) 
- 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
+ 				//	Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
  				e.printStackTrace();
  			}
  			return "";
