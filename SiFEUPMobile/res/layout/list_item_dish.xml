@@ -4,16 +4,17 @@
     android:layout_height="wrap_content"
     android:background="@android:drawable/list_selector_background">
     
-    <TextView android:id="@+id/news_title"
+    <TextView android:id="@+id/description"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         style="@style/ListItemTitle" />
-     <TextView android:id="@+id/news_time"
+     <TextView android:id="@+id/descriptionType"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/news_title"
-        style="@style/ListItemSubtitle"/> 
+        style="@style/ListItemSubtitle"/>   
+          
 </RelativeLayout>
+
+

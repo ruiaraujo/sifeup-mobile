@@ -24,7 +24,8 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class SifeupAPI {
-	final private static String WEBSERVICE = "https://www.fe.up.pt/si/MOBC_GERAL.";
+	final private static String WEBSERVICE = "https://www.fe.up.pt/si/mobc_geral.";
+	
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
 	final private static String WEBSERVICE_SEP = "?";
@@ -193,7 +194,42 @@ public class SifeupAPI {
 		return WEBSERVICE + StudentsSearch.NAME + WEBSERVICE_SEP + StudentsSearch.QUERY + EQUALS + query + 
 						LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
-		
+	
+
+	/**
+	 * Canteens Url for Web Service
+	 * @return 
+	 */
+	public static String getCanteensUrl(){
+		return WEBSERVICE + "cantinas";
+	}
+	
+	
+	/**
+	 * Get Canteens Reply
+	 * @param value
+	 * @return
+	 */
+	public static String getCanteensReply()
+	{
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(getCanteensUrl());
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	
 	/**
 	 * GetPrinting MB  Reply
 	 * @param value

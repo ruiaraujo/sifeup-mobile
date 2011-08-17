@@ -27,13 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import external.com.google.android.apps.iosched.ui.widget.BlockView;
-import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
-import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.res.Resources;
@@ -48,8 +44,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
 
 /**
@@ -63,7 +57,7 @@ public class LunchMenuFragment extends BaseFragment
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  ViewPager; 
     private ViewPagerIndicator indicator;
-    	
+    private Dish[] dishes;	
 	private ArrayList<Canteen> canteens;
     
 	public void onCreate(Bundle savedInstanceState) 
@@ -115,6 +109,7 @@ public class LunchMenuFragment extends BaseFragment
         
         // Start at a custom position
         ViewPager.setCurrentItem(0);
+        dishes = pagerAdapter.getCanteen(0).menus[0].dishs;
  	}
  	
 	
@@ -150,10 +145,6 @@ public class LunchMenuFragment extends BaseFragment
 			}
 			else{
 				Log.e("Login","success");
-				//Canteen a = new Canteen("Grill", "null");
-				//canteens.add(a);
-				//Canteen b = new Canteen("Canteen", "null");
-				//canteens.add(b);
 			    buildPages();
 			    showMainScreen();
 			}
@@ -162,24 +153,25 @@ public class LunchMenuFragment extends BaseFragment
  		@Override
  		protected String doInBackground(Void ... theVoid) {
  			String page = "";
- 			try {
- 	    			page = SifeupAPI.getPrintingReply(
- 								SessionManager.getInstance().getLoginCode());
- 	    			
- 	    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
- 		    		switch (error)
- 		    		{
- 		    			case SifeupAPI.Errors.NO_AUTH:
- 		    				return "Error";
- 		    			case SifeupAPI.Errors.NO_ERROR:
- 		    				return "Sucess";
- 		    			case SifeupAPI.Errors.NULL_PAGE:
- 		    				return "";
- 		    		}
+ 			
+ 			try 
+ 			{	
+    			page = SifeupAPI.getCanteensReply();
+    			
+    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
+	    		
+    			switch (error)
+	    		{
+	    			case SifeupAPI.Errors.NO_AUTH:
+	    				return "Error";
+	    			case SifeupAPI.Errors.NO_ERROR:
+	    				JSONLunchMenu(page);
+	    				return "Sucess";
+	    			case SifeupAPI.Errors.NULL_PAGE:
+	    				return "";
+	    		}
 
  	    		return "";
- 				
- 				
  			} catch (/*JSONException*/Exception e) {
  				if ( getActivity() != null ) 
  					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
@@ -223,12 +215,14 @@ public class LunchMenuFragment extends BaseFragment
   	 * @author Ângela Igreja
   	 *
   	 */
-  	private class Dish implements Serializable
+  	public class Dish implements Serializable
   	{
   		private String state;
-  		private String description;
+  		public String description;
   		private int type;
-  		private String descriptionType;
+  		public String descriptionType;
+  		
+  		
   	}
      
      /** 
@@ -321,8 +315,9 @@ public class LunchMenuFragment extends BaseFragment
 		}
 
 		@Override
-		public Fragment getItem(int pos) {
-			return new Fragment();
+		public Fragment getItem(int pos) 
+		{
+			return MenuFragment.getInstance(dishes);
 		}
 
 		@Override
@@ -333,6 +328,10 @@ public class LunchMenuFragment extends BaseFragment
 		@Override
 		public String getTitle(int pos){
 			return canteens.get(pos).description;
-		}	
+		}
+		
+		public Canteen getCanteen(int pos){
+			return canteens.get(pos);
+		}
     }
 }
