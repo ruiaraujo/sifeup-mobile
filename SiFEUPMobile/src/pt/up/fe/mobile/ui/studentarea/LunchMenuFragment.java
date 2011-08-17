@@ -109,7 +109,7 @@ public class LunchMenuFragment extends BaseFragment
         
         // Start at a custom position
         ViewPager.setCurrentItem(0);
-        dishes = pagerAdapter.getCanteen(0).menus[0].dishs;
+        dishes = pagerAdapter.getCanteen(0).menus[0].dishes;
  	}
  	
 	
@@ -205,7 +205,7 @@ public class LunchMenuFragment extends BaseFragment
   	{
   		private String state;
   		private String date;
-  		private Dish[] dishs;  		
+  		private Dish[] dishes;  		
   	}
   	
   	
@@ -258,7 +258,7 @@ public class LunchMenuFragment extends BaseFragment
      			if(jBlock.has("ementas"))
      			{
      				JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
-     				
+     				canteen.menus = new Menu[jArrayMenus.length()];
      				for(int j = 0; j < jArrayMenus.length(); j++)
      	     		{
      					JSONObject jMenu = jArrayMenus.getJSONObject(j);
@@ -272,10 +272,10 @@ public class LunchMenuFragment extends BaseFragment
      					if(jMenu.has("pratos"))
      					{
      						JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
-     						
+     						menu.dishes = new Dish[jArrayDishs.length()];
      						for(int k = 0; k < jArrayDishs.length(); k++)
      	     	     		{
-     	     					JSONObject jDish = jArrayMenus.getJSONObject(k);
+     	     					JSONObject jDish = jArrayDishs.getJSONObject(k);
      	     					
      	     					Dish dish = new Dish();
      	     					
@@ -286,8 +286,11 @@ public class LunchMenuFragment extends BaseFragment
      	     					if(jDish.has("tipo")) dish.type = jDish.getInt("tipo"); 
      	     					
      	     					if(jDish.has("tipo_descr")) dish.descriptionType = jDish.getString("tipo_descr"); 
+     	     					menu.dishes[k] = dish;
      	     	     		}
+     						
      					}
+     					canteen.menus[j] = menu;
      	     		}
      				
      			}
