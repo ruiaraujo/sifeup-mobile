@@ -235,6 +235,10 @@
             android:name=".ui.studentarea.SubjectsActivity"
             android:configChanges="orientation|keyboardHidden" />
         <activity 
+            android:label="@string/title_subjects"
+            android:name=".ui.studentarea.SubjectDescriptionActivity"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity 
             android:label="@string/title_academic_path"
             android:name=".ui.studentarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden" />

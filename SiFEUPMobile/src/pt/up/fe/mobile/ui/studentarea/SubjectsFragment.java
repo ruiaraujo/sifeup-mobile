@@ -119,14 +119,15 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-		StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
+		/*StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
 		url.append("p_cad_codigo="+subjects.get(position).acronym);
 		int secondYear = UIUtils.secondYearOfSchoolYear();
 		int firstYear = secondYear -1;
 		url.append("&p_ano_lectivo=" + firstYear +"/" + secondYear);
 		url.append("&p_periodo=" +subjects.get(position).semester );
 		Uri uri = Uri.parse( url.toString() );
-		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
+		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );*/
+		startActivity( new Intent(getActivity(), SubjectDescriptionActivity.class));
 	}
 	
     /** Classe privada para a busca de dados ao servidor */

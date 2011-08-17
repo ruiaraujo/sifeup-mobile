@@ -87,6 +87,15 @@ public class SifeupAPI {
 		String NAME = "ficha_aluno";
 		String CODE = "pv_codigo";
 	}
+
+	private interface SubjectDescription {
+		String NAME = "ficha_uc";
+		String CODE = "pv_cad_codigo";
+		/** Not mandatory - if lacking assumed current.*/
+		String YEAR = "pv_ano_lectivo";
+		/** Not mandatory - if lacking assumed current.*/
+		String PERIOD = "pv_periodo";
+	}
 	
 	public interface Errors{
 		int NULL_PAGE = 0;
@@ -164,7 +173,17 @@ public class SifeupAPI {
 							( year==null?"":(LINK_SEP + Subjects.YEAR + EQUALS + year));
 	}
 	
-	
+
+	/**
+	 * Subject Description  Url for Web Service
+	 * @param code
+	 * @return 
+	 */
+	public static String getSubjectDescUrl( String code , String year , String per ){
+		return WEBSERVICE + SubjectDescription.NAME + WEBSERVICE_SEP + SubjectDescription.CODE + EQUALS + code +
+							( year==null?"":(LINK_SEP + SubjectDescription.YEAR + EQUALS + year) ) + 
+							( per==null?"":(LINK_SEP + SubjectDescription.PERIOD + EQUALS + per) );
+	}
 	/**
 	 * Printing MB Url for Web Service
 	 * @param code
@@ -230,6 +249,31 @@ public class SifeupAPI {
 	}
 	
 	
+	/**
+	 * Get Subject Description Reply
+	 * @param code 
+	 * @param year 
+	 * @param per 
+	 * @return
+	 */
+	public static String getSubjectDescReply( String code , String year , String per)
+	{
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(getSubjectDescUrl(code, year, per));
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
 	/**
 	 * GetPrinting MB  Reply
 	 * @param value

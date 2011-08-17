@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.service.Subject;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
@@ -35,10 +36,15 @@ import android.widget.AdapterView.OnItemClickListener;
 public class SubjectDescriptionFragment extends BaseFragment implements OnItemClickListener {
 	
     private ExpandableListView descriptionList;
-	
+	private String code = "EEC0070";
+	private String year = "2010/2011";
+	private String period = "1S";
+    Subject subject = new Subject();
 	 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subject Description");
     }
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,59 +56,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnItemCl
 		return getParentContainer();
 	}
  
-    /**
-     * Represents a subject description.
-     * Holds all data about it.
-     *
-     */
-    private class SubjectDescription{
-		public String acronym; // "EICXXXX"
-		public int year; // 3
-		public String namePt; // Sistemas Distribuidos
-		public String nameEn; // Distributed Systems
-		public String semester; // 2S
-    }
     
-    /** 
-	 * Subject Description Parser
-	 * Stores Description of Subject in @link{SubjectDescriptionFragment}
-	 * Returns true in case of correct parsing.
-	 * 
-	 * @param page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-    public boolean JSONSubjects(String page) throws JSONException{
-    	JSONObject jObject = new JSONObject(page);
-    	    	
-    	if(jObject.has("inscricoes")){
-    		Log.e("JSON", "founded subject description");
-    		JSONArray jArray = jObject.getJSONArray("inscricoes");
-    		
-    		// if year number is wrong, returns false
-    		if(jArray.length()==0)
-    			return false;
-    		
-    		// iterate over jArray
-    		for(int i = 0; i < jArray.length(); i++){
-    			// new JSONObject
-    			JSONObject jSubject = jArray.getJSONObject(i);
-    			// new Block
-    			SubjectDescription subject = new SubjectDescription();
-    			
-    			if(jSubject.has("dis_codigo")) subject.acronym = jSubject.getString("dis_codigo"); // Monday is index 0
-    			if(jSubject.has("ano_curricular")) subject.year = jSubject.getInt("ano_curricular");
-    			if(jSubject.has("nome")) subject.namePt = jSubject.getString("nome");
-    			if(jSubject.has("name")) subject.nameEn = jSubject.getString("name");
-    			if(jSubject.has("periodo")) subject.semester = jSubject.getString("periodo");
-    		}
-    		Log.e("JSON", "loaded subject description");
-    		return true;
-    	}
-    	Log.e("JSON", "subject description not found");
-    	return false;
-    }
-
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 		StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
@@ -147,7 +101,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnItemCl
 			             fillMaps.add(map);
 			         }*/
 			         // fill in the grid_item layout
-			         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
+			         //SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
 			        // list.setAdapter(adapter);
 			        // list.setOnItemClickListener(SubjectDescriptionFragment.this);
 			         showMainScreen();
@@ -184,22 +138,20 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnItemCl
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 		  	try {
-	    			page = SifeupAPI.getSubjectsReply(
-								SessionManager.getInstance().getLoginCode(),
-								"2010");
+	    			page = SifeupAPI.getSubjectDescReply(code,year,period);
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-		    				JSONSubjects(page);
-		    				return "Success";
+		    				if (subject.JSONSubject(page) )
+		    					return "Success";
+		    				else
+		    					return "";
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";	
 		    		}
-
-				return "";
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
 					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
