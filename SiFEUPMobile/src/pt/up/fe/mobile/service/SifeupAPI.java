@@ -97,6 +97,21 @@ public class SifeupAPI {
 		String PERIOD = "pv_periodo";
 	}
 	
+	private interface UcSchedule {
+		String NAME = "horario_uc";
+		String CODE = "pv_uc_codigo";
+	}
+	
+	private interface TeacherSchedule {
+		String NAME = "horario_docente";
+	}
+	
+	private interface RoomSchedule {
+		String NAME = "horario_sala";
+		String CODE = "pv_cod_edi";
+		String ROOM_CODE = "pv_cod_sala";
+	}
+		
 	public interface Errors{
 		int NULL_PAGE = 0;
 		int NO_AUTH = 1;
@@ -223,7 +238,46 @@ public class SifeupAPI {
 		return WEBSERVICE + "cantinas";
 	}
 	
+	/**
+	 * UC Schedule Url for Web Service
+	 * @param code
+	 * @param begin
+	 * @param end
+	 * @return Schedule Url
+	 */
+	public static String getUcScheduleUrl( String code , String begin , String end ){
+		return WEBSERVICE + UcSchedule.NAME + WEBSERVICE_SEP + UcSchedule.CODE + 
+					EQUALS + code + LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
+					LINK_SEP + Schedule.END + EQUALS + end;
+	}
 	
+	/**
+	 * Teacher Schedule Url for Web Service
+	 * @param code
+	 * @param begin
+	 * @param end
+	 * @return Schedule Url
+	 */
+	public static String getTeacherScheduleUrl( String code , String begin , String end ){
+		return WEBSERVICE + TeacherSchedule.NAME + WEBSERVICE_SEP +  Schedule.CODE + 
+					EQUALS + code + LINK_SEP + Schedule.BEGIN + EQUALS + begin +
+					LINK_SEP + Schedule.END + EQUALS + end;
+	}
+	
+	/**
+	 * Room Schedule Url for Web Service
+	 * @param code
+	 * @param begin
+	 * @param end
+	 * @return Schedule Url
+	 */
+	public static String getRoomScheduleUrl( String code , String roomCode, String begin , String end ){
+		return WEBSERVICE + RoomSchedule.NAME + WEBSERVICE_SEP + RoomSchedule.CODE + 
+					EQUALS + code + LINK_SEP + RoomSchedule.ROOM_CODE + EQUALS + roomCode +
+					LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
+					LINK_SEP + Schedule.END + EQUALS + end;
+	}
+		
 	/**
 	 * Get Canteens Reply
 	 * @param value
@@ -483,6 +537,87 @@ public class SifeupAPI {
 			do {
 				HttpsURLConnection httpConn = getUncheckedConnection(
 										getScheduleUrl( code, init, end ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	/**
+	 * UC Schedule query Reply from web service
+	 * @param code
+	 * @param init
+	 * @param end
+	 * @return
+	 */
+	public static String getUcScheduleReply( String code, String init, String end ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+										getUcScheduleUrl( code, init, end ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	/**
+	 * Teacher Schedule query Reply from web service
+	 * @param code
+	 * @param init
+	 * @param end
+	 * @return
+	 */
+	public static String getTeacherScheduleReply( String code, String init, String end ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+										getTeacherScheduleUrl( code, init, end ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	/**
+	 * Room Schedule query Reply from web service
+	 * @param code
+	 * @param init
+	 * @param end
+	 * @return
+	 */
+	public static String getRoomScheduleReply( String code,String roomCode, String init, String end ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+										getRoomScheduleUrl( code, roomCode, init, end ) );
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 				httpConn.connect();
 				page = getPage(httpConn.getInputStream());
