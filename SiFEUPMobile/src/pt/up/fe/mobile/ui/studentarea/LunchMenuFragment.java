@@ -37,9 +37,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -66,13 +63,16 @@ public class LunchMenuFragment extends BaseFragment
     private ViewPagerIndicator indicator;
 	private ArrayList<Canteen> canteens;
     private LayoutInflater mInflater;
-	public void onCreate(Bundle savedInstanceState) 
+    
+	@Override
+    public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Lunch Menu");
 	    canteens = new ArrayList<Canteen>();
 	}
-
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 
 	{
@@ -93,7 +93,7 @@ public class LunchMenuFragment extends BaseFragment
  	 * Build Pages
  	 */
  	private void buildPages(){
- 	// Create our custom adapter to supply pages to the viewpager.
+ 		// Create our custom adapter to supply pages to the viewpager.
         pagerAdapter = new PagerMenuAdapter();
 
         viewPager.setAdapter(pagerAdapter);
@@ -214,7 +214,6 @@ public class LunchMenuFragment extends BaseFragment
   		private Dish[] dishes;  		
   	}
   	
-  	
   	/**
   	 * Class Dish. Save the information of dish.
      *
@@ -255,7 +254,7 @@ public class LunchMenuFragment extends BaseFragment
      
      			Canteen canteen = new Canteen();
      			
-     			if(jBlock.has("codigo")) canteen.code = jBlock.getInt("codico"); 
+     			if(jBlock.has("codigo")) canteen.code = jBlock.getInt("codigo"); 
      			
      			if(jBlock.has("descricao")) canteen.description = jBlock.getString("descricao");
      			
@@ -359,8 +358,10 @@ public class LunchMenuFragment extends BaseFragment
     }
     
     private class MenusAdapter extends BaseExpandableListAdapter {
-        Canteen canteen;
-        public MenusAdapter(Canteen c){
+      
+    	Canteen canteen;
+        
+    	public MenusAdapter(Canteen c){
         	canteen = c;
         }
          
@@ -379,7 +380,8 @@ public class LunchMenuFragment extends BaseFragment
 
         
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-                View convertView, ViewGroup parent) {
+                View convertView, ViewGroup parent) 
+        {
         	View root = mInflater.inflate(R.layout.list_item_menu_dish, null );
         	Dish dish = (Dish) getChild(groupPosition, childPosition);
         	TextView description = (TextView) root.findViewById(R.id.dish_description);
@@ -402,7 +404,8 @@ public class LunchMenuFragment extends BaseFragment
         }
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-                ViewGroup parent) {
+                ViewGroup parent) 
+        {
             // Layout parameters for the ExpandableListView
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
                   ViewGroup.LayoutParams.MATCH_PARENT, 84);
