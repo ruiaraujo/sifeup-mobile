@@ -36,9 +36,11 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +59,6 @@ public class LunchMenuFragment extends BaseFragment
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  ViewPager; 
     private ViewPagerIndicator indicator;
-    private Dish[] dishes;	
 	private ArrayList<Canteen> canteens;
     
 	public void onCreate(Bundle savedInstanceState) 
@@ -87,7 +88,7 @@ public class LunchMenuFragment extends BaseFragment
  	 */
  	private void buildPages(){
  	// Create our custom adapter to supply pages to the viewpager.
-        pagerAdapter = new PagerMenuAdapter(getActivity().getSupportFragmentManager());
+        pagerAdapter = new PagerMenuAdapter();
 
         ViewPager.setAdapter(pagerAdapter);
         
@@ -109,7 +110,6 @@ public class LunchMenuFragment extends BaseFragment
         
         // Start at a custom position
         ViewPager.setCurrentItem(0);
-        dishes = pagerAdapter.getCanteen(0).menus[0].dishes;
  	}
  	
 	
@@ -310,31 +310,43 @@ public class LunchMenuFragment extends BaseFragment
  	 * @author Ângela Igreja
  	 *
  	 */
-    class PagerMenuAdapter extends FragmentStatePagerAdapter implements ViewPagerIndicator.PageInfoProvider 
+    class PagerMenuAdapter extends PagerAdapter implements ViewPagerIndicator.PageInfoProvider 
     {
     	
-    	public PagerMenuAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int pos) 
-		{
-			return MenuFragment.getInstance(dishes);
-		}
-
-		@Override
-		public int getCount() {
-			return canteens.size();
-		}
-		
+    	
 		@Override
 		public String getTitle(int pos){
 			return canteens.get(pos).description;
 		}
 		
-		public Canteen getCanteen(int pos){
-			return canteens.get(pos);
+		public void destroyItem(View collection, int position, Object view) {
+            ((ViewPager) collection).removeView((View) view);
+			
 		}
+
+		public void finishUpdate(View arg0) {}
+
+		public int getCount() {
+			return canteens.size();
+		}
+
+		public Object instantiateItem(View collection, int position) {
+			//((ViewPager) collection).addView(mDays.get(position).rootView,0);
+			return null;//mDays.get(position).rootView;
+		}
+
+		public boolean isViewFromObject(View view, Object object) {
+            return view==((View)object);
+		}
+
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+
+		public Parcelable saveState() {
+			return null;
+		}
+
+		public void startUpdate(View arg0) {}
+
+		
     }
 }
