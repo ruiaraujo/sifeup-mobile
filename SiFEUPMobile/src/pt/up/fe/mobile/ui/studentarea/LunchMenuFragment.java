@@ -224,9 +224,9 @@ public class LunchMenuFragment extends BaseFragment
   	public class Dish implements Serializable
   	{
   		private String state;
-  		public String description;
+  		private String description;
   		private int type;
-  		public String descriptionType;
+  		private String descriptionType;
   		
   		
   	}
@@ -359,7 +359,6 @@ public class LunchMenuFragment extends BaseFragment
     }
     
     private class MenusAdapter extends BaseExpandableListAdapter {
-        // Sample data set.  children[i] contains the children (String[]) for groups[i].
         Canteen canteen;
         public MenusAdapter(Canteen c){
         	canteen = c;
@@ -381,7 +380,13 @@ public class LunchMenuFragment extends BaseFragment
         
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
-            return null;
+        	View root = mInflater.inflate(R.layout.list_item_menu_dish, null );
+        	Dish dish = (Dish) getChild(groupPosition, childPosition);
+        	TextView description = (TextView) root.findViewById(R.id.dish_description);
+        	TextView type = (TextView) root.findViewById(R.id.dish_description_type);
+            description.setText(dish.description);
+            type.setText(dish.descriptionType);
+        	return root;
         }
 
         public Object getGroup(int groupPosition) {
@@ -413,7 +418,7 @@ public class LunchMenuFragment extends BaseFragment
         }
 
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
+            return false;
         }
 
         public boolean hasStableIds() {
