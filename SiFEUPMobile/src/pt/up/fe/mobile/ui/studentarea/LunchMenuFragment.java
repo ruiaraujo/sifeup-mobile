@@ -46,6 +46,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 /**
@@ -57,10 +58,10 @@ import android.widget.Toast;
 public class LunchMenuFragment extends BaseFragment 
 {
 	private PagerMenuAdapter pagerAdapter;
-    private ViewPager  ViewPager; 
+    private ViewPager  viewPager; 
     private ViewPagerIndicator indicator;
 	private ArrayList<Canteen> canteens;
-    
+    private LayoutInflater mInflater;
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -72,8 +73,9 @@ public class LunchMenuFragment extends BaseFragment
 	            Bundle savedInstanceState) 
 	{
 		super.onCreateView(inflater, container, savedInstanceState);
+		mInflater = inflater;
 		View root = inflater.inflate(R.layout.menus_canteens, getParentContainer(), true);
-        ViewPager = (ViewPager)root.findViewById(R.id.pager_menu);
+        viewPager = (ViewPager)root.findViewById(R.id.pager_menu);
        
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_menu);
@@ -90,7 +92,7 @@ public class LunchMenuFragment extends BaseFragment
  	// Create our custom adapter to supply pages to the viewpager.
         pagerAdapter = new PagerMenuAdapter();
 
-        ViewPager.setAdapter(pagerAdapter);
+        viewPager.setAdapter(pagerAdapter);
         
         // Initialize the indicator. We need some information here:
         // * What page do we start on.
@@ -106,10 +108,10 @@ public class LunchMenuFragment extends BaseFragment
 		indicator.setArrows(prev, next);
 		
         // Set the indicator as the pageChangeListener
-        ViewPager.setOnPageChangeListener(indicator);
+        viewPager.setOnPageChangeListener(indicator);
         
         // Start at a custom position
-        ViewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(0);
  	}
  	
 	
@@ -324,15 +326,15 @@ public class LunchMenuFragment extends BaseFragment
 			
 		}
 
-		public void finishUpdate(View arg0) {}
-
 		public int getCount() {
 			return canteens.size();
 		}
 
 		public Object instantiateItem(View collection, int position) {
-			//((ViewPager) collection).addView(mDays.get(position).rootView,0);
-			return null;//mDays.get(position).rootView;
+			View root = mInflater.inflate(R.layout.menu, viewPager, false);
+			ExpandableListView list = (ExpandableListView) root.findViewById(R.id.menu_list);
+			((ViewPager) collection).addView(root,0);
+			return root;
 		}
 
 		public boolean isViewFromObject(View view, Object object) {
@@ -347,6 +349,7 @@ public class LunchMenuFragment extends BaseFragment
 
 		public void startUpdate(View arg0) {}
 
-		
+		public void finishUpdate(View arg0) {}
+
     }
 }
