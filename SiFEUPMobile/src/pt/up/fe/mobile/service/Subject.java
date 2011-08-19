@@ -15,7 +15,7 @@ import android.util.Log;
  *
  */
 @SuppressWarnings("serial")
-public class Subject  implements Serializable{
+public class Subject  implements Serializable {
 	/** Subject code - EIC0083 */
 	private String code;
 	

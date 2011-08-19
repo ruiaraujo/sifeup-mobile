@@ -174,7 +174,6 @@ public class SifeupAPI {
 		return WEBSERVICE + Student.NAME + WEBSERVICE_SEP + Student.CODE + EQUALS + code ;
 	}
 	
-	
 	/**
 	 * Employee Url for Web Service
 	 * @param code
@@ -183,7 +182,6 @@ public class SifeupAPI {
 	public static String getEmployeeUrl( String code ){
 		return WEBSERVICE + Employee.NAME + WEBSERVICE_SEP +  Employee.CODE + EQUALS + code ;
 	}
-	
 	
 	/**
 	 * Printing Url for Web Service
@@ -204,7 +202,6 @@ public class SifeupAPI {
 							( year==null?"":(LINK_SEP + Subjects.YEAR + EQUALS + year));
 	}
 	
-
 	/**
 	 * Subject Description  Url for Web Service
 	 * @param code
@@ -215,6 +212,7 @@ public class SifeupAPI {
 							( year==null?"":(LINK_SEP + SubjectDescription.YEAR + EQUALS + year) ) + 
 							( per==null?"":(LINK_SEP + SubjectDescription.PERIOD + EQUALS + per) );
 	}
+	
 	/**
 	 * Printing MB Url for Web Service
 	 * @param code
@@ -233,7 +231,6 @@ public class SifeupAPI {
 		return WEBSERVICE + AcademicPath.NAME + WEBSERVICE_SEP + AcademicPath.CODE + EQUALS + code;
 	}
 	
-
 	/**
 	 * Students Search Url for Web Service
 	 * @param numPage 
@@ -245,7 +242,6 @@ public class SifeupAPI {
 						LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
 	
-
 	/**
 	 * Canteens Url for Web Service
 	 * @return 
@@ -344,6 +340,7 @@ public class SifeupAPI {
 		}
 		return page;
 	}
+	
 	/**
 	 * GetPrinting MB  Reply
 	 * @param value
