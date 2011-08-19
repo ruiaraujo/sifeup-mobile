@@ -43,10 +43,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -333,6 +337,7 @@ public class LunchMenuFragment extends BaseFragment
 		public Object instantiateItem(View collection, int position) {
 			View root = mInflater.inflate(R.layout.menu, viewPager, false);
 			ExpandableListView list = (ExpandableListView) root.findViewById(R.id.menu_list);
+			list.setAdapter(new MenusAdapter(canteens.get(position)));
 			((ViewPager) collection).addView(root,0);
 			return root;
 		}
@@ -350,6 +355,70 @@ public class LunchMenuFragment extends BaseFragment
 		public void startUpdate(View arg0) {}
 
 		public void finishUpdate(View arg0) {}
+
+    }
+    
+    private class MenusAdapter extends BaseExpandableListAdapter {
+        // Sample data set.  children[i] contains the children (String[]) for groups[i].
+        Canteen canteen;
+        public MenusAdapter(Canteen c){
+        	canteen = c;
+        }
+         
+        
+        public Object getChild(int groupPosition, int childPosition) {
+            return canteen.menus[groupPosition].dishes[childPosition];
+        }
+
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        public int getChildrenCount(int groupPosition) {
+            return canteen.menus[groupPosition].dishes.length;
+        }
+
+        
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+                View convertView, ViewGroup parent) {
+            return null;
+        }
+
+        public Object getGroup(int groupPosition) {
+            return canteen.menus[groupPosition].date;
+        }
+
+        public int getGroupCount() {
+            return canteen.menus.length;
+        }
+
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+                ViewGroup parent) {
+            // Layout parameters for the ExpandableListView
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+                  ViewGroup.LayoutParams.MATCH_PARENT, 84);
+
+            TextView textView = new TextView(getActivity());
+            textView.setLayoutParams(lp);
+            // Center the text vertically
+            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            // Set the text starting position
+            textView.setPadding(84, 0, 0, 0);
+            textView.setText(getGroup(groupPosition).toString());
+            return textView;
+        }
+
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
+        public boolean hasStableIds() {
+            return true;
+        }
 
     }
 }
