@@ -27,7 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Canteen;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.service.Canteen.Dish;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
@@ -164,7 +166,7 @@ public class LunchMenuFragment extends BaseFragment
  			{	
     			page = SifeupAPI.getCanteensReply();
     			
-    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
+    			int error =	SifeupAPI.JSONError(page);
 	    		
     			switch (error)
 	    		{
@@ -178,7 +180,7 @@ public class LunchMenuFragment extends BaseFragment
 	    		}
 
  	    		return "";
- 			} catch (/*JSONException*/Exception e) {
+ 			} catch ( JSONException e) {
  				if ( getActivity() != null ) 
  				//	Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
  				e.printStackTrace();
@@ -187,48 +189,9 @@ public class LunchMenuFragment extends BaseFragment
  		}
      }
 
-  	/**
-  	 * Class Canteen. Save the name and menus of the canteen.
-     *
-  	 * @author Ângela Igreja
-  	 *
-  	 */
-  	private class Canteen implements Serializable
-  	{
-  		private int code;
-  		private String description;
-  		private String timetable;
-  		private Menu[] menus;
-  	}
-  	
-	/**
-  	 * Class Menu. Save the information of menu.
-     *
-  	 * @author Ângela Igreja
-  	 *
-  	 */
-  	private class Menu implements Serializable
-  	{
-  		private String state;
-  		private String date;
-  		private Dish[] dishes;  		
-  	}
-  	
-  	/**
-  	 * Class Dish. Save the information of dish.
-     *
-  	 * @author Ângela Igreja
-  	 *
-  	 */
-  	public class Dish implements Serializable
-  	{
-  		private String state;
-  		private String description;
-  		private int type;
-  		private String descriptionType;
-  		
-  		
-  	}
+
+
+
      
      /** 
  	 * Canteens Parser.
@@ -254,51 +217,7 @@ public class LunchMenuFragment extends BaseFragment
      
      			Canteen canteen = new Canteen();
      			
-     			if(jBlock.has("codigo")) canteen.code = jBlock.getInt("codigo"); 
-     			
-     			if(jBlock.has("descricao")) canteen.description = jBlock.getString("descricao");
-     			
-     			if(jBlock.has("horario")) canteen.timetable = jBlock.getString("horario");
-     			
-     			if(jBlock.has("ementas"))
-     			{
-     				JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
-     				canteen.menus = new Menu[jArrayMenus.length()];
-     				for(int j = 0; j < jArrayMenus.length(); j++)
-     	     		{
-     					JSONObject jMenu = jArrayMenus.getJSONObject(j);
-     					
-     					Menu menu = new Menu();
-     					
-     					if(jMenu.has("estado")) menu.state = jMenu.getString("estado"); 
-     					
-     					if(jMenu.has("data")) menu.date = jMenu.getString("data"); 
-     					
-     					if(jMenu.has("pratos"))
-     					{
-     						JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
-     						menu.dishes = new Dish[jArrayDishs.length()];
-     						for(int k = 0; k < jArrayDishs.length(); k++)
-     	     	     		{
-     	     					JSONObject jDish = jArrayDishs.getJSONObject(k);
-     	     					
-     	     					Dish dish = new Dish();
-     	     					
-     	     					if(jDish.has("estado")) dish.state = jDish.getString("estado"); 
-     	     					
-     	     					if(jDish.has("descricao")) dish.description = jDish.getString("descricao");
-     	     					
-     	     					if(jDish.has("tipo")) dish.type = jDish.getInt("tipo"); 
-     	     					
-     	     					if(jDish.has("tipo_descr")) dish.descriptionType = jDish.getString("tipo_descr"); 
-     	     					menu.dishes[k] = dish;
-     	     	     		}
-     						
-     					}
-     					canteen.menus[j] = menu;
-     	     		}
-     				
-     			}
+     			canteen.parseJson(jBlock);
      			// add canteen to canteens
      			this.canteens.add(canteen);
      		}
@@ -321,7 +240,7 @@ public class LunchMenuFragment extends BaseFragment
     	
 		@Override
 		public String getTitle(int pos){
-			return canteens.get(pos).description;
+			return canteens.get(pos).getDescription();
 		}
 		
 		public void destroyItem(View collection, int position, Object view) {
@@ -367,7 +286,7 @@ public class LunchMenuFragment extends BaseFragment
          
         
         public Object getChild(int groupPosition, int childPosition) {
-            return canteen.menus[groupPosition].dishes[childPosition];
+            return canteen.getDish(groupPosition , childPosition);
         }
 
         public long getChildId(int groupPosition, int childPosition) {
@@ -375,7 +294,7 @@ public class LunchMenuFragment extends BaseFragment
         }
 
         public int getChildrenCount(int groupPosition) {
-            return canteen.menus[groupPosition].dishes.length;
+            return canteen.getDishesCount(groupPosition);
         }
 
         
@@ -386,17 +305,17 @@ public class LunchMenuFragment extends BaseFragment
         	Dish dish = (Dish) getChild(groupPosition, childPosition);
         	TextView description = (TextView) root.findViewById(R.id.dish_description);
         	TextView type = (TextView) root.findViewById(R.id.dish_description_type);
-            description.setText(dish.description);
-            type.setText(dish.descriptionType);
+            description.setText(dish.getDescription());
+            type.setText(dish.getDescriptionType());
         	return root;
         }
 
         public Object getGroup(int groupPosition) {
-            return canteen.menus[groupPosition].date;
+            return canteen.getDate(groupPosition);
         }
 
         public int getGroupCount() {
-            return canteen.menus.length;
+            return canteen.getMenuCount();
         }
 
         public long getGroupId(int groupPosition) {
