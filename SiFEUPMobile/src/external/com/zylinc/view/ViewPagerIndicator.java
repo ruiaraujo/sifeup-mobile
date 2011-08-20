@@ -23,22 +23,21 @@ import android.widget.TextView;
 public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeListener {
 	private static final int PADDING = 5;
 	
-	TextView mPrevious;
-	TextView mCurrent;
-	TextView mNext;
+	private TextView mPrevious;
+	private TextView mCurrent;
+	private TextView mNext;
 	
-	LinearLayout mPreviousGroup;
-	LinearLayout mNextGroup;
+	private LinearLayout mPreviousGroup;
+	private LinearLayout mNextGroup;
 	
-	int mArrowPadding;
-	int mSize;
+	private int mArrowPadding;
+	private int mSize;
 	
-	ImageView mCurrentIndicator;
-	ImageView mPrevArrow;
-	ImageView mNextArrow;
+	private ImageView mPrevArrow;
+	private ImageView mNextArrow;
 	
-	int[] mFocusedTextColor;
-	int[] mUnfocusedTextColor;
+	private int[] mFocusedTextColor;
+	private int[] mUnfocusedTextColor;
 	
 	public interface PageInfoProvider{
 		String getTitle(int pos);
@@ -111,7 +110,6 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		
 		mPrevious.setPadding(PADDING, 0, 0, 0);
 		mNext.setPadding(0, 0, PADDING, 0);
-		
 		mArrowPadding = PADDING + prev.getIntrinsicWidth();
 		
 		mNextGroup.addView(mNextArrow, arrowLayoutParams);
@@ -289,6 +287,23 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 	public void onPageSelected(int position) {
 		// Reset padding when the page is finally selected (May not be necessary)
 		mCurrent.setPadding(0, 0, 0, 0);
+	}
+	
+	/**
+	 * Setting the indicator to only show the center textview.
+	 * @param centerOnly if true only the center textview is shown
+	 */
+	public void onlyCenterText( boolean centerOnly ){
+		if ( !centerOnly )
+		{
+			mPrevious.setVisibility(View.VISIBLE);
+			mNext.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			mPrevious.setVisibility(View.GONE);
+			mNext.setVisibility(View.GONE);
+		}
 	}
 
 }

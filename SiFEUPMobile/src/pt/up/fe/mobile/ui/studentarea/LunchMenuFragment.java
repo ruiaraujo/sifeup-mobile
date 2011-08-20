@@ -105,7 +105,7 @@ public class LunchMenuFragment extends BaseFragment
         // * How many pages are there in total
         // * A callback to get page titles
 		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
-		
+		indicator.onlyCenterText(true);
 		Resources res = getResources();
 		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
 		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
