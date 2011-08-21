@@ -1,6 +1,5 @@
 package pt.up.fe.mobile.ui.studentarea;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,13 +15,10 @@ import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class SubjectsFragment extends BaseFragment implements OnItemClickListener {
@@ -43,7 +38,7 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 	 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subjects");
        
 
     }
@@ -127,6 +122,7 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 		url.append("&p_periodo=" +subjects.get(position).semester );
 		Uri uri = Uri.parse( url.toString() );
 		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );*/
+		
 		startActivity( new Intent(getActivity(), SubjectDescriptionActivity.class));
 	}
 	

@@ -95,6 +95,190 @@ public class Subject  implements Serializable {
 		software = new ArrayList<Software>();
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getNamePt() {
+		return namePt;
+	}
+
+	public void setNamePt(String namePt) {
+		this.namePt = namePt;
+	}
+
+	public String getNameEn() {
+		return nameEn;
+	}
+
+	public void setNameEn(String nameEn) {
+		this.nameEn = nameEn;
+	}
+
+	public String getAcronym() {
+		return acronym;
+	}
+
+	public void setAcronym(String acronym) {
+		this.acronym = acronym;
+	}
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
+
+	public String getUnitCode() {
+		return unitCode;
+	}
+
+	public void setUnitCode(String unitCode) {
+		this.unitCode = unitCode;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getSemestre() {
+		return semestre;
+	}
+
+	public void setSemestre(String semestre) {
+		this.semestre = semestre;
+	}
+
+	public List<Book> getBibliography() {
+		return bibliography;
+	}
+
+	public void setBibliography(List<Book> bibliography) {
+		this.bibliography = bibliography;
+	}
+
+	public List<Workload> getWorkload() {
+		return workload;
+	}
+
+	public void setWorkload(List<Workload> workload) {
+		this.workload = workload;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getObjectives() {
+		return objectives;
+	}
+
+	public void setObjectives(String objectives) {
+		this.objectives = objectives;
+	}
+
+	public String getMetodology() {
+		return metodology;
+	}
+
+	public void setMetodology(String metodology) {
+		this.metodology = metodology;
+	}
+
+	public List<EvaluationComponent> getEvaluation() {
+		return evaluation;
+	}
+
+	public void setEvaluation(List<EvaluationComponent> evaluation) {
+		this.evaluation = evaluation;
+	}
+
+	public String getEvaluationFormula() {
+		return evaluationFormula;
+	}
+
+	public void setEvaluationFormula(String evaluationFormula) {
+		this.evaluationFormula = evaluationFormula;
+	}
+
+	public String getFrequenceCond() {
+		return frequenceCond;
+	}
+
+	public void setFrequenceCond(String frequenceCond) {
+		this.frequenceCond = frequenceCond;
+	}
+
+	public String getObservations() {
+		return observations;
+	}
+
+	public void setObservations(String observations) {
+		this.observations = observations;
+	}
+
+	public String getEvaluationProc() {
+		return evaluationProc;
+	}
+
+	public void setEvaluationProc(String evaluationProc) {
+		this.evaluationProc = evaluationProc;
+	}
+
+	public String getImprovementProc() {
+		return improvementProc;
+	}
+
+	public void setImprovementProc(String improvementProc) {
+		this.improvementProc = improvementProc;
+	}
+
+	public String getEvaluationExams() {
+		return evaluationExams;
+	}
+
+	public void setEvaluationExams(String evaluationExams) {
+		this.evaluationExams = evaluationExams;
+	}
+
+	public List<Responsible> getResponsibles() {
+		return responsibles;
+	}
+
+	public void setResponsibles(List<Responsible> responsibles) {
+		this.responsibles = responsibles;
+	}
+
+	public List<WorloadDesc> getWorloadDesc() {
+		return worloadDesc;
+	}
+
+	public void setWorloadDesc(List<WorloadDesc> worloadDesc) {
+		this.worloadDesc = worloadDesc;
+	}
+
+	public List<Software> getSoftware() {
+		return software;
+	}
+
+	public void setSoftware(List<Software> software) {
+		this.software = software;
+	}
+	
 	/** */
 	private class Book implements Serializable{
 		
