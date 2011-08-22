@@ -2,9 +2,6 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 
-
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -221,7 +218,6 @@ public class LunchMenuFragment extends BaseFragment
  	 */
     class PagerMenuAdapter extends PagerAdapter implements ViewPagerIndicator.PageInfoProvider 
     {
-    	
     	
 		@Override
 		public String getTitle(int pos){

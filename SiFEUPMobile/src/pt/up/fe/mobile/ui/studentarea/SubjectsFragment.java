@@ -13,6 +13,7 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -114,6 +115,7 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+		
 		/*StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
 		url.append("p_cad_codigo="+subjects.get(position).acronym);
 		int secondYear = UIUtils.secondYearOfSchoolYear();
@@ -123,7 +125,19 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 		Uri uri = Uri.parse( url.toString() );
 		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );*/
 		
-		startActivity( new Intent(getActivity(), SubjectDescriptionActivity.class));
+		
+		//TODO: passar parameteros a actividade: code, year, period
+		
+		if ( getActivity() == null )
+			return;
+		Intent i = new Intent(getActivity() , SubjectDescriptionActivity.class);
+		// assumed only one page of results
+		i.putExtra(SubjectDescriptionActivity.SUBJECT_CODE, subjects.get(position).acronym);
+		i.putExtra(SubjectDescriptionActivity.SUBJECT_YEAR, subjects.get(position).year);
+		i.putExtra(SubjectDescriptionActivity.SUBJECT_PERIOD, subjects.get(position).semester);
+	
+		startActivity(i);
+
 	}
 	
     /** Classe privada para a busca de dados ao servidor */
