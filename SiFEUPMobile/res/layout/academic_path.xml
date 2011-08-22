@@ -40,7 +40,7 @@
 		 	/>		
 		 	
 	</LinearLayout>
-    <ListView android:id="@+id/path_ucs_grade"
+    <ExpandableListView android:id="@+id/path_ucs_grade"
 		android:layout_height="wrap_content" 
 		android:layout_width="fill_parent"/>
 		

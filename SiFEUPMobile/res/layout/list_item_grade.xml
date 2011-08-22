@@ -2,6 +2,7 @@
     style="@style/SimpleListItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="70dip"
     android:background="@android:drawable/list_selector_background">
     <TextView android:id="@+id/grade_subject_name"
         android:layout_gravity="left|center_vertical"

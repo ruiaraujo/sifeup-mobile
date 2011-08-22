@@ -1,0 +1,9 @@
+<TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/grade_marker"
+	android:layout_gravity="left|center_vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:paddingLeft="48dip"
+	android:paddingTop="10dip"
+	android:paddingBottom="10dip"
+	style="@style/ListItemTitle" />

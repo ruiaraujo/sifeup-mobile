@@ -1,8 +1,10 @@
+
 package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -45,7 +49,8 @@ public class AcademicPathFragment extends BaseFragment {
 	private TextView year;
 	private TextView entries;
 	
-	private ListView grades;
+	private ExpandableListView grades;
+	private LayoutInflater mInflater;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +63,9 @@ public class AcademicPathFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		mInflater = inflater;
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, getParentContainer(), true);
-		grades = (ListView) root.findViewById(R.id.path_ucs_grade);
+		grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
 		year = (TextView) root.findViewById(R.id.path_year);
 		average = (TextView) root.findViewById(R.id.path_average);
 		entries = (TextView) root.findViewById(R.id.path_entries);
@@ -93,7 +99,8 @@ public class AcademicPathFragment extends BaseFragment {
 		private String average; // "media"
 		private int courseYears; // "anos_curso"
 		private int numberEntries; // "inscricoes_ucs"
-		ArrayList<UC> ucs = new ArrayList<UC>();
+		private int baseYear;
+		private Map<Integer , Year> ucs = new HashMap<Integer, Year>();
 	}
 	
 	/**
@@ -114,6 +121,12 @@ public class AcademicPathFragment extends BaseFragment {
 		private String type; // "tipo"
 		private String name; // "nome"
 		private String nameEn; // "name"
+	}
+	
+	private class Year{
+		private int year;
+		private List<UC> firstSemester = new ArrayList<UC>();
+		private List<UC> secondSemester = new ArrayList<UC>();
 	}
 	
 	/**
@@ -137,7 +150,7 @@ public class AcademicPathFragment extends BaseFragment {
 			if(jObject.has("media")) academicPath.average = jObject.getString("media");
 			if(jObject.has("anos_curso")) academicPath.courseYears = jObject.getInt("anos_curso");
 			if(jObject.has("inscricoes_ucs")) academicPath.numberEntries = jObject.getInt("inscricoes_ucs");
-			
+			academicPath.baseYear = Integer.MAX_VALUE;
 			// iterate over ucs
 			JSONArray jArray = jObject.getJSONArray("ucs");
 			for(int i = 0; i < jArray.length(); i++){
@@ -156,9 +169,23 @@ public class AcademicPathFragment extends BaseFragment {
 				if(jUc.has("tipo")) uc.type = jUc.getString("tipo");
 				if(jUc.has("nome")) uc.name = jUc.getString("nome");
 				if(jUc.has("name")) uc.nameEn = jUc.getString("name");
-				
+				academicPath.baseYear = Math.min(academicPath.baseYear, uc.year);
+				Year year = academicPath.ucs.get(uc.year);
 				// add uc to academic path
-				academicPath.ucs.add(uc);
+				if ( year ==  null ) 
+				{
+					year = new Year();
+					year.year = uc.year;
+					academicPath.ucs.put(uc.year, year);
+				}
+				if ( uc.semester == 1 )
+				{
+					year.firstSemester.add(uc);
+				}
+				else if ( uc.semester == 2)
+				{
+					year.secondSemester.add(uc);
+				}
 			}
 			Log.e("JSON", "academic path loaded");
 			return true;
@@ -185,21 +212,9 @@ public class AcademicPathFragment extends BaseFragment {
 				average.setText(getString(R.string.path_average, academicPath.average));
 				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
 				year.setText(getString(R.string.path_year, academicPath.courseYears));
-				String[] from = new String[] {"name", "number"};
-		         int[] to = new int[] { R.id.grade_subject_name, R.id.grade_number };
-			         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for(UC e : academicPath.ucs){
-		             HashMap<String, String> map = new HashMap<String, String>();
-		             map.put(from[0], e.name);
-		             map.put(from[1], getString(R.string.path_grade , e.grade));
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_grade, from, to);
-		         grades.setAdapter(adapter);
-		         showMainScreen();
+
+		        grades.setAdapter(new AcademicPathAdapter()); 
+				showMainScreen();
     		}
 			else if ( result.equals("Error")){	
 				Log.e("AcademicPath","error");
@@ -241,6 +256,97 @@ public class AcademicPathFragment extends BaseFragment {
 			return "";
 		}
 		 
+	}
+	
+	private class AcademicPathAdapter extends BaseExpandableListAdapter {
+
+		public Object getChild(int groupPosition, int childPosition) {
+			Year year = academicPath.ucs.get(groupPosition + academicPath.baseYear);
+			if ( childPosition == 0 )
+			{
+				//first marker
+				return null;
+			}
+			else if ( year.firstSemester.size() + 1 == childPosition )
+			{
+				// second marker
+				return null;
+			}
+			UC uc = null;
+			if ( childPosition <= year.firstSemester.size() + 1  )
+				uc = year.firstSemester.get(childPosition-1);
+			else
+				uc = year.secondSemester.get(childPosition-2-year.firstSemester.size());
+			return uc;
+		}
+
+		public long getChildId(int groupPosition, int childPosition) {
+			return childPosition;
+		}
+
+		public View getChildView(int groupPosition, int childPosition,
+				boolean isLastChild, View convertView, ViewGroup parent) {
+			UC uc = (UC) getChild(groupPosition, childPosition);
+			if ( uc == null  )
+			{
+				TextView marker = (TextView) mInflater.inflate(R.layout.list_item_grade_marker, null);
+				if ( childPosition == 0 )
+				{
+					//first marker
+					marker.setText(getString(R.string.path_semestre, 1));
+				}
+				else
+				{
+					// second marker
+					marker.setText(getString(R.string.path_semestre, 2));
+				}
+				marker.setPadding(marker.getPaddingLeft() + 16 , 
+								marker.getPaddingTop(),
+								marker.getPaddingRight(),
+								marker.getPaddingBottom());
+				return marker;
+			}
+			View root = mInflater.inflate(R.layout.list_item_grade, null);
+			TextView gradeName = (TextView) root.findViewById(R.id.grade_subject_name);
+			TextView gradeNumber = (TextView) root.findViewById(R.id.grade_number);
+			gradeName.setText(uc.name);
+			gradeNumber.setText( getString(R.string.path_grade , uc.grade));
+			return root;
+		}
+
+		public int getChildrenCount(int groupPosition) {
+			Year year = academicPath.ucs.get(groupPosition + academicPath.baseYear);
+			return year.firstSemester.size() + year.secondSemester.size() + 2;
+		}
+
+		public Object getGroup(int groupPosition) {
+			return getString(R.string.path_year, groupPosition + 1);
+		}
+
+		public int getGroupCount() {
+			return academicPath.ucs.size();
+		}
+
+		public long getGroupId(int groupPosition) {
+			return groupPosition;
+		}
+
+		public View getGroupView(int groupPosition, boolean isExpanded,
+				View convertView, ViewGroup parent) {
+			if ( convertView == null )
+				convertView = mInflater.inflate(R.layout.list_item_grade_marker, null);
+			((TextView) convertView).setText((CharSequence) getGroup(groupPosition));
+			return convertView;
+		}
+
+		public boolean hasStableIds() {
+			return true;
+		}
+
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			return false;
+		}
+		
 	}
 	
 }
