@@ -81,6 +81,10 @@
   	<string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
   	<string name="description_now">Go to Now</string>
   	
+  	<!-- Class Description -->
+    <string name="class_teacher">Teacher: <xliff:g id="teacher">%1$s</xliff:g></string>
+  	<string name="class_room">Room: <xliff:g id="teacher">%1$s</xliff:g></string>
+  	
   	<!-- Exams -->
   	<string name="title_exams">Exams</string>
   	<string name="btn_exams">Exams</string>

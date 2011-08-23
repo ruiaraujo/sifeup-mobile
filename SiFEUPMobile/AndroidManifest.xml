@@ -156,6 +156,12 @@
          android:name=".ui.studentservices.ScholarProfitActivity"
          android:label="@string/title_scholar_profit"
          android:configChanges="orientation|keyboardHidden" />             
+             	
+        <activity
+        	android:name=".ui.studentarea.ClassDescriptionActivity"
+            android:label="@string/title_schedule"
+            android:configChanges="orientation|keyboardHidden"/>
+
             
         <activity
             android:label="@string/title_tuition"

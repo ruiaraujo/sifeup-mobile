@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Block;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -29,6 +30,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -55,6 +57,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -68,7 +71,7 @@ import android.widget.ViewSwitcher;
  *
  */
 public class ScheduleFragment extends BaseFragment implements
-			ObservableScrollView.OnScrollListener, OnPageChangeListener {
+			ObservableScrollView.OnScrollListener, OnPageChangeListener, OnClickListener {
     private ViewPager mPager;
     private TextView mTitle;
     private int mTitleCurrentDayIndex = -1;
@@ -81,7 +84,7 @@ public class ScheduleFragment extends BaseFragment implements
     private LayoutInflater mInflater;
     private boolean fetchingPreviousWeek = false;
     private boolean fetchingNextWeek = false;
-    private int blockOffset = 0;
+    
     /**
      * The key for the student code in the intent.
      */
@@ -152,14 +155,6 @@ public class ScheduleFragment extends BaseFragment implements
 		if ( personCode == null )
 			personCode = SessionManager.getInstance().getLoginCode();
 		new ScheduleTask().execute();
-
-
-       
-/*        mWorkspace.setOnScrollListener(new Workspace.OnScrollListener() {
-            public void onScroll(float screenFraction) {
-                updateWorkspaceHeader(Math.round(screenFraction));
-            }
-        }, true);*/
 
         return getParentContainer();
     }
@@ -304,35 +299,12 @@ public class ScheduleFragment extends BaseFragment implements
     		mDays.get(i).blocksView.removeAllBlocks();
     }
 
-    /**
-     * 
-     * Represents a lecture.
-     * Holds all data about it.
-     * (time, place, teacher)
-     *
-     */
-    private class Block implements Serializable{
-    	private int weekDay; // [1 ... 6]
-    	private int startTime; // seconds from midnight
-    	
-    	private String lectureCode; // EIC0036
-    	private String lectureAcronym; // ex: SDIS
-    	private String lectureType; // T|TP|P
-    	private double lectureDuration; // 2; 1,5 (in hours)
-    	private String classAcronym; // 3MIEIC1
-    	
-    	private String teacherAcronym; // RMA
-    	private String teacherCode; // 466651
-    	
-    	private String roomCode; // 002
-    	private String buildingCode; // B
-    	private String semester; // 2S
-    }
     
     /**
      * A helper class containing object references related to a particular day in the schedule.
      */
-    private class Day implements Serializable{
+    @SuppressWarnings("serial")
+	private class Day implements Serializable{
         private ViewGroup rootView;
         private ObservableScrollView scrollView;
         private View nowView;
@@ -371,23 +343,23 @@ public class ScheduleFragment extends BaseFragment implements
     			// new Block
     			Block block = new Block();
     			
-    			if(jBlock.has("dia")) block.weekDay = jBlock.getInt("dia") - 2; // Monday is index 0
-    			if(jBlock.has("hora_inicio")) block.startTime = jBlock.getInt("hora_inicio");
-    			if(jBlock.has("cad_codigo")) block.lectureCode = jBlock.getString("cad_codigo");
-    			if(jBlock.has("cad_sigla")) block.lectureAcronym = jBlock.getString("cad_sigla");
-    			if(jBlock.has("tipo")) block.lectureType = jBlock.getString("tipo");
-    			if(jBlock.has("aula_duracao")) block.lectureDuration = jBlock.getDouble("aula_duracao");
-    			if(jBlock.has("turma_sigla")) block.classAcronym = jBlock.getString("turma_sigla");
-    			if(jBlock.has("doc_sigla")) block.teacherAcronym = jBlock.getString("doc_sigla");
-    			if(jBlock.has("doc_codigo")) block.teacherCode = jBlock.getString("doc_codigo");
+    			if(jBlock.has("dia")) block.setWeekDay(jBlock.getInt("dia") - 2); // Monday is index 0
+    			if(jBlock.has("hora_inicio")) block.setStartTime(jBlock.getInt("hora_inicio"));
+    			if(jBlock.has("cad_codigo")) block.setLectureCode(jBlock.getString("cad_codigo"));
+    			if(jBlock.has("cad_sigla")) block.setLectureAcronym(jBlock.getString("cad_sigla"));
+    			if(jBlock.has("tipo")) block.setLectureType(jBlock.getString("tipo"));
+    			if(jBlock.has("aula_duracao")) block.setLectureDuration(jBlock.getDouble("aula_duracao"));
+    			if(jBlock.has("turma_sigla")) block.setClassAcronym(jBlock.getString("turma_sigla"));
+    			if(jBlock.has("doc_sigla")) block.setTeacherAcronym(jBlock.getString("doc_sigla"));
+    			if(jBlock.has("doc_codigo")) block.setTeacherCode(jBlock.getString("doc_codigo"));
     			if(jBlock.has("sala_cod")){
-    				block.roomCode = jBlock.getString("sala_cod");
-    				while ( block.roomCode.length() < 3 )
-    					block.roomCode = "0" + block.roomCode;
+    				block.setRoomCode(jBlock.getString("sala_cod"));
+    				while ( block.getRoomCode().length() < 3 )
+    					block.setRoomCode("0" + block.getRoomCode());
     			}
     			
-    			if(jBlock.has("edi_cod")) block.buildingCode = jBlock.getString("edi_cod");
-    			if(jBlock.has("periodo")) block.semester = jBlock.getString("periodo");
+    			if(jBlock.has("edi_cod")) block.setBuildingCode(jBlock.getString("edi_cod"));
+    			if(jBlock.has("periodo")) block.setSemester(jBlock.getString("periodo"));
     			
     			// add block to schedule
     			this.schedule.add(block);
@@ -407,19 +379,19 @@ public class ScheduleFragment extends BaseFragment implements
         // Plus one because mDays.at(0) is a day of the previous week
         Day day = mDays.get(dayIndex+1);
 
-        final String blockId = block.lectureAcronym;
-        final String title = block.lectureAcronym + " (" + block.lectureType + ")" 
-        						+ "\n" +  block.buildingCode + block.roomCode;
-        final long start = block.startTime * 1000 + day.timeStart;
-        final long end = ( block.startTime + (long)(block.lectureDuration * 3600) ) * 1000;
+        final String blockId = block.getLectureAcronym() + " (" + block.getLectureType() + ")" 
+								+ "\n" +  block.getBuildingCode() + block.getRoomCode();
+        final String title = blockId;
+        final long start = block.getStartTime() * 1000 + day.timeStart;
+        final long end = ( block.getStartTime() + (long)(block.getLectureDuration() * 3600) ) * 1000;
         final boolean containsStarred = false;
 
         int column = 0;
-        if ( block.lectureType.equals("T") )
+        if ( block.getLectureType().equals("T") )
         	column = 1;
 		final BlockView blockView = new BlockView(getActivity(), blockId,title , start, end,
         		containsStarred , column );
-
+		blockView.setOnClickListener(this);
         day.blocksView.addBlock(blockView);
             
               
@@ -440,6 +412,7 @@ public class ScheduleFragment extends BaseFragment implements
   		Time yourDate = new Time(UIUtils.TIME_REFERENCE);
   		yourDate.set(mondayMillis);
   		yourDate.normalize(false);
+  		yourDate.month=3;//TODO: remove later
   		yourDate.minute=0;
   		yourDate.hour=0;
   		yourDate.second=1;
@@ -508,14 +481,14 @@ public class ScheduleFragment extends BaseFragment implements
                 		// new event
                 		ContentValues event = new ContentValues();
                 		event.put("calendar_id", calIds[which]);
-                		event.put("title", b.lectureAcronym + " (" + b.lectureType + ")");
-                		event.put("eventLocation", b.buildingCode+b.roomCode);
-                		event.put("description", "Professor: " + b.teacherAcronym);
+                		event.put("title", b.getLectureAcronym() + " (" + b.getLectureType() + ")");
+                		event.put("eventLocation", b.getBuildingCode()+b.getRoomCode());
+                		event.put("description", "Professor: " + b.getTeacherAcronym());
                 		long date =  UIUtils.convertToUtc(mondayMillis) + 
-                					b.weekDay * DateUtils.DAY_IN_MILLIS + 
-                					b.startTime*1000;
+                					b.getWeekDay() * DateUtils.DAY_IN_MILLIS + 
+                					b.getStartTime()*1000;
                 		event.put("dtstart", date );
-                		event.put("dtend", date + b.lectureDuration*3600000 );
+                		event.put("dtend", date + b.getLectureDuration()*3600000 );
                 		
                 		// TODO:  event recursive - this will not be done.
                 		Uri newEvent = null;
@@ -580,12 +553,10 @@ public class ScheduleFragment extends BaseFragment implements
 
 	}
 	public void onPageScrollStateChanged(int state) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -600,6 +571,34 @@ public class ScheduleFragment extends BaseFragment implements
         else if (position == mDays.size()-1)
         	movetoNextWeek();
 	}
+	
+
+	@Override
+	public void onClick(View view ) {
+		if (view instanceof BlockView) {
+            Toast.makeText(getActivity(), ((BlockView)view).getBlockId(), Toast.LENGTH_SHORT).show();
+            Block block = findBlock(((BlockView)view).getBlockId());
+            if ( block == null )
+                Toast.makeText(getActivity(),"Something stupid happened", Toast.LENGTH_SHORT).show();
+            if ( getActivity() == null )
+            	return;
+            Intent i = new Intent(getActivity() , ClassDescriptionActivity.class);
+            i.putExtra(ClassDescriptionFragment.BLOCK, block);
+            startActivity(i);
+		}
+	}
+
+	private Block findBlock( String blockId) {
+		for ( Block block : schedule )
+		{
+			String id =  block.getLectureAcronym() + " (" + block.getLectureType() + ")" 
+							+ "\n" +  block.getBuildingCode() + block.getRoomCode();
+			if (id.equals(blockId) )
+				return block;
+		}
+		return null;
+	}
+    
     
     /** Classe privada para a busca de dados ao servidor */
     private class ScheduleTask extends AsyncTask<Void, Void, String> {
@@ -631,7 +630,7 @@ public class ScheduleFragment extends BaseFragment implements
         				
 				Log.e("Schedule","success");
 				for ( Block block : schedule)
-					addBlock(block.weekDay, block);
+					addBlock(block.getWeekDay(), block);
 				mPager.setAdapter(new DayAdapter());
 				if ( fetchingPreviousWeek )
 				{
@@ -696,6 +695,8 @@ public class ScheduleFragment extends BaseFragment implements
 
 			return "";
 		}
+
     }
-    
+
+
 }

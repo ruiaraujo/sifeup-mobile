@@ -64,7 +64,7 @@ public class SifeupAPI {
 	}
 
 	private interface Schedule {
-		String NAME = "horario";
+		String NAME = "horario_aluno";
 		String CODE = "pv_codigo";
 		String BEGIN = "pv_semana_ini";
 		String END = "pv_semana_fim";
