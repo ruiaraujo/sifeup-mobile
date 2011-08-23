@@ -1,27 +1,28 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/SimpleListItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background">
+    android:background="@android:drawable/list_selector_background"
+    android:orientation="vertical" >
     
-    <TextView android:id="@+id/code"
+    <TextView android:id="@+id/teacher_code"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ListItemTitle" />
      
-     <TextView android:id="@+id/name"
+     <TextView android:id="@+id/teacher_name"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ListItemSubtitle"/>   
         
-     <TextView android:id="@+id/time"
+     <TextView android:id="@+id/teacher_time"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ListItemSubtitle"/>   
           
-</RelativeLayout>
+</LinearLayout>
 
 

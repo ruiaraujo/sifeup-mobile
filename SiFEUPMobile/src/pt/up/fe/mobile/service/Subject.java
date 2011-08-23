@@ -7,7 +7,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+       
 import android.util.Log;
 
 /**
@@ -373,18 +373,47 @@ public class Subject  implements Serializable {
 		private WorloadDesc(){
 			teachers = new ArrayList<Teacher>();
 		}
+		
+		public List<Teacher> getTeachers() {
+			return teachers;
+		}
+		
 	}
 	
-	private class Teacher implements Serializable {
+	public class Teacher implements Serializable {
 		
 		/** */
 		private String code;
-		
+	
 		/** */
 		private String name;
 		
 		/** */
 		private String time;
+		
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getTime() {
+			return time;
+		}
+
+		public void setTime(String time) {
+			this.time = time;
+		}
 	}
 	
 	private class Software implements Serializable {
@@ -521,6 +550,19 @@ public class Subject  implements Serializable {
 		}
     	Log.e("JSON", "subject description not found");
     	return false;
+    }
+    
+    public List<Teacher> getTeachers()
+    {
+    	List<Teacher> res = new ArrayList<Teacher>();
+    	
+    	 for(WorloadDesc wd : this.worloadDesc)
+         {
+		        for(Teacher t : wd.teachers)
+		        	res.add(t);
+         }
+    	 
+    	 return res;
     }
 
 }

@@ -12,9 +12,9 @@ import android.support.v4.app.Fragment;
  */
 public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 	
-	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.profile.PROFILE_CODE"; 
-	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.profile.PROFILE_YEAR"; 
-	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.profile.PROFILE_PERIOD"; 
+	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.profile.SUBJECT_CODE"; 
+	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.profile.SUBJECT_YEAR"; 
+	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.profile.SUBJECT_PERIOD"; 
 	
 	@Override
 	protected Fragment onCreatePane() {

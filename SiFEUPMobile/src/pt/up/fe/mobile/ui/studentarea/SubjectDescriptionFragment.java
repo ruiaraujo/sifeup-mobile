@@ -1,15 +1,17 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
+import pt.up.fe.mobile.service.Subject.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.res.Resources;
@@ -23,11 +25,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
-
-
 
 public class SubjectDescriptionFragment extends BaseFragment {
 	
@@ -44,9 +45,11 @@ public class SubjectDescriptionFragment extends BaseFragment {
     
     /** */
     private ViewPager  viewPager; 
+    
+    /** */
     private ViewPagerIndicator indicator;
-    private ArrayList<String> subjectItems;
-	
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +57,6 @@ public class SubjectDescriptionFragment extends BaseFragment {
         code = args.get(SubjectDescriptionActivity.SUBJECT_CODE).toString();
 		year = args.get(SubjectDescriptionActivity.SUBJECT_YEAR).toString();
 		period = args.get(SubjectDescriptionActivity.SUBJECT_PERIOD).toString();
-        subjectItems = new ArrayList<String>();
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subject Description");
     }
 	
@@ -85,7 +87,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
         // * How many pages are there in total
         // * A callback to get page titles
 		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
-		indicator.onlyCenterText(true);
+
 		Resources res = getResources();
 		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
 		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
@@ -122,6 +124,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				Log.e("Subjects","success");
 				
 				 try {
+					 buildPages();
 			         showMainScreen();
 			         Log.e("JSON", "subjects visual list loaded");
 				 }
@@ -167,12 +170,6 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		    			case SifeupAPI.Errors.NO_ERROR:
 		    				if (subject.JSONSubject(page) )
 		    				{
-		    					subjectItems.add(subject.getNameEn());
-		    					subjectItems.add(subject.getNamePt());
-		    					for(Object o : subjectItems)
-		    					{
-		    						System.out.println(o.toString());
-		    					}
 		    					return "Success";
 		    				}
 		    				else
@@ -199,8 +196,17 @@ public class SubjectDescriptionFragment extends BaseFragment {
     class PagerSubjectAdapter extends PagerAdapter implements ViewPagerIndicator.PageInfoProvider 
     {
 		@Override
-		public String getTitle(int pos){
-			return subject.getNamePt();
+		public String getTitle(int position)
+		{
+			switch ( position )
+			{
+				case 0 :
+					return "Content";
+				case 1 :
+					return "Teachers";
+			}
+			
+			return "";
 		}
 		
 		@Override
@@ -211,20 +217,51 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return subjectItems.size();
+			return 2;
 		}
 
 		@Override
 		public Object instantiateItem(View collection, int position) 
 		{
-			View root = layoutInflater.inflate(R.layout.subject_item, viewPager, false);
+			switch ( position )
+			{
+				case 0 :	
+						View root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+						TextView text = (TextView) root.findViewById(R.id.content);
+						text.setText(subject.getContent());
+						((ViewPager) collection).addView(root,0);
+						return root;
+						
+				case 1 :
+						ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+						((ViewPager) collection).addView(list,0);	
+						
+						String[] from = new String[] {"code", "name", "time"};
+						
+				        int[] to = new int[] { R.id.teacher_code, R.id.teacher_name ,R.id.teacher_time };
+					         // prepare the list of all records
+				        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+				        
+				        for(Teacher t : subject.getTeachers())
+				        {
+				             HashMap<String, String> map = new HashMap<String, String>();
+				     
+				             map.put("code", t.getCode());
+				             map.put("name", t.getName());
+				             map.put("time", t.getTime());
+				           
+				             fillMaps.add(map);   
+				        }
+				        
+				        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_subject_teacher, from, to);
+				        list.setAdapter(adapter);
+						return list;
+						
+				//case 2: 
+						
+			}
 			
-			ExpandableListView list = (ExpandableListView) root.findViewById(R.id.subject_list);
-			
-			list.setAdapter(new SubjectItemAdapter(subjectItems.get(position)));
-			
-			((ViewPager) collection).addView(root,0);
-			return root;
+			return null;
 		}
 
 		@Override
@@ -258,78 +295,5 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
     }
     
-    private class SubjectItemAdapter extends BaseExpandableListAdapter {
-        
-    	Object item;
-        
-    	public SubjectItemAdapter(Object i){
-        	item = i;
-        }
 
-    	//TODO: não sei que objecto é? Como sei qual é o layout? 
-    	//como faco layout diferente para cada um?
-		@Override
-		public Object getChild(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public View getChildView(int groupPosition, int childPosition,
-				boolean isLastChild, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public Object getGroup(int groupPosition) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public int getGroupCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public long getGroupId(int groupPosition) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public View getGroupView(int groupPosition, boolean isExpanded,
-				View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-         
-    }
-	
 }
