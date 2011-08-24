@@ -35,32 +35,32 @@ public class ParkOccupationFragment extends BaseFragment
 {    
     private ListView list;
     
-    Park park1;
-    Park park3;
-    Park park4;
+    private Park park1;
+    private Park park3;
+    private Park park4;
     
 
 	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		park1 = new Park();
-		park3 = new Park();
-		park4 = new Park();
-	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
-	}
-
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	            Bundle savedInstanceState) 
-	{
-		super.onCreateView(inflater, container, savedInstanceState);
-		
-		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
-		list = (ListView) root.findViewById(R.id.generic_list);
-		
-		new ParkOccupationTask().execute();
+		{
+			super.onCreate(savedInstanceState);
+			park1 = new Park();
+			park3 = new Park();
+			park4 = new Park();
+		    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
+		}
 	
-		return getParentContainer();//this is mandatory
-	}
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+		            Bundle savedInstanceState) 
+		{
+			super.onCreateView(inflater, container, savedInstanceState);
+			
+			View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+			list = (ListView) root.findViewById(R.id.generic_list);
+			
+			new ParkOccupationTask().execute();
+		
+			return getParentContainer();//this is mandatory
+		}
 	
 
     private class ParkOccupationTask extends AsyncTask<String, Void, String> 
@@ -137,50 +137,30 @@ public class ParkOccupationFragment extends BaseFragment
 		@Override
 		protected String doInBackground(String ... code) 
 		{
-			String page1 = "";
-			String page3 = "";
-			String page4 = "";
+			String page = "";
+			String pages [] = new String[3];
 		  	try {
-		  			
-	    			page1 = SifeupAPI.getParkOccupationReply("P1");
-	    			int error1 = SifeupAPI.JSONError(page1);
-		    		switch (error1)
+	  			for ( int i = 0 ; i < 4 ; ++i )
+	  			{
+	  				if ( i+1 == 2 )
+	  					continue;
+	  				page = SifeupAPI.getParkOccupationReply("P" + (i+1));
+	  				int error = SifeupAPI.JSONError(page);
+		    		switch (error)
 		    		{
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-		    				park1.JSONParkOccupation(page1);
+		    				pages[i==0?i:i-1] = page;
 		    				break;
 		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "";
+		    				return "Error";// When not autenticathed, it returns a null page.
 		    		}
-				
-	    			page3 = SifeupAPI.getParkOccupationReply("P3");
-	    			int error3 =SifeupAPI.JSONError(page3);
-		    		switch (error3)
-		    		{
-		    			case SifeupAPI.Errors.NO_AUTH:
-		    				return "Error";
-		    			case SifeupAPI.Errors.NO_ERROR:
-		    				park3.JSONParkOccupation(page3);
-		    				break;
-		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "";
-		    		}
-		    		
-	    			page4 = SifeupAPI.getParkOccupationReply("P4");
-	    			int error4 = SifeupAPI.JSONError(page4);
-		    		switch (error4)
-		    		{
-		    			case SifeupAPI.Errors.NO_AUTH:
-		    				return "Error";
-		    			case SifeupAPI.Errors.NO_ERROR:
-		    				park4.JSONParkOccupation(page4);
-		    				break;
-		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "";
-		    		}
-	    			
+	  			}
+		  		park1.JSONParkOccupation(pages[0]);
+		  		park3.JSONParkOccupation(pages[1]);
+		  		park4.JSONParkOccupation(pages[2]);
+
 		    	return "Success";
 			} catch (JSONException e) {
 				if ( getActivity() != null ) 
