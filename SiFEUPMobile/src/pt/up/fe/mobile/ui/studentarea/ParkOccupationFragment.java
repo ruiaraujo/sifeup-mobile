@@ -19,33 +19,20 @@ package pt.up.fe.mobile.ui.studentarea;
 
 
 
-import java.util.ArrayList;
+
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.ui.BaseActivity;
+
 import pt.up.fe.mobile.ui.BaseFragment;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
-import external.com.zylinc.view.ViewPagerIndicator;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.Toast;
+
 
 /**
- * Lunch Menu Fragment
+ * Park Occupation Fragment
  * 
  * @author Ângela Igreja
  * 

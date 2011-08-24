@@ -117,6 +117,11 @@ public class SifeupAPI {
 		String ROOM_CODE = "pv_cod_sala";
 	}
 		
+	private interface Park{
+		String NAME = "ocupacao_parque";
+		String CODE = "pv_parque";
+	}
+	
 	public interface Errors{
 		int NULL_PAGE = 0;
 		int NO_AUTH = 1;
@@ -145,6 +150,15 @@ public class SifeupAPI {
 		return WEBSERVICE + Schedule.NAME + WEBSERVICE_SEP + Schedule.CODE + 
 					EQUALS + code + LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
 					LINK_SEP + Schedule.END + EQUALS + end;
+	}
+	
+	/**
+	 * Park Occupation Url for Web Service
+	 * @param code
+	 * @return Park Occupation Url
+	 */
+	public static String getParkOccupationUrl( String code ){
+		return WEBSERVICE + Park.NAME + WEBSERVICE_SEP + Park.CODE + EQUALS + code ;
 	}
 	
 	/**
