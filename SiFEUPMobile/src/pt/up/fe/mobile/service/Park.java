@@ -17,13 +17,20 @@ import android.util.Log;
  *
  */
 @SuppressWarnings("serial")
-public class ParkOccupation  implements Serializable 
+public class Park implements Serializable 
 {
 	/** Free places in the park */
 	private int places;
 	
-	public ParkOccupation(){
+
+	public String getPlaces() {
+		return Integer.toString(places);
 	}
+
+	public void setPlaces(int places) {
+		this.places = places;
+	}
+
 	
 	/**
 	 *  Park Occupation Parser.
@@ -40,14 +47,16 @@ public class ParkOccupation  implements Serializable
 			jObject = new JSONObject(page);
 			
 			if(jObject.has("lugares")) this.places = jObject.getInt("lugares");
-
-			return true;
+			{
+				Log.e("JSON", "Park Occupation found");
+				return true;
+			}
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
-    	Log.e("JSON", "ParK Occupation not found");
+    	Log.e("JSON", "Park Occupation not found");
     	return false;
     }
     

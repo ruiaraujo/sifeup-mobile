@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SimpleListItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:drawable/list_selector_background">
+    
+    <TextView android:id="@+id/park_name"
+        android:layout_gravity="left|center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemTitle" />
+        
+    <TextView android:id="@+id/park_occupation"
+       android:layout_gravity="left|center_vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       style="@style/ListItemSubtitle"/>   
+       
+</LinearLayout>
+
+

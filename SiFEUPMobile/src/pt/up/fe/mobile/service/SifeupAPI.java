@@ -548,6 +548,30 @@ public class SifeupAPI {
 	}
 	
 	/**
+	 * Park Occupation query Reply from web service
+	 * @param code
+	 * @return
+	 */
+	public static String getParkOccupationReply( String code ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getParkOccupationUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	/**
 	 * Students Search query Reply from web service
 	 * @param numPage 
 	 * @param code
