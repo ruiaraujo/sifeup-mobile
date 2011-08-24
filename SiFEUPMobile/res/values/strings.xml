@@ -94,6 +94,11 @@
 	<string name="title_subjects">Subjects</string>   
 	<string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
 	
+	<!-- Subject Description -->
+	<string name="objectives">Objectives</string>
+	<string name="content">Content</string>
+	<string name="teachers">Teachers</string>
+	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Academic Path</string>
     <string name="btn_academic_path">Academic Path</string> 

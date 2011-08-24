@@ -174,7 +174,7 @@ public class ExamsFragment extends BaseFragment {
 		}
     }
 	
-	/** Stores info about a exam */
+    /** Stores info about a exam */
 	private class Exam{
 		String type; // tipo de exame
 		String courseAcronym; // codigo da cadeira

@@ -201,9 +201,14 @@ public class SubjectDescriptionFragment extends BaseFragment {
 			switch ( position )
 			{
 				case 0 :
-					return "Content";
+					return "Objectives";
+					//getString(R.string.objectives);
 				case 1 :
+					return  "Content";
+					//getString(R.string.content);
+				case 2 :
 					return "Teachers";
+					//getString(R.string.teachers);
 			}
 			
 			return "";
@@ -217,7 +222,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -232,7 +237,14 @@ public class SubjectDescriptionFragment extends BaseFragment {
 						((ViewPager) collection).addView(root,0);
 						return root;
 						
-				case 1 :
+				case 1 :	
+						View root2 = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+						TextView text2 = (TextView) root2.findViewById(R.id.content);
+						text2.setText(subject.getObjectives());
+						((ViewPager) collection).addView(root2,0);
+						return root2;
+						
+				case 2 :
 						ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 						((ViewPager) collection).addView(list,0);	
 						
@@ -257,7 +269,6 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				        list.setAdapter(adapter);
 						return list;
 						
-				//case 2: 
 						
 			}
 			
