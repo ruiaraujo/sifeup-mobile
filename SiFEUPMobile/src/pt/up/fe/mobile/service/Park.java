@@ -21,10 +21,23 @@ public class Park implements Serializable
 {
 	/** Free places in the park */
 	private int places;
-	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	private String name;
 
 	public String getPlaces() {
 		return Integer.toString(places);
+	}
+	
+	public int getPlacesNumber() {
+		return places;
 	}
 
 	public void setPlaces(int places) {

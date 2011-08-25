@@ -11,13 +11,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ListItemTitle" />
-        
+      
+    <TextView android:id="@+id/label_park_occupation"
+        android:layout_gravity="left|center_vertical" 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content" 
+       android:text="free places" />
+          
     <TextView android:id="@+id/park_occupation"
        android:layout_gravity="left|center_vertical"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       style="@style/ListItemSubtitle"/>   
-       
+       style="@style/ListItemSubtitle"/>  
+     
+    <ImageView android:id="@+id/park_light" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:scaleType="center"
+        android:src="@drawable/btn_focused" />  
+         
 </LinearLayout>
 
 
