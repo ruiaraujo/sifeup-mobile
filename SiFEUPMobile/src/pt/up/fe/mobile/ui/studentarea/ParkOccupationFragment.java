@@ -64,6 +64,7 @@ public class ParkOccupationFragment extends BaseFragment
 		{
 			super.onCreateView(inflater, container, savedInstanceState);
 			mInflater = inflater;
+			
 			View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
 			list = (ListView) root.findViewById(R.id.generic_list);
 			
@@ -169,9 +170,9 @@ public class ParkOccupationFragment extends BaseFragment
 		  		parks.get(0).JSONParkOccupation(pages[0]);
 		  		parks.get(0).setName("P1");
 		  		parks.get(1).JSONParkOccupation(pages[1]);
-		  		parks.get(0).setName("P3");
+		  		parks.get(1).setName("P3");
 		  		parks.get(2).JSONParkOccupation(pages[2]);
-		  		parks.get(0).setName("P4");
+		  		parks.get(2).setName("P4");
 
 		    	return "Success";
 			} catch (JSONException e) {
