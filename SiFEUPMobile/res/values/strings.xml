@@ -101,6 +101,7 @@
 	<string name="bibliography">Bibliography</string>
 	<string name="software">Software</string>
 	<string name="evaluation">Evaluation</string>
+	<string name="metodology">Metodology</string> 
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Academic Path</string>

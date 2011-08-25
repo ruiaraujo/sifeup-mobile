@@ -11,6 +11,7 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
 import pt.up.fe.mobile.service.Subject.Book;
+import pt.up.fe.mobile.service.Subject.Software;
 import pt.up.fe.mobile.service.Subject.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -218,6 +219,8 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					return getString(R.string.software);
 				case 5 :
 					return getString(R.string.evaluation);
+				case 6 :
+					return getString(R.string.metodology);
 					
 			}
 			
@@ -232,7 +235,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return 6;
+			return 7;
 		}
 
 		@Override
@@ -319,9 +322,38 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					return listBooks;
 					
 				case 4:
-					break;
+					ListView listSoftware = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+					((ViewPager) collection).addView(listSoftware,0);	
+					
+					String[] fromSoftware = new String[] {"name", "description"};
+						
+			        int[] toSoftware = new int[] { R.id.name, R.id.description};
+			        
+				    // prepare the list of all records
+			        List<HashMap<String, String>> fillMapsSoftware = new ArrayList<HashMap<String, String>>();
+			        
+			        //TODO: ver se a list de software é vazia
+			        for(Software s : subject.getSoftware())
+			        {
+			             HashMap<String, String> map = new HashMap<String, String>();
+			     
+			             map.put("name", s.getName());
+			             map.put("description", s.getDescription());
+			      
+			        }
+		            SimpleAdapter adapterSoftware = new SimpleAdapter(getActivity(), fillMapsSoftware, R.layout.list_item_subject_software, fromSoftware, toSoftware);
+				    listSoftware.setAdapter(adapterSoftware);
+					return listSoftware;
+					
 				case 5:
 					break;
+				
+				case 6:
+					View metodology = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView metodologyText = (TextView) metodology.findViewById(R.id.content);
+					metodologyText.setText(subject.getMetodology());
+					((ViewPager) collection).addView(metodology,0);
+					return metodology;
 						
 						
 			}

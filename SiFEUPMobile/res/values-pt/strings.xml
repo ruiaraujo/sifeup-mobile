@@ -87,10 +87,14 @@
 	<string name="title_subjects">Disciplinas</string>   
 	<string name="subjects_year">Ano<xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
 	
-		<!-- Subject Description -->
+	<!-- Subject Description -->
 	<string name="objectives">Objectivos</string>
 	<string name="content">Conteúdo</string>
 	<string name="teachers">Docência</string>
+	<string name="bibliography">Bibliografia</string>
+	<string name="software">Software</string>
+	<string name="evaluation">Avaliação</string>
+	<string name="metodology">Metodologia</string> 
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Percurso Académico</string>

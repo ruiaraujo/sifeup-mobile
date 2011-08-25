@@ -464,7 +464,7 @@ public class Subject  implements Serializable {
 		}
 	}
 	
-	private class Software implements Serializable {
+	public class Software implements Serializable {
 		
 		/** */
 		private String description;
