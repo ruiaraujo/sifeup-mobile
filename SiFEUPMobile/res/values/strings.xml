@@ -98,6 +98,9 @@
 	<string name="objectives">Objectives</string>
 	<string name="content">Content</string>
 	<string name="teachers">Teachers</string>
+	<string name="bibliography">Bibliography</string>
+	<string name="software">Software</string>
+	<string name="evaluation">Evaluation</string>
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Academic Path</string>

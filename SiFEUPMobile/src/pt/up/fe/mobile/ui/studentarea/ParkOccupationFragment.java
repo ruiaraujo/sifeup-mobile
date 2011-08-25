@@ -2,14 +2,11 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 
-import org.apache.http.message.BasicListHeaderIterator;
 import org.json.JSONException;
-
 import pt.up.fe.mobile.R;
-
 import pt.up.fe.mobile.service.Park;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -18,7 +15,7 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -164,8 +161,8 @@ public class ParkOccupationFragment extends BaseFragment
 			return "";
 		}
     }
-    
-    
+
+       
 	public class ParkAdapter extends ArrayAdapter<Park>
 	{
 
@@ -204,3 +201,4 @@ public class ParkOccupationFragment extends BaseFragment
     }
     
 }
+

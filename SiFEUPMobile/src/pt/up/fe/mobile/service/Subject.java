@@ -280,7 +280,7 @@ public class Subject  implements Serializable {
 	}
 	
 	/** */
-	private class Book implements Serializable{
+	public class Book implements Serializable{
 		
 		/** */
 		private String type;
@@ -299,6 +299,54 @@ public class Subject  implements Serializable {
 		
 		/** */
 		private String isbn;
+		
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getTypeDescription() {
+			return typeDescription;
+		}
+
+		public void setTypeDescription(String typeDescription) {
+			this.typeDescription = typeDescription;
+		}
+
+		public String getAuthors() {
+			return authors;
+		}
+
+		public void setAuthors(String authors) {
+			this.authors = authors;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public String getLink() {
+			return link;
+		}
+
+		public void setLink(String link) {
+			this.link = link;
+		}
+
+		public String getIsbn() {
+			return isbn;
+		}
+
+		public void setIsbn(String isbn) {
+			this.isbn = isbn;
+		}
 	}
 	
 	/** */
@@ -420,9 +468,25 @@ public class Subject  implements Serializable {
 		
 		/** */
 		private String description;
-		
+	
 		/** */
 		private String name;
+		
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 		
 	}
 	

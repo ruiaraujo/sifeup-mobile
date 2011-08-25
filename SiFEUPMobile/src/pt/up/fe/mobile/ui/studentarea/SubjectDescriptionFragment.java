@@ -7,15 +7,19 @@ import java.util.List;
 import org.json.JSONException;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
+import pt.up.fe.mobile.service.Subject.Book;
 import pt.up.fe.mobile.service.Subject.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -25,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -64,16 +69,17 @@ public class SubjectDescriptionFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
 		layoutInflater = inflater;
 		View root = inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		viewPager = (ViewPager)root.findViewById(R.id.pager_subject);
 		
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_subject);
-		//descriptionList = (ExpandableListView) root.findViewById(R.id.subject_description_list);
-        
+		
         new SubjectDescriptionTask().execute();
-		return getParentContainer();
+		
+        return getParentContainer();
 	}
        
 	private void buildPages(){
@@ -201,14 +207,18 @@ public class SubjectDescriptionFragment extends BaseFragment {
 			switch ( position )
 			{
 				case 0 :
-					return "Objectives";
-					//getString(R.string.objectives);
+					return getString(R.string.objectives);
 				case 1 :
-					return  "Content";
-					//getString(R.string.content);
+					return getString(R.string.content);
 				case 2 :
-					return "Teachers";
-					//getString(R.string.teachers);
+					return getString(R.string.teachers);
+				case 3 :
+					return getString(R.string.bibliography);
+				case 4 :
+					return getString(R.string.software);
+				case 5 :
+					return getString(R.string.evaluation);
+					
 			}
 			
 			return "";
@@ -222,7 +232,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 6;
 		}
 
 		@Override
@@ -268,6 +278,50 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_subject_teacher, from, to);
 				        list.setAdapter(adapter);
 						return list;
+				
+				case 3:
+					ListView listBooks = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+					((ViewPager) collection).addView(listBooks,0);	
+					
+					String[] fromBook = new String[] {"typeDescription", "authors", "title", "link", "isbn"};
+						
+			        int[] toBook = new int[] { R.id.typeDescription, R.id.authors, R.id.title, R.id.link, R.id.isbn};
+				    // prepare the list of all records
+			        List<HashMap<String, String>> fillMapsBooks = new ArrayList<HashMap<String, String>>();
+			        
+			        for(Book b : subject.getBibliography())
+			        {
+			             HashMap<String, String> map = new HashMap<String, String>();
+			     
+			             map.put("typeDescription", b.getTypeDescription());
+			             map.put("authors", b.getAuthors());
+			             map.put("title", b.getTitle());
+			             map.put("link", b.getLink());
+			             map.put("isbn", b.getIsbn());
+			           
+			             fillMapsBooks.add(map);  
+			             
+			             //TODO: Como fazer?
+			             /*((TextView) listBooks.findViewById(R.id.link)).setOnClickListener(new OnClickListener() 
+				        	{
+								@Override
+								public void onClick(View v) {
+									Intent i = new Intent(Intent.ACTION_VIEW);
+									i.setData(Uri.parse(b.getLink()));
+									startActivity(i);
+							}
+						});*/
+			        }
+			        
+			     
+			        SimpleAdapter adapterBooks = new SimpleAdapter(getActivity(), fillMapsBooks, R.layout.list_item_subject_book, fromBook, toBook);
+			        listBooks.setAdapter(adapterBooks);
+					return listBooks;
+					
+				case 4:
+					break;
+				case 5:
+					break;
 						
 						
 			}
