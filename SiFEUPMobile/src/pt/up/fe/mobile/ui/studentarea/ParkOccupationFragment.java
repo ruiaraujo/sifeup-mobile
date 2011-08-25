@@ -90,27 +90,7 @@ public class ParkOccupationFragment extends BaseFragment
         	{
 				Log.e("Park Occupation","success");
 				
-				/* String[] from = new String[] {"parkName", "parkOccupation"};
-		         int[] to = new int[] { R.id.park_name, R.id.park_occupation};
-			         
-		         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		         
-		             HashMap<String, String> map1 = new HashMap<String, String>();
-		             map1.put("parkName", "P1");
-		             map1.put("parkOccupation", parks.get(0).getPlaces());
-		             fillMaps.add(map1);
-		            
-		             HashMap<String, String> map3 = new HashMap<String, String>();
-		             map3.put("parkName", "P3");
-		             map3.put("parkOccupation", parks.get(1).getPlaces());
-		             fillMaps.add(map3);
-		             
-		             HashMap<String, String> map4 = new HashMap<String, String>();
-		             map4.put("parkName", "P4");
-		             map4.put("parkOccupation", parks.get(2).getPlaces());
-		             fillMaps.add(map4);*/
-		            
 		         // fill in the grid_item layout
 		         if ( getActivity() == null ) 
 		        	 return;
@@ -164,7 +144,7 @@ public class ParkOccupationFragment extends BaseFragment
 		    				pages[i==0?i:i-1] = page;
 		    				break;
 		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "Error";// When not autenticathed, it returns a null page.
+		    				return "Error";// When not authenticated, it returns a null page.
 		    		}
 	  			}
 		  		parks.get(0).JSONParkOccupation(pages[0]);
@@ -195,35 +175,31 @@ public class ParkOccupationFragment extends BaseFragment
 		
         public View getView(int position, View convertView, ViewGroup parent) 
         {
-        	View root = mInflater.inflate(R.layout.list_item_park, null);
+        	View root = mInflater.inflate(R.layout.list_item_park, list, false);
+            TextView tt = (TextView) root.findViewById(R.id.park_name);
+            ImageView light = (ImageView) root.findViewById(R.id.park_light);
+            TextView places = (TextView) root.findViewById(R.id.park_occupation);
 
             Park park = parks.get(position);
            
-            if (park != null) 
-            {
-                TextView tt = (TextView) root.findViewById(R.id.park_name);
-                if (tt != null) {
-                    tt.setText(park.getName());
-                }
-                
-                TextView places = (TextView) root.findViewById(R.id.park_occupation);
-                if (places != null) {
-                    places.setText(park.getPlacesNumber());
+
+            tt.setText(park.getName());
+            places.setText(Integer.toString(park.getPlacesNumber()));
                     
-                    ImageView light = (ImageView) root.findViewById(R.id.park_light);
-                    int placesNumber = park.getPlacesNumber();
-                    
-                    if( placesNumber == 0)
-                    	light.setImageResource(R.drawable.btn_focused);
-                    else if (placesNumber < 10)
-                    	  	light.setImageResource(R.drawable.btn_bg_pressed);
-                    	 else
-                    		  light.setImageResource(R.drawable.btn_bg_selected);
-                    	
-                }
-                
-            }
+            int placesNumber = park.getPlacesNumber();
+            
+            if( placesNumber == 0)
+            	light.setImageResource(R.drawable.btn_focused);
+            else if (placesNumber < 10)
+        	  	light.setImageResource(R.drawable.btn_bg_pressed);
+        	 else
+        		light.setImageResource(R.drawable.btn_bg_selected);
+                 
             return root;
+        }
+        
+        public int getCount(){
+        	return parks.size();
         }
     }
     
