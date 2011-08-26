@@ -84,8 +84,7 @@ public class Subject  implements Serializable {
 
 	/** */
 	private List<Software> software;
-	
-	
+		
 	public Subject(){
 		responsibles  = new ArrayList<Responsible>();
 		workload = new ArrayList<Workload>();
