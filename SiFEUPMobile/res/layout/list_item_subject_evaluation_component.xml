@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SimpleListItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@android:drawable/list_selector_background">
+    
+    <TextView android:id="@+id/description"
+        android:layout_gravity="left|center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemTitle" />
+     
+    <TextView android:id="@+id/type"
+       android:layout_gravity="left|center_vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       style="@style/ListItemSubtitle"/>   
+       
+    <TextView android:id="@+id/typeDesc"
+       android:layout_gravity="left|center_vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       style="@style/ListItemSubtitle"/>  
+       
+    <TextView android:id="@+id/length"
+       android:layout_gravity="left|center_vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       style="@style/ListItemSubtitle"/>    
+         
+    <TextView android:id="@+id/conclusionDate"
+       android:layout_gravity="left|center_vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       style="@style/ListItemSubtitle"/>    
+          
+
+</LinearLayout>
+
+

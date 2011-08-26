@@ -364,8 +364,8 @@ public class Subject  implements Serializable {
 
 	
 	/** */
-	private class EvaluationComponent implements Serializable{
-		
+	public class EvaluationComponent implements Serializable{
+	
 		/** */
 		private String description;
 		
@@ -383,6 +383,54 @@ public class Subject  implements Serializable {
 		
 		/** */
 		private String conclusionDate;
+		
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getDescriptionEn() {
+			return descriptionEn;
+		}
+
+		public void setDescriptionEn(String descriptionEn) {
+			this.descriptionEn = descriptionEn;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getTypeDesc() {
+			return typeDesc;
+		}
+
+		public void setTypeDesc(String typeDesc) {
+			this.typeDesc = typeDesc;
+		}
+
+		public String getLength() {
+			return length;
+		}
+
+		public void setLength(String length) {
+			this.length = length;
+		}
+
+		public String getConclusionDate() {
+			return conclusionDate;
+		}
+
+		public void setConclusionDate(String conclusionDate) {
+			this.conclusionDate = conclusionDate;
+		}
 	}
 
 	

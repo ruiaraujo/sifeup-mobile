@@ -11,6 +11,7 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
 import pt.up.fe.mobile.service.Subject.Book;
+import pt.up.fe.mobile.service.Subject.EvaluationComponent;
 import pt.up.fe.mobile.service.Subject.Software;
 import pt.up.fe.mobile.service.Subject.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -346,7 +347,32 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					return listSoftware;
 					
 				case 5:
-					break;
+					
+					ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+					((ViewPager) collection).addView(listEvaluation,0);	
+					
+					String[] fromEvaluation = new String[] {"description", "type", "typeDesc", "length", "conclusionDate"};
+						
+			        int[] toEvaluation = new int[] { R.id.description,  R.id.type,  R.id.typeDesc, R.id.length, R.id.conclusionDate};
+			        
+				    // prepare the list of all records
+			        List<HashMap<String, String>> fillMapsEvaluation = new ArrayList<HashMap<String, String>>();
+			        
+			        //TODO: ver se a list de evaluation é vazia
+			        for(EvaluationComponent e : subject.getEvaluation())
+			        {
+			             HashMap<String, String> map = new HashMap<String, String>();
+			     
+			             map.put("description", e.getDescription());
+			             map.put("type", e.getType());
+			             map.put("typeDesc", e.getTypeDesc());
+			             map.put("length", e.getLength());
+			             map.put("conclusionDate", e.getConclusionDate());
+			      
+			        }
+		            SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, fromEvaluation, toEvaluation);
+				    listEvaluation.setAdapter(adapterEvaluation);
+					return listEvaluation;
 				
 				case 6:
 					View metodology = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
