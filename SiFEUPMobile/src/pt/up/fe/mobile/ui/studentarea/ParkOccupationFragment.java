@@ -186,11 +186,11 @@ public class ParkOccupationFragment extends BaseFragment
             int placesNumber = park.getPlacesNumber();
             
             if( placesNumber == 0)
-            	light.setImageResource(R.drawable.btn_focused);
+            	light.setImageResource(R.drawable.red_light);
             else if (placesNumber < 10)
-        	  	light.setImageResource(R.drawable.btn_bg_pressed);
+        	  	light.setImageResource(R.drawable.yellow_light);
         	 else
-        		light.setImageResource(R.drawable.btn_bg_selected);
+        		light.setImageResource(R.drawable.green_light);
                  
             return root;
         }
