@@ -161,6 +161,13 @@
     <string name="lb_new_password">Nova password</string>
     <string name="lb_confirm_new_password">Confirmar nova password:</string>
     <string name="lb_current_password">Password actual:</string>
+    <string name="set_password_message"> Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:
+    	<ul>
+			<li>Conter obrigatoriamente entre 8 e 32 caracteres.</li>
+			<li>Não ser igual às 5 palavras-passe anteriores.</li>
+			<li>Conter um misto de letras e números;</li>
+		</ul> 
+	</string>
         
     <!-- Card Request-->
     <string name="title_card_request">Pedir Cartão</string>
