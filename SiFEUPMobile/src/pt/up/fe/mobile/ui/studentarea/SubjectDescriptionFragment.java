@@ -219,10 +219,19 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				case 4 :
 					return getString(R.string.software);
 				case 5 :
-					return getString(R.string.evaluation);
-				case 6 :
 					return getString(R.string.metodology);
-					
+				case 6 :
+					return getString(R.string.evaluation);
+				case 7 :
+					return getString(R.string.admission_exams);
+				case 8 :
+					return getString(R.string.final_grade);	
+				case 9 :
+					return getString(R.string.special_evaluation);	
+				case 10 :
+					return getString(R.string.improvement_classification);	
+				case 11 :
+					return getString(R.string.comments);		
 			}
 			
 			return "";
@@ -236,7 +245,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return 7;
+			return 12;
 		}
 
 		@Override
@@ -345,9 +354,15 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		            SimpleAdapter adapterSoftware = new SimpleAdapter(getActivity(), fillMapsSoftware, R.layout.list_item_subject_software, fromSoftware, toSoftware);
 				    listSoftware.setAdapter(adapterSoftware);
 					return listSoftware;
-					
+				
 				case 5:
+					View metodology = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView metodologyText = (TextView) metodology.findViewById(R.id.content);
+					metodologyText.setText(subject.getMetodology());
+					((ViewPager) collection).addView(metodology,0);
+					return metodology;
 					
+				case 6:	
 					ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 					((ViewPager) collection).addView(listEvaluation,0);	
 					
@@ -373,14 +388,41 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		            SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, fromEvaluation, toEvaluation);
 				    listEvaluation.setAdapter(adapterEvaluation);
 					return listEvaluation;
-				
-				case 6:
-					View metodology = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView metodologyText = (TextView) metodology.findViewById(R.id.content);
-					metodologyText.setText(subject.getMetodology());
-					((ViewPager) collection).addView(metodology,0);
-					return metodology;
-						
+					
+				case 7:
+					View admissionExams = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView admissionExamsText = (TextView) admissionExams.findViewById(R.id.content);
+					admissionExamsText.setText(subject.getFrequenceCond());
+					((ViewPager) collection).addView(admissionExams,0);
+					return admissionExams;
+
+				case 8:
+					View finalGrade = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView finalGradeText = (TextView) finalGrade.findViewById(R.id.content);
+					finalGradeText.setText(subject.getEvaluationFormula());
+					((ViewPager) collection).addView(finalGrade,0);
+					return finalGrade;
+					
+				case 9:
+					View specialEvaluation = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView specialEvaluationText = (TextView) specialEvaluation.findViewById(R.id.content);
+					specialEvaluationText.setText(subject.getEvaluationProc());
+					((ViewPager) collection).addView(specialEvaluation,0);
+					return specialEvaluation;
+					
+				case 10:
+					View improvementClassification = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView improvementClassificationText = (TextView) improvementClassification.findViewById(R.id.content);
+					improvementClassificationText.setText(subject.getFrequenceCond());
+					((ViewPager) collection).addView(improvementClassification,0);
+					return improvementClassification;
+					
+				case 11:
+					View comments = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView commentsText = (TextView) comments.findViewById(R.id.content);
+					commentsText.setText(subject.getObservations());
+					((ViewPager) collection).addView(comments,0);
+					return comments;
 						
 			}
 			

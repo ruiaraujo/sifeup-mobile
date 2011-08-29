@@ -100,8 +100,14 @@
 	<string name="teachers">Teachers</string>
 	<string name="bibliography">Bibliography</string>
 	<string name="software">Software</string>
+	<string name="metodology">Metodology</string>
 	<string name="evaluation">Evaluation</string>
-	<string name="metodology">Metodology</string> 
+	<string name="admission_exams">Admission to Exams</string>  
+	<string name="final_grade">Final grade</string> 
+	<string name="special_evaluation">Special evaluation (TE, DA, ...)</string> 
+	<string name="improvement_classification">Improvement of Final/Distributed Classification</string> 
+	<string name="comments">Comments</string> 
+
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Academic Path</string>

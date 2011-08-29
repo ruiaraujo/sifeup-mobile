@@ -81,7 +81,6 @@ public class DashboardFragment extends Fragment {
 
         root.findViewById(R.id.home_btn_news).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // Launch map of conference venue
                 fireTrackerEvent("New");
                 startActivity(new Intent(getActivity(),NewsActivity.class));
             }
@@ -90,39 +89,18 @@ public class DashboardFragment extends Fragment {
         
         root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // Launch map of conference venue
                 fireTrackerEvent("Map");
                 startActivity(new Intent(getActivity(),FeupMapActivity.class));
             }
         });
         
-        root.findViewById(R.id.home_btn_settings).setOnClickListener(new View.OnClickListener() {
+       root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // Launch map of conference venue
                 fireTrackerEvent("Settings");
                 startActivity(new Intent(getActivity(),NewsActivity.class));
             }
         });
-
-    /*    root.findViewById(R.id.home_btn_printing).setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View view) {
-                        // splicing in tag streamer
-                        fireTrackerEvent("Printing");
-                        Intent intent = new Intent(getActivity(), PrintActivity.class);
-                        startActivity(intent);
-                    }
-        }); */
         
-      /*  root.findViewById(R.id.home_btn_academicpath).setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View view) {
-                        // splicing in tag streamer
-                        fireTrackerEvent("Printing");
-                        Intent intent = new Intent(getActivity(), AcademicPathActivity.class);
-                        startActivity(intent);
-                    }
-        });*/
         return root;
     }
 }

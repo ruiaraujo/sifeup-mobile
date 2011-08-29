@@ -93,8 +93,13 @@
 	<string name="teachers">Docência</string>
 	<string name="bibliography">Bibliografia</string>
 	<string name="software">Software</string>
-	<string name="evaluation">Avaliação</string>
 	<string name="metodology">Metodologia</string> 
+	<string name="evaluation">Avaliação</string>
+	<string name="admission_exams">Obtenção de Frequência</string>  
+	<string name="final_grade">Cálculo da Classificação Final</string> 
+	<string name="special_evaluation">Avaliação Especial (TE, DA, ...)</string> 
+	<string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string> 
+	<string name="comments">Observações</string> 
 	
     <!-- Academic Path -->   	
    	<string name="title_academic_path">Percurso Académico</string>
