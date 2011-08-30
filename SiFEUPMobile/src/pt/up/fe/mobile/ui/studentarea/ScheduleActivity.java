@@ -12,6 +12,11 @@ import android.support.v4.app.Fragment;
  */
 public class ScheduleActivity extends BaseSinglePaneActivity {
 	
+	public final static String SCHEDULE_TYPE = "pt.up.fe.mobile.ui.studentarea.SCHEDULE_TYPE"; 
+	public final static String ROOM_CODE = "pt.up.fe.mobile.ui.studentarea.ROOM_CODE";
+	public final static String ROOM_EDI = "pt.up.fe.mobile.ui.studentarea.ROOM_EDI"; 
+	
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onPostCreate(Bundle savedInstanceState) {

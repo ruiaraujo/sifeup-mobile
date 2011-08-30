@@ -6,6 +6,7 @@ import pt.up.fe.mobile.service.Block;
 import pt.up.fe.mobile.ui.BaseFragment;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Html;
@@ -76,7 +77,16 @@ public class ClassDescriptionFragment extends BaseFragment
 		room.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "hello room schedule", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getActivity(), "hello room schedule", Toast.LENGTH_SHORT).show();
+				startActivity(new Intent(getActivity(),ScheduleActivity.class));
+				
+	
+				Intent i = new Intent(getActivity() , ScheduleActivity.class);
+				// assumed only one page of results
+				i.putExtra(ScheduleActivity.SCHEDULE_TYPE, "room");
+				i.putExtra(ScheduleActivity.ROOM_EDI, block.getBuildingCode() );
+				i.putExtra(ScheduleActivity.ROOM_CODE, block.getRoomCode());
+				startActivity(i);
 			}
 		});
 		

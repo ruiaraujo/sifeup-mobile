@@ -85,6 +85,10 @@ public class ScheduleFragment extends BaseFragment implements
     private boolean fetchingPreviousWeek = false;
     private boolean fetchingNextWeek = false;
     
+    private String roomCode;
+    private String roomEdi;
+    private String type;
+    
     /**
      * The key for the student code in the intent.
      */
@@ -93,6 +97,10 @@ public class ScheduleFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        roomCode = args.get(ScheduleActivity.ROOM_CODE).toString();
+		roomEdi = args.get(ScheduleActivity.ROOM_EDI).toString();
+		type = args.get(ScheduleActivity.SCHEDULE_TYPE).toString();
         setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
     }
@@ -660,7 +668,8 @@ public class ScheduleFragment extends BaseFragment implements
 		@Override
 		protected String doInBackground(Void ...  code) {
 			String page = "";
-		  	try {
+		  	
+			try {
 		  		Time monday = new Time(UIUtils.TIME_REFERENCE);
 		  		monday.set(mondayMillis);
 		  		monday.normalize(false);
@@ -670,9 +679,17 @@ public class ScheduleFragment extends BaseFragment implements
 		  		monday.normalize(false);
 		  		String lastDay = monday.format("%Y%m%d");
 		  		
-	    		page = SifeupAPI.getScheduleReply(personCode, 
+		  		if(type.equals("room"))
+		  		{
+		  			page = SifeupAPI.getRoomScheduleReply(roomEdi, roomCode, firstDay, 
+							lastDay);
+		  		}
+		  		else
+		  		{
+		  			page = SifeupAPI.getScheduleReply(personCode, 
 								firstDay, 
 								lastDay);
+		  		}
 	    		
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
