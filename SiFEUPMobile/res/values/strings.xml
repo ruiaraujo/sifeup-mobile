@@ -82,8 +82,12 @@
   	<string name="description_now">Go to Now</string>
   	
   	<!-- Class Description -->
-    <string name="class_teacher">Teacher: <xliff:g id="teacher">%1$s</xliff:g></string>
-  	<string name="class_room">Room: <xliff:g id="teacher">%1$s</xliff:g></string>
+  	<string name="class_subject"> <b>Subject:</b> <xliff:g id="subject"> %1$s</xliff:g></string>
+    <string name="class_teacher"> <b>Teacher:</b> <xliff:g id="teacher"> %1$s</xliff:g></string>
+  	<string name="class_room"> <b>Room:</b> <xliff:g id="room">%1$s</xliff:g></string>
+  	<string name="class_team"> <b>Team:</b> <xliff:g id="team">%1$s</xliff:g></string>
+  	<string name="class_start_time"> <b>Start time:</b> <xliff:g id="start_time">%1$s</xliff:g></string>
+  	<string name="class_duration"> <b>Duration:</b> <xliff:g id="duration">%1$s</xliff:g></string>
   	
   	<!-- Exams -->
   	<string name="title_exams">Exams</string>

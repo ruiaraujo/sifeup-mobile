@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 
 
 /**
- * Park Occupation Activity
+ * Class Description Activity
  * 
  * @author Ângela Igreja
  */
