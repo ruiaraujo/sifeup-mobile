@@ -175,7 +175,7 @@ public class Employee extends Profile implements Serializable {
 		}
 		if ( webPage != null  && !webPage.equals("") )
 		{
-			result.add(new ProfileDetail(res.getString(R.string.profile_title_status), webPage, Type.WEBPAGE));
+			result.add(new ProfileDetail(res.getString(R.string.profile_title_website), webPage, Type.WEBPAGE));
 		}
 		for ( Room r : rooms )
 		{

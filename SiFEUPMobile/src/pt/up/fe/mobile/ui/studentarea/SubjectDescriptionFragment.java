@@ -16,6 +16,7 @@ import pt.up.fe.mobile.service.Subject.Software;
 import pt.up.fe.mobile.service.Subject.Teacher;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.Intent;
@@ -32,10 +33,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class SubjectDescriptionFragment extends BaseFragment {
 	
@@ -102,7 +105,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		
 		// Set images for previous and next arrows.
 		indicator.setArrows(prev, next);
-		
+		indicator.onlyCenterText(true);
         // Set the indicator as the pageChangeListener
         viewPager.setOnPageChangeListener(indicator);
         
@@ -290,6 +293,19 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				        
 				        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_subject_teacher, from, to);
 				        list.setAdapter(adapter);
+				        list.setOnItemClickListener(new OnItemClickListener() {
+
+							public void onItemClick(AdapterView<?> arg0, View arg1,
+									int pos, long id) {
+								Teacher b =subject.getTeachers().get(pos);
+								Intent i = new Intent(getActivity() , ProfileActivity.class);
+								i.putExtra(ProfileActivity.PROFILE_CODE, b.getCode());
+								i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_EMPLOYEE);
+								i.putExtra(Intent.EXTRA_TITLE,b.getName());
+								startActivity(i);
+												
+							}
+						});
 						return list;
 				
 				case 3:
@@ -314,21 +330,25 @@ public class SubjectDescriptionFragment extends BaseFragment {
 			           
 			             fillMapsBooks.add(map);  
 			             
-			             //TODO: Como fazer?
-			             /*((TextView) listBooks.findViewById(R.id.link)).setOnClickListener(new OnClickListener() 
-				        	{
-								@Override
-								public void onClick(View v) {
-									Intent i = new Intent(Intent.ACTION_VIEW);
-									i.setData(Uri.parse(b.getLink()));
-									startActivity(i);
-							}
-						});*/
+			         
 			        }
 			        
 			     
 			        SimpleAdapter adapterBooks = new SimpleAdapter(getActivity(), fillMapsBooks, R.layout.list_item_subject_book, fromBook, toBook);
 			        listBooks.setAdapter(adapterBooks);
+			        listBooks.setOnItemClickListener(new OnItemClickListener() {
+
+						public void onItemClick(AdapterView<?> arg0, View arg1,
+								int pos, long id) {
+							Book b =subject.getBibliography().get(pos);
+							if ( b.getLink() == null )
+								return;
+							Intent i = new Intent(Intent.ACTION_VIEW);
+							i.setData(Uri.parse(b.getLink()));
+							startActivity(i);
+											
+						}
+					});
 					return listBooks;
 					
 				case 4:
@@ -436,25 +456,21 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public void finishUpdate(View arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public Parcelable saveState() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public void startUpdate(View arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 

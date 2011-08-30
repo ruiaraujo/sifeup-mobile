@@ -128,13 +128,14 @@
 	<string name="profile_title_email_alt">Alternative Email</string>
    	<string name="profile_title_mobile">Mobile Phone</string>
     <string name="profile_title_telephone">Telephone</string>
-    <string name="profile_title_ext_mobile">External Mobile Phone</string>
+    <string name="profile_title_ext_mobile">Mobile Phone Extension</string>
     <string name="profile_title_ext_voip">VOIP Extension</string>
-    <string name="profile_title_ext_telephone">External Telephone</string>
+    <string name="profile_title_ext_telephone">Telephone Extension</string>
     <string name="profile_title_branch">Branch</string>
     <string name="profile_title_programme">Programme</string>
     <string name="profile_title_code">Code</string>
     <string name="profile_title_status">Status</string>
+    <string name="profile_title_website">Website</string>
     <string name="profile_title_year">Year</string>
     <string name="profile_title_room">Room</string>
     

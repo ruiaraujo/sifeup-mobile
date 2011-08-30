@@ -121,15 +121,16 @@
 	<string name="profile_title_email_alt">Email Alternativo</string>
    	<string name="profile_title_mobile">Telemóvel</string>
     <string name="profile_title_telephone">Telefone</string>
-    <string name="profile_title_ext_mobile">External Mobile Phone</string>
-    <string name="profile_title_ext_voip">VOIP Extension</string>
-    <string name="profile_title_ext_telephone">External Telephone</string>
+    <string name="profile_title_ext_mobile">Extensão de Telemóvel</string>
+    <string name="profile_title_ext_voip">Extensão VOIP</string>
+    <string name="profile_title_ext_telephone">Extensão de Telefone</string>
     <string name="profile_title_branch">Ramo</string>
     <string name="profile_title_programme">Curso</string>
     <string name="profile_title_code">Código</string>
     <string name="profile_title_status">Estado</string>
+    <string name="profile_title_website">Website</string>
     <string name="profile_title_year">Ano</string>
-    <string name="profile_title_room">Room</string>
+    <string name="profile_title_room">Sala</string>
 
    	<!-- Lunch Menu -->
    	<string name="title_lunch_menu">Ementa</string>
