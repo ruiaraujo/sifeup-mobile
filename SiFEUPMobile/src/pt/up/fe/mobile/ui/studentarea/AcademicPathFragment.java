@@ -17,6 +17,7 @@ import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ public class AcademicPathFragment extends BaseFragment {
 	private TextView average;
 	private TextView year;
 	private TextView entries;
+	private TextView state;
+	private TextView course;
 	
 	private ExpandableListView grades;
 	private LayoutInflater mInflater;
@@ -65,10 +68,20 @@ public class AcademicPathFragment extends BaseFragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path, getParentContainer(), true);
+		
 		grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
+		
 		year = (TextView) root.findViewById(R.id.path_year);
+		
 		average = (TextView) root.findViewById(R.id.path_average);
+		
 		entries = (TextView) root.findViewById(R.id.path_entries);
+		
+		state = (TextView) root.findViewById(R.id.path_state);
+		
+		course = (TextView) root.findViewById(R.id.path_course);
+		
+		//TODO: colocar talvez este link no menu de cima
 		((TextView) root.findViewById(R.id.path_link_sifeup)).setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -212,7 +225,8 @@ public class AcademicPathFragment extends BaseFragment {
 				average.setText(getString(R.string.path_average, academicPath.average));
 				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
 				year.setText(getString(R.string.path_year, academicPath.courseYears));
-
+				state.setText(getString(R.string.path_state, academicPath.state));
+				course.setText(getString(R.string.path_course, academicPath.courseAcronym));
 		        grades.setAdapter(new AcademicPathAdapter()); 
 				showMainScreen();
     		}
@@ -304,6 +318,8 @@ public class AcademicPathFragment extends BaseFragment {
 								marker.getPaddingTop(),
 								marker.getPaddingRight(),
 								marker.getPaddingBottom());
+				
+				marker.setBackgroundColor(R.color.accent_1);
 				return marker;
 			}
 			View root = mInflater.inflate(R.layout.list_item_grade, null);

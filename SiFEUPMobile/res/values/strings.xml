@@ -117,7 +117,9 @@
    	<string name="title_academic_path">Academic Path</string>
     <string name="btn_academic_path">Academic Path</string> 
     <string name="path_year"><b>Year:</b> <xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semestre:</b> <xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_state"><b>Status:</b> <xliff:g id="state">%1$s</xliff:g></string>
+    <string name="path_course"><b>Programme:</b> <xliff:g id="course">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semester:</b> <xliff:g id="year">%1$s</xliff:g></string>
     <string name="path_average"><b>Average:</b> <xliff:g id="average">%1$s</xliff:g></string>
     <string name="path_entries"><b>Number of Entries:</b> <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Grade: <xliff:g id="entries">%1$s</xliff:g></string>
