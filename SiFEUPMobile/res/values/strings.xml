@@ -172,15 +172,22 @@
     <string name="bt_set_password_confirm">OK</string>
     <string name="bt_set_password_cancel">Cancel</string>
     <string name="lb_new_password">New password:</string>
+    <string name="hint_new_password">New password</string>
     <string name="lb_confirm_new_password">Confirm new password:</string>
+    <string name="hint_confirm_new_password">Confirm new password</string>
     <string name="lb_current_password">Current password:</string>
-    <string name="set_password_message"> Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:
-    	<ul>
-			<li>Conter obrigatoriamente entre 8 e 32 caracteres.</li>
-			<li>Não ser igual às 5 palavras-passe anteriores.</li>
-			<li>Conter um misto de letras e números;</li>
-		</ul> 
+    <string name="hint_current_password">Current password</string>
+    <string name="set_password_message"> 
+    Para alterar a sua palavra-passe siga as seguintes normas e 
+    preencha os campos a seguir:
+    \n  - Conter obrigatoriamente entre 8 e 32 caracteres.
+	\n  - Não ser igual às 5 palavras-passe anteriores.
+	\n  - Conter um misto de letras e números.
+	\n  - Por questões de compatibilidade de sistemas não pode conter símbolos tais como: &amp;, %, $, (, ), /... .
 	</string>
+	<string name="lb_username">Username:</string>
+	<string name="hint_username">Username</string>
+	
 	
     <!-- Card Request-->
     <string name="title_card_request">Card Request</string>
