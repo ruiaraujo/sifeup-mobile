@@ -25,11 +25,10 @@ public class ProfileActivity extends BaseSinglePaneActivity {
     	Intent i = getIntent();
     	String type = i.getStringExtra(PROFILE_TYPE);
     	
-    	if ( type == null || type.equals(PROFILE_STUDENT))
+    	if ( type.equals(PROFILE_STUDENT))
     		return new StudentProfileFragment();
-       else if ( type.equals(PROFILE_EMPLOYEE))
+        if ( type.equals(PROFILE_EMPLOYEE))
       		return new EmployeeProfileFragment();
-    	
 		return new Fragment();
     	
     }

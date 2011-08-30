@@ -27,11 +27,9 @@
     <string name="toast_server_error">The Web Service seems to be down. Try again.</string>
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
     
-   	   
    	<!-- *************************************************************************************** -->
    	<!-- LOGOUT -->
    	<string name="description_logout">Log Out</string>
-   	
    	
     <!-- *************************************************************************************** -->
    	<!-- SEARCH -->
@@ -61,7 +59,6 @@
 	                                 <li>CICA</li> \n
 	                                 <li>Master in Informatics and Computing Engineering</li> \n
 	                                 <li>Distributed Systems course</li> \n
-	                  
                                  </ul>
                                  </string>
    	
@@ -74,6 +71,7 @@
  
   	<!-- Schedule -->
     <string name="title_schedule">Schedule</string>
+    <string name="title_schedule_arg">Schedule of <xliff:g id="code">%1$s</xliff:g></string>
   	<string name="btn_schedule">Schedule</string>
   	<string name="description_export">Export</string>	
   	<string name="toast_export_calendar_finished">Calendar Exported.</string>
@@ -87,7 +85,7 @@
   	<string name="class_room"> <b>Room:</b> <xliff:g id="room">%1$s</xliff:g></string>
   	<string name="class_team"> <b>Team:</b> <xliff:g id="team">%1$s</xliff:g></string>
   	<string name="class_start_time"> <b>Start time:</b> <xliff:g id="start_time">%1$s</xliff:g></string>
-  	<string name="class_duration"> <b>Duration:</b> <xliff:g id="duration">%1$s</xliff:g></string>
+  	<string name="class_end_time"> <b>End time:</b> <xliff:g id="end time">%1$s</xliff:g></string>
   	
   	<!-- Exams -->
   	<string name="title_exams">Exams</string>
@@ -130,12 +128,16 @@
 	<string name="profile_title_email_alt">Alternative Email</string>
    	<string name="profile_title_mobile">Mobile Phone</string>
     <string name="profile_title_telephone">Telephone</string>
+    <string name="profile_title_ext_mobile">External Mobile Phone</string>
+    <string name="profile_title_ext_voip">VOIP Extension</string>
+    <string name="profile_title_ext_telephone">External Telephone</string>
     <string name="profile_title_branch">Branch</string>
     <string name="profile_title_programme">Programme</string>
     <string name="profile_title_code">Code</string>
     <string name="profile_title_status">Status</string>
     <string name="profile_title_year">Year</string>
-
+    <string name="profile_title_room">Room</string>
+    
    	<!-- Lunch Menu -->
    	<string name="title_lunch_menu">Lunch Menu</string>
    	<string name="btn_lunch_menu">Lunch Menu</string>

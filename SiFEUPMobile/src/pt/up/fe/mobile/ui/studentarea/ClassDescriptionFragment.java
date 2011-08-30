@@ -4,8 +4,10 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Block;
 
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -55,7 +57,11 @@ public class ClassDescriptionFragment extends BaseFragment
 		subject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "hello subject schedule", Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(getActivity() , ScheduleActivity.class);
+				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_UC) ;
+				i.putExtra(ScheduleFragment.SCHEDULE_CODE, block.getLectureCode()  );
+	    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,block.getLectureAcronym() ));
+				startActivity(i);
 			}
 		});
 		
@@ -66,7 +72,11 @@ public class ClassDescriptionFragment extends BaseFragment
 		teacher.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "hello teacher profile", Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(getActivity() , ProfileActivity.class);
+				i.putExtra(ProfileActivity.PROFILE_CODE, block.getTeacherCode());
+				i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_EMPLOYEE);
+				i.putExtra(Intent.EXTRA_TITLE, block.getTeacherAcronym());
+				startActivity(i);
 			}
 		});
 		
@@ -77,15 +87,12 @@ public class ClassDescriptionFragment extends BaseFragment
 		room.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//Toast.makeText(getActivity(), "hello room schedule", Toast.LENGTH_SHORT).show();
-				startActivity(new Intent(getActivity(),ScheduleActivity.class));
-				
-	
 				Intent i = new Intent(getActivity() , ScheduleActivity.class);
-				// assumed only one page of results
-				i.putExtra(ScheduleActivity.SCHEDULE_TYPE, "room");
-				i.putExtra(ScheduleActivity.ROOM_EDI, block.getBuildingCode() );
-				i.putExtra(ScheduleActivity.ROOM_CODE, block.getRoomCode());
+				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_ROOM) ;
+				i.putExtra(ScheduleFragment.SCHEDULE_CODE, block.getBuildingCode() + block.getRoomCode()  );
+	    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,
+	    				 		block.getBuildingCode() + block.getRoomCode()));
+
 				startActivity(i);
 			}
 		});
@@ -95,14 +102,16 @@ public class ClassDescriptionFragment extends BaseFragment
 		team.setText(getString(R.string.class_team, block.getClassAcronym()));
 		
 		// Start time
-		//TODO: obter o start time correcto
-		TextView startTime = (TextView) root.findViewById(R.id.class_start_time);
-		startTime.setText(getString(R.string.class_start_time, block.getStartTime()));
+		int startTime = block.getStartTime();
+		String start = Integer.toString(startTime/3600) + ":" + Integer.toString(startTime%3600);
+		TextView startT = (TextView) root.findViewById(R.id.class_start_time);
+		startT.setText(getString(R.string.class_start_time,start ));
 		
 		// Duration
-		//TODO: colocar horas e minutos
-		TextView duration = (TextView) root.findViewById(R.id.class_duration);
-		duration.setText(getString(R.string.class_duration, block.getLectureDuration()));
+		int endTime = (int) (block.getStartTime() + block.getLectureDuration()*3600);
+		String end = Integer.toString(endTime/3600) + ":" + Integer.toString(endTime%3600);
+		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
+		endT.setText(getString(R.string.class_end_time, end));
 		
 		showMainScreen();
 		

@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import com.commonsware.cwac.endless.EndlessAdapter;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Profile;
+import pt.up.fe.mobile.service.Profile;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -279,48 +281,14 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 			return;
 		Intent i = new Intent(getActivity() , ProfileActivity.class);
 		// assumed only one page of results
+		Profile profile = results.get(position/15).students.get(position%15);
+		i.putExtra(Intent.EXTRA_TITLE,profile.getName() );
 		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT);
 		i.putExtra(ProfileActivity.PROFILE_CODE, 
-					results.get(position/15).students.get(position%15).getCode());
+				profile.getCode());
 		startActivity(i);
 	}
-	/*
-	public class EndlessScrollListener implements OnScrollListener {
-		 
-	    private int visibleThreshold = 12;
-	    private int currentPage = 1;
-	    private int previousTotal = 0;
-	    private boolean loading = true;
-	    public EndlessScrollListener() {
-	    }
-	    public EndlessScrollListener(int visibleThreshold) {
-	        this.visibleThreshold = visibleThreshold;
-	    }
-	 
-	    public void onScroll(AbsListView view, int firstVisibleItem,
-	            int visibleItemCount, int totalItemCount) {
-	        if (loading) {
-	            if (totalItemCount > previousTotal) {
-	                loading = false;
-	                previousTotal = totalItemCount;
-	                currentPage++;
-	            }
-	        }
-	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-	        	if ( results.size() >= 1 )
-	        	{ //Stop trying to load after having loaded them all.
-	        		if ( results.get(0).pageResults >= totalItemCount )
-	        			return;
-	        	}
-	            new StudentsSearchTask().execute(results.size() * 15 + 1);
-	            loading = true;
-	        }
-	    }
-	 
-	    @Override
-	    public void onScrollStateChanged(AbsListView view, int scrollState) {
-	    }
-	}*/
+
 	
 	public class EndlessSearchAdapter extends EndlessAdapter{
 

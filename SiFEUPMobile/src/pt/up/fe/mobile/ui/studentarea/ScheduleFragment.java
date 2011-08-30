@@ -80,29 +80,37 @@ public class ScheduleFragment extends BaseFragment implements
     private ArrayList<Block> schedule = new ArrayList<Block>();
     private List<Day> mDays = new ArrayList<Day>();
     private long mondayMillis;
-    private String personCode;
     private LayoutInflater mInflater;
     private boolean fetchingPreviousWeek = false;
     private boolean fetchingNextWeek = false;
     
-    private String roomCode;
-    private String roomEdi;
-    private String type;
+    private String scheduleCode;
+    private int scheduleType;
+    /**
+     * The key for the schedule code in the intent.
+     */
+    final public static String SCHEDULE_CODE  = "pt.up.fe.mobile.ui.studentarea.SCHEDULE_CODE";
     
     /**
-     * The key for the student code in the intent.
+     * The key for the schedule type in the intent.
      */
-    final public static String PROFILE_CODE  = "pt.up.fe.mobile.ui.studentarea.PROFILE";
+    final public static String SCHEDULE_TYPE  = "pt.up.fe.mobile.ui.studentarea.SCHEDULE_TYPE";
+
+    final public static int SCHEDULE_STUDENT  = 0;
+    final public static int SCHEDULE_EMPLOYEE  = 1;
+    final public static int SCHEDULE_ROOM  = 2;
+    final public static int SCHEDULE_UC  = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        roomCode = args.get(ScheduleActivity.ROOM_CODE).toString();
-		roomEdi = args.get(ScheduleActivity.ROOM_EDI).toString();
-		type = args.get(ScheduleActivity.SCHEDULE_TYPE).toString();
         setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
+  		scheduleCode = (String) getArguments().getString(SCHEDULE_CODE);
+		if ( scheduleCode == null )
+			scheduleCode = SessionManager.getInstance().getLoginCode();
+		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);
     }
 
     @Override
@@ -159,9 +167,6 @@ public class ScheduleFragment extends BaseFragment implements
   		setupDay(mondayMillis + (7 * DateUtils.DAY_IN_MILLIS),6);
         onPageSelected(1);
 
-  		personCode = (String) getArguments().get(PROFILE_CODE);
-		if ( personCode == null )
-			personCode = SessionManager.getInstance().getLoginCode();
 		new ScheduleTask().execute();
 
         return getParentContainer();
@@ -678,18 +683,23 @@ public class ScheduleFragment extends BaseFragment implements
 		  		monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
 		  		monday.normalize(false);
 		  		String lastDay = monday.format("%Y%m%d");
-		  		
-		  		if(type.equals("room"))
+		  		switch ( scheduleType )
 		  		{
-		  			page = SifeupAPI.getRoomScheduleReply(roomEdi, roomCode, firstDay, 
-							lastDay);
+			  		case SCHEDULE_STUDENT : 
+			    		page = SifeupAPI.getScheduleReply(scheduleCode, firstDay,	lastDay);
+			    		break;
+			  		case SCHEDULE_EMPLOYEE : 
+			    		page = SifeupAPI.getEmployeeScheduleReply(scheduleCode, firstDay,	lastDay);
+			    		break;
+			  		case SCHEDULE_ROOM : 
+			    		page = SifeupAPI.getRoomScheduleReply(scheduleCode.substring(0, 1),scheduleCode.substring(1), firstDay,	lastDay);
+			    		break;
+			  		case SCHEDULE_UC : 
+			    		page = SifeupAPI.getUcScheduleReply(scheduleCode, firstDay,	lastDay);
+			    		break;
+			  		default : page = null;	
 		  		}
-		  		else
-		  		{
-		  			page = SifeupAPI.getScheduleReply(personCode, 
-								firstDay, 
-								lastDay);
-		  		}
+
 	    		
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)

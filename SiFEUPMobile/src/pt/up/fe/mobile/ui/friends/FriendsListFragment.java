@@ -98,7 +98,7 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
     		if ( getActivity() == null )
     			return true;
     		Intent i = new Intent(getActivity(), ScheduleActivity.class);
-    		i.putExtra(ScheduleFragment.PROFILE_CODE, loginCode);
+    		i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
     		startActivity(i);
     		break;
     	}

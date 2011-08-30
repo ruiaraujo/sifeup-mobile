@@ -5,8 +5,8 @@
     <string name="app_name">SiFEUP Mobile</string>
     <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
-    <string name="description_refresh">Refresh</string>
-    <string name="description_share">Share</string>
+    <string name="description_refresh">Refrescar</string>
+    <string name="description_share">Partilhar</string>
         
     <!-- *************************************************************************************** -->
    	<!-- LOGIN -->
@@ -25,12 +25,12 @@
     <string name="toast_login_error_wrong_password">O utlizador ou senha estão incorrectos.</string>
     
     <string name="toast_server_error">O servidor parece estar com dificuldades. Por favor, tente outra vez.</string>
-   	   
+    <string name="toast_auth_error">A sua sessão terminou. Por favor, reautentique-se.</string>
+    
    	<!-- *************************************************************************************** -->
    	<!-- LOGOUT -->
    	<string name="description_logout">Log Out</string>
-   	
-   	
+    	
     <!-- *************************************************************************************** -->
    	<!-- SEARCH -->
     <string name="description_search">Procurar</string>
@@ -71,12 +71,17 @@
  
   	<!-- Schedule -->
     <string name="title_schedule">Horário</string>
+    <string name="title_schedule_arg">Horário de <xliff:g id="code">%1$s</xliff:g></string>
   	<string name="btn_schedule">Horário</string>
   	<string name="description_export">Exportar</string>	
     <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
     <string name="toast_export_calendar_finished">Calendário Exportado.</string>
   	<string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
   	<string name="description_now">Ir para hoje</string>
+  	
+  	<!-- Class Description -->
+    <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>
+  	<string name="class_room">Sala: <xliff:g id="teacher">%1$s</xliff:g></string>
   	
   	<!-- Exams -->
   	<string name="title_exams">Exames</string>
@@ -105,6 +110,7 @@
    	<string name="title_academic_path">Percurso Académico</string>
     <string name="btn_academic_path">Percurso Académico</string> 
     <string name="path_year"><b>Ano:</b> <xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semestre:</b> <xliff:g id="year">%1$s</xliff:g></string>
     <string name="path_average"><b>Média:</b> <xliff:g id="average">%1$s</xliff:g></string>
     <string name="path_entries"><b>Número de Inscrições:</b> <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Nota: <xliff:g id="entries">%1$s</xliff:g></string>
@@ -115,11 +121,15 @@
 	<string name="profile_title_email_alt">Email Alternativo</string>
    	<string name="profile_title_mobile">Telemóvel</string>
     <string name="profile_title_telephone">Telefone</string>
+    <string name="profile_title_ext_mobile">External Mobile Phone</string>
+    <string name="profile_title_ext_voip">VOIP Extension</string>
+    <string name="profile_title_ext_telephone">External Telephone</string>
     <string name="profile_title_branch">Ramo</string>
     <string name="profile_title_programme">Curso</string>
     <string name="profile_title_code">Código</string>
     <string name="profile_title_status">Estado</string>
     <string name="profile_title_year">Ano</string>
+    <string name="profile_title_room">Room</string>
 
    	<!-- Lunch Menu -->
    	<string name="title_lunch_menu">Ementa</string>
@@ -137,7 +147,6 @@
    	<!-- Tuition -->
    	<string name="title_tuition">Pagamentos</string>
    	<string name="btn_tuition">Propinas</string>
-   	
 	<string name="title_tuition_history">Histórico de Propinas</string>
     <string name="lbl_year">Ano </string>
     <string name="lbl_paid">Pago</string>

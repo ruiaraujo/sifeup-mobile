@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Employee;
 import pt.up.fe.mobile.service.Friend;
+import pt.up.fe.mobile.service.Profile;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.Student;
-import pt.up.fe.mobile.service.Student.StudentDetail;
+import pt.up.fe.mobile.service.Profile.ProfileDetail;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
@@ -52,8 +52,8 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	private TextView code;
 
 	/** User Info */
-    private Student me = new Student();
-    private List<StudentDetail> contents;
+    private Employee me = new Employee();
+    private List<ProfileDetail> contents;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			
 			@Override
 			public void onClick(View v) {
-				Friend fr = new Friend(me.getCode(),me.getName(), me.getProgrammeAcronym());
+				Friend fr = new Friend(me.getCode(),me.getName(), me.getName());
 				if ( friend.isChecked())
 					SessionManager.friends.addFriend(fr);
 				else
@@ -90,7 +90,9 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
-	    		i.putExtra(ScheduleFragment.PROFILE_CODE, me.getCode());
+				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_EMPLOYEE);
+	    		i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
+	    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,me.getName()));
 	    		startActivity(i);
 			}
 		});
@@ -119,7 +121,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
         	if ( result.equals("Success") )
         	{
 				Log.e("Profile","success");
-				contents = me.getStudentContents(getResources());
+				contents = me.getProfileContents(getResources());
 				name.setText(me.getName());
 				code.setText(me.getCode());
 				if ( SessionManager.friends.isFriend(me.getCode()) )
@@ -130,7 +132,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
 			         // prepare the list of all records
 		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for ( StudentDetail s : contents )   
+		         for ( ProfileDetail s : contents )   
 		         { 
 		        	 HashMap<String, String> map = new HashMap<String, String>();
 		             map.put(from[0], s.title);
@@ -174,7 +176,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		  	try {
 		  		if ( code.length < 1 )
 		  			return "";
-	    			page = SifeupAPI.getStudentReply(code[0]);
+	    			page = SifeupAPI.getEmployeeReply(code[0]);
 	    		int error =	SifeupAPI.JSONError(page);
 	    		switch (error)
 	    		{
@@ -182,7 +184,10 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	    				return "Error";
 	    			case SifeupAPI.Errors.NO_ERROR:
 	    				//JSONEmployee(page);
-	    				return "Success";
+	    				if ( me.JSONSubject(page) )
+	    					return "Success";
+	    				else
+	    					return "";
 	    			case SifeupAPI.Errors.NULL_PAGE:
 	    				return "";	
 	    		}

@@ -113,7 +113,7 @@ public class SifeupAPI {
 	
 	private interface RoomSchedule {
 		String NAME = "horario_sala";
-		String CODE = "pv_cod_edi";
+		String BUILDING_CODE = "pv_cod_edi";
 		String ROOM_CODE = "pv_cod_sala";
 	}
 		
@@ -298,7 +298,7 @@ public class SifeupAPI {
 	 * @return Schedule Url
 	 */
 	public static String getRoomScheduleUrl( String code , String roomCode, String begin , String end ){
-		return WEBSERVICE + RoomSchedule.NAME + WEBSERVICE_SEP + RoomSchedule.CODE + 
+		return WEBSERVICE + RoomSchedule.NAME + WEBSERVICE_SEP + RoomSchedule.BUILDING_CODE + 
 					EQUALS + code + LINK_SEP + RoomSchedule.ROOM_CODE + EQUALS + roomCode +
 					LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
 					LINK_SEP + Schedule.END + EQUALS + end;
@@ -660,7 +660,7 @@ public class SifeupAPI {
 	 * @param end
 	 * @return
 	 */
-	public static String getTeacherScheduleReply( String code, String init, String end ){
+	public static String getEmployeeScheduleReply( String code, String init, String end ){
 		String page = null;
 		try {
 			do {

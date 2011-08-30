@@ -12,7 +12,7 @@ import pt.up.fe.mobile.service.Friend;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
-import pt.up.fe.mobile.service.Student.StudentDetail;
+import pt.up.fe.mobile.service.Profile.ProfileDetail;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
@@ -23,7 +23,6 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 
 	/** User Info */
     private Student me = new Student();
-    private List<StudentDetail> contents;
+    private List<ProfileDetail> contents;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,8 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
-	    		i.putExtra(ScheduleFragment.PROFILE_CODE, me.getCode());
+	    		i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
+	    		i.putExtra(ScheduleFragment.SCHEDULE_TYPE, ScheduleFragment.SCHEDULE_STUDENT);
 	    		startActivity(i);
 			}
 		});
@@ -120,7 +120,7 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
         	if ( result.equals("Success") )
         	{
 				Log.e("Profile","success");
-				contents = me.getStudentContents(getResources());
+				contents = me.getProfileContents(getResources());
 				name.setText(me.getName());
 				code.setText(me.getCode());
 				if ( SessionManager.friends.isFriend(me.getCode()) )
@@ -131,7 +131,7 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
 			         // prepare the list of all records
 		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for ( StudentDetail s : contents )   
+		         for ( ProfileDetail s : contents )   
 		         { 
 		        	 HashMap<String, String> map = new HashMap<String, String>();
 		             map.put(from[0], s.title);
@@ -204,7 +204,7 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 	/**
 	 * Parses a JSON String containing Student info,
 	 * Stores that info at Collection me.
-	 * @param String page
+	 * @param page
 	 * @return boolean
 	 * @throws JSONException
 	 */
