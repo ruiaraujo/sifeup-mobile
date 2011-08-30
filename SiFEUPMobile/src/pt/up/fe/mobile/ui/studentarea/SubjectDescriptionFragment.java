@@ -362,14 +362,13 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				    // prepare the list of all records
 			        List<HashMap<String, String>> fillMapsSoftware = new ArrayList<HashMap<String, String>>();
 			        
-			        //TODO: ver se a list de software é vazia
 			        for(Software s : subject.getSoftware())
 			        {
 			             HashMap<String, String> map = new HashMap<String, String>();
 			     
-			             map.put("name", s.getName());
-			             map.put("description", s.getDescription());
-			      
+			             map.put(fromSoftware[0], s.getName());
+			             map.put(fromSoftware[1], s.getDescription());
+			             fillMapsSoftware.add(map);
 			        }
 		            SimpleAdapter adapterSoftware = new SimpleAdapter(getActivity(), fillMapsSoftware, R.layout.list_item_subject_software, fromSoftware, toSoftware);
 				    listSoftware.setAdapter(adapterSoftware);
@@ -393,7 +392,6 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				    // prepare the list of all records
 			        List<HashMap<String, String>> fillMapsEvaluation = new ArrayList<HashMap<String, String>>();
 			        
-			        //TODO: ver se a list de evaluation é vazia
 			        for(EvaluationComponent e : subject.getEvaluation())
 			        {
 			             HashMap<String, String> map = new HashMap<String, String>();
@@ -403,6 +401,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 			             map.put("typeDesc", e.getTypeDesc());
 			             map.put("length", e.getLength());
 			             map.put("conclusionDate", e.getConclusionDate());
+			             fillMapsEvaluation.add(map);
 			      
 			        }
 		            SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, fromEvaluation, toEvaluation);

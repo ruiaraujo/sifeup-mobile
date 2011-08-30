@@ -90,7 +90,7 @@
   	<!-- Subjects -->
 	<string name="btn_subjects">Disciplinas</string>
 	<string name="title_subjects">Disciplinas</string>   
-	<string name="subjects_year">Ano<xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
+	<string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
 	
 	<!-- Subject Description -->
 	<string name="objectives">Objectivos</string>
