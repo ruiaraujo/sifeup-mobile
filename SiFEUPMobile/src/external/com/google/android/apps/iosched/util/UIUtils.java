@@ -158,4 +158,12 @@ public class UIUtils {
     	return nowT.year;
     }
     
+    public static int secondYearOfSchoolYear(long millis){
+    	Time nowT = new Time();
+    	nowT.set(millis);
+    	nowT.normalize(false);
+    	if ( nowT.month >= 8 )
+    		return nowT.year+1;
+    	return nowT.year;
+    }
 }

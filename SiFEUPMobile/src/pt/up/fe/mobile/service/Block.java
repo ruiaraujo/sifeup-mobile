@@ -25,9 +25,8 @@ public class Block implements Serializable{
 	private String roomCode; // 002
 	private String buildingCode; // B
 	private String semester; // 2S
-
-	public Block() {
-	}
+	
+	private String year; // 2010/2011
 
 	public int getWeekDay() {
 		return weekDay;
@@ -123,5 +122,13 @@ public class Block implements Serializable{
 
 	public void setSemester(String semester) {
 		this.semester = semester;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getYear() {
+		return year;
 	}
 }

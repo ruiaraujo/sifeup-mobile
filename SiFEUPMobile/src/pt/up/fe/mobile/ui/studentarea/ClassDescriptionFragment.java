@@ -57,11 +57,16 @@ public class ClassDescriptionFragment extends BaseFragment
 		subject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity() , ScheduleActivity.class);
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_UC) ;
-				i.putExtra(ScheduleFragment.SCHEDULE_CODE, block.getLectureCode()  );
-	    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,block.getLectureAcronym() ));
+				if ( getActivity() == null )
+					return;
+				Intent i = new Intent(getActivity() , SubjectDescriptionActivity.class);
+				// assumed only one page of results
+				i.putExtra(SubjectDescriptionActivity.SUBJECT_CODE, block.getLectureCode());
+				i.putExtra(SubjectDescriptionActivity.SUBJECT_YEAR, block.getYear());
+				i.putExtra(SubjectDescriptionActivity.SUBJECT_PERIOD, block.getSemester());
+				i.putExtra(Intent.EXTRA_TITLE, block.getLectureAcronym());
 				startActivity(i);
+
 			}
 		});
 		
@@ -107,7 +112,7 @@ public class ClassDescriptionFragment extends BaseFragment
 		TextView startT = (TextView) root.findViewById(R.id.class_start_time);
 		startT.setText(getString(R.string.class_start_time,start ));
 		
-		// Duration
+		// End Time
 		int endTime = (int) (block.getStartTime() + block.getLectureDuration()*3600);
 		String end = Integer.toString(endTime/3600) + ":" + Integer.toString(endTime%3600);
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);

@@ -30,6 +30,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -68,6 +71,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		year = args.get(SubjectDescriptionActivity.SUBJECT_YEAR).toString();
 		period = args.get(SubjectDescriptionActivity.SUBJECT_PERIOD).toString();
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subject Description");
+        setHasOptionsMenu(true);
     }
 	
     @Override
@@ -86,7 +90,36 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		
         return getParentContainer();
 	}
-       
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.subject_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_subject_schedule) {
+			Intent i = new Intent(getActivity() , ScheduleActivity.class);
+			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_UC) ;
+			i.putExtra(ScheduleFragment.SCHEDULE_CODE, subject.getCode()  );
+    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,subject.getAcronym() ));
+			startActivity(i);
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
+        	StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
+    		url.append("p_cad_codigo=");
+    		url.append(code);
+    		url.append("&p_ano_lectivo=");
+    		url.append(year);
+    		url.append("&p_periodo=" );
+    		url.append(period);
+    		Uri uri = Uri.parse( url.toString() );
+    		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+   
 	private void buildPages(){
  		// Create our custom adapter to supply pages to the viewpager.
         pagerAdapter = new PagerSubjectAdapter();

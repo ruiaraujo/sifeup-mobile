@@ -373,7 +373,9 @@ public class ScheduleFragment extends BaseFragment implements
     			
     			if(jBlock.has("edi_cod")) block.setBuildingCode(jBlock.getString("edi_cod"));
     			if(jBlock.has("periodo")) block.setSemester(jBlock.getString("periodo"));
-    			
+    			int secondYear = UIUtils.secondYearOfSchoolYear(mondayMillis);
+    			int firstYear = secondYear -1;
+    			block.setYear(firstYear + "/" + secondYear);
     			// add block to schedule
     			this.schedule.add(block);
     		}
