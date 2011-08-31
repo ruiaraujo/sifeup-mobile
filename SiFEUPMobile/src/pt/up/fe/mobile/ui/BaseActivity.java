@@ -150,7 +150,7 @@ public abstract class BaseActivity extends FragmentActivity {
 			case DIALOG_FETCHING: {
 				ProgressDialog progressDialog =new ProgressDialog(this);
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.setCancelable(true);
+				progressDialog.setCancelable(false);
 				progressDialog.setMessage(getString(R.string.lb_data_fetching));
 				progressDialog.setOnCancelListener(new OnCancelListener() {
 					@Override
