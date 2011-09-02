@@ -225,7 +225,7 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";	
 		    		}
-	    			page = SifeupAPI.getSubjectContentReply("EIC0004","2010/2011","1S");
+	    			page = SifeupAPI.getSubjectContentReply(code,year,period);
 	    			error =	SifeupAPI.JSONError(page);
 		    		
 	    			switch (error)
