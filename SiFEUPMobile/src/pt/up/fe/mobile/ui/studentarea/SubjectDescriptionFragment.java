@@ -10,10 +10,13 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
+import pt.up.fe.mobile.service.SubjectContent;
 import pt.up.fe.mobile.service.Subject.Book;
 import pt.up.fe.mobile.service.Subject.EvaluationComponent;
 import pt.up.fe.mobile.service.Subject.Software;
 import pt.up.fe.mobile.service.Subject.Teacher;
+import pt.up.fe.mobile.service.SubjectContent.File;
+import pt.up.fe.mobile.service.SubjectContent.Folder;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
@@ -28,7 +31,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,13 +48,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SubjectDescriptionFragment extends BaseFragment {
+public class SubjectDescriptionFragment extends BaseFragment  {
 	
 	private String code;
 	private String year;
 	private String period;
     Subject subject = new Subject();
-    
+    SubjectContent subjectContent = new SubjectContent();
     /** */
     private PagerSubjectAdapter pagerAdapter;
     
@@ -82,7 +87,6 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		layoutInflater = inflater;
 		View root = inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		viewPager = (ViewPager)root.findViewById(R.id.pager_subject);
-		
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_subject);
 		
@@ -119,7 +123,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
         }
         return super.onOptionsItemSelected(item);
     }
-   
+
 	private void buildPages(){
  		// Create our custom adapter to supply pages to the viewpager.
         pagerAdapter = new PagerSubjectAdapter();
@@ -214,6 +218,23 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		    			case SifeupAPI.Errors.NO_ERROR:
 		    				if (subject.JSONSubject(page) )
 		    				{
+		    					break;
+		    				}
+		    				else
+		    					return "";
+		    			case SifeupAPI.Errors.NULL_PAGE:
+		    				return "";	
+		    		}
+	    			page = SifeupAPI.getSubjectContentReply("EIC0004","2010/2011","1S");
+	    			error =	SifeupAPI.JSONError(page);
+		    		
+	    			switch (error)
+		    		{
+		    			case SifeupAPI.Errors.NO_AUTH:
+		    				return "Error";
+		    			case SifeupAPI.Errors.NO_ERROR:
+		    				if (subjectContent.JSONSubjectContent(page) )
+		    				{
 		    					return "Success";
 		    				}
 		    				else
@@ -287,7 +308,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		}
 
 		@Override
-		public Object instantiateItem(View collection, int position) 
+		public Object instantiateItem(final View collection, int position) 
 		{
 			switch ( position )
 			{
@@ -306,6 +327,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 						return root2;
 						
 				case 2 :
+				{
 						ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 						((ViewPager) collection).addView(list,0);	
 						
@@ -342,7 +364,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 							}
 						});
 						return list;
-				
+				}
 				case 3:
 					ListView listBooks = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 					((ViewPager) collection).addView(listBooks,0);	
@@ -417,7 +439,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					return metodology;
 					
 				case 6:	
-					ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+				{	ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 					((ViewPager) collection).addView(listEvaluation,0);	
 					
 					String[] fromEvaluation = new String[] {"description", "type", "typeDesc", "length", "conclusionDate"};
@@ -442,7 +464,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		            SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, fromEvaluation, toEvaluation);
 				    listEvaluation.setAdapter(adapterEvaluation);
 					return listEvaluation;
-					
+				}	
 				case 7:
 					View admissionExams = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
 					TextView admissionExamsText = (TextView) admissionExams.findViewById(R.id.content);
@@ -478,12 +500,50 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					((ViewPager) collection).addView(comments,0);
 					return comments;
 					
-				case 12:	
-					Intent i = new Intent(getActivity() , SubjectContentActivity.class);
-					i.putExtra(SubjectContentActivity.SUBJECT_CODE, subject.getAcronym());
-					i.putExtra(SubjectContentActivity.SUBJECT_YEAR, "2010/2011");
-					i.putExtra(SubjectContentActivity.SUBJECT_PERIOD, subject.getSemestre());
-					startActivity(i);		
+				case 12:
+				{
+					final ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+					((ViewPager) collection).addView(list,0);	
+					String[] from = new String[] {"name"};
+					int[] to = new int[] {R.id.folder_name};
+					
+					// prepare the list of all records
+					List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+					 
+					for(Folder f : subjectContent.getCurrentFolder().getFolders())
+					{
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("name", f.getName());
+						fillMaps.add(map);
+					}
+					for(File f : subjectContent.getCurrentFolder().getFiles())
+					{
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("name", f.getName());
+						fillMaps.add(map);
+					}
+					
+					SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_folder, from, to);
+					list.setAdapter(adapter);
+					list.setOnItemClickListener(new OnItemClickListener() {
+
+						@Override
+						public void onItemClick(AdapterView<?> list, View item,
+								int position, long id) {
+							if ( position >= subjectContent.getCurrentFolder().getFolders().size()  )
+							{
+								//launch download;
+								return;
+							}
+							subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getFolders().get(position));
+							pagerAdapter.notifyDataSetChanged();
+							
+					        
+						}
+					});
+					return list; 
+				}
+						
 			}
 			
 			return null;
@@ -513,8 +573,27 @@ public class SubjectDescriptionFragment extends BaseFragment {
 		public void startUpdate(View arg0) {
 			
 		}
+		
+		//This is just implemented like this so 
+		// that the view pager will update itself when notifyDataSetChanged is called.
+		public int getItemPosition(Object object) {
+	        return POSITION_NONE;
+	    }
 
     }
-    
+	public void onBackPressed() {
+		if ( indicator.getPositionViewPager() == 12 && subjectContent.getCurrentFolder().getParent() != null )
+		{
+			subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getParent());
+			pagerAdapter.notifyDataSetChanged();
+		}
+		else
+		{
+			if ( getActivity() != null )
+				getActivity().finish();
+		}
+	}
+
+
 
 }

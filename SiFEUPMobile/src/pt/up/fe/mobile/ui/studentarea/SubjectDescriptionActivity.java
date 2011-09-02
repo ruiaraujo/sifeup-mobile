@@ -3,6 +3,8 @@ package pt.up.fe.mobile.ui.studentarea;
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 
 /**
  * Subject Description Activity
@@ -15,10 +17,11 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE"; 
 	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR"; 
 	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.studentarea.SUBJECT_PERIOD"; 
-	
+	private SubjectDescriptionFragment fragment;
 	@Override
 	protected Fragment onCreatePane() {
-		return new SubjectDescriptionFragment();
+		fragment = new SubjectDescriptionFragment();
+		return fragment;
 	}
 
 	/** Called when the activity is first created. */
@@ -27,4 +30,16 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 	    super.onPostCreate(savedInstanceState);
 	    getActivityHelper().setupSubActivity();
 	}
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) < 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+        	onBackPressed();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    
+    public void onBackPressed(){
+    	fragment.onBackPressed();
+    }
 }

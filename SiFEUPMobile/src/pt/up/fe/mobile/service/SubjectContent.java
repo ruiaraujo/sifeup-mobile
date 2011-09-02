@@ -7,10 +7,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import pt.up.fe.mobile.service.Subject.EvaluationComponent;
-import pt.up.fe.mobile.service.Subject.Software;
-       
 import android.util.Log;
 
 /**
@@ -20,17 +16,30 @@ import android.util.Log;
 @SuppressWarnings("serial")
 public class SubjectContent  implements Serializable {
 
-	/** List of folders */
-	private List<Folder> folders = new ArrayList<Folder>();
 	
-	public List<Folder> getFolders() {
-		return folders;
+	public SubjectContent(){
+		root = new Folder();
+		root.level = 0;
+		current = root;
 	}
 
-	public void setFolders(List<Folder> folders) {
-		this.folders = folders;
+	/** Current Folder*/
+	private Folder root;
+	
+	/** Current Folder*/
+	private Folder current;
+	
+	public void setCurrentFolder(Folder current) {
+		if ( current == null )
+			return;
+		this.current = current;
 	}
 
+	public Folder getCurrentFolder() {
+		return current;
+	}
+	
+	
 	/** Class Folder*/
 	public class Folder implements Serializable{
 		/** */
@@ -40,11 +49,16 @@ public class SubjectContent  implements Serializable {
 		private String name;
 		
 		/** */
-		private String level;
+		private int level;
 		
 		/** */
 		private List<File> files = new ArrayList<File>();
 		
+		/** List of folders */
+		private List<Folder> folders = new ArrayList<Folder>();
+		
+		/** Parent Folder */
+		private Folder parent;
 		
 		public int getCode() {
 			return code;
@@ -62,11 +76,11 @@ public class SubjectContent  implements Serializable {
 			this.name = name;
 		}
 
-		public String getLevel() {
+		public int getLevel() {
 			return level;
 		}
 
-		public void setLevel(String level) {
+		public void setLevel(int level) {
 			this.level = level;
 		}
 
@@ -77,11 +91,23 @@ public class SubjectContent  implements Serializable {
 		public void setFiles(List<File> files) {
 			this.files = files;
 		}
+
+		public void setParent(Folder parent) {
+			this.parent = parent;
+		}
+
+		public Folder getParent() {
+			return parent;
+		}
+
+		public List<Folder> getFolders() {
+			return folders;
+		}
 	}
 	
 
 	/** Class File*/
-	private class File implements Serializable{
+	public class File implements Serializable{
 		
 		/** */
 		private int code;
@@ -110,6 +136,78 @@ public class SubjectContent  implements Serializable {
 		/** */
 		private String description;
 
+		public void setCode(int code) {
+			this.code = code;
+		}
+
+		public int getCode() {
+			return code;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+
+		public String getFilename() {
+			return filename;
+		}
+
+		public void setSize(int size) {
+			this.size = size;
+		}
+
+		public int getSize() {
+			return size;
+		}
+
+		public void setUpdateDate(String updateDate) {
+			this.updateDate = updateDate;
+		}
+
+		public String getUpdateDate() {
+			return updateDate;
+		}
+
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+
+		public String getComment() {
+			return comment;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
 	}
 
 	/** 
@@ -133,7 +231,7 @@ public class SubjectContent  implements Serializable {
 	    			JSONObject jFolder = jFolders.getJSONObject(i);
 	    			if(jFolder.has("codigo")) folder.code = jFolder.getInt("codigo");
 	    			if(jFolder.has("nome")) folder.name = jFolder.getString("nome");
-	    			if(jFolder.has("nivel")) folder.level = jFolder.getString("nivel");
+	    			if(jFolder.has("nivel")) folder.level = jFolder.getInt("nivel");
 	    			
 	    			if ( jFolder.has("ficheiros") )
 	    			{
@@ -143,21 +241,42 @@ public class SubjectContent  implements Serializable {
 	    				{
 	    					File file = new File();
 	    					JSONObject jFile = jFiles.getJSONObject(j);
-	    					if ( jFile.has("codigo") ) file.code = jFile.getInt("codigo");
-	    					if ( jFile.has("nome") ) file.name = jFile.getString("nome");
-	    					if ( jFile.has("tipo") ) file.type = jFile.getString("tipo");
-	    					if ( jFile.has("url") ) file.url = jFile.getString("url");
-	    					if ( jFile.has("filename") ) file.filename = jFile.getString("filename");
-	    					if ( jFile.has("tamanho") )file.size = jFile.getInt("tamanho");
-	    					if ( jFile.has("data_actualizacao") ) file.updateDate = jFile.getString("data_actualizacao");
-	    					if ( jFile.has("comentario") ) file.comment = jFile.getString("comentario");
-	    					if ( jFile.has("descricao") ) file.description = jFile.getString("descricao");
+	    					if ( jFile.has("codigo") ) file.setCode(jFile.getInt("codigo"));
+	    					if ( jFile.has("nome") ) file.setName(jFile.getString("nome"));
+	    					if ( jFile.has("tipo") ) file.setType(jFile.getString("tipo"));
+	    					if ( jFile.has("url") ) file.setUrl(jFile.getString("url"));
+	    					if ( jFile.has("filename") ) file.setFilename(jFile.getString("filename"));
+	    					if ( jFile.has("tamanho") )file.setSize(jFile.getInt("tamanho"));
+	    					if ( jFile.has("data_actualizacao") ) file.setUpdateDate(jFile.getString("data_actualizacao"));
+	    					if ( jFile.has("comentario") ) file.setComment(jFile.getString("comentario"));
+	    					if ( jFile.has("descricao") ) file.setDescription(jFile.getString("descricao"));
 	    			
 	    					folder.files.add(file);
 	    				}
 	    			}
-	    			
-	    			this.folders.add(folder);
+	    			folder.parent = root;
+	    			if (root.folders.isEmpty()  )
+	    			{
+	    				root.folders.add(folder);
+	    				continue; // first folder
+	    			}
+	    			Folder lastFolder = root.folders.get(root.folders.size()-1);
+	    			if ( lastFolder.level == folder.level )
+	    				root.folders.add(folder); // first level
+	    			else
+	    			{
+		    			while ( folder.level !=  lastFolder.level + 1)
+		    			{   // if it is empty, we cannot go any further so we stop here
+		    				//otherwise you continue until the level difference is one.
+		    				if ( !lastFolder.folders.isEmpty() )
+		    					lastFolder = lastFolder.folders.get(lastFolder.folders.size()-1);
+		    				else
+		    					break;
+		    			}
+		    			folder.parent = lastFolder;
+		    			lastFolder.folders.add(folder);
+	    			}
+	    				
 	    		}
 			}
 			

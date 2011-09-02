@@ -282,11 +282,13 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		positionOffsetPixels -= this.getWidth() / 2;
 		return positionOffsetPixels;
 	}
-	
+    private int positionViewPager;
+
 	@Override
 	public void onPageSelected(int position) {
 		// Reset padding when the page is finally selected (May not be necessary)
 		mCurrent.setPadding(0, 0, 0, 0);
+		setPositionViewPager(position);
 	}
 	
 	/**
@@ -304,6 +306,14 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 			mPrevious.setVisibility(View.GONE);
 			mNext.setVisibility(View.GONE);
 		}
+	}
+
+	public void setPositionViewPager(int positionViewPager) {
+		this.positionViewPager = positionViewPager;
+	}
+
+	public int getPositionViewPager() {
+		return positionViewPager;
 	}
 
 }
