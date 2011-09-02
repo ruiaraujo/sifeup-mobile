@@ -267,7 +267,9 @@ public class SubjectDescriptionFragment extends BaseFragment {
 				case 10 :
 					return getString(R.string.improvement_classification);	
 				case 11 :
-					return getString(R.string.comments);		
+					return getString(R.string.comments);	
+				case 12 :
+					return getString(R.string.subject_content);	
 			}
 			
 			return "";
@@ -281,7 +283,7 @@ public class SubjectDescriptionFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return 12;
+			return 13;
 		}
 
 		@Override
@@ -475,7 +477,13 @@ public class SubjectDescriptionFragment extends BaseFragment {
 					commentsText.setText(subject.getObservations());
 					((ViewPager) collection).addView(comments,0);
 					return comments;
-						
+					
+				case 12:	
+					Intent i = new Intent(getActivity() , SubjectContentActivity.class);
+					i.putExtra(SubjectContentActivity.SUBJECT_CODE, subject.getAcronym());
+					i.putExtra(SubjectContentActivity.SUBJECT_YEAR, "2010/2011");
+					i.putExtra(SubjectContentActivity.SUBJECT_PERIOD, subject.getSemestre());
+					startActivity(i);		
 			}
 			
 			return null;

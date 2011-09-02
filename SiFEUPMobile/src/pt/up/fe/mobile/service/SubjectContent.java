@@ -23,11 +23,19 @@ public class SubjectContent  implements Serializable {
 	/** List of folders */
 	private List<Folder> folders = new ArrayList<Folder>();
 	
+	public List<Folder> getFolders() {
+		return folders;
+	}
+
+	public void setFolders(List<Folder> folders) {
+		this.folders = folders;
+	}
+
 	/** Class Folder*/
-	private class Folder implements Serializable{
+	public class Folder implements Serializable{
 		/** */
 		private int code;
-		
+
 		/** */
 		private String name;
 		
@@ -36,6 +44,39 @@ public class SubjectContent  implements Serializable {
 		
 		/** */
 		private List<File> files = new ArrayList<File>();
+		
+		
+		public int getCode() {
+			return code;
+		}
+
+		public void setCode(int code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getLevel() {
+			return level;
+		}
+
+		public void setLevel(String level) {
+			this.level = level;
+		}
+
+		public List<File> getFiles() {
+			return files;
+		}
+
+		public void setFiles(List<File> files) {
+			this.files = files;
+		}
 	}
 	
 
@@ -78,7 +119,7 @@ public class SubjectContent  implements Serializable {
 	 * @param page
 	 * @return Subject
 	 */
-    public boolean JSONSubjectConttent(String page){
+    public boolean JSONSubjectContent(String page){
     	JSONObject jObject;
 		try {
 			jObject = new JSONObject(page);

@@ -109,6 +109,7 @@
 	<string name="special_evaluation">Special evaluation (TE, DA, ...)</string> 
 	<string name="improvement_classification">Improvement of Final/Distributed Classification</string> 
 	<string name="comments">Comments</string> 
+	<string name="subject_content">Subject Content</string> 
 
 	
     <!-- Academic Path -->   	
