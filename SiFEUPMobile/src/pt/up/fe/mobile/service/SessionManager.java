@@ -1,6 +1,5 @@
 package pt.up.fe.mobile.service;
 
-import java.util.ArrayList;
 
 /**
  * Singleton class that holds the active Session cookie.

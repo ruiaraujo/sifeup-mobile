@@ -7,7 +7,6 @@ import java.util.List;
 import org.json.JSONException;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
 import pt.up.fe.mobile.service.SubjectContent;
@@ -40,7 +39,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;

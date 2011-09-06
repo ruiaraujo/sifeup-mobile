@@ -9,9 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Profile.ProfileDetail;
-import pt.up.fe.mobile.service.Student.Type;
-
 import android.content.res.Resources;
 import android.util.Log;
 

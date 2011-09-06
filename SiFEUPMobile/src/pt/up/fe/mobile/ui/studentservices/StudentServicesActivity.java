@@ -1,7 +1,6 @@
 package pt.up.fe.mobile.ui.studentservices;
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-import pt.up.fe.mobile.ui.studentarea.StudentAreaFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 

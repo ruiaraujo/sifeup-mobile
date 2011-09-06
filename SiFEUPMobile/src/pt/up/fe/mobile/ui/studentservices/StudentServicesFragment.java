@@ -21,6 +21,7 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 public class StudentServicesFragment extends Fragment
 {
 	private ExpandableListView menu;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) 
 	{
@@ -44,24 +45,24 @@ public class StudentServicesFragment extends Fragment
 			    	case 1:
 			    		// has children;
 				   		 break;
-			    	case 2:
+				  /*case 2:
 				   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
-				   		 break;
-			    	case 3:
+				   		 break; */
+			    	case 2:
 				   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
 				   		 break;
-			    	case 4:
+			     /*case 4:
 				   		 startActivity(new Intent(getActivity(),CardRequestActivity.class));
-				   		 break;
-			    	case 5:
+				   		 break; */
+			    /*	case 5:
 			    		// has children;
-				   		 break;
-			    	case 6:
+				   		 break; */
+			    /*	case 6:
 				   		 startActivity(new Intent(getActivity(), ScholarProfitActivity.class));
-				   		 break;
-			    	case 7:
+				   		 break; */
+			    /*	case 7:
 			    		 startActivity(new Intent(getActivity(),ClassesSelectionActivity.class));
-			    		 break;
+			    		 break; */
 		    	}
 				return false;
 			}
@@ -84,7 +85,7 @@ public class StudentServicesFragment extends Fragment
 				   		 break;	
 					}
 					break;
-					case 5:
+					/*case 5:
 						switch( childPosition )
 						{
 							case 0:
@@ -94,7 +95,7 @@ public class StudentServicesFragment extends Fragment
 						   		 startActivity(new Intent(getActivity(), AllRequestsActivity.class));
 						   		 break;	
 						}
-						break;
+						break;*/
 		    	}
 				
 				return true;
@@ -111,21 +112,21 @@ public class StudentServicesFragment extends Fragment
         private String[] groups = { 
         		getString(R.string.btn_printing), 
         		getString(R.string.btn_tuition),
-        		getString(R.string.btn_uc_inscriptions),
-        		getString(R.string.btn_change_password),
-        		getString(R.string.btn_card_request),
-        		getString(R.string.btn_requests),
-        		getString(R.string.btn_scholar_profit),
-        		getString(R.string.btn_classes_selection)};
+        	//	getString(R.string.btn_uc_inscriptions),
+        		getString(R.string.btn_change_password)};
+        	//	getString(R.string.btn_card_request),
+        	//	getString(R.string.btn_requests),
+        	//	getString(R.string.btn_scholar_profit),
+        	//	getString(R.string.btn_classes_selection)};
         private String[][] children = {
                 {  },
                 { getString(R.string.btn_tuition_history)  , getString(R.string.btn_tuition_refs) },
-                {  },
-                {  },
-                {  },
-                {getString(R.string.btn_new_request), getString(R.string.btn_all_request) },
-                {  },
+             //   {  },
                 {  }
+               // {  },
+               // {getString(R.string.btn_new_request), getString(R.string.btn_all_request) },
+               // {  },
+               // {  }
         };
         
          
@@ -143,18 +144,22 @@ public class StudentServicesFragment extends Fragment
         }
         
         //TODO: move to xml
-        public TextView getGenericView() {
+        //TODO:Queria aplicar o xml no list menu title mas nao consegui
+       public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+           AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
                   ViewGroup.LayoutParams.MATCH_PARENT, 84);
 
+        //    ViewGroup root = (ViewGroup) menu.inflate(getActivity(), R.layout.list_item_menu, null) ;
+        //    TextView textView= ((TextView)root.findViewById(R.id.list_menu_title));
             TextView textView = new TextView(getActivity());
+            
+           // textView = (TextView) getActivity().findViewById(R.id.list_menu_title);
             textView.setLayoutParams(lp);
             // Center the text vertically
-            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            textView.setGravity(Gravity.LEFT);
             // Set the text starting position
-            textView.setPadding(84, 0, 0, 0);
-            
+            textView.setPadding(12, 11, 0, 0);
             return textView;
         }
         

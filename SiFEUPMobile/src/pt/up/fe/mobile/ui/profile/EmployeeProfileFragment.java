@@ -9,7 +9,6 @@ import org.json.JSONException;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Employee;
 import pt.up.fe.mobile.service.Friend;
-import pt.up.fe.mobile.service.Profile;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Profile.ProfileDetail;

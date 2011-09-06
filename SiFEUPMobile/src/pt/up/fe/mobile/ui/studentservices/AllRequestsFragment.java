@@ -2,7 +2,6 @@ package pt.up.fe.mobile.ui.studentservices;
 
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ public class AllRequestsFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) 
     {
        super.onCreate(savedInstanceState);
-       AnalyticsUtils.getInstance(getActivity()).trackPageView("/Change Password");
+       AnalyticsUtils.getInstance(getActivity()).trackPageView("/All Requests");
     }
 	 
     @Override

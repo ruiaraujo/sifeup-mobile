@@ -5,19 +5,11 @@ package pt.up.fe.mobile.ui.search;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseMultiPaneActivity;
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-
-
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
+
 
 /**
  * An activity that shows session and sandbox search results. This activity can be either single

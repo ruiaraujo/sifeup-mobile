@@ -15,15 +15,12 @@ import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
-
-
 import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
 import external.com.google.android.apps.iosched.util.UIUtils;
-import external.com.zylinc.view.ViewPagerIndicator;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -32,17 +29,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -56,12 +48,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
-
 /**
  * This fragment is responsible of fetching a schedule of the student, 
  * which number is passed as argument. 
@@ -104,7 +93,7 @@ public class ScheduleFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
+     //   Bundle args = getArguments();
         setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
   		scheduleCode = (String) getArguments().getString(SCHEDULE_CODE);
