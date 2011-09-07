@@ -126,9 +126,14 @@ public class SifeupAPI {
 		String ROOM_CODE = "pv_cod_sala";
 	}
 		
-	private interface Park{
+	private interface Park {
 		String NAME = "ocupacao_parque";
 		String CODE = "pv_parque";
+	}
+	
+	
+	private interface Notifications {
+		String NAME = "notificacoes";
 	}
 	
 	public interface Errors{
@@ -159,6 +164,15 @@ public class SifeupAPI {
 		return WEBSERVICE + Schedule.NAME + WEBSERVICE_SEP + Schedule.CODE + 
 					EQUALS + code + LINK_SEP + Schedule.BEGIN+ EQUALS + begin +
 					LINK_SEP + Schedule.END + EQUALS + end;
+	}
+	
+	/**
+	 * Notifications Url for Web Service
+	 *
+	 * @return Notifications Url
+	 */
+	public static String getNotificationsUrl(){
+		return WEBSERVICE + Notifications.NAME;
 	}
 	
 	/**
@@ -226,7 +240,7 @@ public class SifeupAPI {
 	}
 	
 	/**
-	 * Subject Description  Url for Web Service
+	 * Subject Description Url for Web Service
 	 * @param code
 	 * @return 
 	 */
@@ -607,6 +621,31 @@ public class SifeupAPI {
 			do {
 				HttpsURLConnection httpConn = getUncheckedConnection(
 											getParkOccupationUrl( code ) );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	
+	/**
+	 *Notifications query reply from web service
+	 * @param code
+	 * @return
+	 */
+	public static String getNotificationsReply(){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(
+											getNotificationsUrl());
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 				httpConn.connect();
 				page = getPage(httpConn.getInputStream());

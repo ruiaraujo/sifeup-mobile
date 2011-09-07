@@ -46,29 +46,29 @@ public class ParkOccupationFragment extends BaseFragment
     private LayoutInflater mInflater;
 
 	public void onCreate(Bundle savedInstanceState) 
-		{
-			super.onCreate(savedInstanceState);
-			parks = new ArrayList<Park>();
-			
-			for (int i=0; i< NUMBER_PARKS;i++)
-				parks.add(new Park());
-			
-		    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
-		}
-	
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		            Bundle savedInstanceState) 
-		{
-			super.onCreateView(inflater, container, savedInstanceState);
-			mInflater = inflater;
-			
-			View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
-			list = (ListView) root.findViewById(R.id.generic_list);
-			
-			new ParkOccupationTask().execute();
+	{
+		super.onCreate(savedInstanceState);
+		parks = new ArrayList<Park>();
 		
-			return getParentContainer();//this is mandatory
-		}
+		for (int i=0; i< NUMBER_PARKS;i++)
+			parks.add(new Park());
+		
+	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
+	}
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	            Bundle savedInstanceState) 
+	{
+		super.onCreateView(inflater, container, savedInstanceState);
+		mInflater = inflater;
+		
+		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+		
+		new ParkOccupationTask().execute();
+	
+		return getParentContainer();//this is mandatory
+	}
 	
 
     private class ParkOccupationTask extends AsyncTask<String, Void, String> 

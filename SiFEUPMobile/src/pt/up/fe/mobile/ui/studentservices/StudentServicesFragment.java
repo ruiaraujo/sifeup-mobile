@@ -149,7 +149,7 @@ public class StudentServicesFragment extends Fragment
         	ViewGroup root = (ViewGroup) mInflater.inflate(R.layout.list_item_menu, null) ;
             TextView textView= ((TextView)root.findViewById(R.id.list_menu_title));
           //Insert a extra padding to the children
-            textView.setPadding( textView.getPaddingLeft() + 32 , 
+            textView.setPadding( textView.getPaddingLeft() + 40 , 
 			            		textView.getPaddingTop(),
 			            		textView.getPaddingRight(),
 			            		textView.getPaddingBottom());
