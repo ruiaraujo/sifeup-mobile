@@ -131,11 +131,19 @@ public class SifeupAPI {
 		String CODE = "pv_parque";
 	}
 	
-	
 	private interface Notifications {
 		String NAME = "notificacoes";
 	}
 	
+	private interface SetPassword {
+		String NAME = "mudar_password";
+		String LOGIN = "pv_login";
+		String ACTUAL_PASSWORD = "pv_password_actual";
+		String NEW_PASSWORD = "pv_password_nova";
+		String CONFIRM_NEW_PASSWORD_ = "pv_password_nova_conf";
+		String SYSTEM = "pv_sistema";
+	}
+		
 	public interface Errors{
 		int NULL_PAGE = 0;
 		int NO_AUTH = 1;
@@ -211,6 +219,20 @@ public class SifeupAPI {
 		return WEBSERVICE + Student.NAME + WEBSERVICE_SEP + Student.CODE + EQUALS + code ;
 	}
 	
+	/**
+	 * Set Password Url for Web Service
+	 * @param code
+	 * @return Student Url
+	 */
+	public static String getSetPasswordUrl( String login, String actualPassword, String newPassword,
+			                                String confirmNewPassword, String system){
+		return WEBSERVICE + SetPassword.NAME + WEBSERVICE_SEP + 
+					SetPassword.LOGIN + EQUALS + login + LINK_SEP +
+					SetPassword.ACTUAL_PASSWORD + EQUALS + actualPassword + LINK_SEP +
+					SetPassword.NEW_PASSWORD + EQUALS + newPassword + LINK_SEP +
+					SetPassword.CONFIRM_NEW_PASSWORD_ + EQUALS + confirmNewPassword + LINK_SEP +
+					SetPassword.SYSTEM + EQUALS + system;
+	}	
 	/**
 	 * Employee Url for Web Service
 	 * @param code
@@ -390,7 +412,33 @@ public class SifeupAPI {
 		return page;
 	}
 	
-	
+	/**
+	 * Get Set Password Reply
+	 * @param code 
+	 * @param year 
+	 * @param per 
+	 * @return
+	 */
+	public static String getSetPasswordReply( String login, String actualPassword, String newPassword,
+            String confirmNewPassword, String system)
+	{
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection(getSetPasswordReply(login, actualPassword, newPassword, confirmNewPassword, system));
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+		
 	/**
 	 * Get Subject Content Reply
 	 * @param code 

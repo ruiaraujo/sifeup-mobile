@@ -48,6 +48,7 @@ public class ChangePasswordFragment extends BaseFragment
 			}
 		});
     	
+    	//TODO: Apenas quando confirm ver a qualidade da password????
     	Button setPassword = (Button) root.findViewById(R.id.set_password_confirm);
     	setPassword.setOnClickListener(new OnClickListener() {
 			
@@ -83,12 +84,13 @@ public class ChangePasswordFragment extends BaseFragment
         }
 
 		@Override
+		//TODO: passar argumentos
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 		  	try {
-	    			page = SifeupAPI.getSubjectsReply(
+	    		/*page = SifeupAPI.getSetPasswordReply(login, actualPassword, newPassword, confirmNewPassword, system)Reply(
 								SessionManager.getInstance().getLoginCode(),
-								"2010");
+								"2010");*/
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
