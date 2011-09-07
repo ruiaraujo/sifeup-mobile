@@ -21,7 +21,7 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 public class StudentServicesFragment extends Fragment
 {
 	private ExpandableListView menu;
-
+	private LayoutInflater mInflater;
 	@Override
     public void onCreate(Bundle savedInstanceState) 
 	{
@@ -30,6 +30,7 @@ public class StudentServicesFragment extends Fragment
 	  @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+		mInflater = inflater;
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.studentservices, null);
     	menu = (ExpandableListView) root.findViewById(R.id.studentservices_menu);
     	menu.setOnGroupClickListener(new OnGroupClickListener() {
@@ -143,36 +144,17 @@ public class StudentServicesFragment extends Fragment
             return children[groupPosition].length;
         }
         
-        //TODO: move to xml
-        //TODO:Queria aplicar o xml no list menu title mas nao consegui
-       public TextView getGenericView() {
-            // Layout parameters for the ExpandableListView
-           AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                  ViewGroup.LayoutParams.MATCH_PARENT, 84);
-
-        //    ViewGroup root = (ViewGroup) menu.inflate(getActivity(), R.layout.list_item_menu, null) ;
-        //    TextView textView= ((TextView)root.findViewById(R.id.list_menu_title));
-            TextView textView = new TextView(getActivity());
-            
-           // textView = (TextView) getActivity().findViewById(R.id.list_menu_title);
-            textView.setLayoutParams(lp);
-            // Center the text vertically
-            textView.setGravity(Gravity.LEFT);
-            // Set the text starting position
-            textView.setPadding(12, 11, 0, 0);
-            return textView;
-        }
-        
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
-            TextView textView = getGenericView();
-            //Insert a extra padding to the children
+        	ViewGroup root = (ViewGroup) mInflater.inflate(R.layout.list_item_menu, null) ;
+            TextView textView= ((TextView)root.findViewById(R.id.list_menu_title));
+          //Insert a extra padding to the children
             textView.setPadding( textView.getPaddingLeft() + 32 , 
 			            		textView.getPaddingTop(),
 			            		textView.getPaddingRight(),
 			            		textView.getPaddingBottom());
             textView.setText(getChild(groupPosition, childPosition).toString());
-            return textView;
+            return root;            
         }
 
         public Object getGroup(int groupPosition) {
@@ -189,9 +171,10 @@ public class StudentServicesFragment extends Fragment
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
                 ViewGroup parent) {
-            TextView textView = getGenericView();
+        	ViewGroup root = (ViewGroup) mInflater.inflate(R.layout.list_item_menu, null) ;
+            TextView textView= ((TextView)root.findViewById(R.id.list_menu_title));
             textView.setText(getGroup(groupPosition).toString());
-            return textView;
+            return root;
         }
 
         public boolean isChildSelectable(int groupPosition, int childPosition) {
