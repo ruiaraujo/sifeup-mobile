@@ -1,5 +1,7 @@
 package pt.up.fe.mobile.ui.notifications;
 
+import java.util.ArrayList;
+
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.AsyncTask;
@@ -11,9 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Notification;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -28,6 +33,8 @@ public class NotificationsFragment extends BaseFragment  {
 
 	private ListView list;
 	
+	private ArrayList<Notification> notifications;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +47,7 @@ public class NotificationsFragment extends BaseFragment  {
 		 super.onCreateView(inflater, container, savedInstanceState);
 		 View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
 	     list = (ListView) root.findViewById(R.id.generic_list);
+	     notifications = new ArrayList<Notification>();
 	 	 new NotificationsTask().execute();
 	 return getParentContainer(); //this is mandatory.
 	}
@@ -102,7 +110,29 @@ public class NotificationsFragment extends BaseFragment  {
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-		    				break;
+		    				JSONObject jObject = new JSONObject(page);
+		    				
+		    				if(jObject.has("notificacoes"))
+		    				{
+		    					Log.e("JSON", "founded notifications");
+		    					
+		    					JSONArray jArray = jObject.getJSONArray("notificacoes");
+		    					
+		    					if(jArray.length() == 0)
+		    						return "";
+		    					
+		    					for(int i = 0; i < jArray.length(); i++){
+		    		    			JSONObject jNotification = jArray.getJSONObject(i);
+		    		    			
+			    		    		Notification noti = new Notification();
+			    		    		
+			    		    		noti.JSONNotification(jNotification);
+			    		    		notifications.add(noti);
+		    					}
+		    				}	
+		    				else
+		    					return "";
+		    				
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "Error";// When not authenticated, it returns a null page.
 		    		}		
