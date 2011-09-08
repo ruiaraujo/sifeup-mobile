@@ -80,7 +80,7 @@ public class DashboardFragment extends Fragment {
             }
         });
         
-       root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
+       root.findViewById(R.id.home_btn_notifications).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Notifications");
                 startActivity(new Intent(getActivity(),NotificationsActivity.class));

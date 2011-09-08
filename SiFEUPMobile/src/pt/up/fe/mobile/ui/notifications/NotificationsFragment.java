@@ -1,6 +1,8 @@
 package pt.up.fe.mobile.ui.notifications;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -22,7 +25,6 @@ import pt.up.fe.mobile.service.Notification;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-
 
 /**
  * Notifications Fragment
@@ -51,7 +53,7 @@ public class NotificationsFragment extends BaseFragment  {
 	 	 new NotificationsTask().execute();
 	 return getParentContainer(); //this is mandatory.
 	}
-	 
+
 	/** Classe privada para a busca de dados ao servidor */
 	private class NotificationsTask extends AsyncTask<String, Void, String> {
 	
@@ -71,11 +73,30 @@ public class NotificationsFragment extends BaseFragment  {
 			     // fill in the grid_item layout
 			     if ( getActivity() == null ) 
 			    	 return;
-			     //TODO:SHOW data 
-			     showMainScreen();
 			     Log.e("JSON", "Notifications visual list loaded");
+		
+				 String[] from = new String[] {"subject", "date"};
+		         int[] to = new int[] { R.id.notification_subject, R.id.notification_date};
+			         // prepare the list of all records
+		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		         
+		         for(Notification n : notifications){
+		             HashMap<String, String> map = new HashMap<String, String>();
+		             map.put("subject", n.getSubject());
+		             map.put("date", n.getDate());
+		             fillMaps.add(map);
+		         }
+				 
+		         // fill in the grid_item layout
+		         if ( getActivity() == null ) 
+		        	 return;
+		         
+		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_notification, from, to);
+		         list.setAdapter(adapter);
+		         list.setClickable(false);
+		         showMainScreen();
+		         Log.e("JSON", "Notifications visual list loaded");
 			     return;
-			
 			}
 			else if ( result.equals("Error") ){	
 				Log.e("Login","error");
@@ -130,8 +151,8 @@ public class NotificationsFragment extends BaseFragment  {
 			    		    		notifications.add(noti);
 		    					}
 		    				}	
-		    				else
-		    					return "";
+		    					
+		    				return "Success";
 		    				
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "Error";// When not authenticated, it returns a null page.

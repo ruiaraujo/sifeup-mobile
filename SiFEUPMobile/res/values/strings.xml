@@ -269,6 +269,10 @@
 	<!-- NOTIFICATIONS -->
 	<string name="title_notifications">Notifications</string>
     <string name="btn_notifications">Notifications</string>
+    <string name="lb_date">Date:</string>
+    <string name="lb_subject">Subject:</string>
+    <string name="lb_message">Message:</string>
+    <string name="lb_obs">Comments:</string>
     
    
 </resources>
