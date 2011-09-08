@@ -9,11 +9,14 @@ import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -57,8 +60,26 @@ public class ChangePasswordFragment extends BaseFragment
 			}
 		});
     	showMainScreen();
+    	
+    	EditText newPassword = (EditText) root.findViewById(R.id.new_password);
+    	
+    	newPassword.setOnKeyListener(new OnKeyListener() {
+    		
+    		@Override
+    		public boolean onKey(View v, int keyCode, KeyEvent event) {
+    	        final int view = v.getId();
+    	        switch (view) {
+    	            
+    	        }
+    	        return false;
+    	    }
+
+			
+    	});
+    	
 		return getParentContainer();
 	} 
+    
     /** Classe privada para a busca de dados ao servidor */
     private class PasswordTask extends AsyncTask<Void, Void, String> {
 
