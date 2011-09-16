@@ -425,7 +425,7 @@ public class SifeupAPI {
 		String page = null;
 		try {
 			do {
-				HttpsURLConnection httpConn = getUncheckedConnection(getSetPasswordReply(login, actualPassword, newPassword, confirmNewPassword, system));
+				HttpsURLConnection httpConn = getUncheckedConnection(getSetPasswordUrl(login, actualPassword, newPassword, confirmNewPassword, system));
 				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 				httpConn.connect();
 				page = getPage(httpConn.getInputStream());
