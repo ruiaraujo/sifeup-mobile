@@ -17,7 +17,9 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE"; 
 	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR"; 
 	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.studentarea.SUBJECT_PERIOD"; 
+	
 	private SubjectDescriptionFragment fragment;
+	
 	@Override
 	protected Fragment onCreatePane() {
 		fragment = new SubjectDescriptionFragment();

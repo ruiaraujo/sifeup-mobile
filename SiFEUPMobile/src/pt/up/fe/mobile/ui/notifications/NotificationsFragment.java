@@ -6,15 +6,18 @@ import java.util.List;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,13 +28,16 @@ import pt.up.fe.mobile.service.Notification;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.news.NewsDescActivity;
+import pt.up.fe.mobile.ui.studentarea.SubjectDescriptionActivity;
+import pt.up.fe.mobile.ui.studentarea.SubjectsFragment;
 
 /**
  * Notifications Fragment
  * @author Ângela Igreja
  *
  */
-public class NotificationsFragment extends BaseFragment  {
+public class NotificationsFragment extends BaseFragment implements OnItemClickListener {
 
 	private ListView list;
 	
@@ -75,15 +81,18 @@ public class NotificationsFragment extends BaseFragment  {
 			    	 return;
 			     Log.e("JSON", "Notifications visual list loaded");
 		
-				 String[] from = new String[] {"subject", "date"};
-		         int[] to = new int[] { R.id.notification_subject, R.id.notification_date};
-			         // prepare the list of all records
+				 String[] from = new String[] {"subject", "date", "designation", "priority"};
+		         int[] to = new int[] { R.id.notification_subject, R.id.notification_date, R.id.notification_designation, R.id.notification_priority};
+			     
+		         // prepare the list of all records
 		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		         
 		         for(Notification n : notifications){
 		             HashMap<String, String> map = new HashMap<String, String>();
-		             map.put("subject", n.getSubject());
-		             map.put("date", n.getDate());
+		             map.put("subject", " "+n.getSubject());
+		             map.put("date", " "+n.getDate());
+		             map.put("designation", " "+n.getDesignation());
+		             map.put("priority", " "+n.getPriorityString());
 		             fillMaps.add(map);
 		         }
 				 
@@ -93,7 +102,7 @@ public class NotificationsFragment extends BaseFragment  {
 		         
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_notification, from, to);
 		         list.setAdapter(adapter);
-		         list.setClickable(false);
+		         list.setOnItemClickListener(NotificationsFragment.this);
 		         showMainScreen();
 		         Log.e("JSON", "Notifications visual list loaded");
 			     return;
@@ -167,4 +176,23 @@ public class NotificationsFragment extends BaseFragment  {
 			return "";
 		}
 	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+		
+		if ( getActivity() == null )
+			return;
+		
+		Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
+		i.putExtra(NotificationsDescActivity.NOTIFICATION, notifications.get(position));
+			
+		//i.putExtra(NotificationsDescActivity.NOTIFICATION_SUBJECT, notifications.get(position).getSubject());
+		//i.putExtra(NotificationsDescActivity.NOTIFICATION_MESSAGE,notifications.get(position).getMessage());
+		//i.putExtra(NotificationsDescActivity.NOTIFICATION_LINK, notifications.get(position).getLink());
+		//i.putExtra(Intent.EXTRA_TITLE, notifications.get(position).getDesignation());
+
+		startActivity(i);
+
+	}
 }
+

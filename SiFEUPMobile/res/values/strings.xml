@@ -269,10 +269,13 @@
 	<!-- NOTIFICATIONS -->
 	<string name="title_notifications">Notifications</string>
     <string name="btn_notifications">Notifications</string>
-    <string name="lb_date">Date:</string>
-    <string name="lb_subject">Subject:</string>
-    <string name="lb_message">Message:</string>
-    <string name="lb_obs">Comments:</string>
+    <string name="lb_date">Date: </string>
+    <string name="lb_priority">Priority: </string>
+    <string name="lb_designation">Designation: </string>
+    <string name="lb_description">Description: </string>
+    <string name="lb_subject">Subject: </string>
+    <string name="lb_message">Message: </string>
+    <string name="lb_reply_notification">Reply </string>
+    <string name="lb_obs">Comments: </string>
     
-   
 </resources>

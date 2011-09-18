@@ -5,15 +5,20 @@ package pt.up.fe.mobile.ui.notifications;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.service.Notification;
+import pt.up.fe.mobile.service.SessionManager;
 
 /**
 * This interface is responsible for displaying information 
@@ -23,39 +28,40 @@ import pt.up.fe.mobile.R;
 * 
 */
 public class NotificationsDescFragment extends Fragment {
-
-
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/News");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Notifications");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.news_item, null);
-    	String theStory = null;
-        
+    	
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.notifications_item, null);
+    	        
     	Bundle b = getArguments();
-    	if (b == null)
-    	{
-     		theStory = "bad bundle?";
-     	}
-     	else
- 		{
-     		theStory = "\n" + b.getString("description") + "\n\n" + 
-     						getString(R.string.news_more_info)+"\n" + b.getString("link");
-	        ((TextView) root.findViewById(R.id.news_desc_title)).setText(b.getString("title"));
-	        ((TextView) root.findViewById(R.id.news_desc_time)).setText(b.getString("pubdate"));
- 		}
-        
- 		((TextView) root.findViewById(R.id.news_desc)).setText(theStory);
-
+    	final Notification n = (Notification) b.getSerializable(NotificationsDescActivity.NOTIFICATION);
+    	//TODO: Is necessary cheks if b is null?
+	   ((TextView) root.findViewById(R.id.notification_subject)).setText(" "+n.getSubject());
+	   ((TextView) root.findViewById(R.id.notification_description)).setText(" "+n.getDescription());
+	   ((TextView) root.findViewById(R.id.notification_priority)).setText(" "+n.getPriorityString());
+	   ((TextView) root.findViewById(R.id.notification_designation)).setText(" "+n.getDesignation());
+	   ((TextView) root.findViewById(R.id.notification_message)).setText(" "+n.getMessage());
+	   ((TextView) root.findViewById(R.id.notification_link)).setText(" "+n.getLink());
+	   ((TextView) root.findViewById(R.id.notification_reply)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String url = "https://www.fe.up.pt/si/wf_geral.not_form_view?pv_not_id="+n.getCode();
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		});    
     	return root;
-
     }
    
-
 }

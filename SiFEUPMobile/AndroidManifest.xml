@@ -91,6 +91,11 @@
           android:name=".ui.notifications.NotificationsActivity"
           android:label="@string/title_notifications"
           android:configChanges="orientation|keyboardHidden" />
+          
+       <activity
+          android:name=".ui.notifications.NotificationsDescActivity"
+          android:label="@string/title_notifications"
+          android:configChanges="orientation|keyboardHidden" />
                   
         <activity
           android:name=".ui.map.SettingsActivity"

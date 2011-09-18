@@ -19,6 +19,9 @@ import android.util.Log;
 @SuppressWarnings("serial")
 public class Notification  implements Serializable {
 	
+	/** Notification Code */
+	private int code;
+
 	/** Notification Link */
 	private String link;
 	
@@ -55,7 +58,7 @@ public class Notification  implements Serializable {
     public boolean JSONNotification(JSONObject jObject){
 	
     	try {
-			
+    		if(jObject.has("codigo")) this.code = jObject.getInt("codigo");
 			if(jObject.has("link")) this.link = jObject.getString("link");
 			if(jObject.has("designacao")) this.setDesignation(jObject.getString("designacao"));
 			if(jObject.has("descricao")) this.setDescription(jObject.getString("descricao"));
@@ -113,6 +116,22 @@ public class Notification  implements Serializable {
 
 	public int getPriority() {
 		return priority;
+	}
+	
+	public String getPriorityString() {
+		return Integer.toString(priority);
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+	
+	public String getCodeString() {
+		return Integer.toString(code);
 	}
 
 	public void setDate(String date) {

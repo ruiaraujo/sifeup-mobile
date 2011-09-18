@@ -52,7 +52,8 @@ public class NewsFragment extends BaseFragment implements AdapterView.OnItemClic
 	private final String RSSFEEDOFCHOICE = "http://www.fe.up.pt/si/noticias_web.rss";
 	private ListView list;
 	private RSSFeed feed;
-    @Override
+    
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/News");
@@ -92,8 +93,6 @@ public class NewsFragment extends BaseFragment implements AdapterView.OnItemClic
 		             fillMaps.add(map);
 		         }
 				
-		         
-				 
 		         // fill in the grid_item layout		         
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_news, from, to);
 
