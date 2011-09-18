@@ -46,8 +46,15 @@ public class NotificationsDescFragment extends Fragment {
     	final Notification n = (Notification) b.getSerializable(NotificationsDescActivity.NOTIFICATION);
     	//TODO: Is necessary cheks if b is null?
 	   ((TextView) root.findViewById(R.id.notification_subject)).setText(" "+n.getSubject());
-	   ((TextView) root.findViewById(R.id.notification_description)).setText(" "+n.getDescription());
+	   
+	   if(!n.getDescription().equals(""))
+	   {
+		   ((TextView) root.findViewById(R.id.notification_lb_description)).setVisibility(View.VISIBLE);
+		   ((TextView) root.findViewById(R.id.notification_description)).setText(" "+n.getDescription());
+	   }
+	   
 	   ((TextView) root.findViewById(R.id.notification_priority)).setText(" "+n.getPriorityString());
+	  
 	   ((TextView) root.findViewById(R.id.notification_designation)).setText(" "+n.getDesignation());
 	   ((TextView) root.findViewById(R.id.notification_message)).setText(" "+n.getMessage());
 	   ((TextView) root.findViewById(R.id.notification_link)).setText(" "+n.getLink());
