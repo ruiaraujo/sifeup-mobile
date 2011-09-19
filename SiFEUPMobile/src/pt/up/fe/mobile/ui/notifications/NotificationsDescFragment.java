@@ -43,13 +43,16 @@ public class NotificationsDescFragment extends Fragment {
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.notifications_item, null);
     	        
     	Bundle b = getArguments();
+    	if ( b == null )
+    		throw new IllegalStateException("Should have an notification arguments.");
     	final Notification n = (Notification) b.getSerializable(NotificationsDescActivity.NOTIFICATION);
-    	//TODO: Is necessary cheks if b is null?
 	   ((TextView) root.findViewById(R.id.notification_subject)).setText(" "+n.getSubject());
-	   
-	   if(!n.getDescription().equals(""))
+	   if( n.getDescription().trim().length() == 0 )
 	   {
-		   ((TextView) root.findViewById(R.id.notification_lb_description)).setVisibility(View.VISIBLE);
+		   root.findViewById(R.id.notification_description_group).setVisibility(View.GONE);
+	   }
+	   else
+	   {
 		   ((TextView) root.findViewById(R.id.notification_description)).setText(" "+n.getDescription());
 	   }
 	   

@@ -28,7 +28,7 @@
 	         
     </LinearLayout>
     
-   <LinearLayout
+   <LinearLayout android:id="@+id/notification_description_group"
 		android:orientation="horizontal"
 		android:paddingLeft="15.0dp"
 		android:paddingRight="15.0dp"
@@ -83,7 +83,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content">
 		
-	    <TextView android:id="@+id/designation_lb_subject"
+	    <TextView android:id="@+id/notification_lb_designation"
 			android:textSize="16.0sp"
 			android:textStyle="normal"
 			android:layout_width="wrap_content"
@@ -159,7 +159,7 @@
 		android:paddingRight="15.0dp"
 		android:paddingTop="10.0dp"
 	    android:autoLink="all"
-	    android:textColorLink="@color/hyperlink"
+	    android:textColor="@color/hyperlink"
 	    android:text="@string/lb_reply_notification"
 	    style="@style/TextBody"/>
 	    	    
