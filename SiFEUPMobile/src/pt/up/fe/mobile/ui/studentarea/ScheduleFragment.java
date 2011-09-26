@@ -416,7 +416,6 @@ public class ScheduleFragment extends BaseFragment implements
   		Time yourDate = new Time(UIUtils.TIME_REFERENCE);
   		yourDate.set(mondayMillis);
   		yourDate.normalize(false);
-  		yourDate.month=3;//TODO: remove later
   		yourDate.minute=0;
   		yourDate.hour=0;
   		yourDate.second=1;
