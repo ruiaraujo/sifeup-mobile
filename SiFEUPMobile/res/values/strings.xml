@@ -197,6 +197,7 @@
 	</string>
 	<string name="lb_username">Username:</string>
 	<string name="hint_username">Username</string>
+	<string name="new_password_security"></string>
 	
 	
     <!-- Card Request-->

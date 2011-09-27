@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
@@ -36,6 +37,7 @@ public class ChangePasswordFragment extends BaseFragment
 	private EditText usernameText;
 	private EditText newPasswordText;
 	private EditText confirmNewPasswordText;
+	private TextView newPasswordSecurity;
 	private PasswordCheck checker;
 	@Override
     public void onCreate(Bundle savedInstanceState) 
@@ -86,9 +88,11 @@ public class ChangePasswordFragment extends BaseFragment
 		});
     	
     	/** Username */
+    	newPasswordSecurity = (TextView) root.findViewById(R.id.new_password_security);
+    	
+    	/** Username */
     	usernameText = (EditText) root.findViewById(R.id.username);
  
-    		
     	/** Current Password */
     	actualPasswordText = (EditText) root.findViewById(R.id.current_password);    	
     	
@@ -111,7 +115,8 @@ public class ChangePasswordFragment extends BaseFragment
 			public void afterTextChanged(Editable s) {
 				String password = s.toString();
     	        int result = checker.validatePassword(password);
-    	        usernameText.setText(newPasswordText.getText().toString() + " Pass = " + result);
+    	        //TODO: switch case para colocar texto
+    	        newPasswordSecurity.setText(" Pass Security = " + result);
     	    }
     	});
     	
@@ -139,14 +144,14 @@ public class ChangePasswordFragment extends BaseFragment
 				 return;
         	if ( result.equals("Success") )
         	{
-
+        		Toast.makeText(getActivity(), "Password successfully changed.",Toast.LENGTH_SHORT).show();
     		}
 			else if ( result.equals("Error") ){	
-			
+				Toast.makeText(getActivity(), "Error.",Toast.LENGTH_SHORT).show();
 			}
 			else if ( result.equals("") )
 			{
-
+				Toast.makeText(getActivity(), "Error.Empty!",Toast.LENGTH_SHORT).show();
 			}
         }
 
@@ -159,13 +164,13 @@ public class ChangePasswordFragment extends BaseFragment
 	    				   								actualPasswordText.getText().toString(), 
 	    				   								newPasswordText.getText().toString(),
 	    				   								confirmNewPasswordText.getText().toString(), "S");
-	    			int error =	SifeupAPI.JSONError(page);
+	    			
+	    		   int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-
 		    				return "Success";
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";	
