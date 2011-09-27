@@ -142,6 +142,7 @@ public class ChangePasswordFragment extends BaseFragment
         protected void onPostExecute(String result) {
 			if ( getActivity() == null )
 				 return;
+			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         	if ( result.equals("Success") )
         	{
         		Toast.makeText(getActivity(), "Password successfully changed.",Toast.LENGTH_SHORT).show();
