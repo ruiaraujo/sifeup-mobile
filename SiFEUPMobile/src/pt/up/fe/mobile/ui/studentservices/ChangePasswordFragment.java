@@ -4,20 +4,20 @@ import org.json.JSONException;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.PasswordCheck;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.LoginActivity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,7 +43,6 @@ public class ChangePasswordFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) 
     {
        super.onCreate(savedInstanceState);
-       checker = new PasswordCheck();//TODO: check if it is too slow
        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Change Password");
     }
 	 
@@ -126,8 +125,29 @@ public class ChangePasswordFragment extends BaseFragment
     	
     	
     	
-    	showMainScreen();
- 
+    	new AsyncTask<Void , Void, Void>() {
+            protected void onPostExecute(Void result) {
+            	showMainScreen();
+            }
+            
+			protected Void doInBackground(Void... params) {
+			    checker = new PasswordCheck();
+				return null;
+			}
+		}.execute();
+        SharedPreferences loginSettings = getActivity().getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
+        boolean rememberUser = loginSettings.getBoolean(LoginActivity.PREF_REMEMBER, false);
+        if ( rememberUser )
+        {
+        	String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
+        	String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "") ;
+        	if ( !user.equals("") && !pass.equals("") )
+        	{
+        		usernameText.setText(user);
+        		actualPasswordText.setText(pass);
+        		
+        	}
+        }
 		return getParentContainer();
 	} 
     
@@ -141,7 +161,7 @@ public class ChangePasswordFragment extends BaseFragment
 
         protected void onPostExecute(String result) {
 			if ( getActivity() == null )
-				 return;
+				 return;//TODO: move this string to xml
 			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         	if ( result.equals("Success") )
         	{
@@ -172,6 +192,7 @@ public class ChangePasswordFragment extends BaseFragment
 		    			case SifeupAPI.Errors.NO_AUTH:
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
+		    				//TODO:parse the returned object  to check for erros
 		    				return "Success";
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";	
