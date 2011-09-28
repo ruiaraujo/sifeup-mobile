@@ -122,9 +122,9 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 			return;
 		Intent i = new Intent(getActivity() , SubjectDescriptionActivity.class);
 		// assumed only one page of results
-		i.putExtra(SubjectDescriptionActivity.SUBJECT_CODE, subjects.get(position).acronym);
-		i.putExtra(SubjectDescriptionActivity.SUBJECT_YEAR,/* subjects.get(position).year*/"2010/2011");
-		i.putExtra(SubjectDescriptionActivity.SUBJECT_PERIOD, subjects.get(position).semester);
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subjects.get(position).acronym);
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR,/* subjects.get(position).year*/"2010/2011");
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, subjects.get(position).semester);
 		i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).namePt);
 		startActivity(i);
 

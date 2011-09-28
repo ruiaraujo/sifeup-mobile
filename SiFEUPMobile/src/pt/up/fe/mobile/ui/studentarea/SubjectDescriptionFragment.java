@@ -30,9 +30,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +45,11 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class SubjectDescriptionFragment extends BaseFragment  {
+	
+
+	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE"; 
+	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR"; 
+	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.studentarea.SUBJECT_PERIOD"; 
 	
 	private String code;
 	private String year;
@@ -70,9 +73,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        code = args.get(SubjectDescriptionActivity.SUBJECT_CODE).toString();
-		year = args.get(SubjectDescriptionActivity.SUBJECT_YEAR).toString();
-		period = args.get(SubjectDescriptionActivity.SUBJECT_PERIOD).toString();
+        code = args.get(SUBJECT_CODE).toString();
+		year = args.get(SUBJECT_YEAR).toString();
+		period = args.get(SUBJECT_PERIOD).toString();
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subject Description");
         setHasOptionsMenu(true);
     }

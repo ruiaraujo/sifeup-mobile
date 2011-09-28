@@ -57,9 +57,9 @@ public class ClassDescriptionFragment extends BaseFragment
 					return;
 				Intent i = new Intent(getActivity() , SubjectDescriptionActivity.class);
 				// assumed only one page of results
-				i.putExtra(SubjectDescriptionActivity.SUBJECT_CODE, block.getLectureCode());
-				i.putExtra(SubjectDescriptionActivity.SUBJECT_YEAR, block.getYear());
-				i.putExtra(SubjectDescriptionActivity.SUBJECT_PERIOD, block.getSemester());
+				i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, block.getLectureCode());
+				i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, block.getYear());
+				i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, block.getSemester());
 				i.putExtra(Intent.EXTRA_TITLE, block.getLectureAcronym());
 				startActivity(i);
 
