@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.ui.studentservices;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.PasswordCheck;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -39,6 +41,7 @@ public class ChangePasswordFragment extends BaseFragment
 	private EditText confirmNewPasswordText;
 	private TextView newPasswordSecurity;
 	private PasswordCheck checker;
+	private int currentQuality = -1;
 	@Override
     public void onCreate(Bundle savedInstanceState) 
     {
@@ -65,22 +68,27 @@ public class ChangePasswordFragment extends BaseFragment
 		});
     	
     	/** Confirm */
-    	//TODO: Apenas quando confirm ver a qualidade da password????
     	Button setPassword = (Button) root.findViewById(R.id.set_password_confirm);
     	setPassword.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
 				String username = usernameText.getText().toString();
-		    	
 		    	if(username.equals(""))
 		    	{
 		    		Toast.makeText(getActivity(), "Username can not be empty.",Toast.LENGTH_SHORT).show();
+		    		return;
 		    	}
 		    	String actualPassword = actualPasswordText.getText().toString();
 		    	
 		    	if(actualPassword.equals(""))
 		    	{
 		    		Toast.makeText(getActivity(), "Current password can not be empty.",Toast.LENGTH_SHORT).show();
+		    		return;
+		    	}
+		    	if ( currentQuality <= 1  )
+		    	{
+		    		;    	//TODO: error message pass
+		    		return;
 		    	}
 				new PasswordTask().execute();
 			}
@@ -113,9 +121,9 @@ public class ChangePasswordFragment extends BaseFragment
 			@Override
 			public void afterTextChanged(Editable s) {
 				String password = s.toString();
-    	        int result = checker.validatePassword(password);
+    	        currentQuality = checker.validatePassword(password);
     	        //TODO: switch case para colocar texto
-    	        newPasswordSecurity.setText(" Pass Security = " + result);
+    	        newPasswordSecurity.setText(" Pass Security = " + currentQuality);
     	    }
     	});
     	
@@ -150,6 +158,13 @@ public class ChangePasswordFragment extends BaseFragment
         }
 		return getParentContainer();
 	} 
+    private String errorTitle;
+    private String errorContent;
+    private void getError(String page) throws JSONException{
+    	JSONObject jObject = new JSONObject(page);
+		if(jObject.has("erro")) errorTitle = (String) jObject.get("erro");
+		if(jObject.has("erro_msg")) errorContent = (String) jObject.get("erro_msg");
+    }
     
     /** Classe privada para a busca de dados ao servidor */
     private class PasswordTask extends AsyncTask<Void, Void, String> {
@@ -165,13 +180,25 @@ public class ChangePasswordFragment extends BaseFragment
 			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         	if ( result.equals("Success") )
         	{
+        		
         		Toast.makeText(getActivity(), "Password successfully changed.",Toast.LENGTH_SHORT).show();
     		}
 			else if ( result.equals("Error") ){	
+				//TODO: present dialog with error
+				DialogFragment df = new DialogFragment(){//TODO: check how this works
+        		    @Override
+        		    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        		            Bundle savedInstanceState) {
+        		    	TextView tv = new TextView(getActivity());
+        		        tv.setText("This is an instance of MyDialogFragment");
+        		        return tv;
+        		    }
+        		};
+        		df.show(getFragmentManager(), "MyDF");
 				Toast.makeText(getActivity(), "Error.",Toast.LENGTH_SHORT).show();
 			}
 			else if ( result.equals("") )
-			{
+			{//TODO: problem with the webservice or no internet
 				Toast.makeText(getActivity(), "Error.Empty!",Toast.LENGTH_SHORT).show();
 			}
         }
@@ -190,6 +217,7 @@ public class ChangePasswordFragment extends BaseFragment
 		    		switch (error)
 		    		{
 		    			case SifeupAPI.Errors.NO_AUTH:
+		    				getError(page);
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
 		    				//TODO:parse the returned object  to check for erros
