@@ -31,7 +31,6 @@ import pt.up.fe.mobile.ui.BaseFragment;
    campo para inserção de um valor e um botão que inicia a
      actividade PrintRefActivity.
      
-    TODO
  * This interface is responsible for fetching the information
  *   the balance to the print server and shows it. There is a
  *   field to insert a value and a button that starts

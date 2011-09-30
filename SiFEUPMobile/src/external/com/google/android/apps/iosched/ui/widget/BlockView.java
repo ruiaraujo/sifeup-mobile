@@ -57,7 +57,6 @@ public class BlockView extends Button {
 
         setText(mTitle);
 
-        // TODO: turn into color state list with layers?
         int textColor = Color.WHITE;
         int accentColor = -1;
         switch (mColumn) {

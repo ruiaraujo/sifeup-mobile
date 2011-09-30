@@ -579,7 +579,6 @@ public class ScheduleFragment extends BaseFragment implements
 	@Override
 	public void onClick(View view ) {
 		if (view instanceof BlockView) {
-            Toast.makeText(getActivity(), ((BlockView)view).getBlockId(), Toast.LENGTH_SHORT).show();
             Block block = findBlock(((BlockView)view).getBlockId());
             if ( block == null )
                 Toast.makeText(getActivity(),"Something stupid happened", Toast.LENGTH_SHORT).show();

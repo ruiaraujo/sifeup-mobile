@@ -197,7 +197,21 @@
 	</string>
 	<string name="lb_username">Username:</string>
 	<string name="hint_username">Username</string>
-	<string name="new_password_security"></string>
+	<string name="new_password_security">Password Strength: \n<xliff:g id="quota">%1$s</xliff:g></string>
+	<string name="new_password_too_short">Too short</string>
+	<string name="new_password_too_weak">Password too weak.</string>
+	<string name="new_password_common_word">Common word</string>
+	<string name="new_password_very_weak">Very Weak</string>
+	<string name="new_password_weak">Weak</string>
+	<string name="new_password_medium">Medium</string>
+	<string name="new_password_strong">Strong</string>
+	<string name="new_password_very_strong">Very Strong</string>
+	<string name="confirm_new_password_empty">Confirmation of new password can not be empty.</string>
+	<string name="new_password_empty">New password can not be empty.</string>
+	<string name="old_password_empty">Current password can not be empty.</string>
+	<string name="username_empty">Username can not be empty.</string>
+	<string name="password_successfully_changed">Password successfully changed.</string>
+	<string name="confirmation_password_different">The confirmation is different from the password.</string>
 	
 	
     <!-- Card Request-->

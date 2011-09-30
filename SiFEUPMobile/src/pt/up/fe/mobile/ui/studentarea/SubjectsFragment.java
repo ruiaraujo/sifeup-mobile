@@ -16,6 +16,7 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -115,15 +116,14 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-
-		//TODO: passar parameteros a actividade: code, year, period
-		
 		if ( getActivity() == null )
 			return;
 		Intent i = new Intent(getActivity() , SubjectDescriptionActivity.class);
 		// assumed only one page of results
+		int secondYear = UIUtils.secondYearOfSchoolYear();
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subjects.get(position).acronym);
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR,/* subjects.get(position).year*/"2010/2011");
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR,
+				Integer.toString(secondYear-1)+	"/" + Integer.toString(secondYear));
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, subjects.get(position).semester);
 		i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).namePt);
 		startActivity(i);
@@ -196,7 +196,7 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 		  	try {
 	    			page = SifeupAPI.getSubjectsReply(
 								SessionManager.getInstance().getLoginCode(),
-								"2010");
+								Integer.toString(UIUtils.secondYearOfSchoolYear()-1));
 	    			int error =	SifeupAPI.JSONError(page);
 		    		switch (error)
 		    		{

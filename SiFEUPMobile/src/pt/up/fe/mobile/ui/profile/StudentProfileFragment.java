@@ -251,7 +251,6 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position, long id) {
-		// TODO Auto-generated method stub
 		
 	}
 }

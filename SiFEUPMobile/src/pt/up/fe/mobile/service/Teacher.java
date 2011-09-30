@@ -131,7 +131,7 @@ public class Teacher implements Serializable
 	}
 
 	/**
-	 * TODO: It is necessary to...?
+	 * 
 	 * 
 	 */
 	public class StudentDetail

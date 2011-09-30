@@ -76,7 +76,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			
 			@Override
 			public void onClick(View v) {
-				Friend fr = new Friend(me.getCode(),me.getName(), me.getName());
+				Friend fr = new Friend(me.getCode(),me.getName(),null);
 				if ( friend.isChecked())
 					SessionManager.friends.addFriend(fr);
 				else
@@ -205,7 +205,6 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position, long id) {
-		// TODO Auto-generated method stub
 		
 	}
 }

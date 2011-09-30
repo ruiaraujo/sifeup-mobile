@@ -37,7 +37,6 @@ public class Payment {
 			
 			this.name=payment.getString("nome_prestacao");
 			String[] dueDateString=payment.getString("data_limite_pag").split("-");
-			//TODO: GregorianCalendar is very very very slow. Check if Time can't do the same thing
 			if(dueDateString.length==3)
 			{
 				this.dueDate=new Time(Time.TIMEZONE_UTC);

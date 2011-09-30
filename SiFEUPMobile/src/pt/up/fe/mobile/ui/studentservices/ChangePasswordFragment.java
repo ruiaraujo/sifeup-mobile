@@ -9,6 +9,8 @@ import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -35,6 +37,7 @@ import external.com.google.android.apps.iosched.util.AnalyticsUtils;
  */
 public class ChangePasswordFragment extends BaseFragment
 {
+	private boolean rememberUser;
 	private EditText actualPasswordText;
 	private EditText usernameText;
 	private EditText newPasswordText;
@@ -75,19 +78,43 @@ public class ChangePasswordFragment extends BaseFragment
 				String username = usernameText.getText().toString();
 		    	if(username.equals(""))
 		    	{
-		    		Toast.makeText(getActivity(), "Username can not be empty.",Toast.LENGTH_SHORT).show();
+		    		Toast.makeText(getActivity(), getString(R.string.username_empty),Toast.LENGTH_SHORT).show();
+		    		usernameText.requestFocus();
 		    		return;
 		    	}
 		    	String actualPassword = actualPasswordText.getText().toString();
 		    	
 		    	if(actualPassword.equals(""))
 		    	{
-		    		Toast.makeText(getActivity(), "Current password can not be empty.",Toast.LENGTH_SHORT).show();
+		    		Toast.makeText(getActivity(), getString(R.string.old_password_empty),Toast.LENGTH_SHORT).show();
+		    		actualPasswordText.requestFocus();
+		    		return;
+		    	}
+		    	String newPassword = newPasswordText.getText().toString();
+		    	if(newPassword.equals(""))
+		    	{
+		    		Toast.makeText(getActivity(),getString(R.string.new_password_empty) ,Toast.LENGTH_SHORT).show();
+		    		newPasswordText.requestFocus();
 		    		return;
 		    	}
 		    	if ( currentQuality <= 1  )
 		    	{
-		    		;    	//TODO: error message pass
+		    		Toast.makeText(getActivity(),getString(R.string.new_password_too_weak) ,Toast.LENGTH_SHORT).show();
+		    		newPasswordText.requestFocus();
+		    		return;
+		    	}
+		    	String confirmNewPassword = confirmNewPasswordText.getText().toString();
+		    	
+		    	if(confirmNewPassword.equals(""))
+		    	{
+		    		Toast.makeText(getActivity(),getString(R.string.confirm_new_password_empty) ,Toast.LENGTH_SHORT).show();
+		    		confirmNewPasswordText.requestFocus();
+		    		return;
+		    	}
+		    	if(!confirmNewPassword.equals(newPassword))
+		    	{
+		    		Toast.makeText(getActivity(),getString(R.string.confirmation_password_different) ,Toast.LENGTH_SHORT).show();
+		    		confirmNewPasswordText.requestFocus();
 		    		return;
 		    	}
 				new PasswordTask().execute();
@@ -122,8 +149,17 @@ public class ChangePasswordFragment extends BaseFragment
 			public void afterTextChanged(Editable s) {
 				String password = s.toString();
     	        currentQuality = checker.validatePassword(password);
-    	        //TODO: switch case para colocar texto
-    	        newPasswordSecurity.setText(" Pass Security = " + currentQuality);
+    	        String quality = null;
+    	        switch(currentQuality){
+	    	        case -2: quality = getString(R.string.new_password_too_short); break;
+	    	        case -1: quality = getString(R.string.new_password_common_word); break;
+	    	        case 1: quality = getString(R.string.new_password_very_weak); break;
+	    	        case 2: quality = getString(R.string.new_password_weak); break;
+	    	        case 3: quality = getString(R.string.new_password_medium); break;
+	    	        case 4: quality = getString(R.string.new_password_strong); break;
+	    	        case 5: quality = getString(R.string.new_password_very_strong); break;
+    	        }
+    	        newPasswordSecurity.setText(getString(R.string.new_password_security, quality));
     	    }
     	});
     	
@@ -144,7 +180,7 @@ public class ChangePasswordFragment extends BaseFragment
 			}
 		}.execute();
         SharedPreferences loginSettings = getActivity().getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
-        boolean rememberUser = loginSettings.getBoolean(LoginActivity.PREF_REMEMBER, false);
+        rememberUser = loginSettings.getBoolean(LoginActivity.PREF_REMEMBER, false);
         if ( rememberUser )
         {
         	String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
@@ -176,35 +212,40 @@ public class ChangePasswordFragment extends BaseFragment
 
         protected void onPostExecute(String result) {
 			if ( getActivity() == null )
-				 return;//TODO: move this string to xml
+				 return;
 			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         	if ( result.equals("Success") )
         	{
-        		
-        		Toast.makeText(getActivity(), "Password successfully changed.",Toast.LENGTH_SHORT).show();
+        		if ( rememberUser )
+        	    {
+	                SharedPreferences loginSettings = getActivity().getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
+	                String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
+	            	String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "") ;
+	            	if ( !user.equals("") && !pass.equals("") && user.equals(usernameText.getText().toString()))
+	            	{
+		            	SharedPreferences.Editor prefEditor = loginSettings.edit();
+		            	prefEditor.putString(LoginActivity.PREF_PASSWORD, newPasswordText.getText().toString());
+	            		
+	            	}
+        	    }
+        		Toast.makeText(getActivity(), getString(R.string.password_successfully_changed),Toast.LENGTH_SHORT).show();
     		}
 			else if ( result.equals("Error") ){	
-				//TODO: present dialog with error
-				DialogFragment df = new DialogFragment(){//TODO: check how this works
-        		    @Override
-        		    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        		            Bundle savedInstanceState) {
-        		    	TextView tv = new TextView(getActivity());
-        		        tv.setText("This is an instance of MyDialogFragment");
-        		        return tv;
-        		    }
+				DialogFragment df = new DialogFragment(){
+					  public Dialog onCreateDialog(Bundle savedInstanceState) {
+					        return new AlertDialog.Builder(getActivity())
+					                .setTitle(errorTitle)
+					                .setMessage(errorContent)
+					                .create();
+					    }  
+
         		};
         		df.show(getFragmentManager(), "MyDF");
-				Toast.makeText(getActivity(), "Error.",Toast.LENGTH_SHORT).show();
 			}
 			else if ( result.equals("") )
-			{//TODO: problem with the webservice or no internet
-				Toast.makeText(getActivity(), "Error.Empty!",Toast.LENGTH_SHORT).show();
-			}
+				Toast.makeText(getActivity(),getString(R.string.toast_server_error),Toast.LENGTH_SHORT).show();
         }
 
-		@Override
-		//TODO: passar argumentos
 		protected String doInBackground(Void ... theVoid) {
 			String page = "";
 		  	try {
@@ -220,7 +261,6 @@ public class ChangePasswordFragment extends BaseFragment
 		    				getError(page);
 		    				return "Error";
 		    			case SifeupAPI.Errors.NO_ERROR:
-		    				//TODO:parse the returned object  to check for erros
 		    				return "Success";
 		    			case SifeupAPI.Errors.NULL_PAGE:
 		    				return "";	

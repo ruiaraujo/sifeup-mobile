@@ -64,7 +64,8 @@ public class ParkOccupationFragment extends BaseFragment
 		
 		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-		
+		list.setClickable(false);
+		list.setFocusable(false);
 		new ParkOccupationTask().execute();
 	
 		return getParentContainer();//this is mandatory

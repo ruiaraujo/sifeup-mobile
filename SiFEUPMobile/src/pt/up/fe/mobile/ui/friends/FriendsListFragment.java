@@ -97,6 +97,10 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
     			return true;
     		Intent i = new Intent(getActivity(), ScheduleActivity.class);
     		i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
+    		if ( SessionManager.friends.getList().get((int)info.id).getCourse() != null )
+        		i.putExtra( ScheduleFragment.SCHEDULE_TYPE, ScheduleFragment.SCHEDULE_EMPLOYEE);
+        	else
+        		i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_STUDENT );
     		startActivity(i);
     		break;
     	}
@@ -105,10 +109,14 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
     
 
 	public void onItemClick(AdapterView<?> arg0, View v, int position, long id)  {
-    	//TODO
     	SessionManager.friends.setSelectedFriend(position);
     	Intent i = new Intent(getActivity(), ProfileActivity.class);
-    	i.putExtra("profile", SessionManager.friends.getFriend(position).getCode());
+    	Friend f = SessionManager.friends.getFriend(position);
+    	if ( f.getCourse() != null )
+    		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_EMPLOYEE );
+    	else
+    		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT );
+    	i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
     	startActivity(i);
 	}
 	
@@ -135,7 +143,8 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
 
 		             HashMap<String, String> map = new HashMap<String, String>();
 		             map.put(from[0], f.getName());
-		             map.put(from[1],f.getCourse());
+		             if ( f.getCourse() != null )
+		             	map.put(from[1],f.getCourse());
 		             fillMaps.add(map);
 		         }
 

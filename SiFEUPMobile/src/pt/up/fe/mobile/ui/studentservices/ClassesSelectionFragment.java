@@ -82,10 +82,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
         
 		return getParentContainer();
     }
- 	
- 	/**
- 	 * TODO: what is this?
- 	 */
+ 
  	private void buildPages(){
         mViewPager.setAdapter(mPagerAdapter);
         

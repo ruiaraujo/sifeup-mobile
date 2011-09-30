@@ -114,8 +114,6 @@ public class BezelImageView extends ImageView {
         if (mMaskDrawable.isStateful()) {
             mMaskDrawable.setState(getDrawableState());
         }
-
-        // TODO: is this the right place to invalidate?
         invalidate();
     }
 }
