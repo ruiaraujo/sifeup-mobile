@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         style="@style/ListItemTitle" />
      
-    <TextView android:id="@+id/type"
+ <!--   <TextView android:id="@+id/type"
        android:layout_gravity="left|center_vertical"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       style="@style/ListItemSubtitle"/>   
+       style="@style/ListItemSubtitle"/>   -->
        
     <TextView android:id="@+id/typeDesc"
        android:layout_gravity="left|center_vertical"
@@ -23,7 +23,7 @@
        android:layout_height="wrap_content"
        style="@style/ListItemSubtitle"/>  
        
-    <TextView android:id="@+id/length"
+ <!--    <TextView android:id="@+id/length"
        android:layout_gravity="left|center_vertical"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
        android:layout_gravity="left|center_vertical"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       style="@style/ListItemSubtitle"/>    
+       style="@style/ListItemSubtitle"/>   -->  
           
 
 </LinearLayout>

@@ -11,21 +11,21 @@
 		android:paddingLeft="20dip"
 		android:orientation="vertical">
 		
-		<TextView android:id="@+id/path_course"
+		<!-- <TextView android:id="@+id/path_course"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 		 	android:layout_gravity="center_vertical"
 		 	android:paddingBottom="8dip"
 		    android:textStyle="bold"
-		 	android:textSize="16.0sp"/>	
+		 	android:textSize="16.0sp"/>	-->
 		
-		<TextView android:id="@+id/path_state"
+		<!-- <TextView android:id="@+id/path_state"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 		 	android:layout_gravity="center_vertical"
 		 	android:paddingBottom="8dip"
 		    android:textStyle="bold"
-		 	android:textSize="16.0sp"/>
+		 	android:textSize="16.0sp"/> -->
 			
 		<TextView android:id="@+id/path_average"
 			android:layout_height="wrap_content"
@@ -35,13 +35,13 @@
 		    android:textStyle="bold"
 		 	android:textSize="16.0sp"/>	
 		
-		<TextView android:id="@+id/path_entries"
+		<!-- <TextView android:id="@+id/path_entries"
 			android:layout_height="wrap_content"
 		 	android:layout_width="wrap_content"
 		 	android:layout_gravity="center_vertical"
 		 	android:paddingBottom="8dip"	
 		 	android:textStyle="bold"
-		 	android:textSize="16.0sp"/>
+		 	android:textSize="16.0sp"/> -->
 		
 		 <TextView android:id="@+id/path_year"
 			android:layout_height="wrap_content"

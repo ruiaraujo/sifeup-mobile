@@ -45,9 +45,9 @@ public class AcademicPathFragment extends BaseFragment {
 	
 	private TextView average;
 	private TextView year;
-	private TextView entries;
-	private TextView state;
-	private TextView course;
+	//private TextView entries;
+	//private TextView state;
+	//private TextView course;
 	
 	private ExpandableListView grades;
 	private LayoutInflater mInflater;
@@ -72,11 +72,11 @@ public class AcademicPathFragment extends BaseFragment {
 		
 		average = (TextView) root.findViewById(R.id.path_average);
 		
-		entries = (TextView) root.findViewById(R.id.path_entries);
+		//entries = (TextView) root.findViewById(R.id.path_entries);
 		
-		state = (TextView) root.findViewById(R.id.path_state);
+		//state = (TextView) root.findViewById(R.id.path_state);
 		
-		course = (TextView) root.findViewById(R.id.path_course);
+		//course = (TextView) root.findViewById(R.id.path_course);
 		
 		//TODO: colocar talvez este link no menu de cima
 		((TextView) root.findViewById(R.id.path_link_sifeup)).setOnClickListener(new OnClickListener() {
@@ -220,10 +220,10 @@ public class AcademicPathFragment extends BaseFragment {
         	{
 				Log.e("AcademicPath","success");
 				average.setText(getString(R.string.path_average, academicPath.average));
-				entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
+				//entries.setText(getString(R.string.path_entries, academicPath.numberEntries));
 				year.setText(getString(R.string.path_year, academicPath.courseYears));
-				state.setText(getString(R.string.path_state, academicPath.state));
-				course.setText(getString(R.string.path_course, academicPath.courseAcronym));
+				//state.setText(getString(R.string.path_state, academicPath.state));
+				//course.setText(getString(R.string.path_course, academicPath.courseAcronym));
 		        grades.setAdapter(new AcademicPathAdapter()); 
 				showMainScreen();
     		}

@@ -5,11 +5,11 @@
     android:orientation="vertical" 
     android:background="@android:drawable/list_selector_background">
     
-    <TextView android:id="@+id/teacher_code"
+   <!--  <TextView android:id="@+id/teacher_code"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ListItemTitle" />
+        style="@style/ListItemTitle" /> --> 
      
      <TextView android:id="@+id/teacher_name"
         android:layout_gravity="left|center_vertical"
@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         style="@style/ListItemSubtitle"/>   
         
-     <TextView android:id="@+id/teacher_time"
+  <!--  <TextView android:id="@+id/teacher_time"
         android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ListItemSubtitle"/>   
+        style="@style/ListItemSubtitle"/>   --> 
           
 </LinearLayout>
 

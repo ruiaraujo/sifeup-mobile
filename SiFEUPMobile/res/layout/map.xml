@@ -9,6 +9,6 @@
         android:layout_height="fill_parent"
         android:enabled="true"
         android:clickable="true"
-        android:apiKey="00y5Lhie_59veySfhMeKhF9ks7bylC0iezok_NA"
+        android:apiKey="00y5Lhie_59sIirvMKUo8lAEDBei0lpVYfmfI6Q"
         /><!-- This key works only on Angela pc -->
 </RelativeLayout>

@@ -332,9 +332,10 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 						ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 						((ViewPager) collection).addView(list,0);	
 						
-						String[] from = new String[] {"code", "name", "time"};
-						
-				        int[] to = new int[] { R.id.teacher_code, R.id.teacher_name ,R.id.teacher_time };
+						//String[] from = new String[] {"code", "name", "time"};
+						String[] from = new String[] { "name"};
+				        //int[] to = new int[] { R.id.teacher_code, R.id.teacher_name ,R.id.teacher_time };
+						int[] to = new int[] { R.id.teacher_name};
 					         // prepare the list of all records
 				        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 				        
@@ -342,9 +343,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 				        {
 				             HashMap<String, String> map = new HashMap<String, String>();
 				     
-				             map.put("code", t.getCode());
+				          //   map.put("code", t.getCode());
 				             map.put("name", t.getName());
-				             map.put("time", t.getTime());
+				          //   map.put("time", t.getTime());
 				           
 				             fillMaps.add(map);   
 				        }
@@ -443,9 +444,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 				{	ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
 					((ViewPager) collection).addView(listEvaluation,0);	
 					
-					String[] fromEvaluation = new String[] {"description", "type", "typeDesc", "length", "conclusionDate"};
+					String[] fromEvaluation = new String[] {"description", /*"type",*/ "typeDesc",/* "length", "conclusionDate"*/};
 						
-			        int[] toEvaluation = new int[] { R.id.description,  R.id.type,  R.id.typeDesc, R.id.length, R.id.conclusionDate};
+			        int[] toEvaluation = new int[] { R.id.description,  /*R.id.type,*/  R.id.typeDesc,/* R.id.length, R.id.conclusionDate*/};
 			        
 				    // prepare the list of all records
 			        List<HashMap<String, String>> fillMapsEvaluation = new ArrayList<HashMap<String, String>>();
@@ -455,10 +456,10 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 			             HashMap<String, String> map = new HashMap<String, String>();
 			     
 			             map.put("description", e.getDescription());
-			             map.put("type", e.getType());
+			            // map.put("type", e.getType());
 			             map.put("typeDesc", e.getTypeDesc());
-			             map.put("length", e.getLength());
-			             map.put("conclusionDate", e.getConclusionDate());
+			             //map.put("length", e.getLength());
+			            // map.put("conclusionDate", e.getConclusionDate());
 			             fillMapsEvaluation.add(map);
 			      
 			        }
@@ -534,6 +535,11 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 							if ( position >= subjectContent.getCurrentFolder().getFolders().size()  )
 							{
 								//launch download;
+								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
+								String url = toDownload.getUrl()==null?"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode():toDownload.getUrl();
+								Intent i = new Intent(Intent.ACTION_VIEW);
+								i.setData(Uri.parse(url));
+								startActivity(i);
 								return;
 							}
 							subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getFolders().get(position));

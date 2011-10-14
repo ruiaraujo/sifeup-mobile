@@ -509,6 +509,14 @@ public class Subject  implements Serializable {
 		public void setTime(String time) {
 			this.time = time;
 		}
+		
+		public boolean equals(Object t){
+			if ( t instanceof Teacher)
+			{
+				return ( (Teacher)t).code.equals(code);
+			}
+			return false;
+		}
 	}
 	
 	public class Software implements Serializable {
@@ -670,7 +678,8 @@ public class Subject  implements Serializable {
     	 for(WorloadDesc wd : this.worloadDesc)
          {
 		        for(Teacher t : wd.teachers)
-		        	res.add(t);
+		        	if ( !res.contains(t) )
+		        		res.add(t);
          }
     	 
     	 return res;

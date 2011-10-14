@@ -216,6 +216,7 @@ public class ChangePasswordFragment extends BaseFragment
 			getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         	if ( result.equals("Success") )
         	{
+
         		if ( rememberUser )
         	    {
 	                SharedPreferences loginSettings = getActivity().getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
@@ -229,6 +230,7 @@ public class ChangePasswordFragment extends BaseFragment
 	            	}
         	    }
         		Toast.makeText(getActivity(), getString(R.string.password_successfully_changed),Toast.LENGTH_SHORT).show();
+
     		}
 			else if ( result.equals("Error") ){	
 				DialogFragment df = new DialogFragment(){

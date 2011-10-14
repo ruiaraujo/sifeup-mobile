@@ -55,7 +55,7 @@ public class NotificationsDescFragment extends Fragment {
 	   {
 		   ((TextView) root.findViewById(R.id.notification_description)).setText(" "+n.getDescription());
 	   }
-	   
+	   ((TextView) root.findViewById(R.id.notification_date)).setText(" "+n.getDate());
 	   ((TextView) root.findViewById(R.id.notification_priority)).setText(" "+n.getPriorityString());
 	  
 	   ((TextView) root.findViewById(R.id.notification_designation)).setText(" "+n.getDesignation());
