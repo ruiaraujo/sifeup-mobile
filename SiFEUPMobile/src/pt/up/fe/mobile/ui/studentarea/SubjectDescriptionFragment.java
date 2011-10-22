@@ -18,6 +18,7 @@ import pt.up.fe.mobile.service.SubjectContent.File;
 import pt.up.fe.mobile.service.SubjectContent.Folder;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.zylinc.view.ViewPagerIndicator;
@@ -536,10 +537,17 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 							{
 								//launch download;
 								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
-								String url = toDownload.getUrl()==null?"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode():toDownload.getUrl();
-								Intent i = new Intent(Intent.ACTION_VIEW);
-								i.setData(Uri.parse(url));
-								startActivity(i);
+								if ( toDownload.getUrl() == null || toDownload.getUrl().trim().length() == 0)
+								{
+									DownloaderFragment.newInstance(toDownload.getName(),"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode() , toDownload.getFilename())
+														.show(getFragmentManager(), "Downloader");
+								}
+								else
+								{
+									Intent i = new Intent(Intent.ACTION_VIEW);
+									i.setData(Uri.parse(toDownload.getUrl()));
+									startActivity(i);
+								}
 								return;
 							}
 							subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getFolders().get(position));

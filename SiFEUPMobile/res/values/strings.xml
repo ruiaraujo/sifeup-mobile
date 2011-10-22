@@ -7,7 +7,11 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
-
+    
+     <!-- *************************************************************************************** -->
+   	<!-- Downloader -->
+	<string name="msg_estimating_download">Estimating download speed and time left...</string>
+	<string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
     <!-- *************************************************************************************** -->
    	<!-- LOGIN -->
    	
@@ -15,7 +19,8 @@
     <string name="lb_login_username">Username:</string>
     <string name="lb_login_password">Password:</string>
     
-   	<string name="bt_cancel">Exit</string>
+   	<string name="bt_cancel">Cancel</string>
+   	<string name="bt_exit">Exit</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Reset</string>

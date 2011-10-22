@@ -242,7 +242,7 @@ public class ChangePasswordFragment extends BaseFragment
 					    }  
 
         		};
-        		df.show(getFragmentManager(), "MyDF");
+        		df.show(getFragmentManager(), "Error Dialog");
 			}
 			else if ( result.equals("") )
 				Toast.makeText(getActivity(),getString(R.string.toast_server_error),Toast.LENGTH_SHORT).show();
