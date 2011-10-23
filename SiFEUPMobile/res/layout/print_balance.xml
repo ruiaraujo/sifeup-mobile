@@ -58,6 +58,7 @@
 			    android:layout_height="wrap_content"
 	    		android:paddingTop="15dp"
 	    		android:orientation="horizontal"
+		    	android:gravity="center"
 		    	android:layout_below="@id/print_ref_title">
 		    	<TextView
 			    	android:layout_height="wrap_content"
