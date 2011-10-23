@@ -7,6 +7,7 @@ package pt.up.fe.mobile.ui.studentservices;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -27,6 +28,7 @@ import pt.up.fe.mobile.service.RefMB;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
+import pt.up.fe.mobile.ui.BaseFragment;
 
 /**
  * This interface is responsible for fetching information from
@@ -36,7 +38,7 @@ import pt.up.fe.mobile.ui.BaseActivity;
  * @author Ângela Igreja
  *
  */
-public class PrintRefFragment extends Fragment {
+public class PrintRefFragment extends BaseFragment {
 	
 	RefMB ref = new RefMB();
 	private TextView nome;
@@ -56,8 +58,9 @@ public class PrintRefFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
     	new PrintRefTask().execute(getArguments().get("value").toString());
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, null);
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, getParentContainer() , true);
     	ref.setName(getString(R.string.lb_print_ref_title));
     	nome=(TextView)root.findViewById(R.id.tuition_ref_detail_name);
     	entidade = ((TextView)root.findViewById(R.id.tuition_ref_detail_entity));
@@ -65,7 +68,8 @@ public class PrintRefFragment extends Fragment {
     	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
     	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
     	root.findViewById(R.id.tableRow4).setVisibility(View.GONE);
-    	return root;
+
+    	return getParentContainer(); //mandatory
 
     } 
     
@@ -109,13 +113,10 @@ public class PrintRefFragment extends Fragment {
     private class PrintRefTask extends AsyncTask<String, Void, String> {
 
     	protected void onPreExecute (){
-    		if ( getActivity() != null ) 
-    			getActivity().showDialog(BaseActivity.DIALOG_FETCHING);  
+    		showLoadingScreen();
     	}
 
         protected void onPostExecute(String saldo) {
-        	if ( getActivity() == null )
-        		return;
         	if ( saldo.equals("Success") )
         	{
         		nome.setText(ref.getName());
@@ -123,11 +124,11 @@ public class PrintRefFragment extends Fragment {
         		referencia.setText(""+ref.getRef());
         		valor.setText(ref.getAmount()+"€");
         		dataFim.setText(ref.getEndDate().format3339(true));
+        		showMainScreen();
 			}
 			else if ( saldo.equals("Error") )  {	
 				if ( getActivity() != null ) 
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
 					((BaseActivity)getActivity()).goLogin(true);
 					getActivity().finish();
@@ -137,14 +138,11 @@ public class PrintRefFragment extends Fragment {
 			else if ( saldo.equals("") ){
 				if ( getActivity() != null ) 	
 				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 					getActivity().finish();
 					return;
 				}
 			}
-        	if ( getActivity() != null ) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
