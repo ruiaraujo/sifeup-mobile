@@ -641,18 +641,22 @@ public class Subject  implements Serializable {
 	    			this.software.add(soft);
 	    		}
 			}
+			//comp_avalicao might be present though empty
 			if(jObject.has("comp_avaliacao")){
-	    		JSONArray jArray = jObject.getJSONArray("comp_avaliacao");
-	    		for(int i = 0; i < jArray.length(); i++){
-	    			EvaluationComponent eval = new EvaluationComponent();
-	    			JSONObject jEval = jArray.getJSONObject(i);
-	    			if(jEval.has("descricao")) eval.description = jEval.getString("descricao");
-	    			if(jEval.has("descricao_ing")) eval.descriptionEn = jEval.getString("descricao_ing");
-	    			if(jEval.has("tipo")) eval.type = jEval.getString("tipo");
-	    			if(jEval.has("tipo_descr")) eval.typeDesc = jEval.getString("tipo_descr");
-	    			if(jEval.has("duracao")) eval.length = jEval.getString("duracao");
-	    			if(jEval.has("data_conclusao")) eval.conclusionDate = jEval.getString("data_conclusao");
-	    			this.evaluation.add(eval);
+	    		JSONArray jArray = jObject.optJSONArray("comp_avaliacao");
+	    		if ( jArray != null )
+	    		{
+	    			for(int i = 0; i < jArray.length(); i++){
+		    			EvaluationComponent eval = new EvaluationComponent();
+		    			JSONObject jEval = jArray.getJSONObject(i);
+		    			if(jEval.has("descricao")) eval.description = jEval.getString("descricao");
+		    			if(jEval.has("descricao_ing")) eval.descriptionEn = jEval.getString("descricao_ing");
+		    			if(jEval.has("tipo")) eval.type = jEval.getString("tipo");
+		    			if(jEval.has("tipo_descr")) eval.typeDesc = jEval.getString("tipo_descr");
+		    			if(jEval.has("duracao")) eval.length = jEval.getString("duracao");
+		    			if(jEval.has("data_conclusao")) eval.conclusionDate = jEval.getString("data_conclusao");
+		    			this.evaluation.add(eval);
+		    		}
 	    		}
 			}
 			if(jObject.has("cond_frequencia")) this.frequenceCond = jObject.getString("cond_frequencia");
