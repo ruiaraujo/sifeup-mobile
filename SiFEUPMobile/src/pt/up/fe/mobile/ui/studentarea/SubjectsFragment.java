@@ -3,6 +3,7 @@ package pt.up.fe.mobile.ui.studentarea;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -142,26 +143,30 @@ public class SubjectsFragment extends BaseFragment implements OnItemClickListene
 				 return;
         	if ( result.equals("Success") )
         	{
-				Log.e("Subjects","success");
+				Log.d("Subjects","success");
 				
 				 try {
-					 String[] from = new String[] {"chair", "time", "room"};
-			         int[] to = new int[] { R.id.exam_chair, R.id.exam_time, R.id.exam_room};
+					 final String language = Locale.getDefault().getLanguage();
+					 final String[] from = new String[] {"name", "code", "time"};
+					 final int[] to = new int[] { R.id.exam_chair, R.id.exam_time, R.id.exam_room};
 				     // prepare the list of all records
-			         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+					 final  List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 			         for(Subject s : subjects){
 			             HashMap<String, String> map = new HashMap<String, String>();
-			             map.put("chair", s.namePt);
-			             map.put("time", s.acronym + " (" + s.nameEn + ")");
-			             map.put("room", getString(R.string.subjects_year,s.year, s.semester));
+			             if ( language.startsWith("pt") )
+			            	 map.put(from[0], (s.namePt.trim().length()!=0)?s.namePt:s.nameEn);
+			             else
+			            	 map.put(from[0], (s.nameEn.trim().length()!=0)?s.nameEn:s.namePt);
+			             map.put(from[1], s.acronym );
+			             map.put(from[2], getString(R.string.subjects_year,s.year, s.semester));
 			             fillMaps.add(map);
 			         }
 			         // fill in the grid_item layout
-			         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
+			         final SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_exam, from, to);
 			         list.setAdapter(adapter);
 			         list.setOnItemClickListener(SubjectsFragment.this);
 			         showMainScreen();
-			         Log.e("JSON", "subjects visual list loaded");
+			         Log.d("JSON", "subjects visual list loaded");
 				 }
 				 catch (Exception ex){
 					 ex.printStackTrace();

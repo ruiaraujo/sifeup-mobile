@@ -101,6 +101,7 @@
     <style name="ListItemSubtitle">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/body_text_2</item>
+        <item name="android:paddingLeft">12dip</item>
     </style>
 
     <style name="ListItemContainerBase">

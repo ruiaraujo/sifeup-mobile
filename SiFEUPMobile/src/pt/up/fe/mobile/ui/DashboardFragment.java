@@ -67,7 +67,7 @@ public class DashboardFragment extends Fragment {
 
         root.findViewById(R.id.home_btn_news).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                fireTrackerEvent("New");
+                fireTrackerEvent("News");
                 startActivity(new Intent(getActivity(),NewsActivity.class));
             }
         });
