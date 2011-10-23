@@ -2,10 +2,10 @@ package pt.up.fe.mobile.ui.studentarea;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Block;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.Bundle;

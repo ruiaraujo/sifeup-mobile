@@ -13,12 +13,12 @@ import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.service.Profile.ProfileDetail;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;

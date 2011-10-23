@@ -1,11 +1,11 @@
 package pt.up.fe.mobile.ui.studentservices;
 
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 public class ScholarProfitFragment extends Fragment
 {

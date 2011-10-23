@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package external.com.google.android.apps.iosched.util;
+package pt.up.fe.mobile.tracker;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -37,8 +37,6 @@ public class AnalyticsUtils {
     /**
      * The analytics tracking code for the app.
      */
-    // TODO: insert your Analytics UA code here.
-    private static final String UACODE = "INSERT_YOUR_ANALYTICS_UA_CODE_HERE";
 
     private static final int VISITOR_SCOPE = 1;
     private static final String FIRST_RUN_KEY = "firstRun";
@@ -46,6 +44,11 @@ public class AnalyticsUtils {
 
     private static AnalyticsUtils sInstance;
 
+    /**
+     * The category for menu clicks
+     */
+    public static final String MENU_CAT = "Menu Click";
+    
     /**
      * Returns the global {@link AnalyticsUtils} singleton object, creating one if necessary.
      */
@@ -74,8 +77,6 @@ public class AnalyticsUtils {
         mTracker = GoogleAnalyticsTracker.getInstance();
 
         // Unfortunately this needs to be synchronous.
-        mTracker.start(UACODE, 300, mApplicationContext);
-
         Log.d(TAG, "Initializing Analytics");
 
         // Since visitor CV's should only be declared the first time an app runs, check if

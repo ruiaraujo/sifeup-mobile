@@ -28,6 +28,7 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.YearsTuition;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Intent;
@@ -43,7 +44,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 public class TuitionHistoryFragment extends BaseFragment implements OnItemClickListener {
 

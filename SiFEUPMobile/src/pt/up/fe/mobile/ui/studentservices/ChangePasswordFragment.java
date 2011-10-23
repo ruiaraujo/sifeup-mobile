@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.PasswordCheck;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
@@ -26,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 
 /**

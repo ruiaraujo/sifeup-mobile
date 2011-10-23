@@ -3,6 +3,7 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.friends.FriendsActivity;
 import pt.up.fe.mobile.ui.map.FeupMapActivity;
 import pt.up.fe.mobile.ui.news.NewsActivity;
@@ -10,7 +11,6 @@ import pt.up.fe.mobile.ui.notifications.NotificationsActivity;
 import pt.up.fe.mobile.ui.studentarea.StudentAreaActivity;
 import pt.up.fe.mobile.ui.studentservices.StudentServicesActivity;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.Bundle;

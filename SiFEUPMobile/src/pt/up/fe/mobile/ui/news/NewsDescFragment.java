@@ -3,7 +3,6 @@
 package pt.up.fe.mobile.ui.news;
 
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 /**
 * This interface is responsible for displaying information 

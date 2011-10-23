@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 
 public class UCsInscriptionsFragment extends Fragment

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.Bundle;

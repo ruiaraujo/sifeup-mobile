@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,6 +25,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Notification;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.news.NewsDescActivity;

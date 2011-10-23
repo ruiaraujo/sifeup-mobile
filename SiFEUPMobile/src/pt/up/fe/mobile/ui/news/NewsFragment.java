@@ -11,7 +11,6 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -30,6 +29,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseFragment;
 
 /**

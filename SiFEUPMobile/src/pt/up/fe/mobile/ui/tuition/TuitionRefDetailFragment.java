@@ -17,7 +17,6 @@
 package pt.up.fe.mobile.ui.tuition;
 
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.*;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 public class TuitionRefDetailFragment extends Fragment {
 

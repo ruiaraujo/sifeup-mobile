@@ -1,8 +1,12 @@
 
 package pt.up.fe.mobile.ui;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
+import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 
 import external.com.google.android.apps.iosched.util.ActivityHelper;
 
@@ -26,7 +30,53 @@ import android.view.MenuItem;
  */
 public abstract class BaseActivity extends FragmentActivity {
     final ActivityHelper mActivityHelper = new ActivityHelper(this);
+    
+    protected  void onCreate( Bundle o){
+    	super.onCreate(o);
+        GoogleAnalyticsSessionManager.getInstance(getApplication()).incrementActivityCount();
+    	//Recovering the Cookie here
+    	// as every activity will descend from this one.
+    	if ( SessionManager.getInstance().getCookie() == null)
+    	{
+            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
+            long now = System.currentTimeMillis();
+            long before = loginSettings.getLong( LoginActivity.PREF_COOKIE_TIME, 0);
+            String oldCookie = loginSettings.getString( LoginActivity.PREF_COOKIE, "");
+            if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
+            {
+            	SessionManager.getInstance().setCookie(oldCookie);
+            	SessionManager.getInstance().setLoginCode(loginSettings.getString(
+            										LoginActivity.PREF_USERNAME_SAVED, ""));
+            	
+            }
+            else	
+            {
+            	goLogin(false);
+            }
+    	}
+    		
 
+    }
+    
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Example of how to track a pageview event
+        AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(getClass().getSimpleName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Purge analytics so they don't hold references to this activity
+        GoogleAnalyticsTracker.getInstance().dispatch();
+
+        // Need to do this for every activity that uses google analytics
+        GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();
+    }
+    
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -63,33 +113,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected ActivityHelper getActivityHelper() {
         return mActivityHelper;
     }
-    
-    protected  void onCreate( Bundle o){
-    	super.onCreate(o);
-    	//Recovering the Cookie here
-    	// as every activity will descend from this one.
-    	if ( SessionManager.getInstance().getCookie() == null)
-    	{
-            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
-            long now = System.currentTimeMillis();
-            long before = loginSettings.getLong( LoginActivity.PREF_COOKIE_TIME, 0);
-            String oldCookie = loginSettings.getString( LoginActivity.PREF_COOKIE, "");
-            if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
-            {
-            	SessionManager.getInstance().setCookie(oldCookie);
-            	SessionManager.getInstance().setLoginCode(loginSettings.getString(
-            										LoginActivity.PREF_USERNAME_SAVED, ""));
-            	
-            }
-            else	
-            {
-            	goLogin(false);
-            }
-    	}
-    		
-
-    }
-    
 
     /**
      * Takes a given intent and either starts a new activity to handle it (the default behavior),

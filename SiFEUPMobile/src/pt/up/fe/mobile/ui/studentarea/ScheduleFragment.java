@@ -12,13 +12,13 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Block;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
 import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -198,6 +198,8 @@ public class ScheduleFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_now) {
             if (!updateNowView(true)) {
+            	AnalyticsUtils.getInstance(getActivity()).trackEvent(AnalyticsUtils.MENU_CAT, 
+						"Click", "Go to Now", 1);
                 Toast.makeText(getActivity(), R.string.toast_now_not_visible,
                         Toast.LENGTH_SHORT).show();
             }
@@ -205,6 +207,8 @@ public class ScheduleFragment extends BaseFragment implements
         }
         if (item.getItemId() == R.id.menu_export_calendar) {
         	// export to Calendar (create event)
+        	AnalyticsUtils.getInstance(getActivity()).trackEvent(AnalyticsUtils.MENU_CAT, 
+        									"Click", "Export Calendar", 1);
     		calendarExport();
             return true;
         }

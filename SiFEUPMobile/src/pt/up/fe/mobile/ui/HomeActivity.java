@@ -2,8 +2,8 @@ package pt.up.fe.mobile.ui;
 
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.os.Bundle;
 import android.view.Menu;

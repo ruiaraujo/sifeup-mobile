@@ -3,7 +3,6 @@
 package pt.up.fe.mobile.ui.notifications;
 
 
-import external.com.google.android.apps.iosched.util.AnalyticsUtils;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Notification;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 /**
 * This interface is responsible for displaying information 
