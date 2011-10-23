@@ -149,7 +149,7 @@ public class NotificationsFragment extends BaseFragment implements OnItemClickLi
 		    					JSONArray jArray = jObject.getJSONArray("notificacoes");
 		    					
 		    					if(jArray.length() == 0)
-		    						return "";
+		    						return "Success";
 		    					
 		    					for(int i = 0; i < jArray.length(); i++){
 		    		    			JSONObject jNotification = jArray.getJSONObject(i);
