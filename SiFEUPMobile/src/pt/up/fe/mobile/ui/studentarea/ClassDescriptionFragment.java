@@ -104,13 +104,13 @@ public class ClassDescriptionFragment extends BaseFragment
 		
 		// Start time
 		int startTime = block.getStartTime();
-		String start = Integer.toString(startTime/3600) + ":" + Integer.toString(startTime%3600);
+		String start = Integer.toString(startTime/3600) + ":" + Integer.toString((startTime%3600)/60);
 		TextView startT = (TextView) root.findViewById(R.id.class_start_time);
 		startT.setText(getString(R.string.class_start_time,start ));
 		
 		// End Time
 		int endTime = (int) (block.getStartTime() + block.getLectureDuration()*3600);
-		String end = Integer.toString(endTime/3600) + ":" + Integer.toString(endTime%3600);
+		String end = Integer.toString(endTime/3600) + ":" + Integer.toString((endTime%3600)/60);
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
 		endT.setText(getString(R.string.class_end_time, end));
 		
