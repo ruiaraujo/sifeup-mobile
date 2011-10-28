@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
     android:versionName="1.0"
-    package="pt.up.fe.mobile" android:installLocation="preferExternal">
+    package="pt.up.fe.mobile" 
+    android:installLocation="preferExternal">
 
     <uses-sdk
         android:minSdkVersion="7"

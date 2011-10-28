@@ -42,7 +42,19 @@ import android.widget.TextView;
 public class ActivityHelper {
     protected Activity mActivity;
 
-    public ActivityHelper(Activity activity) {
+    /**
+     * Factory method for creating {@link ActivityHelper} objects for a given activity. Depending
+     * on which device the app is running, either a basic helper or Honeycomb-specific helper will
+     * be returned.
+     */
+    public static ActivityHelper createInstance(Activity activity) {
+        return UIUtils.isHoneycomb() ?
+                new ActivityHelperHoneycomb(activity) :
+                new ActivityHelper(activity);
+    }
+
+    
+    protected ActivityHelper(Activity activity) {
         mActivity = activity;
     }
 
