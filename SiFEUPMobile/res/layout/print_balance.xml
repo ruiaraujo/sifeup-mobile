@@ -1,94 +1,82 @@
-<!--
-  Copyright 2011 Google Inc.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
-    <TextView
-    	android:layout_height="wrap_content"
-    	android:layout_width="wrap_content"
-    	android:paddingTop="25dp"
-    	android:paddingLeft="15dp"
-    	android:layout_gravity="left"
-    	android:textSize="25.0sp"
-    	android:id="@+id/print_balance"
-    	android:bufferType="normal"/>
-    <TextView
-    	android:layout_height="wrap_content"
-    	android:layout_width="wrap_content"
-    	android:paddingTop="25dp"
-    	android:paddingLeft="15dp"
-    	android:layout_gravity="left"
-    	android:textSize="20.0sp"
-    	android:id="@+id/print_desc"
-    	android:bufferType="normal"/>
-    	<RelativeLayout
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-    		android:paddingTop="25dp">
-    		<LinearLayout android:id="@+id/print_ref_title"
-			    android:layout_width="fill_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical">
+	    <TextView
+	    	android:layout_height="wrap_content"
+	    	android:layout_width="wrap_content"
+	    	android:paddingTop="25dp"
+	    	android:paddingLeft="15dp"
+	    	android:layout_gravity="left"
+	    	android:textSize="25.0sp"
+	    	android:id="@+id/print_balance"
+	    	android:bufferType="normal"/>
+	    <TextView
+	    	android:layout_height="wrap_content"
+	    	android:layout_width="wrap_content"
+	    	android:paddingTop="25dp"
+	    	android:paddingLeft="15dp"
+	    	android:layout_gravity="left"
+	    	android:textSize="20.0sp"
+	    	android:id="@+id/print_desc"
+	    	android:bufferType="normal"/>
+	    	<RelativeLayout
+			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-		    	android:gravity="center">
-		    	<TextView
-			    	android:layout_height="wrap_content"
-			    	android:layout_width="wrap_content"
-		    		android:gravity="center"
-			    	android:layout_gravity="center"
-			    	android:textSize="20.0sp"
-			    	android:bufferType="normal"
-			    	android:text="@string/print_reference_title"/>
-		    </LinearLayout>
-		    <LinearLayout android:id="@+id/print_ref_lb"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-	    		android:paddingTop="15dp"
-	    		android:orientation="horizontal"
-		    	android:gravity="center"
-		    	android:layout_below="@id/print_ref_title">
-		    	<TextView
-			    	android:layout_height="wrap_content"
-			    	android:layout_width="wrap_content"
-			    	android:textSize="20.0sp"
-			    	android:paddingLeft="15dp"
-			    	android:paddingRight="5dp"
-			    	android:layout_gravity="left|center_vertical"
-			    	android:gravity="left"
-			    	android:text="@string/lb_print_increase"/>
-			    <EditText android:id="@+id/print_value"
-	    			android:layout_width="100dp"
-	    			android:layout_height="wrap_content"
-	    			android:layout_gravity="right|center_vertical"
-	    			android:inputType="numberDecimal"
-	    			android:text="5"/>
-	    	</LinearLayout>
-		    
-		    <LinearLayout
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-    			android:paddingTop="25dp"
-		    	android:gravity="center"
-		    	android:layout_below="@id/print_ref_lb">
-	    		<Button android:id="@+id/print_generate_reference"
-		    		android:text="@string/btn_print_reference"
-		    		android:layout_width="wrap_content"
-		    		android:layout_height="wrap_content"
-		    		android:layout_below="@id/print_ref_lb"
-		    		android:gravity="center"/>
-	    	</LinearLayout>
-    	</RelativeLayout>
-</LinearLayout>
+	    		android:paddingTop="25dp">
+	    		<LinearLayout android:id="@+id/print_ref_title"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+			    	android:gravity="center">
+			    	<TextView
+				    	android:layout_height="wrap_content"
+				    	android:layout_width="wrap_content"
+			    		android:gravity="center"
+				    	android:layout_gravity="center"
+				    	android:textSize="20.0sp"
+				    	android:bufferType="normal"
+				    	android:text="@string/print_reference_title"/>
+			    </LinearLayout>
+			    <LinearLayout android:id="@+id/print_ref_lb"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+		    		android:paddingTop="15dp"
+		    		android:orientation="horizontal"
+			    	android:gravity="center"
+			    	android:layout_below="@id/print_ref_title">
+			    	<TextView
+				    	android:layout_height="wrap_content"
+				    	android:layout_width="wrap_content"
+				    	android:textSize="20.0sp"
+				    	android:paddingLeft="15dp"
+				    	android:paddingRight="5dp"
+				    	android:layout_gravity="left|center_vertical"
+				    	android:gravity="left"
+				    	android:text="@string/lb_print_increase"/>
+				    <EditText android:id="@+id/print_value"
+		    			android:layout_width="100dp"
+		    			android:layout_height="wrap_content"
+		    			android:layout_gravity="right|center_vertical"
+		    			android:inputType="numberDecimal"
+		    			android:text="5"/>
+		    	</LinearLayout>
+			    
+			    <LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+	    			android:paddingTop="25dp"
+			    	android:gravity="center"
+			    	android:layout_below="@id/print_ref_lb">
+		    		<Button android:id="@+id/print_generate_reference"
+			    		android:text="@string/btn_print_reference"
+			    		android:layout_width="wrap_content"
+			    		android:layout_height="wrap_content"
+			    		android:layout_below="@id/print_ref_lb"
+			    		android:gravity="center"/>
+		    	</LinearLayout>
+	    	</RelativeLayout>
+	</LinearLayout>
+</ScrollView>
