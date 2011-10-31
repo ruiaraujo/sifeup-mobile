@@ -109,13 +109,12 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
     
 
 	public void onItemClick(AdapterView<?> arg0, View v, int position, long id)  {
-    	SessionManager.friends.setSelectedFriend(position);
     	Intent i = new Intent(getActivity(), ProfileActivity.class);
     	Friend f = SessionManager.friends.getFriend(position);
     	if ( f.getCourse() != null )
-    		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_EMPLOYEE );
-    	else
     		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT );
+    	else
+    		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_EMPLOYEE );
     	i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
     	startActivity(i);
 	}

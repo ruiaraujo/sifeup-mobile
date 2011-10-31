@@ -160,7 +160,7 @@ public class Employee extends Profile implements Serializable {
 		}
 		if ( extPhone != null  && !extPhone.equals("") )
 		{
-			result.add(new ProfileDetail(res.getString(R.string.profile_title_ext_telephone), extPhone, Type.MOBILE));
+			result.add(new ProfileDetail(res.getString(R.string.profile_title_ext_telephone), extPhone, null));
 		}
 		if ( teleAlt != null  && !teleAlt.equals("") )
 		{

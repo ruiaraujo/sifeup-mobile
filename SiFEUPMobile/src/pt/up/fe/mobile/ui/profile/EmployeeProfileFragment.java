@@ -9,6 +9,7 @@ import org.json.JSONException;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Employee;
 import pt.up.fe.mobile.service.Friend;
+import pt.up.fe.mobile.service.Profile;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Profile.ProfileDetail;
@@ -20,6 +21,7 @@ import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -95,6 +97,8 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	    		startActivity(i);
 			}
 		});
+		
+		
 		
 		if ( code != null )
 		{
@@ -205,6 +209,32 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position, long id) {
-		
+		if ( contents.get(position).type == Profile.Type.WEBPAGE )
+		{
+			final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contents.get(position).content));
+			startActivity(browserIntent);
+		}
+		else if ( contents.get(position).type == Profile.Type.ROOM )
+		{
+			final Intent i = new Intent(getActivity() , ScheduleActivity.class);
+			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_ROOM) ;
+			i.putExtra(ScheduleFragment.SCHEDULE_CODE, contents.get(position).content  );
+    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,
+    											contents.get(position).content));
+    		startActivity(i);
+		}
+		else if ( contents.get(position).type == Profile.Type.EMAIL )
+		{
+			final Intent i = new Intent(Intent.ACTION_SEND);  
+			i.setType("message/rfc822");
+			i.putExtra(Intent.EXTRA_EMAIL, new String[]{contents.get(position).content});
+			startActivity(Intent.createChooser(i, getString(R.string.profile_choose_email_app))); 
+		}
+		else if ( contents.get(position).type == Profile.Type.MOBILE )
+		{
+			Intent callIntent = new Intent(Intent.ACTION_CALL);
+			callIntent.setData(Uri.parse("tel:"+contents.get(position).content));
+			startActivity(callIntent);
+		}
 	}
 }

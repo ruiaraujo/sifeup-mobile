@@ -21,11 +21,20 @@ public class Friend implements Serializable , Comparable<Friend>
 	public Friend(String untokenizedString)
 	{
 		StringTokenizer reader = new StringTokenizer(untokenizedString , SEPARATOR);
-		if ( reader.countTokens() < 3 )
-			throw new IllegalArgumentException("There must be three tokens");
-		this.code=reader.nextToken();
-		this.name=reader.nextToken();
-		this.course=reader.nextToken();;
+		if ( reader.countTokens() == 3 )
+		{
+			this.code=reader.nextToken();
+			this.name=reader.nextToken();
+			this.course=reader.nextToken();
+		} 
+		else if (reader.countTokens() == 2 )
+		{
+			this.code=reader.nextToken();
+			this.name=reader.nextToken();
+			this.course=null;
+		}
+		else
+			throw new IllegalArgumentException("There must be three or two tokens");
 	}
 	public String getCode() {
 		return code;
@@ -59,6 +68,8 @@ public class Friend implements Serializable , Comparable<Friend>
 	}
 
 	public String toString(){
+		if ( course == null )
+			return code + SEPARATOR + name;
 		return code + SEPARATOR + name + SEPARATOR + course;
 	}
 

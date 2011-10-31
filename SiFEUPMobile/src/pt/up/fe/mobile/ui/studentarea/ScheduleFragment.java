@@ -109,6 +109,7 @@ public class ScheduleFragment extends BaseFragment implements
     	mInflater  = inflater;
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_schedule,getParentContainer(),true);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
+		mPager.setAdapter(new DayAdapter());//Workaround a android bug
         mTitle = (TextView) root.findViewById(R.id.block_title);
         
         mPager.setOnPageChangeListener(this);
