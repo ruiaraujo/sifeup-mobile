@@ -3,6 +3,8 @@ package external.com.zylinc.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -18,29 +20,51 @@ import android.widget.TextView;
  * Made to resemble the indicator in the Google+ application
  * in function.
  * 
- * @author Mark Gj�l @ Zylinc
+ * @author Mark Gjøl @ Zylinc
  */
 public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeListener {
 	private static final int PADDING = 5;
 	
-	private TextView mPrevious;
-	private TextView mCurrent;
-	private TextView mNext;
+	TextView mPrevious;
+	TextView mCurrent;
+	TextView mNext;
+	int mCurItem;
+	int mRestoreCurItem = -1;
 	
-	private LinearLayout mPreviousGroup;
-	private LinearLayout mNextGroup;
+	LinearLayout mPreviousGroup;
+	LinearLayout mNextGroup;
 	
-	private int mArrowPadding;
-	private int mSize;
+	int mArrowPadding;
+	int mSize;
 	
-	private ImageView mPrevArrow;
-	private ImageView mNextArrow;
+	ImageView mCurrentIndicator;
+	ImageView mPrevArrow;
+	ImageView mNextArrow;
 	
-	private int[] mFocusedTextColor;
-	private int[] mUnfocusedTextColor;
+	int[] mFocusedTextColor;
+	int[] mUnfocusedTextColor;
+	
+	OnClickListener mOnClickHandler;
 	
 	public interface PageInfoProvider{
 		String getTitle(int pos);
+	}
+	
+	public interface OnClickListener{
+		void onNextClicked(View v);
+		void onPreviousClicked(View v);
+		void onCurrentClicked(View v);
+	}
+	
+	public void setOnClickListener(OnClickListener handler){
+		this.mOnClickHandler = handler;
+		mPreviousGroup.setOnClickListener(new OnPreviousClickedListener());
+		mCurrent.setOnClickListener(new OnCurrentClickedListener());
+		mNextGroup.setOnClickListener(new OnNextClickedListener());
+	}
+	
+	public int getCurrentPosition(){
+		return mCurItem;
 	}
 	
 	PageInfoProvider mPageInfoProvider;
@@ -60,6 +84,24 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		updateColor(0);
 	}
 	
+	@Override
+	protected Parcelable onSaveInstanceState() {
+		Parcelable state = super.onSaveInstanceState();
+		Bundle b = new Bundle();
+		b.putInt("current", this.mCurItem);
+		b.putParcelable("viewstate", state);
+		return b;
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Parcelable state) {
+		super.onRestoreInstanceState(((Bundle)state).getParcelable("viewstate"));
+		mCurItem = ((Bundle)state).getInt("current", mCurItem);
+		this.setText(mCurItem - 1);
+		this.updateArrows(mCurItem);
+		this.invalidate();
+	}
+	
 	/**
 	 * Initialization
 	 * 
@@ -69,8 +111,9 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 	 */
 	public void init(int startPos, int size, PageInfoProvider pageInfoProvider){
 		setPageInfoProvider(pageInfoProvider);
-		setText(startPos - 1);
 		this.mSize = size;
+		setText(startPos - 1);
+		mCurItem = startPos;
 	}
 	
 	public ViewPagerIndicator(Context context, AttributeSet attrs) {
@@ -110,9 +153,11 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		
 		mPrevious.setPadding(PADDING, 0, 0, 0);
 		mNext.setPadding(0, 0, PADDING, 0);
+		
 		mArrowPadding = PADDING + prev.getIntrinsicWidth();
 		
 		mNextGroup.addView(mNextArrow, arrowLayoutParams);
+		updateArrows(mCurItem);
 	}
 	
 	/**
@@ -157,6 +202,12 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		mCurrent.setText("current");
 		mNext.setText("next");
 		
+		mPrevious.setClickable(false);
+		mNext.setClickable(false);
+		mCurrent.setClickable(true);
+		mPreviousGroup.setClickable(true);
+		mNextGroup.setClickable(true);
+		
 		// Set colors
 		mNext.setTextColor(Color.argb(255, mUnfocusedTextColor[0], mUnfocusedTextColor[1], mUnfocusedTextColor[2]));
 		mPrevious.setTextColor(Color.argb(255, mUnfocusedTextColor[0], mUnfocusedTextColor[1], mUnfocusedTextColor[2]));
@@ -176,6 +227,7 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		updateColor(positionOffsetPixels);
 		updateArrows(position);
 		updatePositions(positionOffsetPixels);
+		mCurItem = position;
 	}
 	
 	void updatePositions(int positionOffsetPixels){
@@ -242,7 +294,9 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 	 */
 	void updateColor(int offset){
 		offset = Math.abs(offset);
-		float fraction = offset / ((float)this.getWidth() / 4.0f);
+		// Initial condition: offset is always 0, this.getWidth is also 0! 0/0 = NaN
+		int width = this.getWidth();
+		float fraction = width == 0 ? 0 : offset / ((float)width / 4.0f);
 		fraction = Math.min(1, fraction);
 		int r = (int)(mUnfocusedTextColor[0] * fraction + mFocusedTextColor[0] * (1 - fraction));
 		int g = (int)(mUnfocusedTextColor[1] * fraction + mFocusedTextColor[1] * (1 - fraction));
@@ -282,14 +336,7 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 		positionOffsetPixels -= this.getWidth() / 2;
 		return positionOffsetPixels;
 	}
-    private int positionViewPager;
-
-	@Override
-	public void onPageSelected(int position) {
-		// Reset padding when the page is finally selected (May not be necessary)
-		mCurrent.setPadding(0, 0, 0, 0);
-		setPositionViewPager(position);
-	}
+	
 	
 	/**
 	 * Setting the indicator to only show the center textview.
@@ -307,13 +354,35 @@ public class ViewPagerIndicator extends RelativeLayout implements OnPageChangeLi
 			mNext.setVisibility(View.GONE);
 		}
 	}
-
-	public void setPositionViewPager(int positionViewPager) {
-		this.positionViewPager = positionViewPager;
+	
+	@Override
+	public void onPageSelected(int position) {
+		// Reset padding when the page is finally selected (May not be necessary)
+		mCurrent.setPadding(0, 0, 0, 0);
 	}
-
-	public int getPositionViewPager() {
-		return positionViewPager;
+	
+	class OnPreviousClickedListener implements android.view.View.OnClickListener{
+		@Override
+		public void onClick(View v) {
+			if(mOnClickHandler != null){
+				mOnClickHandler.onPreviousClicked(ViewPagerIndicator.this);
+			}
+		}
 	}
-
+	class OnCurrentClickedListener implements android.view.View.OnClickListener{
+		@Override
+		public void onClick(View v) {
+			if(mOnClickHandler != null){
+				mOnClickHandler.onCurrentClicked(ViewPagerIndicator.this);
+			}
+		}
+	}
+	class OnNextClickedListener implements android.view.View.OnClickListener{
+		@Override
+		public void onClick(View v) {
+			if(mOnClickHandler != null){
+				mOnClickHandler.onNextClicked(ViewPagerIndicator.this);
+			}
+		}
+	}
 }

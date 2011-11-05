@@ -597,7 +597,7 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 
     }
 	public void onBackPressed() {
-		if ( indicator.getPositionViewPager() == 12 && subjectContent.getCurrentFolder().getParent() != null )
+		if ( indicator.getCurrentPosition() == 12 && subjectContent.getCurrentFolder().getParent() != null )
 		{
 			subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getParent());
 			pagerAdapter.notifyDataSetChanged();
