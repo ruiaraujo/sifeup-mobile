@@ -37,6 +37,9 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
     }
     
     public void onBackPressed(){
-    	fragment.onBackPressed();
+    	if ( fragment != null )
+    		fragment.onBackPressed();
+    	else
+    		super.onBackPressed();
     }
 }
