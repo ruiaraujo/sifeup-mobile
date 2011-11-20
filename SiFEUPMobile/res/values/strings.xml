@@ -27,7 +27,8 @@
     
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
-    <string name="toast_login_error_wrong_password">Your username or password were wrong.</string>
+    <string name="toast_login_error_wrong_password">Your username or password are wrong.</string>
+    <string name="toast_login_error_password_too_short">Password must be at least 8 characters in length.</string>
     
     <string name="toast_server_error">The Web Service seems to be down. Try again.</string>
     <string name="toast_auth_error">Your session timed out. Please login again.</string>

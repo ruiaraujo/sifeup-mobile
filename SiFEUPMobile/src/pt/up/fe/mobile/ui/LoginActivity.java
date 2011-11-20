@@ -42,6 +42,10 @@ public class LoginActivity extends Activity
 	private boolean rememberUser;
 	private String user;
 	private String pass;
+	
+	private EditText passwordEditText;
+    private EditText username;
+    private CheckBox rememberPassCheckbox;
     
 	/** Called when the activity is first created. */
 	@Override
@@ -55,9 +59,9 @@ public class LoginActivity extends Activity
         SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
         final SharedPreferences.Editor prefEditor = loginSettings.edit();
         //como os objectos sao declarados em xml para termos a referencia deles temos de fazer isto
-        final EditText username = (EditText) findViewById(R.id.login_username);
-        final EditText password = (EditText) findViewById(R.id.login_pass);
-        final CheckBox check = (CheckBox) findViewById(R.id.login_remember);
+        username = (EditText) findViewById(R.id.login_username);
+        passwordEditText = (EditText) findViewById(R.id.login_pass);
+        rememberPassCheckbox = (CheckBox) findViewById(R.id.login_remember);
         final Button about = (Button) findViewById(R.id.login_about);
         //verficar se o utilizador carregou no remember me e se sim
         //preencher os campos com as informações gravadas
@@ -69,12 +73,11 @@ public class LoginActivity extends Activity
         	if ( !user.equals("") && !pass.equals("") )
         	{
         		username.setText(user);
-        		password.setText(pass);
-        		
+        		passwordEditText.setText(pass);
         	}
         }
-    	check.setChecked(rememberUser);
-    	check.setText("   " + check.getText());
+    	rememberPassCheckbox.setChecked(rememberUser);
+    	rememberPassCheckbox.setText("   " + rememberPassCheckbox.getText());
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override
@@ -83,13 +86,13 @@ public class LoginActivity extends Activity
 	        	user = username.getText().toString().trim();
 	        	if ( user.equals("") )
 	        	{
-	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_username), Toast.LENGTH_SHORT);
+	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_username), Toast.LENGTH_SHORT).show();
 	        		return;
 	        	}
-	        	pass = password.getText().toString().trim();
+	        	pass = passwordEditText.getText().toString().trim();
 	        	if ( pass.equals("") )
 	        	{
-	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_password), Toast.LENGTH_SHORT);
+	        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_password), Toast.LENGTH_SHORT).show();
 	        		return;
 	        	}
 
@@ -105,7 +108,7 @@ public class LoginActivity extends Activity
 			public void onClick(View v) 
 			{
 				username.setText("");
-				password.setText("");
+				passwordEditText.setText("");
 			}
 				
 		});
@@ -117,13 +120,32 @@ public class LoginActivity extends Activity
 				finish();//sair do programa.
 			}
 		});
-        check.setOnClickListener(new OnClickListener() 
+        rememberPassCheckbox.setOnClickListener(new OnClickListener() 
         {
 			@Override
 			public void onClick(View v) 
 			{
-				if ( check.isChecked() )
+				if ( rememberPassCheckbox.isChecked() )
+				{
 					rememberUser = true;
+					int ul = username.getText().toString().trim().length();
+					int pl = passwordEditText.getText().toString().trim().length();
+		        	if ( ul == 0 )
+		        	{
+		        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_username), Toast.LENGTH_SHORT).show();
+						rememberPassCheckbox.setChecked(false);
+		        	}
+		        	if ( pl == 0 )
+		        	{
+		        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_empty_password), Toast.LENGTH_SHORT).show();
+						rememberPassCheckbox.setChecked(false);
+		        	}
+					else if(pl < 8)	// Password must be at least 8 chars long.
+		        	{
+		        		Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_password_too_short), Toast.LENGTH_SHORT).show();
+						rememberPassCheckbox.setChecked(false);
+		        	}
+				}
 				else
 					rememberUser = false;
 				prefEditor.putBoolean(PREF_REMEMBER, rememberUser); //sempre qe se carrega na checkbox, o programa guarda a preferencia.
@@ -224,7 +246,8 @@ public class LoginActivity extends Activity
      */
     private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
-    	/**
+
+		/**
     	 * This function is invoked on the UI thread immediately 
     	 * after the task is executed. 
     	 */
@@ -240,7 +263,7 @@ public class LoginActivity extends Activity
         protected void onPostExecute(Boolean result) {
         	if ( result == null )
         	{
-        		Log.e("Login","error page is null");
+        		Log.e("Login", "error page is null");
 				Toast.makeText(LoginActivity.this, getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 	        	removeDialog(DIALOG_CONNECTING);
 				return;
@@ -253,10 +276,9 @@ public class LoginActivity extends Activity
 		        prefEditor.putString(PREF_COOKIE, SessionManager.getInstance().getCookie());
 				prefEditor.putLong(PREF_COOKIE_TIME, System.currentTimeMillis());
 				prefEditor.putString(PREF_USERNAME_SAVED, SessionManager.getInstance().getLoginCode());
-				Log.e("Login","success");
+				Log.e("Login", "success");
 				if ( rememberUser )
 				{
-
 					prefEditor.putString(PREF_USERNAME, user);
 					prefEditor.putString(PREF_PASSWORD, pass);
 				}
@@ -265,8 +287,11 @@ public class LoginActivity extends Activity
 				finish();
 			}
 			else{	
-				Log.e("Login","error");
+				Log.e("Login", "error");
 				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
+				// Remove stored password...
+				passwordEditText.setText("");
+				rememberPassCheckbox.setChecked(false);
 			}
         	removeDialog(DIALOG_CONNECTING);
         }
@@ -289,7 +314,7 @@ public class LoginActivity extends Activity
 					if ( jObject.optBoolean("authenticated") )
 					{
 						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
-						return true;					
+						return true;
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

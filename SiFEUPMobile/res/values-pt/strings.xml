@@ -22,7 +22,8 @@
        
     <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
     <string name="toast_login_error_empty_password">Senha tem de estar preenchido.</string>
-    <string name="toast_login_error_wrong_password">O utlizador ou senha estão incorrectos.</string>
+    <string name="toast_login_error_wrong_password">O utilizador ou senha estão incorrectos.</string>
+    <string name="toast_login_error_password_too_short">Senha tem de ser maior que 8 caracteres.</string>
     
     <string name="toast_server_error">O servidor parece estar com dificuldades. Por favor, tente outra vez.</string>
     <string name="toast_auth_error">A sua sessão terminou. Por favor, reautentique-se.</string>
