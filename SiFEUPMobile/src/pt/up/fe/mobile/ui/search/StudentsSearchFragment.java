@@ -51,6 +51,8 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
     private ListAdapter adapter;
     private String query;
     private ListView list;
+    
+    private final static String REGEX_STUDENT_CODE = "^[0-9,;]{9}$";
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 		  	try {
 		  		if ( query == null )
 		  			return "";
-		  		boolean isNumber = query.matches(".*[0-9].*");
+		  		boolean isNumber = query.matches(REGEX_STUDENT_CODE);
 		  		if ( isNumber )
 		  			page = SifeupAPI.getStudentReply(query);
 		  		else
@@ -205,8 +207,8 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	 */
     private boolean JSONStudentsSearch(String page) throws JSONException {
     	JSONObject jObject = new JSONObject(page);
-		
-    	if (  query.matches(".*[0-9].*") )
+		//matches against 9 digits
+    	if (  query.matches(REGEX_STUDENT_CODE) )
     	{
     		ResultsPage resultsPage = new ResultsPage();
     		resultsPage.searchSize = resultsPage.page = resultsPage.pageResults = 1;

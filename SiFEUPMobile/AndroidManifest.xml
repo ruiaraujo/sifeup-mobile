@@ -58,19 +58,6 @@
             android:label="@string/title_exams"
             android:configChanges="orientation|keyboardHidden"/>
 
-
-        <activity
-            android:name=".ui.search.SearchActivity"
-            android:label="@string/title_search"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
-        </activity>
-
         <!-- Phone-only activities -->
         
         <activity
@@ -246,7 +233,20 @@
                 <category android:name="android.intent.category.TAB" />
             </intent-filter>
         </activity>
+        
+            
 
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:label="@string/title_search"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+        </activity>
 
         <!-- Used for install referrer tracking -->
         <receiver
@@ -263,9 +263,13 @@
             android:name="android.app.default_searchable"
             android:value=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden"  />
-		<uses-library android:name="com.google.android.maps" />  
- 
         
+        
+		<uses-library android:name="com.google.android.maps" />  
+		
+        <provider android:name=".ui.search.SearchSuggestionHistory"
+                  android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
+
     </application>
  
 

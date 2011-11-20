@@ -34,8 +34,13 @@ public class YearsTuition
 			this.courseCode=yearInfo.getString("curso_sigla");
 			this.courseName=yearInfo.getString("curso_nome");
 			this.state=yearInfo.getString("estado");
-			this.type=yearInfo.getString("tipo");
-			
+			//may not be present if student has applied for a 
+			// scholarship
+			this.type=yearInfo.optString("tipo");
+			// If it is empty there is no more data to load
+			if ( this.type.length() == 0 )
+				return true;
+				
 			JSONArray jChild=yearInfo.getJSONArray("planos_pag");
 			
 			JSONObject jPayment = jChild.getJSONObject(0);	
@@ -71,8 +76,11 @@ public class YearsTuition
 		catch (JSONException e) 
 		{
 			Log.e("Propinas","JSON error in year");
+			e.printStackTrace();
+			Log.e("Propina", e.getMessage());
+			Log.e("Propina",yearInfo.toString());
 			return false;
-			//e.printStackTrace();
+
 		}
 	}
 	

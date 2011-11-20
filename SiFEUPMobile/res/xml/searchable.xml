@@ -2,5 +2,10 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/search_label"
     android:hint="@string/search_hint"
- />   <!-- android:searchSuggestAuthority="pt.up.fe.mobile"
-    android:searchSuggestSelection="suggest_text_1 LIKE ?"  -->
+    
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:voiceLanguageModel="free_form"
+
+    android:searchSuggestAuthority="pt.up.fe.mobile.SearchSuggestionProvider"
+    android:searchSuggestSelection=" ? "
+ />
