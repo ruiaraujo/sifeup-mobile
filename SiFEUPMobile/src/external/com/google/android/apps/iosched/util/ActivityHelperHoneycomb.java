@@ -20,6 +20,7 @@ package external.com.google.android.apps.iosched.util;
 import pt.up.fe.mobile.R;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.drm.DrmStore.Action;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,34 +64,21 @@ public class ActivityHelperHoneycomb extends ActivityHelper {
     @Override
     public void setupHomeActivity() {
         super.setupHomeActivity();
+        final ActionBar actionbar = mActivity.getActionBar();
         // NOTE: there needs to be a content view set before this is called, so this method
         // should be called in onPostCreate.
-        if (UIUtils.isTablet(mActivity)) {
-            mActivity.getActionBar().setDisplayOptions(
-            		0,
-            		ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        } else {
-            mActivity.getActionBar().setDisplayOptions(
-                    ActionBar.DISPLAY_USE_LOGO,
-                    ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_TITLE);
-        }
+        actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setupSubActivity() {
         super.setupSubActivity();
+        final ActionBar actionbar = mActivity.getActionBar();
         // NOTE: there needs to be a content view set before this is called, so this method
         // should be called in onPostCreate.
-        if (UIUtils.isTablet(mActivity)) {
-            mActivity.getActionBar().setDisplayOptions(
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO,
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
-        } else {
-            mActivity.getActionBar().setDisplayOptions(
-                    0,
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
-        }
+        actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP|ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
+
     }
 
     /**
