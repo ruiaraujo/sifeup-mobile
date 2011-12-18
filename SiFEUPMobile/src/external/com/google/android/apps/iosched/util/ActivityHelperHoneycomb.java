@@ -50,7 +50,10 @@ public class ActivityHelperHoneycomb extends ActivityHelper {
         final ActionBar actionbar = mActivity.getActionBar();
         // NOTE: there needs to be a content view set before this is called, so this method
         // should be called in onPostCreate.
-        actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
+        if ( UIUtils.isTablet(mActivity) )
+            actionbar.setDisplayOptions( 0, ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE); 
+        else
+            actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
     }
 
     /** {@inheritDoc} */
