@@ -8,8 +8,8 @@
         <item name="android:windowContentOverlay">@null</item>
 
         <!-- custom attributes -->
-        <item name="textHeaderMaxLines">3</item>
-        <item name="trackAbstractMaxLines">2</item>
+        <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
+        <item name="trackAbstractMaxLines">@integer/track_abstract_max_lines</item>
 
         <!-- for programmatic instantiation -->
         <item name="actionbarCompatButtonStyle">@style/ActionBarCompatButton</item>

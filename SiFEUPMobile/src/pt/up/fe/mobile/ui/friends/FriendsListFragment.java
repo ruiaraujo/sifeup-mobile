@@ -116,6 +116,7 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
     	else
     		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_EMPLOYEE );
     	i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
+    	i.putExtra(Intent.EXTRA_TITLE, f.getName());
     	startActivity(i);
 	}
 	
@@ -147,7 +148,6 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
 		             fillMaps.add(map);
 		         }
 
-				 
 		         // fill in the grid_item layout
 		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
 		        		 							R.layout.list_item_friend, from, to);
@@ -170,28 +170,13 @@ public class FriendsListFragment extends BaseFragment implements OnItemClickList
 
 		@Override
 		protected String doInBackground(Void ... theVoid) {
-			//String page = "";
-		  	/*try 
-		  	{
-    			page = SifeupAPI.getExamsReply(SessionManager.getInstance().getLoginCode());
-	    		if(	SifeupAPI.JSONError(page))
-	    		{
-		    		 return "";
-	    		}*/
 	    		if(!SessionManager.friends.isLoaded())
 	    		{
 	    			if(SessionManager.friends.loadFromFile(getActivity()))
 	    				return "Sucess";
 	    		}
 	    		else
-	    			return "Sucess";		
-				
-			/*} catch (JSONException e) {
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}*/
-
+	    			return "Sucess";
 			return "";
 		}
     }
