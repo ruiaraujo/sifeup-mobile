@@ -110,7 +110,7 @@ public class AcademicPathFragment extends BaseFragment {
 		private int courseYears; // "anos_curso"
 		private int numberEntries; // "inscricoes_ucs"
 		private int baseYear;
-		private Map<Integer , Year> ucs = new HashMap<Integer, Year>();
+		private List<Year> ucs = new ArrayList< Year>();
 	}
 	
 	/**
@@ -180,13 +180,16 @@ public class AcademicPathFragment extends BaseFragment {
 				if(jUc.has("nome")) uc.name = jUc.getString("nome");
 				if(jUc.has("name")) uc.nameEn = jUc.getString("name");
 				academicPath.baseYear = Math.min(academicPath.baseYear, uc.year);
-				Year year = academicPath.ucs.get(uc.year);
+				Year year = null;
+				for ( int j = 0 ; j < academicPath.ucs.size() ; ++j )
+				    if ( academicPath.ucs.get(j).year == uc.year )
+				        year = academicPath.ucs.get(j);
 				// add uc to academic path
 				if ( year ==  null ) 
 				{
 					year = new Year();
 					year.year = uc.year;
-					academicPath.ucs.put(uc.year, year);
+					academicPath.ucs.add(year);
 				}
 				if ( uc.semester == 1 )
 				{
@@ -272,7 +275,7 @@ public class AcademicPathFragment extends BaseFragment {
 	private class AcademicPathAdapter extends BaseExpandableListAdapter {
 
 		public Object getChild(int groupPosition, int childPosition) {
-			Year year = academicPath.ucs.get(groupPosition + academicPath.baseYear);
+			Year year = academicPath.ucs.get(groupPosition );
 			if ( childPosition == 0 )
 			{
 				//first marker
@@ -328,12 +331,13 @@ public class AcademicPathFragment extends BaseFragment {
 		}
 
 		public int getChildrenCount(int groupPosition) {
-			Year year = academicPath.ucs.get(groupPosition + academicPath.baseYear);
+		    
+			Year year = academicPath.ucs.get(groupPosition);
 			return year.firstSemester.size() + year.secondSemester.size() + 2;
 		}
 
 		public Object getGroup(int groupPosition) {
-			return getString(R.string.path_year, groupPosition + 1);
+			return getString(R.string.path_year, academicPath.ucs.get(groupPosition).year-academicPath.baseYear+1);
 		}
 
 		public int getGroupCount() {
