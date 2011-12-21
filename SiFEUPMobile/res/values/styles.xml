@@ -1,9 +1,9 @@
 <resources>
     <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="android:style/Theme.Holo" />
+    <style name="Theme" parent="android:style/Theme" />
 
     <!-- Variation on the Light theme that turns off the title -->
-    <style name="Theme.IOSched" parent="android:style/Theme.Holo.Light">
+    <style name="Theme.IOSched" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
 
