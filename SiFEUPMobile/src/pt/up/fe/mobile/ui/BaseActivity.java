@@ -35,7 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
     	super.onCreate(o);
         GoogleAnalyticsSessionManager.getInstance(getApplication()).incrementActivityCount();
     }
-    
+     
 
     @Override
     protected void onResume() {
@@ -46,7 +46,7 @@ public abstract class BaseActivity extends FragmentActivity {
     	{
 
             if ( !SifeupUtils.checkCookie(this) )
-            	goLogin(false);
+            	goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
     	}
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(getClass().getSimpleName());
@@ -179,6 +179,9 @@ public abstract class BaseActivity extends FragmentActivity {
 		}
 		return null;
 	}
+	public void goLogin(){
+		goLogin(0);
+	}
 	
 	/**
 	 * Starts the login activity. the param is used 
@@ -186,12 +189,12 @@ public abstract class BaseActivity extends FragmentActivity {
 	 * in as soon as it is starts or not.
 	 * @param logOff
 	 */
-	public void goLogin( boolean logOff ){
+	public void goLogin( final int logOff ){
 		Intent i = new Intent(this, LoginActivity.class);
-		if ( logOff )
-			i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, true);
+		i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, logOff);
 		startActivity(i);
-		finish();
+		if ( logOff == 0 )
+			finish();
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 	}
 	

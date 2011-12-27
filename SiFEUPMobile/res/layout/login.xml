@@ -91,20 +91,6 @@
 			android:text="@string/bt_login"
 			/>
 		<Button
-			android:id="@+id/login_reset"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginRight="8.0dp"
-			android:text="@string/bt_reset"
-			/>
-		<Button
-			android:id="@+id/login_cancel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginRight="8.0dp"
-			android:text="@string/bt_cancel"
-			/>
-		<Button
 			android:id="@+id/login_about"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

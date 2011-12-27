@@ -41,7 +41,7 @@ public class HomeActivity extends BaseActivity {
 		public boolean onOptionsItemSelected(MenuItem item) {
 			switch (item.getItemId()) {
 			case R.id.menu_home:
-				goLogin(true);
+				goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

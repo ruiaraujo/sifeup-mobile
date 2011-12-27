@@ -28,6 +28,7 @@ import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.news.NewsDescActivity;
 import pt.up.fe.mobile.ui.studentarea.SubjectDescriptionActivity;
 import pt.up.fe.mobile.ui.studentarea.SubjectsFragment;
@@ -112,7 +113,7 @@ public class NotificationsFragment extends BaseFragment implements OnItemClickLi
 				if ( getActivity() != null ) 
 				{
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
+					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
 					getActivity().finish();
 					return;
 				}

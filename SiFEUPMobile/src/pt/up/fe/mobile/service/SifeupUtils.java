@@ -48,6 +48,8 @@ public class SifeupUtils {
 	private static String getConnectionType(final Context context){
 		final ConnectivityManager connectManager = 
 			   (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if ( connectManager.getActiveNetworkInfo() == null )
+			return "DISCONNECTED";
 		return connectManager.getActiveNetworkInfo().getTypeName();
 	}
 	

@@ -15,6 +15,7 @@ import pt.up.fe.mobile.service.Canteen.Dish;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.LoginActivity;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -129,7 +130,7 @@ public class LunchMenuFragment extends BaseFragment
 				if ( getActivity() != null ) 
 				{
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
+					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
 					return;
 				}
 			}

@@ -36,8 +36,12 @@ public class LoginActivity extends Activity
 	public static final String PREF_COOKIE = "Cookie";
 	public static final String PREF_COOKIE_TIME = "Cookie Time";
 	public static final String PREF_USERNAME_SAVED = "Cookie User";
+	
+	
 	public static final String EXTRA_DIFFERENT_LOGIN =
         					"pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
+	public static final int EXTRA_DIFFERENT_LOGIN_LOGOUT = 1;
+	public static final int EXTRA_DIFFERENT_LOGIN_REVALIDATE = 2;
 
 	private LoginTask logintask;
 	private boolean rememberUser;
@@ -105,24 +109,7 @@ public class LoginActivity extends Activity
 			}
 				
 		});
-        findViewById(R.id.login_reset).setOnClickListener(new OnClickListener() 
-        {
-			@Override
-			public void onClick(View v) 
-			{
-				username.setText("");
-				passwordEditText.setText("");
-			}
-				
-		});
-        findViewById(R.id.login_cancel).setOnClickListener(new OnClickListener() 
-        {
-			@Override
-			public void onClick(View v) 
-			{
-				finish();//sair do programa.
-			}
-		});
+
         rememberPassCheckbox.setOnClickListener(new OnClickListener() 
         {
 			@Override
@@ -170,30 +157,47 @@ public class LoginActivity extends Activity
         // A actividade de login pode ser chamada no launcher ou caso a pessoa faça logout
         // In case of a logout.
         Intent i = getIntent();
-        boolean relogin = i.getBooleanExtra(EXTRA_DIFFERENT_LOGIN, false);
-        if ( relogin )
-        {	// if logging out the cookie is removed
-        	prefEditor.putString(PREF_COOKIE, "");
-        	prefEditor.commit(); 
-        }
-        else
-        {
-	        //Take advantage of the 24h period while the session
-	        // is still active on the main server.
-        	if ( SifeupUtils.checkCookie(this) ){
-    	        SessionManager.getInstance().setCookie(loginSettings.getString( PREF_COOKIE, ""));
-	        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
-	        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        		finish();
-        		return;
-        	}
-	        if ( rememberUser )
+        final int action = i.getIntExtra(EXTRA_DIFFERENT_LOGIN, 0);
+        switch( action ){
+	        case 0:
 	        {
-		        logintask = new LoginTask();
-	    		logintask.execute();
+		        //Take advantage of the 24h period while the session
+		        // is still active on the main server.
+	        	if ( SifeupUtils.checkCookie(this) ){
+	    	        SessionManager.getInstance().setCookie(loginSettings.getString( PREF_COOKIE, ""));
+		        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
+		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+	        		finish();
+	        		return;
+	        	}
+
+		        if ( rememberUser )
+		        {
+			        logintask = new LoginTask();
+		    		logintask.execute();
+		        }
+		        break;
+        	}
+	        case EXTRA_DIFFERENT_LOGIN_LOGOUT:
+	        {	// if logging out the cookie is removed
+	        	prefEditor.putString(PREF_COOKIE, "");
+	        	prefEditor.apply(); 
 	        }
-	        
+	        break;
+	        case EXTRA_DIFFERENT_LOGIN_REVALIDATE:
+	        {
+	        	// if logging out the cookie is removed
+	        	prefEditor.putString(PREF_COOKIE, "");
+	        	prefEditor.apply(); 
+		        if ( rememberUser )
+		        {
+			        logintask = new LoginTask();
+		    		logintask.execute();
+		        }
+		        break;
+	        }
         }
+        
     }
 
     private static final int DIALOG_CONNECTING = 3000;
@@ -282,7 +286,13 @@ public class LoginActivity extends Activity
 					prefEditor.putString(PREF_PASSWORD, pass);
 				}
 				prefEditor.commit();
-				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
+		        final Intent i = getIntent();
+		        final int action = i.getIntExtra(EXTRA_DIFFERENT_LOGIN, 0);
+		        
+		        //only start the new activity if not revalidating
+		        if ( action != EXTRA_DIFFERENT_LOGIN_REVALIDATE )
+		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 				finish();
 			}
 			else{	

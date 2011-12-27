@@ -16,6 +16,7 @@ import pt.up.fe.mobile.service.Profile.ProfileDetail;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
@@ -156,7 +157,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 				if ( getActivity() != null ) 
 				{
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
+					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
 					getActivity().finish();
 					return;
 				}

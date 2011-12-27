@@ -17,6 +17,7 @@ import pt.up.fe.mobile.service.Student;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
+import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -129,7 +130,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 				if ( getActivity() != null ) 
 				{
 					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(true);
+					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
 					return;
 				}
 			}
