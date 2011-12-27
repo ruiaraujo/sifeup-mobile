@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.service.SifeupUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -78,6 +79,8 @@ public class LoginActivity extends Activity
         }
     	rememberPassCheckbox.setChecked(rememberUser);
     	rememberPassCheckbox.setText("   " + rememberPassCheckbox.getText());
+    	
+    	
         findViewById(R.id.login_confirm).setOnClickListener(new OnClickListener() 
         {
 			@Override
@@ -177,17 +180,13 @@ public class LoginActivity extends Activity
         {
 	        //Take advantage of the 24h period while the session
 	        // is still active on the main server.
-	        long now = System.currentTimeMillis();
-	        long before = loginSettings.getLong( PREF_COOKIE_TIME, 0);
-	        String oldCookie = loginSettings.getString( PREF_COOKIE, "");
-	        if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
-	        {
-	        	SessionManager.getInstance().setCookie(oldCookie);
+        	if ( SifeupUtils.checkCookie(this) ){
+    	        SessionManager.getInstance().setCookie(loginSettings.getString( PREF_COOKIE, ""));
 	        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
 	        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-	        	finish();
-	        	return;
-	        }
+        		finish();
+        		return;
+        	}
 	        if ( rememberUser )
 	        {
 		        logintask = new LoginTask();
@@ -314,6 +313,7 @@ public class LoginActivity extends Activity
 					if ( jObject.optBoolean("authenticated") )
 					{
 						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
+						SifeupUtils.storeConnectionType(LoginActivity.this);
 						return true;
 					}
 				} catch (JSONException e) {

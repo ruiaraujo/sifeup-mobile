@@ -5,6 +5,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.service.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 
@@ -14,7 +15,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,34 +34,20 @@ public abstract class BaseActivity extends FragmentActivity {
     protected  void onCreate( Bundle o){
     	super.onCreate(o);
         GoogleAnalyticsSessionManager.getInstance(getApplication()).incrementActivityCount();
-    	//Recovering the Cookie here
-    	// as every activity will descend from this one.
-    	if ( SessionManager.getInstance().getCookie() == null)
-    	{
-            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
-            long now = System.currentTimeMillis();
-            long before = loginSettings.getLong( LoginActivity.PREF_COOKIE_TIME, 0);
-            String oldCookie = loginSettings.getString( LoginActivity.PREF_COOKIE, "");
-            if ( ( ( now - before )/3600000 < 24 ) &&  !oldCookie.equals("") )
-            {
-            	SessionManager.getInstance().setCookie(oldCookie);
-            	SessionManager.getInstance().setLoginCode(loginSettings.getString(
-            										LoginActivity.PREF_USERNAME_SAVED, ""));
-            	
-            }
-            else	
-            {
-            	goLogin(false);
-            }
-    	}
-    		
-
     }
     
 
     @Override
     protected void onResume() {
         super.onResume();
+    	//Recovering the Cookie here
+    	// as every activity will descend from this one.
+    	if ( SessionManager.getInstance().getCookie() != null)
+    	{
+
+            if ( !SifeupUtils.checkCookie(this) )
+            	goLogin(false);
+    	}
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(getClass().getSimpleName());
     }
@@ -120,6 +106,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * intent.
      *
      * Must be called from the main (UI) thread.
+     * @param intent 
      */
     public void openActivityOrFragment(Intent intent) {
         // Default implementation simply calls startActivity
@@ -128,6 +115,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * Converts an intent into a {@link Bundle} suitable for use as fragment arguments.
+     * @param intent 
+     * @return 
      */
     public static Bundle intentToFragmentArguments(Intent intent) {
         Bundle arguments = new Bundle();
@@ -150,6 +139,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * Converts a fragment arguments bundle into an intent.
+     * @param arguments 
+     * @return 
      */
     public static Intent fragmentArgumentsToIntent(Bundle arguments) {
         Intent intent = new Intent();
@@ -189,6 +180,12 @@ public abstract class BaseActivity extends FragmentActivity {
 		return null;
 	}
 	
+	/**
+	 * Starts the login activity. the param is used 
+	 * for the login activity to know whether it should start logging
+	 * in as soon as it is starts or not.
+	 * @param logOff
+	 */
 	public void goLogin( boolean logOff ){
 		Intent i = new Intent(this, LoginActivity.class);
 		if ( logOff )
