@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Canteen;
 import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.Canteen.Dish;
+import pt.up.fe.mobile.service.Dish;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -54,7 +54,6 @@ public class LunchMenuFragment extends BaseFragment
 	{
 		super.onCreate(savedInstanceState);
 	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Lunch Menu");
-	    canteens = new ArrayList<Canteen>();
 	}
 	
 	@Override
@@ -68,9 +67,21 @@ public class LunchMenuFragment extends BaseFragment
        
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_menu);
+
+        if ( savedInstanceState != null )
+        {
+            canteens = savedInstanceState.getParcelableArrayList("canteens");
+            if ( canteens == null )
+                canteens = new ArrayList<Canteen>();
+            buildPages();
+            showMainScreen();
+        }
+        else
+        {
+            canteens = new ArrayList<Canteen>();
+            new LunchMenusTask().execute();
+        }
        
-        new LunchMenusTask().execute();
-        
 		return getParentContainer();//mandatory
 	}
 	
@@ -172,8 +183,10 @@ public class LunchMenuFragment extends BaseFragment
  		}
      }
 
-
-
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 	    outState.putParcelableArrayList("canteens", canteens);
+ 	}
 
      
      /** 
@@ -246,7 +259,9 @@ public class LunchMenuFragment extends BaseFragment
             return view==((View)object);
 		}
 
-		public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {
+		    indicator.setPageInfoProvider(pagerAdapter);
+		}
 
 		public Parcelable saveState() {
 			return null;

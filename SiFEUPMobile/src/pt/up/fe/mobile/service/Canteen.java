@@ -1,144 +1,145 @@
 package pt.up.fe.mobile.service;
 
-import java.io.Serializable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Class this. Save the name and menus of the this.
- *
+ * 
  * @author Ângela Igreja
- *
+ * 
  */
 
-public class Canteen {
+public class Canteen implements Parcelable {
 
-	private int code;
-	private String description;
-	private String timetable;
-	private Menu[] menus;
-	/**
-  	 * Class Menu. Save the information of menu.
-     *
-  	 * @author Ângela Igreja
-  	 *
-  	 */
-  	public class Menu implements Serializable
-  	{
-  		private String state;
-  		private String date;
-  		private Dish[] dishes;  		
-  	}
-  	
-  	/**
-  	 * Class Dish. Save the information of dish.
-     *
-  	 * @author Ângela Igreja
-  	 *
-  	 */
-  	public class Dish implements Serializable
-  	{
-  		private String state;
-  		private String description;
-  		private int type;
-  		private String descriptionType;
-		public void setDescription(String description) {
-			this.description = description;
-		}
-		public String getDescription() {
-			return description;
-		}
-		public void setDescriptionType(String descriptionType) {
-			this.descriptionType = descriptionType;
-		}
-		public String getDescriptionType() {
-			return descriptionType;
-		}
-  		
-  		
-  	}
+    private int code;
+    private String description;
+    private String timetable;
+    private Menu[] menus;
+    
 
-	public void setMenus(Menu[] menus) {
-		this.menus = menus;
-	}
+    public Canteen() {
+    }
 
-	public Menu[] getMenus() {
-		return menus;
-	}
 
-	public void parseJson(JSONObject jBlock) throws JSONException {
-		if(jBlock.has("codigo")) this.code = jBlock.getInt("codigo"); 
-			
-			if(jBlock.has("descricao")) this.setDescription(jBlock.getString("descricao"));
-			
-			if(jBlock.has("horario")) this.timetable = jBlock.getString("horario");
-			
-			if(jBlock.has("ementas"))
-			{
-				JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
-				this.menus = new Menu[jArrayMenus.length()];
-				for(int j = 0; j < jArrayMenus.length(); j++)
-	     		{
-					JSONObject jMenu = jArrayMenus.getJSONObject(j);
-					
-					Menu menu = new Menu();
-					
-					if(jMenu.has("estado")) menu.state = jMenu.getString("estado"); 
-					
-					if(jMenu.has("data")) menu.date = jMenu.getString("data"); 
-					
-					if(jMenu.has("pratos"))
-					{
-						JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
-						menu.dishes = new Dish[jArrayDishs.length()];
-						for(int k = 0; k < jArrayDishs.length(); k++)
-	     	     		{
-	     					JSONObject jDish = jArrayDishs.getJSONObject(k);
-	     					
-	     					Dish dish = new Dish();
-	     					
-	     					if(jDish.has("estado")) dish.state = jDish.getString("estado"); 
-	     					
-	     					if(jDish.has("descricao")) dish.setDescription(jDish.getString("descricao"));
-	     					
-	     					if(jDish.has("tipo")) dish.type = jDish.getInt("tipo"); 
-	     					
-	     					if(jDish.has("tipo_descr")) dish.setDescriptionType(jDish.getString("tipo_descr")); 
-	     					menu.dishes[k] = dish;
-	     	     		}
-						
-					}
-					this.menus[j] = menu;
-	     		}
-				
-			}		
-	}
+    public void setMenus(Menu[] menus) {
+        this.menus = menus;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public Menu[] getMenus() {
+        return menus;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void parseJson(JSONObject jBlock) throws JSONException {
+        if (jBlock.has("codigo"))
+            this.code = jBlock.getInt("codigo");
 
-	public String getDate(int groupPosition) {
-		return menus[groupPosition].date;
-	}
+        if (jBlock.has("descricao"))
+            this.setDescription(jBlock.getString("descricao"));
 
-	public int getMenuCount() {
-		return menus.length;
-	}
+        if (jBlock.has("horario"))
+            this.timetable = jBlock.getString("horario");
 
-	public Dish getDish(int groupPosition, int childPosition) {
-		return menus[groupPosition].dishes[childPosition];
-	}
+        if (jBlock.has("ementas")) {
+            JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
+            this.menus = new Menu[jArrayMenus.length()];
+            for (int j = 0; j < jArrayMenus.length(); j++) {
+                JSONObject jMenu = jArrayMenus.getJSONObject(j);
 
-	public int getDishesCount(int groupPosition) {
-		return menus[groupPosition].dishes.length;
-	}
-  	
+                Menu menu = new Menu();
+
+                if (jMenu.has("estado"))
+                    menu.setState(jMenu.getString("estado"));
+
+                if (jMenu.has("data"))
+                    menu.setDate(jMenu.getString("data"));
+
+                if (jMenu.has("pratos")) {
+                    JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
+                    final Dish[] dishes = new Dish[jArrayDishs.length()];
+                    for (int k = 0; k < jArrayDishs.length(); k++) {
+                        JSONObject jDish = jArrayDishs.getJSONObject(k);
+
+                        Dish dish = new Dish();
+
+                        if (jDish.has("estado"))
+                            dish.setState(jDish.getString("estado"));
+
+                        if (jDish.has("descricao"))
+                            dish.setDescription(jDish.getString("descricao"));
+
+                        if (jDish.has("tipo"))
+                            dish.setType(jDish.getInt("tipo"));
+
+                        if (jDish.has("tipo_descr"))
+                            dish.setDescriptionType(jDish
+                                    .getString("tipo_descr"));
+                        dishes[k] = dish;
+                    }
+                    menu.setDishes(dishes);
+
+                }
+                this.menus[j] = menu;
+            }
+
+        }
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDate(int groupPosition) {
+        return menus[groupPosition].getDate();
+    }
+
+    public int getMenuCount() {
+        return menus.length;
+    }
+
+    public Dish getDish(int groupPosition, int childPosition) {
+        return menus[groupPosition].getDishes()[childPosition];
+    }
+
+    public int getDishesCount(int groupPosition) {
+        return menus[groupPosition].getDishes().length;
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(code);
+        out.writeString(description);
+        out.writeString(timetable);
+        out.writeValue(menus);
+    }
+
+    public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {
+        public Canteen createFromParcel(Parcel in) {
+            return new Canteen(in);
+        }
+
+        public Canteen[] newArray(int size) {
+            return new Canteen[size];
+        }
+    };
+
+    private Canteen(Parcel in) {
+        code = in.readInt();
+        description = in.readString();
+        timetable = in.readString();
+        menus = (Menu[]) in.readValue(Menu.class.getClassLoader());
+    }
+
 }
