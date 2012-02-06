@@ -74,7 +74,7 @@ public class ScheduleFragment extends BaseFragment implements
     private LayoutInflater mInflater;
     private boolean fetchingPreviousWeek = false;
     private boolean fetchingNextWeek = false;
-
+    private boolean setToNow = false;
     private String scheduleCode;
     private int scheduleType;
     /**
@@ -148,7 +148,7 @@ public class ScheduleFragment extends BaseFragment implements
                 increaseDay();
             }
         });
-        mondayMillis = firstDayofWeek(false);
+        mondayMillis = firstDayofWeek();
         setupDay(mondayMillis - (3 * DateUtils.DAY_IN_MILLIS), 0);
         setupDay(mondayMillis, 1);
         setupDay(mondayMillis + (1 * DateUtils.DAY_IN_MILLIS), 2);
@@ -196,7 +196,7 @@ public class ScheduleFragment extends BaseFragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_now) {
-            if (!updateNowView(true)) {
+            if (!updateNowView()) {
                 AnalyticsUtils.getInstance(getActivity()).trackEvent(
                         AnalyticsUtils.MENU_CAT, "Click", "Go to Now", 1);
                 Toast.makeText(getActivity(), R.string.toast_now_not_visible,
@@ -234,9 +234,14 @@ public class ScheduleFragment extends BaseFragment implements
     /**
      * Update position and visibility of "now" view.
      */
-    private boolean updateNowView(boolean forceScroll) {
-        final long now = UIUtils.getCurrentTime(false);
-
+    private boolean updateNowView() {
+        
+        final Time nowTime = new Time(UIUtils.TIME_REFERENCE);
+        nowTime.setToNow();
+        if ( nowTime.weekDay == 0 || nowTime.weekDay == 6 )
+            return false;
+        final long now = nowTime.toMillis(true);
+        
         Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
             if (now >= day.timeStart && now <= day.timeEnd) {
@@ -246,19 +251,27 @@ public class ScheduleFragment extends BaseFragment implements
                 day.nowView.setVisibility(View.GONE);
             }
         }
-        if (nowDay != null && forceScroll) {
+        if (nowDay != null ) {
             long hours = (now - nowDay.timeStart) / 3600000;
             double timeOffset = (double) (hours - nowDay.blocksView
                     .getTimeRulerStartHour())
                     / (double) nowDay.blocksView.getTimeRulerHours();
             // Scroll to show "now" in center
             mPager.setCurrentItem(nowDay.index);
+            nowDay.nowView.invalidate();
             final int offset = (int) (nowDay.scrollView.getHeight() * timeOffset);
             nowDay.scrollView.scrollTo(0, offset);
             nowDay.blocksView.requestLayout();
-            return true;
         }
-        return false;
+        else
+        {
+            mondayMillis = firstDayofWeek();
+            for (int i = 0; i < mDays.size(); ++i)
+                updateDay(i, mondayMillis + i * DateUtils.DAY_IN_MILLIS);
+            setToNow = true;
+            new ScheduleTask().execute();
+        }
+        return true;
     }
 
     private void setupDay(long startMillis, int i) {
@@ -403,8 +416,8 @@ public class ScheduleFragment extends BaseFragment implements
                 + block.getRoomCode();
         final String title = blockId;
         final long start = block.getStartTime() * 1000 + day.timeStart;
-        final long end = (block.getStartTime() + (long) (block
-                .getLectureDuration() * 3600)) * 1000;
+        final long end = start + (long) (block
+                .getLectureDuration() * 3600000);
         final boolean containsStarred = false;
 
         int column = 0;
@@ -426,20 +439,19 @@ public class ScheduleFragment extends BaseFragment implements
      * @return mondayMillis milliseconds of the the first day of the week
      */
 
-    private static long firstDayofWeek(boolean utc) {
-        long mondayMillis = UIUtils.getCurrentTime(utc);
+    private static long firstDayofWeek() {
         Time yourDate = new Time(UIUtils.TIME_REFERENCE);
-        yourDate.set(mondayMillis);
+        yourDate.setToNow();
         yourDate.normalize(false);
         yourDate.minute = 0;
         yourDate.hour = 0;
-        yourDate.second = 1;
+        yourDate.second = 0;
         yourDate.normalize(false);
         int weekDay = yourDate.weekDay - 1;
         // Our week starts at Monday
         if (weekDay < 0)
             weekDay = 6;
-        mondayMillis = yourDate.toMillis(true);
+        long mondayMillis = yourDate.toMillis(true);
         mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
         if ((mondayMillis + 5 * DateUtils.DAY_IN_MILLIS) < UIUtils
                 .getCurrentTime(false))
@@ -491,7 +503,7 @@ public class ScheduleFragment extends BaseFragment implements
                                         + b.getRoomCode();
                                 String description = "Professor: "
                                         + b.getTeacherAcronym();
-                                long date = UIUtils.convertToUtc(mondayMillis)
+                                long date = mondayMillis
                                         + b.getWeekDay()
                                         * DateUtils.DAY_IN_MILLIS
                                         + b.getStartTime() * 1000;
@@ -614,7 +626,7 @@ public class ScheduleFragment extends BaseFragment implements
     private class ScheduleTask extends AsyncTask<Void, Void, String> {
 
         protected void onPreExecute() {
-            if (fetchingNextWeek || fetchingPreviousWeek) {
+            if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
                 getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
                 return;
             }
@@ -625,8 +637,9 @@ public class ScheduleFragment extends BaseFragment implements
         protected void onPostExecute(String result) {
             if (getActivity() == null)
                 return;
+            getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
             if (result.equals("Success") || result.equals("")) {
-                if (fetchingNextWeek || fetchingPreviousWeek) {
+                if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
                     updateDay(0, mondayMillis - 3 * DateUtils.DAY_IN_MILLIS); // previous
                                                                               // friday
                     for (int i = 1; i < mDays.size() - 1; ++i)
@@ -643,13 +656,19 @@ public class ScheduleFragment extends BaseFragment implements
                 mPager.setAdapter(new DayAdapter());
                 if (fetchingPreviousWeek) {
                     mPager.setCurrentItem(mDays.size() - 2);
-                } else
+                } else if ( fetchingNextWeek )  {
                     mPager.setCurrentItem(1);
-                if (fetchingNextWeek || fetchingPreviousWeek) {
-                    getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+                } else if ( setToNow ) {
+                    updateNowView();
+                } else {
+                    mPager.setCurrentItem(1);
+                }
+                if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
                     fetchingNextWeek = false;
                     fetchingPreviousWeek = false;
+                    setToNow = false;
                 }
+                
                 showMainScreen();
             } else if (result.equals("Error")) {
                 Log.e("Schedule", "fail");

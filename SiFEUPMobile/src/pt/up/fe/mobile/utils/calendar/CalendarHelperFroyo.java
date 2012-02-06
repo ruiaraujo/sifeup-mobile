@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.utils.calendar;
 
+import external.com.google.android.apps.iosched.util.UIUtils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -11,12 +12,14 @@ public class CalendarHelperFroyo extends CalendarHelper {
         super(cr);
     }
 
+    @Override
     public Cursor getCalendars() {
         return cr.query(Uri.parse("content://com.android.calendar/calendars"),
                 new String[] { "_id", "displayName" }, null, null, null);
     }
-    
-    public Uri insertEvent(int calendarId, Event ev){
+
+    @Override
+    public Uri insertEvent(long calendarId, Event ev){
         final ContentValues event = new ContentValues();
         event.put("calendar_id", calendarId);
         event.put("title", ev.getTitle());
@@ -24,6 +27,7 @@ public class CalendarHelperFroyo extends CalendarHelper {
         event.put("description", ev.getDescription());
         event.put("dtstart",ev.getTimeStart() );
         event.put("dtend", ev.getTimeEnd() );
+        event.put("eventTimezone", UIUtils.TIME_REFERENCE );
         return cr.insert(Uri.parse("content://com.android.calendar/events"), event);
     }
 }

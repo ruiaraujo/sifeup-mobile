@@ -276,8 +276,8 @@ public class ExamsFragment extends BaseFragment {
                             // iterate over schedule and add them to schedule
                             for (Exam b : exams) {
                                 // new event
-                                long time = UIUtils.convertToUtc(getDate(
-                                        b.date, b.startTime).toMillis(false));
+                                long time = getDate(
+                                        b.date, b.startTime).toMillis(false);
                                 Event event = new Event(b.courseName, b.rooms,
                                         b.type, time, time
                                                 + timeDifference(b.startTime,
