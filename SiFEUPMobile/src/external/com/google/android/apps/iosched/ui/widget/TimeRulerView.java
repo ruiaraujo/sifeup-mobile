@@ -16,7 +16,6 @@
 
 package external.com.google.android.apps.iosched.ui.widget;
 
-import java.util.TimeZone;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 

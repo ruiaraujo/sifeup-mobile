@@ -174,6 +174,7 @@ public class ExamsFragment extends BaseFragment {
     }
 
     /** Stores info about a exam */
+    @SuppressWarnings("unused")
     private class Exam {
         String type; // tipo de exame
         String courseAcronym; // codigo da cadeira

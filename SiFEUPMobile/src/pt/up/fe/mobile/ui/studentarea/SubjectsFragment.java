@@ -16,7 +16,6 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
-import pt.up.fe.mobile.ui.profile.ProfileActivity;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 

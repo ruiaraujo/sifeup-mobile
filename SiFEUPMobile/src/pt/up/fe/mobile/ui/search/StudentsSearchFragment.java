@@ -1,7 +1,6 @@
 package pt.up.fe.mobile.ui.search;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -49,8 +48,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
-	private List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-    private ListAdapter adapter;
+	private ListAdapter adapter;
     private String query;
     private ListView list;
     
@@ -193,6 +191,7 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
      * of students
      *
      */
+    @SuppressWarnings("unused")
     private class ResultsPage{
     	private int searchSize; // "total" : 583
     	private int page; // "primeiro" : 1

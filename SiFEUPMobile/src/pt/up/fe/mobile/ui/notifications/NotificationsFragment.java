@@ -29,9 +29,6 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
-import pt.up.fe.mobile.ui.news.NewsDescActivity;
-import pt.up.fe.mobile.ui.studentarea.SubjectDescriptionActivity;
-import pt.up.fe.mobile.ui.studentarea.SubjectsFragment;
 
 /**
  * Notifications Fragment

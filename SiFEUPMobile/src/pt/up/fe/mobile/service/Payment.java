@@ -1,7 +1,5 @@
 package pt.up.fe.mobile.service;
 
-import java.io.IOException;
-import java.util.GregorianCalendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;

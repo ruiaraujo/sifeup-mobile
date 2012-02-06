@@ -6,13 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -24,8 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
 
 public class DownloaderFragment extends DialogFragment {
 	private final static String TITLE_ARG = "title";
@@ -143,7 +139,7 @@ public class DownloaderFragment extends DialogFragment {
 					//fileLen = con.getContentLength();
 					type = con.getContentType();
 					// Checking if external storage has enough memory ...
-					android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
+					//android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
 					//if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
 						//return "No memory";
 

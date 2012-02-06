@@ -4,7 +4,6 @@ package pt.up.fe.mobile.ui.studentservices;
 import external.com.zylinc.view.ViewPagerIndicator;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -162,11 +161,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
 
  		@Override
  		protected String doInBackground(Void ... theVoid) {
- 			String page = "";
  			try {
- 	    			page = SifeupAPI.getPrintingReply(
- 								SessionManager.getInstance().getLoginCode());
- 	    		
  	    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
  		    		switch (error)
  		    		{

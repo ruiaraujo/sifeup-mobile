@@ -2,9 +2,7 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,8 +99,9 @@ public class AcademicPathFragment extends BaseFragment {
 	 * Academic Path
 	 *
 	 */
+	@SuppressWarnings("unused")
 	private class AcademicPath{
-		private String code; // "numero"
+        private String code; // "numero"
 		private String state; // "estado"
 		private String courseAcronym; // "cur_codigo"
 		private String courseName; // "cur_nome"
@@ -121,6 +120,7 @@ public class AcademicPathFragment extends BaseFragment {
 	 * like, grade, name, semester, etc
 	 *
 	 */
+    @SuppressWarnings("unused")
 	private class UC{
 		private int semester; // "reg_d_codigo"
 		private int year; // "a_lectivo"

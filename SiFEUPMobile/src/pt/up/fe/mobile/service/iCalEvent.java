@@ -120,11 +120,13 @@ public class iCalEvent {
 		return SEQUENCE.NAME + TOOLS.SEPARATOR + SEQUENCE.VALUE + TOOLS.NEWLINE;
 	}
 	
-	private String generateDTStamp(){
+	@SuppressWarnings("unused")
+    private String generateDTStamp(){
 		return DTSTAMP.NAME + TOOLS.SEPARATOR + dtStamp + TOOLS.NEWLINE;
 	}
 	
-	private String generateCreated(){
+	@SuppressWarnings("unused")
+    private String generateCreated(){
 		return CREATED.NAME + TOOLS.SEPARATOR + created + TOOLS.NEWLINE;
 	}
 	

@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Notification;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 /**
