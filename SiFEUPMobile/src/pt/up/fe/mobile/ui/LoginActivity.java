@@ -183,14 +183,14 @@ public class LoginActivity extends Activity
 	        case EXTRA_DIFFERENT_LOGIN_LOGOUT:
 	        {	// if logging out the cookie is removed
 	        	prefEditor.putString(PREF_COOKIE, "");
-	        	prefEditor.apply(); 
+	        	prefEditor.commit(); 
 	        }
 	        break;
 	        case EXTRA_DIFFERENT_LOGIN_REVALIDATE:
 	        {
 	        	// if logging out the cookie is removed
 	        	prefEditor.putString(PREF_COOKIE, "");
-	        	prefEditor.apply(); 
+	        	prefEditor.commit(); 
 		        if ( rememberUser )
 		        {
 			        logintask = new LoginTask();
