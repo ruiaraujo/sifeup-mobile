@@ -22,6 +22,8 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -297,9 +299,11 @@ public class LoginActivity extends Activity
 			}
 			else{	
 				Log.e("Login", "error");
-				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
+		        final Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+		        Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
 				// Remove stored password...
 				passwordEditText.setText("");
+				passwordEditText.startAnimation(shake);
 				rememberPassCheckbox.setChecked(false);
 			}
         	removeDialog(DIALOG_CONNECTING);

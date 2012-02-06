@@ -1,4 +1,5 @@
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/generic_list"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"/>
+	    android:layout_height="match_parent"
+    	android:layoutAnimation="@anim/layout_top_to_bottom_slide"/>
