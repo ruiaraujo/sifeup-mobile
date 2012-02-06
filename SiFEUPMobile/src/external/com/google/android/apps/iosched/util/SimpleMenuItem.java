@@ -18,6 +18,7 @@ package external.com.google.android.apps.iosched.util;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.view.ActionProvider;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -207,6 +208,47 @@ public class SimpleMenuItem implements MenuItem {
     }
 
     public MenuItem setActionView(int i) {
+        // Noop
+        return this;
+    }
+
+    @Override
+    public boolean collapseActionView() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean expandActionView() {
+        return false;
+    }
+
+    @Override
+    public ActionProvider getActionProvider() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isActionViewExpanded() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public MenuItem setActionProvider(ActionProvider actionProvider) {
+        // Noop
+        return this;
+    }
+
+    @Override
+    public MenuItem setOnActionExpandListener(OnActionExpandListener listener) {
+        // Noop
+        return this;
+    }
+
+    @Override
+    public MenuItem setShowAsActionFlags(int actionEnum) {
         // Noop
         return this;
     }

@@ -137,7 +137,6 @@ public class UIUtils {
     	TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
         long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
         now -= tz_offset_gmt*3600000;
-        
         return now;
     }
 

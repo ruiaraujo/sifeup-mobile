@@ -4,6 +4,7 @@ import pt.up.fe.mobile.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,6 +32,11 @@ public class BaseFragment extends Fragment {
     private Interpolator accelerator = new AccelerateInterpolator();
     private Interpolator decelerator = new DecelerateInterpolator();
     private void flipit() {
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB )
+        {
+            switcher.showNext();
+            return;
+        }
         final View visibleList;
         final View invisibleList;
         if (switcher.getCurrentView() == switcher.getChildAt(0)) {
