@@ -102,6 +102,12 @@
         <item name="android:textColor">@color/body_text_2</item>
         <item name="android:paddingLeft">12dip</item>
     </style>
+    
+       <style name="GrayTitle">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textColor">@color/body_text_grey</item>
+    </style>
+    
 
     <style name="ListItemContainerBase">
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>

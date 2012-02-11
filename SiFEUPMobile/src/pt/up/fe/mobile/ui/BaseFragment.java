@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 /**
@@ -27,10 +28,12 @@ import android.widget.ViewSwitcher;
 public class BaseFragment extends Fragment {
 
     private ViewSwitcher switcher;
+    private View emptyScreen;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		switcher = (ViewSwitcher) inflater.inflate(R.layout.loading_view, container, false);
+		emptyScreen  =  inflater.inflate(R.layout.fragment_no_results, switcher, false);
 		return switcher;
     }
     
@@ -79,13 +82,8 @@ public class BaseFragment extends Fragment {
         visibleList.startAnimation(visToInvis);
     }
     
-    
-    
     private Interpolator accelerator = new AccelerateInterpolator();
     private Interpolator decelerator = new DecelerateInterpolator();
-    
-    
-    
     
     private void flipIt() {
         if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB )
@@ -121,13 +119,26 @@ public class BaseFragment extends Fragment {
 
     protected void showLoadingScreen(){
     	if ( switcher.getCurrentView() != switcher.getChildAt(0) ) 
-    	    flipIt();
+            switcher.showNext();
     }
     
     protected void showMainScreen(){
     	if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
     	    flipIt();
     }
+    
+    protected void showEmptyScreen(final String message ){
+        if ( switcher.getCurrentView() == switcher.getChildAt(1) ) 
+            return;
+        if ( switcher.getChildAt(1) != null ) 
+        {
+            switcher.removeViewAt(1);
+        }
+        TextView text = (TextView) emptyScreen.findViewById(R.id.message);
+        text.setText(message);
+        switcher.addView(emptyScreen,1);
+        flipIt();
+    }    
     
     protected ViewGroup getParentContainer(){
     	if ( switcher == null )

@@ -93,6 +93,10 @@ public class ExamsFragment extends BaseFragment {
         protected void onPostExecute(String result) {
             if (result.equals("Success")) {
                 Log.e("Login", "success");
+                if (exams.isEmpty()) {
+                    showEmptyScreen(getString(R.string.label_no_exams));
+                    return;
+                }
 
                 String[] from = new String[] { "chair", "time", "room" };
                 int[] to = new int[] { R.id.exam_chair, R.id.exam_time,
@@ -238,10 +242,13 @@ public class ExamsFragment extends BaseFragment {
     }
 
     /**
-     * Exports the schedule to Google Calendar
-     * TODO: Produce an ICAL file which can be imported by most calendars.
+     * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
+     * can be imported by most calendars.
      */
     public boolean calendarExport() {
+
+        if (exams == null || exams.isEmpty())
+            return true;
 
         final ContentResolver cr = getActivity().getContentResolver();
         final CalendarHelper calendarHelper = CalendarHelper.getInstance(cr);
@@ -276,8 +283,8 @@ public class ExamsFragment extends BaseFragment {
                             // iterate over schedule and add them to schedule
                             for (Exam b : exams) {
                                 // new event
-                                long time = getDate(
-                                        b.date, b.startTime).toMillis(false);
+                                long time = getDate(b.date, b.startTime)
+                                        .toMillis(false);
                                 Event event = new Event(b.courseName, b.rooms,
                                         b.type, time, time
                                                 + timeDifference(b.startTime,

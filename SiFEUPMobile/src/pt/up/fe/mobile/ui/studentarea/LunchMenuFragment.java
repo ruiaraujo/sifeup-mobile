@@ -147,6 +147,11 @@ public class LunchMenuFragment extends BaseFragment
 			}
 			else{
 				Log.e("Login","success");
+				if ( canteens.isEmpty() )
+				{
+				    showEmptyScreen(getString(R.string.lb_no_menu));
+				    return;
+				}
 			    buildPages();
 			    showMainScreen();
 			}
@@ -214,8 +219,9 @@ public class LunchMenuFragment extends BaseFragment
      			Canteen canteen = new Canteen();
      			
      			canteen.parseJson(jBlock);
-     			// add canteen to canteens
-     			this.canteens.add(canteen);
+     			if (  canteen.getMenus().length > 0  )
+     			    // add canteen to canteens
+     			    this.canteens.add(canteen);
      		}
      		Log.e("JSON", "loaded canteens");
      		return true;
@@ -251,8 +257,9 @@ public class LunchMenuFragment extends BaseFragment
 			View root = mInflater.inflate(R.layout.menu, viewPager, false);
 			ExpandableListView list = (ExpandableListView) root.findViewById(R.id.menu_list);
 			list.setAdapter(new MenusAdapter(canteens.get(position)));
+			list.expandGroup(0);
 			((ViewPager) collection).addView(root,0);
-			return root;
+            return root;
 		}
 
 		public boolean isViewFromObject(View view, Object object) {

@@ -87,12 +87,14 @@
   	<!-- Exams -->
   	<string name="title_exams">Exames</string>
   	<string name="btn_exams">Exames</string>
+  	<string name="label_no_exams">Não tem exames marcados</string>
   	
   	<!-- Subjects -->
 	<string name="btn_subjects">Disciplinas</string>
 	<string name="title_subjects">Disciplinas</string>   
 	<string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
-	
+   	<string name="lb_no_subjects">Não tem disciplinas</string>
+   	
 	<!-- Subject Description -->
 	<string name="objectives">Objectivos</string>
 	<string name="content">Conteúdo</string>
@@ -137,6 +139,7 @@
    	<!-- Lunch Menu -->
    	<string name="title_lunch_menu">Ementa</string>
    	<string name="btn_lunch_menu">Ementa</string>
+   	<string name="lb_no_menu">Não há ementas</string>
    	
    	<!-- Park Occupation -->
     <string name="title_park_occupation">Ocupação do Parque</string>
@@ -232,6 +235,7 @@
  	<string name="description_add">Adicionar Amigo</string>
     <string name="friends_context_delete">Remover Amigo</string>
     <string name="friends_context_timetable">Ver Horário</string>
+  	<string name="label_no_friends">Não tem amigos</string>
     
     
  	<!-- *************************************************************************************** -->
@@ -240,7 +244,8 @@
  	<string name="btn_news">Notícias</string>
  	<string name="news_more_info">Mais informações:</string>
     <string name="news_error">Houve um erro a ler as notícias. Por favor verifique a sua ligação de internet.</string>
- 	
+ 	<string name="lb_no_news">Não há notícias</string>
+ 	 
  	<!-- *************************************************************************************** -->
  	<!-- MAP -->
 	<string name="description_map">Mapa</string>
@@ -252,6 +257,19 @@
 	<!-- SETTINGS -->
 	<string name="title_settings">Definições</string>
     <string name="btn_settings">Definições</string>
-    
+        
+    <!-- *************************************************************************************** -->
+	<!-- NOTIFICATIONS -->
+	<string name="title_notifications">Notificações</string>
+    <string name="btn_notifications">Notificações</string>
+    <string name="lb_date">Data: </string>
+    <string name="lb_priority">Prioridade: </string>
+    <string name="lb_designation">Designação: </string>
+    <string name="lb_description">Descrição: </string>
+    <string name="lb_subject">Assunto: </string>
+    <string name="lb_message">Messagem: </string>
+    <string name="lb_reply_notification">Resposta </string>
+    <string name="lb_obs">Comentários: </string>
+  	<string name="lb_no_notification">Não tem notificações</string>
      
 </resources>
