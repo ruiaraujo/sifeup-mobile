@@ -122,6 +122,11 @@ public class BaseFragment extends Fragment {
             switcher.showNext();
     }
     
+    protected void showFastMainScreen(){
+        if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
+            switcher.showNext();
+    }
+    
     protected void showMainScreen(){
     	if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
     	    flipIt();

@@ -27,8 +27,10 @@ public class DownloaderFragment extends DialogFragment {
 	private final static String TITLE_ARG = "title";
 	private final static String URL_ARG = "url";
 	private final static String NAME_ARG = "name";
+    private final static String TYPE_ARG = "type";
 	private String url;
 	private String filename;
+	private String type;
 	private ProgressDialog pbarDialog;
 	  public static DownloaderFragment newInstance(String title, String url , String name) {
 		  	DownloaderFragment frag = new DownloaderFragment();
@@ -40,12 +42,25 @@ public class DownloaderFragment extends DialogFragment {
 	        
 	        return frag;
 	    }
+	  
+	  public static DownloaderFragment newInstance(String title, String url , String name , String type) {
+          DownloaderFragment frag = new DownloaderFragment();
+          Bundle args = new Bundle();
+          args.putString(TITLE_ARG, title);
+          args.putString(URL_ARG, url);
+          args.putString(NAME_ARG, name);
+          args.putString(TYPE_ARG, type);
+          frag.setArguments(args);
+          
+          return frag;
+      }
 
 	  @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        String title = getArguments().getString(TITLE_ARG);
 	        url = getArguments().getString(URL_ARG);
 	        filename = getArguments().getString(NAME_ARG);
+	        type = getArguments().getString(TYPE_ARG);
 	        final DownloadTask downloader = new DownloadTask();
 	        pbarDialog = new ProgressDialog(getActivity());
 			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -78,7 +93,6 @@ public class DownloaderFragment extends DialogFragment {
 			//private long lastTime;
 			//private long downloadBegin;
 			private File myFile;
-			private String type;
 			protected void onPostExecute(String result) 
 			{
 				if ( result == null )
@@ -137,7 +151,8 @@ public class DownloaderFragment extends DialogFragment {
 					dis = new DataInputStream(con.getInputStream());
 					//fileLen = Integer.MAX_VALUE;
 					//fileLen = con.getContentLength();
-					type = con.getContentType();
+					if ( type == null )
+					    type = con.getContentType();
 					// Checking if external storage has enough memory ...
 					//android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
 					//if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)

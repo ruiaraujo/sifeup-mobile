@@ -22,6 +22,8 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 import external.com.zylinc.view.ViewPagerIndicator;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -120,8 +122,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
     		url.append(year);
     		url.append("&p_periodo=" );
     		url.append(period);
-    		Uri uri = Uri.parse( url.toString() );
-    		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
+    		Intent i = new Intent(getActivity(), WebviewActivity.class);
+            i.putExtra(WebviewFragment.URL_INTENT, url.toString());
+    		startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);

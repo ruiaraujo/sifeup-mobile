@@ -225,6 +225,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".ui.webclient.WebviewActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_webview"/>
 
         <!-- Used for install referrer tracking -->
         <receiver

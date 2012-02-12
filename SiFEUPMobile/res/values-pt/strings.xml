@@ -272,4 +272,9 @@
     <string name="lb_obs">Comentários: </string>
   	<string name="lb_no_notification">Não tem notificações</string>
      
+    <!-- *************************************************************************************** -->
+	<!-- WEBVIEW -->
+	<string name="title_webview">SiFEUP</string>
+ 	<string name="description_browser">Ver no Browser</string>
+	
 </resources>
