@@ -35,10 +35,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
 
-import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import pt.up.fe.mobile.R;
