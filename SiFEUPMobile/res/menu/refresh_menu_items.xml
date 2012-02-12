@@ -20,6 +20,6 @@
         android:icon="@drawable/ic_title_refresh"
         android:title="@string/description_refresh"
         android:orderInCategory="1"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
        />
 </menu>

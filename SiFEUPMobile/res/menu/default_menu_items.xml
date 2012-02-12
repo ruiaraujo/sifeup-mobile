@@ -20,5 +20,5 @@
         android:icon="@drawable/ic_title_search"
         android:title="@string/description_search"
         android:orderInCategory="0"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="always" />
 </menu>
