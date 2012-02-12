@@ -274,19 +274,23 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id ) {
 
-		EndlessSearchAdapter a = (EndlessSearchAdapter) parent.getAdapter();
-		//ignoring clicks on the pending view
-		//see: http://stackoverflow.com/questions/7938891/disable-click-for-pending-view-of-cwac-endless-adapter
-	    if( a.getItemViewType(position) != Adapter.IGNORE_ITEM_VIEW_TYPE) {
-	    	Intent i = new Intent(getActivity() , ProfileActivity.class);
-			// assumed only one page of results
-			Profile profile = results.get(position/15).students.get(position%15);
-			i.putExtra(Intent.EXTRA_TITLE,profile.getName() );
-			i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT);
-			i.putExtra(ProfileActivity.PROFILE_CODE, 
-					profile.getCode());
-			startActivity(i);
+	    if ( parent.getAdapter() instanceof  EndlessSearchAdapter )
+	    {
+	        EndlessSearchAdapter a = (EndlessSearchAdapter) parent.getAdapter(); 
+	        //ignoring clicks on the pending view
+	        //see: http://stackoverflow.com/questions/7938891/disable-click-for-pending-view-of-cwac-endless-adapter
+
+	        if( a.getItemViewType(position) == Adapter.IGNORE_ITEM_VIEW_TYPE)
+	            return;
 	    }
+    	Intent i = new Intent(getActivity() , ProfileActivity.class);
+		// assumed only one page of results
+		Profile profile = results.get(position/15).students.get(position%15);
+		i.putExtra(Intent.EXTRA_TITLE,profile.getName() );
+		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT);
+		i.putExtra(ProfileActivity.PROFILE_CODE, 
+				profile.getCode());
+		startActivity(i);
 	}
 
 	
