@@ -258,9 +258,11 @@
     <string name="btn_classes_selection">Classes Selection</string>
  	<string name="btn_ok">Ok</string>
 	<string name="classes_selection_option">Option <xliff:g id="option">%1$s</xliff:g></string>
-	<string name="classes_selection_submit">Submit Options</string>
- 	   
-    
+	<string name="classes_selection_submit">Submit Options</string><!-- *************************************************************************************** -->
+    <!-- Dynamic mail -->
+    <string name="title_dynamic_mail_files">Dynamic Email Files</string>
+    <string name="btn_dynamic_mail_files">Dynamic Email Files</string>
+ 	
  	<!-- *************************************************************************************** -->
  	<!-- FRIENDS -->
  	<string name="title_friends">Friends</string> 

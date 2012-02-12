@@ -1,128 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    
+
     <!-- APPLICATION -->
     <string name="app_name">SiFEUP Mobile</string>
     <string name="description_logo">SiFEUP Mobile</string>
     <string name="description_home">Home</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
-        
+
     <!-- *************************************************************************************** -->
-   	<!-- LOGIN -->
+    <!-- LOGIN -->
 
     <string name="lb_login_remember">Lembrar-se de mim</string>
     <string name="lb_login_username">Utilizador:</string>
     <string name="lb_login_password">Senha:</string>
-    
     <string name="bt_cancel">Sair</string>
     <string name="lb_login_cancel">Conectando...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Limpar</string>
-       
     <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
     <string name="toast_login_error_empty_password">Senha tem de estar preenchido.</string>
     <string name="toast_login_error_wrong_password">O utilizador ou senha estão incorrectos.</string>
     <string name="toast_login_error_password_too_short">Senha tem de ser maior que 8 caracteres.</string>
-    
     <string name="toast_server_error">O servidor parece estar com dificuldades. Por favor, tente outra vez.</string>
     <string name="toast_auth_error">A sua sessão terminou. Por favor, reautentique-se.</string>
-    
-   	<!-- *************************************************************************************** -->
-   	<!-- LOGOUT -->
-   	<string name="description_logout">Log Out</string>
-    	
+
     <!-- *************************************************************************************** -->
-   	<!-- SEARCH -->
+    <!-- LOGOUT -->
+    <string name="description_logout">Log Out</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- SEARCH -->
     <string name="description_search">Procurar</string>
-   	<string name="search_label">SiFEUP Mobile</string>
+    <string name="search_label">SiFEUP Mobile</string>
     <string name="search_hint">Procurar Estudantes</string>
     <string name="title_search">Procurar</string>
     <string name="title_search_query">Procurar por \'<xliff:g id="query">%1$s</xliff:g>\'</string>
-   	<string name="toast_search_error">Não houve resultados para a sua pesquisa.</string>
-   	
-   	<!-- *************************************************************************************** -->
-   	<!-- ABOUT -->
-   	<string name="bt_about">Sobre</string>
+    <string name="toast_search_error">Não houve resultados para a sua pesquisa.</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- ABOUT -->
+    <string name="bt_about">Sobre</string>
     <string name="bt_about_title">Sobre SiFEUP Mobile</string>
-    <string name="bt_about_message">Para dar aos estudantes da FEUP uma plataforma móvel para obterem 
+    <string name="bt_about_message">ara dar aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
-                                 \n\n
-                                 <a href="http://code.google.com/p/sifeup-mobile">Website do Projetco</a>
-                                 \n\n
-                                 <b>Versão: </b>0.4 
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projetco</a>                                 \n\n<b>Versão: </b>.4 
                                  \n
                                  01/08/2011
-                                 \n\n
-                                 <b>Créditos:</b>\n
-                                 <ul>
-	                                 <li>Faculdade de Engenharia da Universidade do Porto</li> \n
-	                                 <li>CICA</li> \n
-	                                 <li>Mestrado Integrado em Engenharia Informática e Computação</li> \n
-	                                 <li>Disciplina Sistemas Distríbuidos</li> \n
-                                 </ul>
-                                 </string>
-   	
-    <!--  MAIN  MENU -->
-   
+                                 \n\n<b>Créditos:</b>n<ul>
+            <li>Faculdade de Engenharia da Universidade do Porto</li>
+\n            <li>CICA</li>
+\n            <li>Mestrado Integrado em Engenharia Informática e Computação</li>
+\n            <li>Disciplina Sistemas Distríbuidos</li>
+\n</ul></string>
+
+    <!-- MAIN  MENU -->
+
+
     <!-- *************************************************************************************** -->
-   	<!-- STUDENT AREA -->
+    <!-- STUDENT AREA -->
     <string name="title_student_area">Área do Estudante</string>
     <string name="btn_student_area">Área do Estudante</string>
- 
-  	<!-- Schedule -->
+
+    <!-- Schedule -->
     <string name="title_schedule">Horário</string>
     <string name="title_schedule_arg">Horário de <xliff:g id="code">%1$s</xliff:g></string>
-  	<string name="btn_schedule">Horário</string>
-  	<string name="description_export">Exportar</string>	
+    <string name="btn_schedule">Horário</string>
+    <string name="description_export">Exportar</string>
     <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
     <string name="toast_export_calendar_finished">Calendário Exportado.</string>
-  	<string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
-  	<string name="description_now">Ir para hoje</string>
-  	
-  	<!-- Class Description -->
+    <string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
+    <string name="description_now">Ir para hoje</string>
+
+    <!-- Class Description -->
     <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>
-  	<string name="class_room">Sala: <xliff:g id="teacher">%1$s</xliff:g></string>
-  	
-  	<!-- Exams -->
-  	<string name="title_exams">Exames</string>
-  	<string name="btn_exams">Exames</string>
-  	<string name="label_no_exams">Não tem exames marcados</string>
-  	
-  	<!-- Subjects -->
-	<string name="btn_subjects">Disciplinas</string>
-	<string name="title_subjects">Disciplinas</string>   
-	<string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
-   	<string name="lb_no_subjects">Não tem disciplinas</string>
-   	
-	<!-- Subject Description -->
-	<string name="objectives">Objectivos</string>
-	<string name="content">Conteúdo</string>
-	<string name="teachers">Docência</string>
-	<string name="bibliography">Bibliografia</string>
-	<string name="software">Software</string>
-	<string name="metodology">Metodologia</string> 
-	<string name="evaluation">Avaliação</string>
-	<string name="admission_exams">Obtenção de Frequência</string>  
-	<string name="final_grade">Cálculo da Classificação Final</string> 
-	<string name="special_evaluation">Avaliação Especial (TE, DA, ...)</string> 
-	<string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string> 
-	<string name="comments">Observações</string> 
-	
-    <!-- Academic Path -->   	
-   	<string name="title_academic_path">Percurso Académico</string>
-    <string name="btn_academic_path">Percurso Académico</string> 
-    <string name="path_year"><b>Ano:</b> <xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semestre:</b> <xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_average"><b>Média:</b> <xliff:g id="average">%1$s</xliff:g></string>
-    <string name="path_entries"><b>Número de Inscrições:</b> <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="class_room">Sala: <xliff:g id="teacher">%1$s</xliff:g></string>
+
+    <!-- Exams -->
+    <string name="title_exams">Exames</string>
+    <string name="btn_exams">Exames</string>
+    <string name="label_no_exams">Não tem exames marcados</string>
+
+    <!-- Subjects -->
+    <string name="btn_subjects">Disciplinas</string>
+    <string name="title_subjects">Disciplinas</string>
+    <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="lb_no_subjects">Não tem disciplinas</string>
+
+    <!-- Subject Description -->
+    <string name="objectives">Objectivos</string>
+    <string name="content">Conteúdo</string>
+    <string name="teachers">Docência</string>
+    <string name="bibliography">Bibliografia</string>
+    <string name="software">Software</string>
+    <string name="metodology">Metodologia</string>
+    <string name="evaluation">Avaliação</string>
+    <string name="admission_exams">Obtenção de Frequência</string>
+    <string name="final_grade">Cálculo da Classificação Final</string>
+    <string name="special_evaluation">Avaliação Especial (TE, DA, ...)</string>
+    <string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string>
+    <string name="comments">Observações</string>
+
+    <!-- Academic Path -->
+    <string name="title_academic_path">Percurso Académico</string>
+    <string name="btn_academic_path">Percurso Académico</string>
+    <string name="path_year"><b>Ano:</b>
+<xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semestre:</b>
+<xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Média:</b>
+<xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Número de Inscrições:</b>
+<xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Nota: <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>Página Web SiFEUP</u></string>
 
     <!-- Profile -->
-	<string name="profile_title_email">Email</string>
-	<string name="profile_title_email_alt">Email Alternativo</string>
-   	<string name="profile_title_mobile">Telemóvel</string>
+    <string name="profile_title_email">Email</string>
+    <string name="profile_title_email_alt">Email Alternativo</string>
+    <string name="profile_title_mobile">Telemóvel</string>
     <string name="profile_title_telephone">Telefone</string>
     <string name="profile_title_ext_mobile">Extensão de Telemóvel</string>
     <string name="profile_title_ext_voip">Extensão VOIP</string>
@@ -136,24 +132,24 @@
     <string name="profile_title_room">Sala</string>
     <string name="profile_choose_email_app">Escolha a aplicação de email:</string>
 
-   	<!-- Lunch Menu -->
-   	<string name="title_lunch_menu">Ementa</string>
-   	<string name="btn_lunch_menu">Ementa</string>
-   	<string name="lb_no_menu">Não há ementas</string>
-   	
-   	<!-- Park Occupation -->
-    <string name="title_park_occupation">Ocupação do Parque</string>
-   	<string name="btn_park_occupation">Ocupação do Parque</string>
+    <!-- Lunch Menu -->
+    <string name="title_lunch_menu">Ementa</string>
+    <string name="btn_lunch_menu">Ementa</string>
+    <string name="lb_no_menu">Não há ementas</string>
 
-   	<!-- *************************************************************************************** -->
-   	<!-- STUDENT SERVICES -->
-   	<string name="title_student_services">Serviços</string>
-   	<string name="btn_student_services">Serviços</string>
-   	   	
-   	<!-- Tuition -->
-   	<string name="title_tuition">Pagamentos</string>
-   	<string name="btn_tuition">Propinas</string>
-	<string name="title_tuition_history">Histórico de Propinas</string>
+    <!-- Park Occupation -->
+    <string name="title_park_occupation">Ocupação do Parque</string>
+    <string name="btn_park_occupation">Ocupação do Parque</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- STUDENT SERVICES -->
+    <string name="title_student_services">Serviços</string>
+    <string name="btn_student_services">Serviços</string>
+
+    <!-- Tuition -->
+    <string name="title_tuition">Pagamentos</string>
+    <string name="btn_tuition">Propinas</string>
+    <string name="title_tuition_history">Histórico de Propinas</string>
     <string name="lbl_year">Ano </string>
     <string name="lbl_paid">Pago</string>
     <string name="lbl_still_to_pay">Falta pagar</string>
@@ -168,11 +164,11 @@
     <string name="lbl_tuition_ref_detail_amount">Montante</string>
     <string name="lbl_tuition_ref_detail_date_start">Data de Início</string>
     <string name="lbl_tuition_ref_detail_date_end">Data de Fim</string>
-	
-	<!-- UCs Inscriptions -->
- 	<string name="title_uc_inscriptions">Inscrições em UCs</string> 
+
+    <!-- UCs Inscriptions -->
+    <string name="title_uc_inscriptions">Inscrições em UCs</string>
     <string name="btn_uc_inscriptions">Inscrições em UCs</string>
-    
+
     <!-- Change Password -->
     <string name="title_change_password">Mudar Password</string>
     <string name="btn_change_password">Mudar Password</string>
@@ -181,34 +177,31 @@
     <string name="lb_new_password">Nova password</string>
     <string name="lb_confirm_new_password">Confirmar nova password:</string>
     <string name="lb_current_password">Password actual:</string>
-    <string name="set_password_message"> Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:
-    	<ul>
-			<li>Conter obrigatoriamente entre 8 e 32 caracteres.</li>
-			<li>Não ser igual às 5 palavras-passe anteriores.</li>
-			<li>Conter um misto de letras e números;</li>
-		</ul> 
-	</string>
-        
-    <!-- Card Request-->
+    <string name="set_password_message">Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:<ul>
+            <li>Conter obrigatoriamente entre 8 e 32 caracteres.</li>
+            <li>Não ser igual às 5 palavras-passe anteriores.</li>
+            <li>Conter um misto de letras e números;</li>
+        </ul></string>
+
+    <!-- Card Request -->
     <string name="title_card_request">Pedir Cartão</string>
     <string name="btn_card_request">Pedir Cartão</string>
 
     <!-- Scholar Profit -->
-    <string name="title_scholar_profit">Aproveitamento Escolar</string> 
-    <string name="btn_scholar_profit">Aproveitamento Escolar</string>  
-               
- 	<!-- Requests -->
- 	<string name="title_requests">Requerimentos</string>
+    <string name="title_scholar_profit">Aproveitamento Escolar</string>
+    <string name="btn_scholar_profit">Aproveitamento Escolar</string>
+
+    <!-- Requests -->
+    <string name="title_requests">Requerimentos</string>
     <string name="title_all_requests">Todos os Requerimentos</string>
     <string name="title_new_request">Novo Requerimento</string>
     <string name="btn_requests">Requerimentos</string>
     <string name="btn_new_request">Novo Requerimento</string>
     <string name="btn_all_request">Todos os Requerimentos</string>
-    
+
     <!-- Printing -->
     <string name="title_printing">Saldo</string>
- 	<string name="btn_printing">Saldo</string>
-    
+    <string name="btn_printing">Saldo</string>
     <string name="lb_data_fetching">Extraindo dados...</string>
     <string name="print_balance">Saldo: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
@@ -218,49 +211,50 @@
     <string name="lb_print_ref_title">Referência Gerada</string>
     <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
     <string name="print_ref_share_title">Partilhar Referência</string>
-    
-    
+
     <!-- Classes Selection -->
     <string name="title_classes_selection">Selecção de Turmas</string>
     <string name="btn_classes_selection">Selecção de Turmas</string>
- 	<string name="btn_ok">Ok</string>
-	<string name="classes_selection_option">Opção <xliff:g id="option">%1$s</xliff:g></string>
-	<string name="classes_selection_submit">Submeter opções</string>
- 	   
-    
- 	<!-- *************************************************************************************** -->
- 	<!-- FRIENDS -->
- 	<string name="title_friends">Amigos</string> 
- 	<string name="btn_friends">Amigos</string> 
- 	<string name="description_add">Adicionar Amigo</string>
+    <string name="btn_ok">Ok</string>
+    <string name="classes_selection_option">Opção <xliff:g id="option">%1$s</xliff:g></string>
+    <string name="classes_selection_submit">Submeter opções</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- Dynamic mail -->
+    <string name="title_dynamic_mail_files">Ficheiros do Email Dinâmico</string>
+    <string name="btn_dynamic_mail_files">Ficheiros do Email Dinâmico</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- FRIENDS -->
+    <string name="title_friends">Amigos</string>
+    <string name="btn_friends">Amigos</string>
+    <string name="description_add">Adicionar Amigo</string>
     <string name="friends_context_delete">Remover Amigo</string>
     <string name="friends_context_timetable">Ver Horário</string>
-  	<string name="label_no_friends">Não tem amigos</string>
-    
-    
- 	<!-- *************************************************************************************** -->
- 	<!-- NEWS -->
- 	<string name="title_news">Notícias</string>
- 	<string name="btn_news">Notícias</string>
- 	<string name="news_more_info">Mais informações:</string>
+    <string name="label_no_friends">Não tem amigos</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- NEWS -->
+    <string name="title_news">Notícias</string>
+    <string name="btn_news">Notícias</string>
+    <string name="news_more_info">Mais informações:</string>
     <string name="news_error">Houve um erro a ler as notícias. Por favor verifique a sua ligação de internet.</string>
- 	<string name="lb_no_news">Não há notícias</string>
- 	 
- 	<!-- *************************************************************************************** -->
- 	<!-- MAP -->
-	<string name="description_map">Mapa</string>
+    <string name="lb_no_news">Não há notícias</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- MAP -->
+    <string name="description_map">Mapa</string>
     <string name="title_map">Mapa</string>
     <string name="btn_map">Mapa</string>
-	
-	
-	<!-- *************************************************************************************** -->
-	<!-- SETTINGS -->
-	<string name="title_settings">Definições</string>
-    <string name="btn_settings">Definições</string>
-        
+
     <!-- *************************************************************************************** -->
-	<!-- NOTIFICATIONS -->
-	<string name="title_notifications">Notificações</string>
+    <!-- SETTINGS -->
+    <string name="title_settings">Definições</string>
+    <string name="btn_settings">Definições</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- NOTIFICATIONS -->
+    <string name="title_notifications">Notificações</string>
     <string name="btn_notifications">Notificações</string>
     <string name="lb_date">Data: </string>
     <string name="lb_priority">Prioridade: </string>
@@ -270,11 +264,11 @@
     <string name="lb_message">Messagem: </string>
     <string name="lb_reply_notification">Resposta </string>
     <string name="lb_obs">Comentários: </string>
-  	<string name="lb_no_notification">Não tem notificações</string>
-     
+    <string name="lb_no_notification">Não tem notificações</string>
+
     <!-- *************************************************************************************** -->
-	<!-- WEBVIEW -->
-	<string name="title_webview">SiFEUP</string>
- 	<string name="description_browser">Ver no Browser</string>
-	
+    <!-- WEBVIEW -->
+    <string name="title_webview">SiFEUP</string>
+    <string name="description_browser">Ver no Browser</string>
+
 </resources>
