@@ -55,8 +55,8 @@ public class WebviewFragment extends BaseFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(true);
-        webSettings.setSavePassword(true);
-        webSettings.setSaveFormData(true);
+        webSettings.setSavePassword(false);
+        webSettings.setSaveFormData(false);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebViewClient(new FeupWebViewClient());
