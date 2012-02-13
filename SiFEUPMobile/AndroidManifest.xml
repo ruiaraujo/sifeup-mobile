@@ -228,6 +228,7 @@
         <activity
             android:name=".ui.webclient.WebviewActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
             android:label="@string/title_webview"/>
 
         <!-- Used for install referrer tracking -->

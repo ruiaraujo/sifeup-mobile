@@ -22,6 +22,7 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
+import pt.up.fe.mobile.ui.utils.BogusViewPagerAdapter;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 import external.com.zylinc.view.ViewPagerIndicator;
@@ -92,6 +93,7 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 		layoutInflater = inflater;
 		View root = inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		viewPager = (ViewPager)root.findViewById(R.id.pager_subject);
+		viewPager.setAdapter(new BogusViewPagerAdapter());
         // Find the indicator from the layout
         indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_subject);
 		

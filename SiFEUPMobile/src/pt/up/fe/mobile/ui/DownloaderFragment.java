@@ -11,6 +11,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.service.SifeupAPI;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -93,7 +94,7 @@ public class DownloaderFragment extends DialogFragment {
 			//private long lastTime;
 			//private long downloadBegin;
 			private File myFile;
-			protected void onPostExecute(String result) 
+			protected void onPostExecute(String result) //TODO: add error handling
 			{
 				if ( result == null )
 					return;
@@ -139,7 +140,7 @@ public class DownloaderFragment extends DialogFragment {
 				try {
 					
 					//lastTime = downloadBegin= System.currentTimeMillis();
-					con =  (HttpsURLConnection) new URL(argsDownload[0]).openConnection( );
+					con =  SifeupAPI.getUncheckedConnection(argsDownload[0]);
 					con.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 					con.connect();
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);

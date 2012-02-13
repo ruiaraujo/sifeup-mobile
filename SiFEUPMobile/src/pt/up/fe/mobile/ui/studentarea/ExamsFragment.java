@@ -91,6 +91,8 @@ public class ExamsFragment extends BaseFragment {
         }
 
         protected void onPostExecute(String result) {
+            if (getActivity() == null)
+                return;
             if (result.equals("Success")) {
                 Log.e("Login", "success");
                 if (exams.isEmpty()) {
@@ -127,23 +129,20 @@ public class ExamsFragment extends BaseFragment {
 
             } else if (result.equals("Error")) {
                 Log.e("Login", "error");
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(),
-                            getString(R.string.toast_auth_error),
-                            Toast.LENGTH_LONG).show();
-                    ((BaseActivity) getActivity())
-                            .goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
-                    getActivity().finish();
-                    return;
-                }
+                Toast.makeText(getActivity(),
+                        getString(R.string.toast_auth_error), Toast.LENGTH_LONG)
+                        .show();
+                ((BaseActivity) getActivity())
+                        .goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+                getActivity().finish();
+                return;
             } else if (result.equals("")) {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(),
-                            getString(R.string.toast_server_error),
-                            Toast.LENGTH_LONG).show();
-                    getActivity().finish();
-                    return;
-                }
+                Toast.makeText(getActivity(),
+                        getString(R.string.toast_server_error),
+                        Toast.LENGTH_LONG).show();
+                getActivity().finish();
+                return;
+                
             }
         }
 
