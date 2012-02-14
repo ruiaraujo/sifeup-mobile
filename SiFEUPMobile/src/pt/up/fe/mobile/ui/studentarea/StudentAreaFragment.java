@@ -76,21 +76,27 @@ public class StudentAreaFragment extends ListFragment{
     	{
 	    	case 0:
 	    		 startActivity(new Intent(getActivity(),ScheduleActivity.class));
+	             getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 	    		 return;
 	    	case 1:
 		   		 startActivity(new Intent(getActivity(),ExamsActivity.class));
+                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
 	   		case 2:
 		   		 startActivity(new Intent(getActivity(),SubjectsActivity.class));
+                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
 	   		case 3:
 		   		 startActivity(new Intent(getActivity(),LunchMenuActivity.class));
+                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
 	   		case 4:
 		   		 startActivity(new Intent(getActivity(), AcademicPathActivity.class));
+                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
 	   		case 5:
 		   		 startActivity(new Intent(getActivity(), ParkOccupationActivity.class));
+                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
     	}
     }

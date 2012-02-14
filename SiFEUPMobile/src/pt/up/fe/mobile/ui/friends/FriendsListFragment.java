@@ -104,7 +104,6 @@ public class FriendsListFragment extends BaseFragment implements
                 i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
                         ScheduleFragment.SCHEDULE_STUDENT);
             startActivity(i);
-            break;
         }
         return false;
     }
@@ -121,6 +120,7 @@ public class FriendsListFragment extends BaseFragment implements
         i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
         i.putExtra(Intent.EXTRA_TITLE, f.getName());
         startActivity(i);
+        getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
 
     /** Classe privada para a busca de dados ao servidor */

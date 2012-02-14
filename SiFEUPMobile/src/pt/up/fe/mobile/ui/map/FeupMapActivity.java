@@ -109,6 +109,11 @@ public class FeupMapActivity extends MapActivity {
    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (android.os.Build.VERSION.SDK_INT < 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            onBackPressed();
+        }
         return mActivityHelper.onKeyDown(keyCode, event) ||
                 super.onKeyDown(keyCode, event);
     }
@@ -133,4 +138,8 @@ public class FeupMapActivity extends MapActivity {
         return mActivityHelper;
     }
 
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+    }
 }

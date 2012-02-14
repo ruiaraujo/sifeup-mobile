@@ -176,7 +176,10 @@ public class WebviewFragment extends BaseFragment {
         if (mWebView != null && mWebView.canGoBack()) {
             mWebView.goBack();
         } else
+        {
             getActivity().finish();
+            getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+        }
     }
 
 }

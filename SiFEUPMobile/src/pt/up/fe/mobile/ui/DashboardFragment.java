@@ -42,7 +42,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Student Area");
                 startActivity(new Intent(getActivity(), StudentAreaActivity.class));
-                    
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
             
         });
@@ -51,6 +51,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Student Services");
                 startActivity(new Intent(getActivity(), StudentServicesActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                     
             }
             
@@ -60,6 +61,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Profile");
                 startActivity(new Intent(getActivity(), FriendsActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                     
             }
             
@@ -69,6 +71,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("News");
                 startActivity(new Intent(getActivity(),NewsActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
         
@@ -77,6 +80,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Map");
                 startActivity(new Intent(getActivity(),FeupMapActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
         
@@ -84,6 +88,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Notifications");
                 startActivity(new Intent(getActivity(),NotificationsActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
         

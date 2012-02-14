@@ -170,6 +170,7 @@ public class LoginActivity extends Activity
 		        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
 		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 	        		finish();
+	        		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 	        		return;
 	        	}
 
@@ -296,6 +297,7 @@ public class LoginActivity extends Activity
 		        if ( action != EXTRA_DIFFERENT_LOGIN_REVALIDATE )
 		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 				finish();
+				overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 			}
 			else{	
 				Log.e("Login", "error");

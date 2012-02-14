@@ -42,16 +42,19 @@ public class StudentServicesFragment extends Fragment
 		    	{
 			    	case 0:
 			    		 startActivity(new Intent(getActivity(),PrintActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 			    		 break;
 			    	case 1:
 			    		// has children;
 				   		 break;
 			    	case 2:
 				   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 			    	case 3:
 				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
 				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://www.fe.up.pt/si/mail_dinamico.ficheiros"));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 		    	}
 				return false;
@@ -69,9 +72,11 @@ public class StudentServicesFragment extends Fragment
 					{
 					case 0:
 				   		 startActivity(new Intent(getActivity(), TuitionHistoryActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 					case 1:
 				   		 startActivity(new Intent(getActivity(), TuitionRefListActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;	
 					}
 					break;

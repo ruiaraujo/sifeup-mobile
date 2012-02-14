@@ -6,6 +6,7 @@ import pt.up.fe.mobile.ui.utils.Rotate3dAnimation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -149,5 +150,11 @@ public class BaseFragment extends Fragment {
     	if ( switcher == null )
     		throw new RuntimeException("onCreateView must be called before from super");
     	return switcher;
+    }
+    
+    @Override
+    public void startActivity(Intent intent){
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
 }
