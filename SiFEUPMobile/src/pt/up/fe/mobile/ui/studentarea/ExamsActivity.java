@@ -2,7 +2,6 @@ package pt.up.fe.mobile.ui.studentarea;
 
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
@@ -17,11 +16,6 @@ public class ExamsActivity extends BaseSinglePaneActivity {
     	
         return new ExamsFragment();
     }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        getActivityHelper().setupSubActivity();
-    }  
 
 }
 

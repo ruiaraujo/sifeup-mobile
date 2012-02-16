@@ -1,13 +1,17 @@
 package pt.up.fe.mobile.ui;
 
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class HomeActivity extends BaseActivity {
@@ -22,19 +26,24 @@ public class HomeActivity extends BaseActivity {
 	        AnalyticsUtils.getInstance(this).trackPageView("/Home");
 
 	        setContentView(R.layout.activity_home);
-	        getActivityHelper().setupActionBar(null, 0);
 	    }
 	    
 	    @Override
 	    protected void onPostCreate(Bundle savedInstanceState) {
 	        super.onPostCreate(savedInstanceState);
-	        getActivityHelper().setupHomeActivity();
+	        // NOTE: there needs to be a content view set before this is called, so this method
+	        // should be called in onPostCreate.
+	        if ( UIUtils.isTablet(this) )
+	            actionbar.setDisplayOptions( 0, ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE); 
+	        else
+	            actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
+
 	    }
 
 	    @Override
 	    public boolean onCreateOptionsMenu(Menu menu) {
 	        super.onCreateOptionsMenu(menu);
-	        getMenuInflater().inflate(R.menu.home_menu_items, menu);
+	        getSupportMenuInflater().inflate(R.menu.home_menu_items,  menu);
 	        return true;
 	    }
 

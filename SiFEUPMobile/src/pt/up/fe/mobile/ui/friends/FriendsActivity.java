@@ -13,11 +13,5 @@ public class FriendsActivity extends BaseSinglePaneActivity {
 		//registerForContextMenu(findViewById(android.R.id.list));
         return fri;
     }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        //registerForContextMenu(findViewById(android.R.id.list));
-        getActivityHelper().setupSubActivity();
-    } 
 }
 

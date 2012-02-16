@@ -1,7 +1,6 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
@@ -20,12 +19,6 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 		return fragment;
 	}
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onPostCreate(Bundle savedInstanceState) {
-	    super.onPostCreate(savedInstanceState);
-	    getActivityHelper().setupSubActivity();
-	}
 	
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (Integer.parseInt(android.os.Build.VERSION.SDK) < 5

@@ -1,5 +1,8 @@
 package pt.up.fe.mobile.ui;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
@@ -8,7 +11,6 @@ import pt.up.fe.mobile.service.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 
-import external.com.google.android.apps.iosched.util.ActivityHelper;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -19,8 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * A base activity that defers common functionality across app activities to an
@@ -29,13 +29,13 @@ import android.view.MenuItem;
  * {@link BaseMultiPaneActivity}.
  */
 public abstract class BaseActivity extends FragmentActivity {
-    final ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
-
+    protected ActionBar actionbar;
     protected void onCreate(Bundle o) {
         super.onCreate(o);
         GoogleAnalyticsSessionManager.getInstance(getApplication())
                 .incrementActivityCount();
-    }
+        actionbar = getSupportActionBar();
+        }
 
     @Override
     protected void onResume() {
@@ -66,13 +66,10 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mActivityHelper.onPostCreate(savedInstanceState);
-    }
+        // NOTE: there needs to be a content view set before this is called, so this method
+        // should be called in onPostCreate.
+        actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP|ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
 
-    @Override
-    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        return mActivityHelper.onKeyLongPress(keyCode, event)
-                || super.onKeyLongPress(keyCode, event);
     }
 
     @Override
@@ -82,28 +79,51 @@ public abstract class BaseActivity extends FragmentActivity {
                 && event.getRepeatCount() == 0) {
             onBackPressed();
         }
-        return mActivityHelper.onKeyDown(keyCode, event)
-                || super.onKeyDown(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goHome();
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return mActivityHelper.onCreateOptionsMenu(menu)
-                || super.onCreateOptionsMenu(menu);
+        getSupportMenuInflater().inflate(R.menu.default_menu_items, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mActivityHelper.onOptionsItemSelected(item)
-                || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                startSearch(null, false, Bundle.EMPTY, false);
+                return true;
+            case android.R.id.home:
+                // Handle the HOME / UP affordance. Since the app is only two levels deep
+                // hierarchically, UP always just goes home.
+                goHome();
+                return true;
+        }   
+        return super.onOptionsItemSelected(item);
     }
-
     /**
-     * Returns the {@link ActivityHelper} object associated with this activity.
+     * Invoke "home" action, returning to {@link com.google.android.apps.iosched.ui.HomeActivity}.
      */
-    protected ActivityHelper getActivityHelper() {
-        return mActivityHelper;
+    public void goHome() {
+        if (this instanceof HomeActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
+    
 
     /**
      * Takes a given intent and either starts a new activity to handle it (the
