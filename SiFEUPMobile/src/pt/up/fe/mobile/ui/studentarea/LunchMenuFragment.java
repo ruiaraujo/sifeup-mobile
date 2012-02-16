@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TitleProvider;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Canteen;
 import pt.up.fe.mobile.service.SifeupAPI;
@@ -16,9 +19,6 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
-import external.com.zylinc.view.ViewPagerIndicator;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -45,7 +45,7 @@ public class LunchMenuFragment extends BaseFragment
 {
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  viewPager; 
-    private ViewPagerIndicator indicator;
+    private TitlePageIndicator indicator;
 	private ArrayList<Canteen> canteens;
     private LayoutInflater mInflater;
     
@@ -66,7 +66,7 @@ public class LunchMenuFragment extends BaseFragment
         viewPager = (ViewPager)root.findViewById(R.id.pager_menu);
        
         // Find the indicator from the layout
-        indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_menu);
+        indicator = (TitlePageIndicator)root.findViewById(R.id.indicator_menu);
 
         if ( savedInstanceState != null )
         {
@@ -93,25 +93,10 @@ public class LunchMenuFragment extends BaseFragment
         pagerAdapter = new PagerMenuAdapter();
 
         viewPager.setAdapter(pagerAdapter);
-        
-        // Initialize the indicator. We need some information here:
-        // * What page do we start on.
-        // * How many pages are there in total
-        // * A callback to get page titles
-		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
-		indicator.onlyCenterText(true);
-		Resources res = getResources();
-		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
-		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
-		
-		// Set images for previous and next arrows.
-		indicator.setArrows(prev, next);
-		
-        // Set the indicator as the pageChangeListener
-        viewPager.setOnPageChangeListener(indicator);
+        indicator.setViewPager(viewPager);
         
         // Start at a custom position
-        viewPager.setCurrentItem(0);
+        indicator.setCurrentItem(0);
  	}
  	
 	
@@ -236,7 +221,7 @@ public class LunchMenuFragment extends BaseFragment
  	 * @author Ângela Igreja
  	 *
  	 */
-    class PagerMenuAdapter extends PagerAdapter implements ViewPagerIndicator.PageInfoProvider 
+    class PagerMenuAdapter extends PagerAdapter implements TitleProvider
     {
     	
 		@Override
@@ -267,7 +252,7 @@ public class LunchMenuFragment extends BaseFragment
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-		    indicator.setPageInfoProvider(pagerAdapter);
+		    indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {

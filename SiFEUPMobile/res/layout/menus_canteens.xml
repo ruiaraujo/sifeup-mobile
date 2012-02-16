@@ -1,42 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	      xmlns:app="http://schemas.android.com/apk/res/pt.up.fe.mobile"
         android:orientation="vertical" 
         android:gravity="center_horizontal"
-        android:layout_width="fill_parent" 
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent" 
+        android:layout_height="match_parent"
         android:background="#ffffffff">
-    	<external.com.zylinc.view.ViewPagerIndicator 
+    	<com.viewpagerindicator.TitlePageIndicator
     		android:id="@+id/indicator_menu"
-    		android:layout_width="fill_parent"
+    		android:layout_width="match_parent"
     		android:layout_height="wrap_content"
-    		android:background="#ffeaeaea"
-    		android:paddingLeft="5dp"
-    		android:paddingRight="5dp" 
-			android:layout_weight="0.5" />
-    	
-    	<RelativeLayout 
-    		android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	android:background="#ffeaeaea" 
-			android:layout_weight="0.5" > 
-	    	<View 
-	    		android:layout_width="fill_parent"
-	    		android:layout_height="1px"
-	    		android:layout_alignBottom="@+id/current"
-	    		android:background="#ffbdbdbd" />
-    		<ImageView 
-    		    android:id="@id/current"
-	    		android:layout_width="wrap_content"
-	    		android:layout_height="wrap_content"
-	    		android:src="@drawable/indicator_current"
-	    		android:layout_centerInParent="true"
-	    		android:layout_alignParentTop="true" />
-    	</RelativeLayout>
+	        android:background="#FFFFFFFF"
+	        app:footerColor="@color/feup"
+	        app:footerLineHeight="1dp"
+	        app:footerIndicatorHeight="3dp"
+	        app:footerIndicatorStyle="underline"
+	        app:textColor="@color/body_text_grey"
+	        app:selectedColor="#FF000000"/>
     	
     <android.support.v4.view.ViewPager
             android:id="@+id/pager_menu"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="15" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
             		
 </LinearLayout>
