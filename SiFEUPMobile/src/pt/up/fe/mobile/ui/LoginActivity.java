@@ -330,12 +330,15 @@ public class LoginActivity extends Activity
 					{
 						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
 						SifeupUtils.storeConnectionType(LoginActivity.this);
-						return true;
+						if ( jObject.getString("tipo").equals("A") )
+							return Boolean.TRUE;
+						else
+							return null;
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				return false;
+				return Boolean.FALSE;
 		}
     }
     
