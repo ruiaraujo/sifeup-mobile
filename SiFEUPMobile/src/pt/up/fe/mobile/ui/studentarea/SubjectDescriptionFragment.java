@@ -9,7 +9,7 @@ import org.json.JSONException;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
@@ -28,7 +28,6 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
-import pt.up.fe.mobile.ui.utils.BogusViewPagerAdapter;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 
@@ -73,7 +72,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
     private ViewPager  viewPager; 
     
     /** */
-    private TitlePageIndicator indicator;
+    private TabPageIndicator indicator;
     
     private int currentPage = 0;
 
@@ -97,9 +96,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		layoutInflater = inflater;
 		View root = inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		viewPager = (ViewPager)root.findViewById(R.id.pager_subject);
-		viewPager.setAdapter(new BogusViewPagerAdapter());
+		viewPager.setAdapter(new PagerSubjectAdapter());
         // Find the indicator from the layout
-        indicator = (TitlePageIndicator)root.findViewById(R.id.indicator_subject);
+        indicator = (TabPageIndicator)root.findViewById(R.id.indicator_subject);
+        indicator.setViewPager(viewPager);
         new SubjectDescriptionTask().execute();
 		
         return getParentContainer();

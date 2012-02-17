@@ -1,8 +1,9 @@
 <resources>
     <!-- Base application theme is the default theme. -->
     <style name="Theme" parent="@style/Theme.Sherlock.Light" />
+    
     <!-- Start with the Holographic Light theme -->
-    <style name="Theme.IOSched" parent="@style/Theme.Sherlock.Light">
+    <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
 
@@ -11,9 +12,33 @@
         <item name="trackAbstractMaxLines">@integer/track_abstract_max_lines</item>
     </style>
 
-    <style name="Theme.IOSched.Home" parent="style/Theme.IOSched">
+    <style name="Theme.SiFEUP.Home" parent="style/Theme.SiFEUP">
         <item name="android:windowBackground">@drawable/window_background_home</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
+    </style>
+    
+    <style name="Theme.SiFEUP.TabPageIndicator" parent="style/Theme.SiFEUP">
+        <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
+        <item name="vpiTabTextStyle">@style/TabPageIndicator.Text</item>
+    </style>
+
+    <style name="TitlePageIndicator">
+        <item name="android:background">#FFFFFFFF</item>
+        <item name="footerColor">@color/feup</item>
+        <item name="footerLineHeight">1dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="textColor">@color/body_text_grey</item>
+        <item name="selectedColor">#FF000000</item>
+        <item name="selectedBold">true</item>
+    </style>
+
+    
+    <style name="TabPageIndicator" parent="Widget.TabPageIndicator">
+        <item name="android:background">@drawable/tab_indicator</item>
+    </style>
+    <style name="TabPageIndicator.Text" parent="Widget.TabPageIndicator.Text">
+        <item name="android:textColor">@color/body_text_1</item>
     </style>
 
     <style name="ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">

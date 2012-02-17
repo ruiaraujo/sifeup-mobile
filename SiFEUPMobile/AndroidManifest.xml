@@ -19,7 +19,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.IOSched" >
+        android:theme="@style/Theme.SiFEUP" >
 
         <!-- Activities for both phones and tablets -->
 
@@ -27,14 +27,14 @@
             android:name=".ui.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.IOSched.Home" >
+            android:theme="@style/Theme.SiFEUP.Home" >
         </activity>
         <activity
             android:name=".ui.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:noHistory="true"
-            android:theme="@style/Theme.IOSched.Home" >
+            android:theme="@style/Theme.SiFEUP.Home" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -147,6 +147,7 @@
         <activity
             android:name=".ui.studentarea.SubjectDescriptionActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.SiFEUP.TabPageIndicator"
             android:label="@string/title_subjects" />
         <activity
             android:name=".ui.studentarea.AcademicPathActivity"

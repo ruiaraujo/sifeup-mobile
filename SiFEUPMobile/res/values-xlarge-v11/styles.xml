@@ -16,14 +16,14 @@
 
 <resources>
     <!-- Start with the Holographic Light theme -->
-    <style name="Theme.IOSched" parent="@style/Theme.Sherlock.Light">
+    <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="textHeaderMaxLines">3</item>
         <item name="trackAbstractMaxLines">6</item>
     </style>
 
-    <style name="Theme.IOSched.Home" parent="style/Theme.IOSched">
+    <style name="Theme.SiFEUP.Home" parent="style/Theme.SiFEUP">
         <item name="android:windowBackground">@drawable/window_background_home</item>
         <item name="android:actionBarStyle">@null</item>
     </style>
