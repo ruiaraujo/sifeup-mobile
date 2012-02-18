@@ -3,6 +3,8 @@
 	<name>SiFEUP Mobile</name>
 	<comment></comment>
 	<projects>
+		<project>Actionbar</project>
+		<project>ViewPagerIndicator</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
