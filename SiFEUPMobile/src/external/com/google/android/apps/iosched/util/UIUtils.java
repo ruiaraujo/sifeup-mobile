@@ -50,7 +50,7 @@ public class UIUtils {
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
     
-    public static String TIME_REFERENCE = TimeZone.getDefault().getDisplayName();
+    public static String TIME_REFERENCE = "Europe/Lisbon";
 
     /**
      * Populate the given {@link TextView} with the requested text, formatting
@@ -123,21 +123,15 @@ public class UIUtils {
     }
 
     public static long getCurrentTime(boolean utc) {
-    	long now = System.currentTimeMillis (); //Gets current local time in ms
-        if ( !utc )
-        {
-	        TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
-	        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
-	        now += tz_offset_gmt*3600000;
-        }
-        return now;
+        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
+        yourDate.setToNow();
+        return yourDate.toMillis(true);
     }
     
     public static long convertToUtc(long now) {
-    	TimeZone local_tz = TimeZone.getDefault();  //Gets current local TZ of phone
-        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ())/3600000; // Get Offset in ms, divide by 3600000
-        now -= tz_offset_gmt*3600000;
-        
+    	TimeZone local_tz = TimeZone.getTimeZone(TIME_REFERENCE); //Gets current local TZ of phone
+        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ()); // Get Offset in ms, divide by 3600000
+        now -= tz_offset_gmt;
         return now;
     }
 

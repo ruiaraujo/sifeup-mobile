@@ -4,14 +4,14 @@ package pt.up.fe.mobile.ui.studentservices;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.tuition.TuitionHistoryActivity;
 import pt.up.fe.mobile.ui.tuition.TuitionRefListActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -42,28 +42,20 @@ public class StudentServicesFragment extends Fragment
 		    	{
 			    	case 0:
 			    		 startActivity(new Intent(getActivity(),PrintActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 			    		 break;
 			    	case 1:
 			    		// has children;
 				   		 break;
-				  /*case 2:
-				   		 startActivity(new Intent(getActivity(),UCsInscriptionsActivity.class));
-				   		 break; */
 			    	case 2:
 				   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
-			     /*case 4:
-				   		 startActivity(new Intent(getActivity(),CardRequestActivity.class));
-				   		 break; */
-			    /*	case 5:
-			    		// has children;
-				   		 break; */
-			    /*	case 6:
-				   		 startActivity(new Intent(getActivity(), ScholarProfitActivity.class));
-				   		 break; */
-			    /*	case 7:
-			    		 startActivity(new Intent(getActivity(),ClassesSelectionActivity.class));
-			    		 break; */
+			    	case 3:
+				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
+				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://www.fe.up.pt/si/mail_dinamico.ficheiros"));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+				   		 break;
 		    	}
 				return false;
 			}
@@ -80,23 +72,14 @@ public class StudentServicesFragment extends Fragment
 					{
 					case 0:
 				   		 startActivity(new Intent(getActivity(), TuitionHistoryActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 					case 1:
 				   		 startActivity(new Intent(getActivity(), TuitionRefListActivity.class));
+		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;	
 					}
 					break;
-					/*case 5:
-						switch( childPosition )
-						{
-							case 0:
-						   		 startActivity(new Intent(getActivity(), NewRequestActivity.class));
-						   		 break;
-							case 1:
-						   		 startActivity(new Intent(getActivity(), AllRequestsActivity.class));
-						   		 break;	
-						}
-						break;*/
 		    	}
 				
 				return true;
@@ -113,21 +96,13 @@ public class StudentServicesFragment extends Fragment
         private String[] groups = { 
         		getString(R.string.btn_printing), 
         		getString(R.string.btn_tuition),
-        	//	getString(R.string.btn_uc_inscriptions),
-        		getString(R.string.btn_change_password)};
-        	//	getString(R.string.btn_card_request),
-        	//	getString(R.string.btn_requests),
-        	//	getString(R.string.btn_scholar_profit),
-        	//	getString(R.string.btn_classes_selection)};
+        		getString(R.string.btn_change_password),
+        		getString(R.string.btn_dynamic_mail_files)};
         private String[][] children = {
                 {  },
                 { getString(R.string.btn_tuition_history)  , getString(R.string.btn_tuition_refs) },
-             //   {  },
+                {  },
                 {  }
-               // {  },
-               // {getString(R.string.btn_new_request), getString(R.string.btn_all_request) },
-               // {  },
-               // {  }
         };
         
          

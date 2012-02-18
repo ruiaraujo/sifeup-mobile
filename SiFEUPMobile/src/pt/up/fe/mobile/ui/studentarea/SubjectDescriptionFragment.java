@@ -6,6 +6,12 @@ import java.util.List;
 
 import org.json.JSONException;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.TitleProvider;
+
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.service.Subject;
@@ -22,21 +28,19 @@ import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
-import external.com.zylinc.view.ViewPagerIndicator;
+import pt.up.fe.mobile.ui.webclient.WebviewActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewFragment;
+
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -46,7 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SubjectDescriptionFragment extends BaseFragment  {
+public class SubjectDescriptionFragment extends BaseFragment implements OnPageChangeListener  {
 	
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE"; 
@@ -68,7 +72,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
     private ViewPager  viewPager; 
     
     /** */
-    private ViewPagerIndicator indicator;
+    private TabPageIndicator indicator;
+    
+    private int currentPage = 0;
 
 
     @Override
@@ -90,9 +96,10 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 		layoutInflater = inflater;
 		View root = inflater.inflate(R.layout.subject_description, getParentContainer(), true);
 		viewPager = (ViewPager)root.findViewById(R.id.pager_subject);
+		viewPager.setAdapter(new PagerSubjectAdapter());
         // Find the indicator from the layout
-        indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator_subject);
-		
+        indicator = (TabPageIndicator)root.findViewById(R.id.indicator_subject);
+        indicator.setViewPager(viewPager);
         new SubjectDescriptionTask().execute();
 		
         return getParentContainer();
@@ -120,8 +127,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
     		url.append(year);
     		url.append("&p_periodo=" );
     		url.append(period);
-    		Uri uri = Uri.parse( url.toString() );
-    		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
+    		Intent i = new Intent(getActivity(), WebviewActivity.class);
+            i.putExtra(WebviewFragment.URL_INTENT, url.toString());
+    		startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -132,25 +140,12 @@ public class SubjectDescriptionFragment extends BaseFragment  {
         pagerAdapter = new PagerSubjectAdapter();
 
         viewPager.setAdapter(pagerAdapter);
-        
-        // Initialize the indicator. We need some information here:
-        // * What page do we start on.
-        // * How many pages are there in total
-        // * A callback to get page titles
-		indicator.init(0, pagerAdapter.getCount(), pagerAdapter);
-
-		Resources res = getResources();
-		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
-		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
-		
-		// Set images for previous and next arrows.
-		indicator.setArrows(prev, next);
-		indicator.onlyCenterText(true);
+        indicator.setViewPager(viewPager);
         // Set the indicator as the pageChangeListener
-        viewPager.setOnPageChangeListener(indicator);
+        indicator.setOnPageChangeListener(this);
         
         // Start at a custom position
-        viewPager.setCurrentItem(0);
+        indicator.setCurrentItem(0);
         
         
  	}
@@ -261,7 +256,7 @@ public class SubjectDescriptionFragment extends BaseFragment  {
  	 * @author Ângela Igreja
  	 *
  	 */
-    class PagerSubjectAdapter extends PagerAdapter implements ViewPagerIndicator.PageInfoProvider 
+    class PagerSubjectAdapter extends PagerAdapter implements TitleProvider
     {
 		@Override
 		public String getTitle(int position)
@@ -597,8 +592,9 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 	    }
 
     }
+    
 	public void onBackPressed() {
-		if ( indicator.getCurrentPosition() == 12 && subjectContent.getCurrentFolder().getParent() != null )
+		if ( currentPage == 12 && subjectContent.getCurrentFolder().getParent() != null )
 		{
 			subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getParent());
 			pagerAdapter.notifyDataSetChanged();
@@ -609,6 +605,21 @@ public class SubjectDescriptionFragment extends BaseFragment  {
 				getActivity().finish();
 		}
 	}
+
+	//Unused
+    @Override
+    public void onPageScrollStateChanged(int arg0) {
+    }
+
+    //Unused
+    @Override
+    public void onPageScrolled(int arg0, float arg1, int arg2) {
+    }
+
+    @Override
+    public void onPageSelected(int page) {
+        currentPage = page;
+    }
 
 
 

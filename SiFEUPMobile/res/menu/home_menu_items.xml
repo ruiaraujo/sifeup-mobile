@@ -5,6 +5,6 @@
         android:icon="@drawable/ic_title_logout"
         android:title="@string/description_logout"
         android:orderInCategory="1"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
        />
 </menu>

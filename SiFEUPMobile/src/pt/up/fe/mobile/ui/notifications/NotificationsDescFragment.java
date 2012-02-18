@@ -5,7 +5,6 @@ package pt.up.fe.mobile.ui.notifications;
 
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +16,9 @@ import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.Notification;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
+import pt.up.fe.mobile.ui.webclient.WebviewActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 
 /**
 * This interface is responsible for displaying information 
@@ -65,9 +65,9 @@ public class NotificationsDescFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				String url = "https://www.fe.up.pt/si/wf_geral.not_form_view?pv_not_id="+n.getCode();
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
+				final String url = "https://www.fe.up.pt/si/wf_geral.not_form_view?pv_not_id="+n.getCode();
+				Intent i = new Intent(getActivity(), WebviewActivity.class);
+				i.putExtra(WebviewFragment.URL_INTENT, url);
 				startActivity(i);
 			}
 		});    

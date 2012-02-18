@@ -7,14 +7,9 @@ package pt.up.fe.mobile.ui.studentservices;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,6 +17,10 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.service.RefMB;
@@ -92,9 +91,12 @@ public class PrintRefFragment extends BaseFragment {
 				StringBuilder message = new StringBuilder(getString(R.string.lbl_tuition_ref_detail_entity) + ": " + 
 												ref.getEntity() + "\n");
 			
-				
+				String refStr = Long.toString(ref.getRef());
+                while ( refStr.length() < 9 )
+                    refStr = "0" + refStr; 
 				message.append(getString(R.string.lbl_tuition_ref_detail_reference) + ": " + 
-								ref.getRef() + "\n");
+        				        refStr.substring(0,3) + " " + refStr.substring(3,6) + 
+                                " " + refStr.substring(6,9) + "\n");
 				message.append(getString(R.string.lbl_tuition_ref_detail_amount) + ": " + 
 								ref.getAmount() + "\n");
 				message.append(getString(R.string.lbl_tuition_ref_detail_date_end) + ": " + 
@@ -121,8 +123,12 @@ public class PrintRefFragment extends BaseFragment {
         	if ( saldo.equals("Success") )
         	{
         		nome.setText(ref.getName());
-        		entidade.setText(""+ref.getEntity());
-        		referencia.setText(""+ref.getRef());
+        		entidade.setText(Long.toString(ref.getEntity()));
+                String refStr = Long.toString(ref.getRef());
+                while ( refStr.length() < 9 )
+                    refStr = "0" + refStr;  
+        		referencia.setText(refStr.substring(0,3) + " " + refStr.substring(3,6) + 
+        		                    " " + refStr.substring(6,9));
         		valor.setText(ref.getAmount()+"€");
         		dataFim.setText(ref.getEndDate().format3339(true));
         		showMainScreen();

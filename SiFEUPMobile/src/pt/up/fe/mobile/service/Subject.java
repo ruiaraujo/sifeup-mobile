@@ -14,7 +14,7 @@ import android.util.Log;
  * @author Rui Araújo
  *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "unused", "serial" })
 public class Subject  implements Serializable {
 	/** Subject code - EIC0083 */
 	private String code;
@@ -352,7 +352,7 @@ public class Subject  implements Serializable {
 	private class Workload implements Serializable{
 		
 		/** */
-		private String type;
+        private String type;
 		
 		/** */
 		private String description;

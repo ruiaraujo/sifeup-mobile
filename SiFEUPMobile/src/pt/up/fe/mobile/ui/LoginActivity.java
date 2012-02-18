@@ -22,6 +22,8 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -168,6 +170,7 @@ public class LoginActivity extends Activity
 		        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
 		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 	        		finish();
+	        		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 	        		return;
 	        	}
 
@@ -181,14 +184,14 @@ public class LoginActivity extends Activity
 	        case EXTRA_DIFFERENT_LOGIN_LOGOUT:
 	        {	// if logging out the cookie is removed
 	        	prefEditor.putString(PREF_COOKIE, "");
-	        	prefEditor.apply(); 
+	        	prefEditor.commit(); 
 	        }
 	        break;
 	        case EXTRA_DIFFERENT_LOGIN_REVALIDATE:
 	        {
 	        	// if logging out the cookie is removed
 	        	prefEditor.putString(PREF_COOKIE, "");
-	        	prefEditor.apply(); 
+	        	prefEditor.commit(); 
 		        if ( rememberUser )
 		        {
 			        logintask = new LoginTask();
@@ -294,12 +297,15 @@ public class LoginActivity extends Activity
 		        if ( action != EXTRA_DIFFERENT_LOGIN_REVALIDATE )
 		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 				finish();
+				overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 			}
 			else{	
 				Log.e("Login", "error");
-				Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
+		        final Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+		        Toast.makeText(LoginActivity.this, getString(R.string.toast_login_error_wrong_password), Toast.LENGTH_LONG).show();
 				// Remove stored password...
 				passwordEditText.setText("");
+				passwordEditText.startAnimation(shake);
 				rememberPassCheckbox.setChecked(false);
 			}
         	removeDialog(DIALOG_CONNECTING);
@@ -324,12 +330,15 @@ public class LoginActivity extends Activity
 					{
 						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
 						SifeupUtils.storeConnectionType(LoginActivity.this);
-						return true;
+						if ( jObject.getString("tipo").equals("A") )
+							return Boolean.TRUE;
+						else
+							return null;
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				return false;
+				return Boolean.FALSE;
 		}
     }
     

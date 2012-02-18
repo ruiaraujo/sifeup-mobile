@@ -38,22 +38,11 @@ public class SearchActivity extends BaseSinglePaneActivity {
                 SearchSuggestionHistory.AUTHORITY, SearchSuggestionHistory.MODE);
         suggestions.saveRecentQuery(mQuery, null);
         //TODO: add a way to clean the previous searches
-        getActivityHelper().setupActionBar(getTitle(), 0);
         final CharSequence title = getString(R.string.title_search_query, mQuery);
-        getActivityHelper().setActionBarTitle(title);
+        actionbar.setTitle(title);
 
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        getActivityHelper().setupSubActivity();
-
-       /* ViewGroup detailContainer = (ViewGroup) findViewById(R.id.fragment_container_search_detail);
-        if (detailContainer != null && detailContainer.getChildCount() > 1) {
-            findViewById(android.R.id.empty).setVisibility(View.GONE);
-        }*/
-    }
 
 	@Override
 	protected Fragment onCreatePane() {
@@ -64,7 +53,7 @@ public class SearchActivity extends BaseSinglePaneActivity {
 	protected void onNewIntent( Intent query) {
 		mQuery = query.getStringExtra(SearchManager.QUERY).trim();
 		final CharSequence title = getString(R.string.title_search_query, mQuery);
-	    getActivityHelper().setActionBarTitle(title);
+		actionbar.setTitle(title);
         // Record the query string in the recent queries suggestions provider.
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
                 SearchSuggestionHistory.AUTHORITY, SearchSuggestionHistory.MODE);

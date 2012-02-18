@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             iosched:headerWidth="@dimen/schedule_label_header_width"
             iosched:hourHeight="@dimen/schedule_hour_height"
-            iosched:horizontalDivider="true"
+            iosched:horizontal_Divider="true"
             iosched:labelTextSize="@dimen/text_size_small"
             iosched:labelPaddingLeft="@dimen/schedule_label_padding"
             iosched:labelColor="#000000"

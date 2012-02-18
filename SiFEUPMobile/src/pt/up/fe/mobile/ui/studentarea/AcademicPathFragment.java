@@ -2,9 +2,7 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +15,9 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewActivity;
+import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -84,11 +83,11 @@ public class AcademicPathFragment extends BaseFragment {
 			
 			@Override
 			public void onClick(View v) {
-				String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod=" +
+				final String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod=" +
 							SessionManager.getInstance().getLoginCode();
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
+                Intent i = new Intent(getActivity(), WebviewActivity.class);
+                i.putExtra(WebviewFragment.URL_INTENT, url);
+                startActivity(i);
 			}
 		});
         new AcademicPathTask().execute();
@@ -101,8 +100,9 @@ public class AcademicPathFragment extends BaseFragment {
 	 * Academic Path
 	 *
 	 */
+	@SuppressWarnings("unused")
 	private class AcademicPath{
-		private String code; // "numero"
+        private String code; // "numero"
 		private String state; // "estado"
 		private String courseAcronym; // "cur_codigo"
 		private String courseName; // "cur_nome"
@@ -121,6 +121,7 @@ public class AcademicPathFragment extends BaseFragment {
 	 * like, grade, name, semester, etc
 	 *
 	 */
+    @SuppressWarnings("unused")
 	private class UC{
 		private int semester; // "reg_d_codigo"
 		private int year; // "a_lectivo"

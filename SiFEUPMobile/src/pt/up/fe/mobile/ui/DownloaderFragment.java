@@ -5,8 +5,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -24,15 +22,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
 
 public class DownloaderFragment extends DialogFragment {
 	private final static String TITLE_ARG = "title";
 	private final static String URL_ARG = "url";
 	private final static String NAME_ARG = "name";
+    private final static String TYPE_ARG = "type";
 	private String url;
 	private String filename;
+	private String type;
 	private ProgressDialog pbarDialog;
 	  public static DownloaderFragment newInstance(String title, String url , String name) {
 		  	DownloaderFragment frag = new DownloaderFragment();
@@ -44,12 +42,25 @@ public class DownloaderFragment extends DialogFragment {
 	        
 	        return frag;
 	    }
+	  
+	  public static DownloaderFragment newInstance(String title, String url , String name , String type) {
+          DownloaderFragment frag = new DownloaderFragment();
+          Bundle args = new Bundle();
+          args.putString(TITLE_ARG, title);
+          args.putString(URL_ARG, url);
+          args.putString(NAME_ARG, name);
+          args.putString(TYPE_ARG, type);
+          frag.setArguments(args);
+          
+          return frag;
+      }
 
 	  @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        String title = getArguments().getString(TITLE_ARG);
 	        url = getArguments().getString(URL_ARG);
 	        filename = getArguments().getString(NAME_ARG);
+	        type = getArguments().getString(TYPE_ARG);
 	        final DownloadTask downloader = new DownloadTask();
 	        pbarDialog = new ProgressDialog(getActivity());
 			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -82,8 +93,7 @@ public class DownloaderFragment extends DialogFragment {
 			//private long lastTime;
 			//private long downloadBegin;
 			private File myFile;
-			private String type;
-			protected void onPostExecute(String result) 
+			protected void onPostExecute(String result) //TODO: add error handling
 			{
 				if ( result == null )
 					return;
@@ -129,7 +139,7 @@ public class DownloaderFragment extends DialogFragment {
 				try {
 					
 					//lastTime = downloadBegin= System.currentTimeMillis();
-					con =  (HttpsURLConnection) new URL(argsDownload[0]).openConnection( );
+					con =  SifeupAPI.getUncheckedConnection(argsDownload[0]);
 					con.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
 					con.connect();
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);
@@ -141,9 +151,10 @@ public class DownloaderFragment extends DialogFragment {
 					dis = new DataInputStream(con.getInputStream());
 					//fileLen = Integer.MAX_VALUE;
 					//fileLen = con.getContentLength();
-					type = con.getContentType();
+					if ( type == null )
+					    type = con.getContentType();
 					// Checking if external storage has enough memory ...
-					android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
+					//android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
 					//if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
 						//return "No memory";
 

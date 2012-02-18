@@ -88,20 +88,19 @@ public abstract class BaseMultiPaneActivity extends BaseActivity {
      * A class describing information for a fragment-substitution, used when a fragment can act
      * in place of an activity.
      */
+    @SuppressWarnings("rawtypes")
     protected class FragmentReplaceInfo {
-        @SuppressWarnings("unchecked")
-		private Class mFragmentClass;
+		
+        private Class mFragmentClass;
         private String mFragmentTag;
         private int mContainerId;
 
-        @SuppressWarnings("unchecked")
 		public FragmentReplaceInfo(Class fragmentClass, String fragmentTag, int containerId) {
             mFragmentClass = fragmentClass;
             mFragmentTag = fragmentTag;
             mContainerId = containerId;
         }
 
-        @SuppressWarnings("unchecked")
 		public Class getFragmentClass() {
             return mFragmentClass;
         }

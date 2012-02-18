@@ -16,7 +16,6 @@
 
 package external.com.google.android.apps.iosched.ui.widget;
 
-import java.util.TimeZone;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -73,7 +72,7 @@ public class TimeRulerView extends View {
                 mHeaderWidth);
         mHourHeight = a
                 .getDimensionPixelSize(R.styleable.TimeRulerView_hourHeight, mHourHeight);
-        mHorizontalDivider = a.getBoolean(R.styleable.TimeRulerView_horizontalDivider,
+        mHorizontalDivider = a.getBoolean(R.styleable.TimeRulerView_horizontal_Divider,
                 mHorizontalDivider);
         mLabelTextSize = a.getDimensionPixelSize(R.styleable.TimeRulerView_labelTextSize,
                 mLabelTextSize);

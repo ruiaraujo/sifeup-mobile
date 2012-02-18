@@ -1,17 +1,15 @@
 package pt.up.fe.mobile.ui.studentservices;
 
 
-import external.com.zylinc.view.ViewPagerIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
 import pt.up.fe.mobile.service.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,7 +34,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
 {
 	private PagerAdapter mPagerAdapter;
     private ViewPager  mViewPager; 
-    private ViewPagerIndicator indicator;
+    private TitlePageIndicator indicator;
     
     /** Number of options to choose the classes */
  	final static private int NUMBER_OPTIONS = 10;
@@ -61,24 +59,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
         mPagerAdapter = new PagerAdapter(getActivity().getSupportFragmentManager());
         
         // Find the indicator from the layout
-        indicator = (ViewPagerIndicator)root.findViewById(R.id.indicator);
-        
-        // Initialize the indicator. We need some information here:
-        // * What page do we start on.
-        // * How many pages are there in total
-        // * A callback to get page titles
-		indicator.init(0, mPagerAdapter.getCount(), mPagerAdapter);
-		
-		Resources res = getResources();
-		Drawable prev = res.getDrawable(R.drawable.indicator_prev_arrow);
-		Drawable next = res.getDrawable(R.drawable.indicator_next_arrow);
-		
-		// Set images for previous and next arrows.
-		indicator.setArrows(prev, next);
-		
-        // Set the indicator as the pageChangeListener
-        mViewPager.setOnPageChangeListener(indicator);
-        
+        indicator = (TitlePageIndicator)root.findViewById(R.id.indicator);
         new ClassesSelectionTask().execute();
         
 		return getParentContainer();
@@ -89,9 +70,10 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
  	 */
  	private void buildPages(){
         mViewPager.setAdapter(mPagerAdapter);
-        
+
+        indicator.setViewPager(mViewPager);
         // Start at a custom position
-        mViewPager.setCurrentItem(0);
+        indicator.setCurrentItem(0);
  	}
  	
  	@Override
@@ -162,11 +144,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
 
  		@Override
  		protected String doInBackground(Void ... theVoid) {
- 			String page = "";
  			try {
- 	    			page = SifeupAPI.getPrintingReply(
- 								SessionManager.getInstance().getLoginCode());
- 	    		
  	    			int error =	SifeupAPI.Errors.NO_ERROR;//SifeupAPI.JSONError(page);
  		    		switch (error)
  		    		{
@@ -196,7 +174,7 @@ public class ClassesSelectionFragment extends BaseFragment implements OnClickLis
      * @author Ângela Igreja
  	 *
  	 */
-    class PagerAdapter extends FragmentStatePagerAdapter implements ViewPagerIndicator.PageInfoProvider 
+    class PagerAdapter extends FragmentStatePagerAdapter implements TitleProvider
     {
     	
     	public PagerAdapter(FragmentManager fm) {

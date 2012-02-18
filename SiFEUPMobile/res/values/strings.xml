@@ -55,7 +55,7 @@
                                  \n\n
                                  <a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>
                                  \n\n
-                                 <b>Version: </b>0.1 
+                                 <b>Version: </b>0.4
                                  \n
                                  01/08/2011
                                  \n\n
@@ -96,12 +96,14 @@
   	<!-- Exams -->
   	<string name="title_exams">Exams</string>
   	<string name="btn_exams">Exams</string>
+  	<string name="label_no_exams">You have no scheduled exams</string>
   	
   	<!-- Subjects -->
 	<string name="btn_subjects">Subjects</string>
 	<string name="title_subjects">Subjects</string>   
 	<string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
-	
+	<string name="lb_no_subjects">You have no subjects</string>
+	   	
 	<!-- Subject Description -->
 	<string name="objectives">Objectives</string>
 	<string name="content">Content</string>
@@ -150,7 +152,8 @@
    	<!-- Lunch Menu -->
    	<string name="title_lunch_menu">Lunch Menu</string>
    	<string name="btn_lunch_menu">Lunch Menu</string>
-   	
+   	<string name="lb_no_menu">There are no menus</string>
+   	  	
     <!-- Park Occupation -->
     <string name="title_park_occupation">Park Occupation</string>
    	<string name="btn_park_occupation">Park Occupation</string>
@@ -255,9 +258,11 @@
     <string name="btn_classes_selection">Classes Selection</string>
  	<string name="btn_ok">Ok</string>
 	<string name="classes_selection_option">Option <xliff:g id="option">%1$s</xliff:g></string>
-	<string name="classes_selection_submit">Submit Options</string>
- 	   
-    
+	<string name="classes_selection_submit">Submit Options</string><!-- *************************************************************************************** -->
+    <!-- Dynamic mail -->
+    <string name="title_dynamic_mail_files">Dynamic Email Files</string>
+    <string name="btn_dynamic_mail_files">Dynamic Email Files</string>
+ 	
  	<!-- *************************************************************************************** -->
  	<!-- FRIENDS -->
  	<string name="title_friends">Friends</string> 
@@ -265,6 +270,7 @@
  	<string name="description_add">Add Friend</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
+  	<string name="label_no_friends">You have no friends</string>
     
     
  	<!-- *************************************************************************************** -->
@@ -273,7 +279,7 @@
  	<string name="btn_news">News</string>
  	<string name="news_more_info">More information:</string>
     <string name="news_error">There was a error fetching the News. Please check your connection.</string>
- 	
+  	<string name="lb_no_news">There are no news</string>
  	
  	<!-- *************************************************************************************** -->
  	<!-- MAP -->
@@ -299,5 +305,11 @@
     <string name="lb_message">Message: </string>
     <string name="lb_reply_notification">Reply </string>
     <string name="lb_obs">Comments: </string>
+  	<string name="lb_no_notification">You have no notifications</string>
+    
+    <!-- *************************************************************************************** -->
+	<!-- WEBVIEW -->
+	<string name="title_webview">SiFEUP</string>
+ 	<string name="description_browser">See in the Browser</string>
     
 </resources>

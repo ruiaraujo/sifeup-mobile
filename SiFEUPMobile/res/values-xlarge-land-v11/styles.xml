@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <style name="Theme.IOSched" parent="android:style/Theme.Holo.Light">
+    <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="textHeaderMaxLines">2</item>

@@ -102,12 +102,7 @@ public class StudentProfileFragment extends BaseFragment  implements OnItemClick
 			}
 		});
 		
-		if ( code != null )
-		{
-			new ProfileTask().execute(code);
-		}
-		else
-			new ProfileTask().execute(SessionManager.getInstance().getLoginCode());
+		new ProfileTask().execute(code);
         return getParentContainer();
     }
     
