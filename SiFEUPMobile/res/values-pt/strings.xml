@@ -200,8 +200,8 @@
     <string name="btn_all_request">Todos os Requerimentos</string>
 
     <!-- Printing -->
-    <string name="title_printing">Saldo</string>
-    <string name="btn_printing">Saldo</string>
+    <string name="title_printing">Saldo de Impressão</string>
+    <string name="btn_printing">Saldo de Impressão</string>
     <string name="lb_data_fetching">Extraindo dados...</string>
     <string name="print_balance">Saldo: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>

@@ -7,48 +7,45 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
-    
-     <!-- *************************************************************************************** -->
-   	<!-- Downloader -->
-	<string name="msg_estimating_download">Estimating download speed and time left...</string>
-	<string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+
     <!-- *************************************************************************************** -->
-   	<!-- LOGIN -->
-   	
-   	<string name="lb_login_remember">Remember Me</string>
+    <!-- Downloader -->
+    <string name="msg_estimating_download">Estimating download speed and time left...</string>
+    <string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <!-- *************************************************************************************** -->
+    <!-- LOGIN -->
+
+    <string name="lb_login_remember">Remember Me</string>
     <string name="lb_login_username">Username:</string>
     <string name="lb_login_password">Password:</string>
-    
-   	<string name="bt_cancel">Cancel</string>
-   	<string name="bt_exit">Exit</string>
+    <string name="bt_cancel">Cancel</string>
+    <string name="bt_exit">Exit</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
     <string name="bt_reset">Reset</string>
-    
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     <string name="toast_login_error_wrong_password">Your username or password are wrong.</string>
     <string name="toast_login_error_password_too_short">Password must be at least 8 characters in length.</string>
-    
     <string name="toast_server_error">The Web Service seems to be down. Try again.</string>
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
-    
-   	<!-- *************************************************************************************** -->
-   	<!-- LOGOUT -->
-   	<string name="description_logout">Log Out</string>
-   	
+
     <!-- *************************************************************************************** -->
-   	<!-- SEARCH -->
+    <!-- LOGOUT -->
+    <string name="description_logout">Log Out</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- SEARCH -->
     <string name="description_search">Search</string>
-   	<string name="search_label">SiFEUP Mobile</string>
+    <string name="search_label">SiFEUP Mobile</string>
     <string name="search_hint">Search Students</string>
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="toast_search_error">There were no results for your search.</string>
-   	
-   	<!-- *************************************************************************************** -->
-   	<!-- ABOUT -->
-   	<string name="bt_about">About</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- ABOUT -->
+    <string name="bt_about">About</string>
     <string name="bt_about_title">About SiFEUP Mobile</string>
     <string name="bt_about_message">To give FEUP students a mobile platform
                                  where they can track their academic life with ease.
@@ -61,81 +58,96 @@
                                  \n\n
                                  <b>Credits:</b>\n
                                  <ul>
-	                                 <li>Faculty of Engineering of University of Porto</li> \n
-	                                 <li>CICA</li> \n
-	                                 <li>Master in Informatics and Computing Engineering</li> \n
-	                                 <li>Distributed Systems course</li> \n
-                                 </ul>
-                                 </string>
-   	
-    <!--  MAIN  MENU -->
-   
+            <li>Faculty of Engineering of University of Porto</li>
+ \n
+	                                             <li>CICA</li>
+ \n
+	                                             <li>Master in Informatics and Computing Engineering</li>
+ \n
+	                                             <li>Distributed Systems course</li>
+ \n
+                                 </ul></string>
+
+    <!-- MAIN  MENU -->
+
+
     <!-- *************************************************************************************** -->
-   	<!-- STUDENT AREA -->
+    <!-- STUDENT AREA -->
     <string name="title_student_area">Student Area</string>
     <string name="btn_student_area">Student Area</string>
- 
-  	<!-- Schedule -->
+
+    <!-- Schedule -->
     <string name="title_schedule">Schedule</string>
     <string name="title_schedule_arg">Schedule of <xliff:g id="code">%1$s</xliff:g></string>
-  	<string name="btn_schedule">Schedule</string>
-  	<string name="description_export">Export</string>	
-  	<string name="toast_export_calendar_finished">Calendar Exported.</string>
-  	<string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
-  	<string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
-  	<string name="description_now">Go to Now</string>
-  	
-  	<!-- Class Description -->
-  	<string name="class_subject"> <b>Subject:</b> <xliff:g id="subject"> %1$s</xliff:g></string>
-    <string name="class_teacher"> <b>Teacher:</b> <xliff:g id="teacher"> %1$s</xliff:g></string>
-  	<string name="class_room"> <b>Room:</b> <xliff:g id="room">%1$s</xliff:g></string>
-  	<string name="class_team"> <b>Team:</b> <xliff:g id="team">%1$s</xliff:g></string>
-  	<string name="class_start_time"> <b>Start time:</b> <xliff:g id="start_time">%1$s</xliff:g></string>
-  	<string name="class_end_time"> <b>End time:</b> <xliff:g id="end time">%1$s</xliff:g></string>
-  	
-  	<!-- Exams -->
-  	<string name="title_exams">Exams</string>
-  	<string name="btn_exams">Exams</string>
-  	<string name="label_no_exams">You have no scheduled exams</string>
-  	
-  	<!-- Subjects -->
-	<string name="btn_subjects">Subjects</string>
-	<string name="title_subjects">Subjects</string>   
-	<string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
-	<string name="lb_no_subjects">You have no subjects</string>
-	   	
-	<!-- Subject Description -->
-	<string name="objectives">Objectives</string>
-	<string name="content">Content</string>
-	<string name="teachers">Teachers</string>
-	<string name="bibliography">Bibliography</string>
-	<string name="software">Software</string>
-	<string name="metodology">Metodology</string>
-	<string name="evaluation">Evaluation</string>
-	<string name="admission_exams">Admission to Exams</string>  
-	<string name="final_grade">Final grade</string> 
-	<string name="special_evaluation">Special evaluation (TE, DA, ...)</string> 
-	<string name="improvement_classification">Improvement of Final/Distributed Classification</string> 
-	<string name="comments">Comments</string> 
-	<string name="subject_content">Subject Content</string> 
+    <string name="btn_schedule">Schedule</string>
+    <string name="description_export">Export</string>
+    <string name="toast_export_calendar_finished">Calendar Exported.</string>
+    <string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
+    <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
+    <string name="description_now">Go to Now</string>
 
-	
-    <!-- Academic Path -->   	
-   	<string name="title_academic_path">Academic Path</string>
-    <string name="btn_academic_path">Academic Path</string> 
-    <string name="path_year"><b>Year:</b> <xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_state"><b>Status:</b> <xliff:g id="state">%1$s</xliff:g></string>
-    <string name="path_course"><b>Programme:</b> <xliff:g id="course">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semester:</b> <xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_average"><b>Average:</b> <xliff:g id="average">%1$s</xliff:g></string>
-    <string name="path_entries"><b>Number of Entries:</b> <xliff:g id="entries">%1$s</xliff:g></string>
+    <!-- Class Description -->
+    <string name="class_subject"><b>Subject:</b>
+<xliff:g id="subject"> %1$s</xliff:g></string>
+    <string name="class_teacher"><b>Teacher:</b>
+<xliff:g id="teacher"> %1$s</xliff:g></string>
+    <string name="class_room"><b>Room:</b>
+<xliff:g id="room">%1$s</xliff:g></string>
+    <string name="class_team"><b>Team:</b>
+<xliff:g id="team">%1$s</xliff:g></string>
+    <string name="class_start_time"><b>Start time:</b>
+<xliff:g id="start_time">%1$s</xliff:g></string>
+    <string name="class_end_time"><b>End time:</b>
+<xliff:g id="end time">%1$s</xliff:g></string>
+
+    <!-- Exams -->
+    <string name="title_exams">Exams</string>
+    <string name="btn_exams">Exams</string>
+    <string name="label_no_exams">You have no scheduled exams</string>
+
+    <!-- Subjects -->
+    <string name="btn_subjects">Subjects</string>
+    <string name="title_subjects">Subjects</string>
+    <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="lb_no_subjects">You have no subjects</string>
+
+    <!-- Subject Description -->
+    <string name="objectives">Objectives</string>
+    <string name="content">Content</string>
+    <string name="teachers">Teachers</string>
+    <string name="bibliography">Bibliography</string>
+    <string name="software">Software</string>
+    <string name="metodology">Metodology</string>
+    <string name="evaluation">Evaluation</string>
+    <string name="admission_exams">Admission to Exams</string>
+    <string name="final_grade">Final grade</string>
+    <string name="special_evaluation">Special evaluation (TE, DA, ...)</string>
+    <string name="improvement_classification">Improvement of Final/Distributed Classification</string>
+    <string name="comments">Comments</string>
+    <string name="subject_content">Subject Content</string>
+
+    <!-- Academic Path -->
+    <string name="title_academic_path">Academic Path</string>
+    <string name="btn_academic_path">Academic Path</string>
+    <string name="path_year"><b>Year:</b>
+<xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_state"><b>Status:</b>
+<xliff:g id="state">%1$s</xliff:g></string>
+    <string name="path_course"><b>Programme:</b>
+<xliff:g id="course">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semester:</b>
+<xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Average:</b>
+<xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Number of Entries:</b>
+<xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Grade: <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>SiFEUP WebPage</u></string>
-   
+
     <!-- Profile -->
-	<string name="profile_title_email">Email</string>
-	<string name="profile_title_email_alt">Alternative Email</string>
-   	<string name="profile_title_mobile">Mobile Phone</string>
+    <string name="profile_title_email">Email</string>
+    <string name="profile_title_email_alt">Alternative Email</string>
+    <string name="profile_title_mobile">Mobile Phone</string>
     <string name="profile_title_telephone">Telephone</string>
     <string name="profile_title_ext_mobile">Mobile Phone Extension</string>
     <string name="profile_title_ext_voip">VOIP Extension</string>
@@ -148,24 +160,24 @@
     <string name="profile_title_year">Year</string>
     <string name="profile_title_room">Room</string>
     <string name="profile_choose_email_app">Choose the email application:</string>
-        
-   	<!-- Lunch Menu -->
-   	<string name="title_lunch_menu">Lunch Menu</string>
-   	<string name="btn_lunch_menu">Lunch Menu</string>
-   	<string name="lb_no_menu">There are no menus</string>
-   	  	
+
+    <!-- Lunch Menu -->
+    <string name="title_lunch_menu">Lunch Menu</string>
+    <string name="btn_lunch_menu">Lunch Menu</string>
+    <string name="lb_no_menu">There are no menus</string>
+
     <!-- Park Occupation -->
     <string name="title_park_occupation">Park Occupation</string>
-   	<string name="btn_park_occupation">Park Occupation</string>
+    <string name="btn_park_occupation">Park Occupation</string>
 
-   	<!-- *************************************************************************************** -->
-   	<!-- STUDENT SERVICES -->
-   	<string name="title_student_services">Student Services</string>
-   	<string name="btn_student_services">Student Services</string>
-   	   	
-   	<!-- Tuition -->
-   	<string name="title_tuition">Payments</string>
-   	<string name="btn_tuition">Tuition</string>
+    <!-- *************************************************************************************** -->
+    <!-- STUDENT SERVICES -->
+    <string name="title_student_services">Student Services</string>
+    <string name="btn_student_services">Student Services</string>
+
+    <!-- Tuition -->
+    <string name="title_tuition">Payments</string>
+    <string name="btn_tuition">Tuition</string>
     <string name="title_tuition_history">Tuition History</string>
     <string name="lbl_year">Year </string>
     <string name="lbl_paid">Paid</string>
@@ -182,10 +194,10 @@
     <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
 
-	<!-- UCs Inscriptions -->
- 	<string name="title_uc_inscriptions">UCs Inscriptions</string> 
+    <!-- UCs Inscriptions -->
+    <string name="title_uc_inscriptions">UCs Inscriptions</string>
     <string name="btn_uc_inscriptions">UCs Inscriptions</string>
-    
+
     <!-- Change Password -->
     <string name="title_change_password">Change Password</string>
     <string name="btn_change_password">Change Password</string>
@@ -200,49 +212,49 @@
     <string name="set_password_message"> 
     Para alterar a sua palavra-passe siga as seguintes normas e 
     preencha os campos a seguir:
-    \n  - Conter obrigatoriamente entre 8 e 32 caracteres.
-	\n  - Não ser igual às 5 palavras-passe anteriores.
-	\n  - Conter um misto de letras e números.
-	\n  - Por questões de compatibilidade de sistemas não pode conter símbolos tais como: &amp;, %, $, (, ), /... .
-	</string>
-	<string name="lb_username">Username:</string>
-	<string name="hint_username">Username</string>
-	<string name="new_password_security">Password Strength: \n<xliff:g id="quota">%1$s</xliff:g></string>
-	<string name="new_password_too_short">Too short</string>
-	<string name="new_password_too_weak">Password too weak.</string>
-	<string name="new_password_common_word">Common word</string>
-	<string name="new_password_very_weak">Very Weak</string>
-	<string name="new_password_weak">Weak</string>
-	<string name="new_password_medium">Medium</string>
-	<string name="new_password_strong">Strong</string>
-	<string name="new_password_very_strong">Very Strong</string>
-	<string name="confirm_new_password_empty">Confirmation of new password can not be empty.</string>
-	<string name="new_password_empty">New password can not be empty.</string>
-	<string name="old_password_empty">Current password can not be empty.</string>
-	<string name="username_empty">Username can not be empty.</string>
-	<string name="password_successfully_changed">Password successfully changed.</string>
-	<string name="confirmation_password_different">The confirmation is different from the password.</string>
-	
-	
-    <!-- Card Request-->
+    <ul>
+            <il>Conter obrigatoriamente entre 8 e 32 caracteres.</il>
+            <il>Não ser igual às 5 palavras-passe anteriores.</il>
+            <il>Conter um misto de letras e números.</il>
+            <il>Por questões de compatibilidade de sistemas não pode conter símbolos tais como: &amp;, %, $, (, ), /... .</il>
+        </ul></string>
+    <string name="lb_username">Username:</string>
+    <string name="hint_username">Username</string>
+    <string name="new_password_security">Password Strength: \n<xliff:g id="quota">%1$s</xliff:g></string>
+    <string name="new_password_too_short">Too short</string>
+    <string name="new_password_too_weak">Password too weak.</string>
+    <string name="new_password_common_word">Common word</string>
+    <string name="new_password_very_weak">Very Weak</string>
+    <string name="new_password_weak">Weak</string>
+    <string name="new_password_medium">Medium</string>
+    <string name="new_password_strong">Strong</string>
+    <string name="new_password_very_strong">Very Strong</string>
+    <string name="confirm_new_password_empty">Confirmation of new password can not be empty.</string>
+    <string name="new_password_empty">New password can not be empty.</string>
+    <string name="old_password_empty">Current password can not be empty.</string>
+    <string name="username_empty">Username can not be empty.</string>
+    <string name="password_successfully_changed">Password successfully changed.</string>
+    <string name="confirmation_password_different">The confirmation is different from the password.</string>
+
+    <!-- Card Request -->
     <string name="title_card_request">Card Request</string>
     <string name="btn_card_request">Card Request</string>
 
     <!-- Scholar Profit -->
-    <string name="title_scholar_profit">Scholar Profit</string> 
-    <string name="btn_scholar_profit">Scholar Profit</string>  
-               
- 	<!-- Requests -->
- 	<string name="title_requests">Requests</string>
+    <string name="title_scholar_profit">Scholar Profit</string>
+    <string name="btn_scholar_profit">Scholar Profit</string>
+
+    <!-- Requests -->
+    <string name="title_requests">Requests</string>
     <string name="title_all_requests">All Requests</string>
     <string name="title_new_request">New Request</string>
     <string name="btn_requests">Requests</string>
     <string name="btn_new_request">New Request</string>
     <string name="btn_all_request">All Requests</string>
-    
+
     <!-- Printing -->
     <string name="title_printing">Printing Quota</string>
- 	<string name="btn_printing">Printing Quota</string>
+    <string name="btn_printing">Printing Quota</string>
     <string name="lb_data_fetching">Fetching data...</string>
     <string name="print_balance">Printing Quota: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">You can print up to <xliff:g id="pages">%1$s</xliff:g> black A4 pages.</string>
@@ -252,50 +264,48 @@
     <string name="lb_print_ref_title">Generated Reference</string>
     <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
     <string name="print_ref_share_title">Share Reference</string>
-    
+
     <!-- Classes Selection -->
     <string name="title_classes_selection">Classes Selection</string>
     <string name="btn_classes_selection">Classes Selection</string>
- 	<string name="btn_ok">Ok</string>
-	<string name="classes_selection_option">Option <xliff:g id="option">%1$s</xliff:g></string>
-	<string name="classes_selection_submit">Submit Options</string><!-- *************************************************************************************** -->
+    <string name="btn_ok">Ok</string>
+    <string name="classes_selection_option">Option <xliff:g id="option">%1$s</xliff:g></string>
+    <string name="classes_selection_submit">Submit Options</string> <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->
     <string name="title_dynamic_mail_files">Dynamic Email Files</string>
     <string name="btn_dynamic_mail_files">Dynamic Email Files</string>
- 	
- 	<!-- *************************************************************************************** -->
- 	<!-- FRIENDS -->
- 	<string name="title_friends">Friends</string> 
- 	<string name="btn_friends">Friends</string> 
- 	<string name="description_add">Add Friend</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- FRIENDS -->
+    <string name="title_friends">Friends</string>
+    <string name="btn_friends">Friends</string>
+    <string name="description_add">Add Friend</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
-  	<string name="label_no_friends">You have no friends</string>
-    
-    
- 	<!-- *************************************************************************************** -->
- 	<!-- NEWS -->
- 	<string name="title_news">News</string>
- 	<string name="btn_news">News</string>
- 	<string name="news_more_info">More information:</string>
+    <string name="label_no_friends">You have no friends</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- NEWS -->
+    <string name="title_news">News</string>
+    <string name="btn_news">News</string>
+    <string name="news_more_info">More information:</string>
     <string name="news_error">There was a error fetching the News. Please check your connection.</string>
-  	<string name="lb_no_news">There are no news</string>
- 	
- 	<!-- *************************************************************************************** -->
- 	<!-- MAP -->
-	<string name="description_map">Map</string>
+    <string name="lb_no_news">There are no news</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- MAP -->
+    <string name="description_map">Map</string>
     <string name="title_map">Map</string>
     <string name="btn_map">Map</string>
-	
-	
-	<!-- *************************************************************************************** -->
-	<!-- SETTINGS -->
-	<string name="title_settings">Settings</string>
-    <string name="btn_settings">Settings</string>
-    
+
     <!-- *************************************************************************************** -->
-	<!-- NOTIFICATIONS -->
-	<string name="title_notifications">Notifications</string>
+    <!-- SETTINGS -->
+    <string name="title_settings">Settings</string>
+    <string name="btn_settings">Settings</string>
+
+    <!-- *************************************************************************************** -->
+    <!-- NOTIFICATIONS -->
+    <string name="title_notifications">Notifications</string>
     <string name="btn_notifications">Notifications</string>
     <string name="lb_date">Date: </string>
     <string name="lb_priority">Priority: </string>
@@ -305,23 +315,23 @@
     <string name="lb_message">Message: </string>
     <string name="lb_reply_notification">Reply </string>
     <string name="lb_obs">Comments: </string>
-  	<string name="lb_no_notification">You have no notifications</string>
-    
+    <string name="lb_no_notification">You have no notifications</string>
+
     <!-- *************************************************************************************** -->
-	<!-- WEBVIEW -->
-	<string name="title_webview">SiFEUP</string>
- 	<string name="description_browser">See in the Browser</string>
- 	
+    <!-- WEBVIEW -->
+    <string name="title_webview">SiFEUP</string>
+    <string name="description_browser">See in the Browser</string>
+
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
     <string name="notification_uploader_title">SiFEUP Mobile</string>
     <string name="notification_uploader_content">Uploading\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_finished">Finished uploading \n<xliff:g id="file">%1$s</xliff:g></string>
-    <string name="notification_uploader_error_credential_title">Wrong Credentials</string>    
-    <string name="notification_uploader_error_credential">Please login at SiFEUP Mobile.</string>    
-	<string name="notification_uploader_error_host_title">Error connecting</string>    
-	<string name="notification_uploader_error_host">Please be inside FEUP\'s network or connected through VPN.</string>
-	<string name="notification_uploader_error_title">Error</string>
-	<string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
-        
+    <string name="notification_uploader_error_credential_title">Wrong Credentials</string>
+    <string name="notification_uploader_error_credential">Please login at SiFEUP Mobile.</string>
+    <string name="notification_uploader_error_host_title">Error connecting</string>
+    <string name="notification_uploader_error_host">Please be inside FEUP\'s network or connected through VPN.</string>
+    <string name="notification_uploader_error_title">Error</string>
+    <string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
+
 </resources>
