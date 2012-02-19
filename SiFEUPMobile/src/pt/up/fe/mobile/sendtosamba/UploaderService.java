@@ -24,20 +24,6 @@ public class UploaderService extends Service {
 	 */
 	public final static String PASSWORD_KEY = "pt.up.fe.sendtosamba.PASSWORD";
 
-	/**
-	 * Class for clients to access. Because we know this service always runs in
-	 * the same process as its clients, we don't need to deal with IPC.
-	 */
-	public class LoggerServiceBinder extends Binder {
-		public UploaderService getService() {
-			return UploaderService.this;
-		}
-	}
-
-	@Override
-	public void onCreate() {
-	}
-
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
 		Log.i("LoggerService", "Received start id " + startId + ": " + i);
@@ -85,6 +71,18 @@ public class UploaderService extends Service {
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return START_STICKY;
+	}
+
+	
+
+	/**
+	 * Class for clients to access. Because we know this service always runs in
+	 * the same process as its clients, we don't need to deal with IPC.
+	 */
+	public class LoggerServiceBinder extends Binder {
+		public UploaderService getService() {
+			return UploaderService.this;
+		}
 	}
 
 	public IBinder onBind(Intent arg0) {
