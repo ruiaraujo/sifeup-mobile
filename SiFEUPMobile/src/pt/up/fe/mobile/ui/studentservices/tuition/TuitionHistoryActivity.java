@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.ui.tuition;
+package pt.up.fe.mobile.ui.studentservices.tuition;
 
 
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;

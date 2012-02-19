@@ -2,8 +2,8 @@ package pt.up.fe.mobile.ui.studentservices;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.ui.tuition.TuitionHistoryActivity;
-import pt.up.fe.mobile.ui.tuition.TuitionRefListActivity;
+import pt.up.fe.mobile.ui.studentservices.tuition.TuitionHistoryActivity;
+import pt.up.fe.mobile.ui.studentservices.tuition.TuitionRefListActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;

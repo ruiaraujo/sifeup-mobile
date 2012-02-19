@@ -158,7 +158,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_classes_selection" />
         <activity
-            android:name=".ui.tuition.TuitionActivity"
+            android:name=".ui.studentservices.tuition.TuitionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition" >
             <intent-filter>
@@ -169,7 +169,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.tuition.TuitionHistoryActivity"
+            android:name=".ui.studentservices.tuition.TuitionHistoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_history" >
             <intent-filter>
@@ -180,7 +180,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.tuition.TuitionMenuActivity"
+            android:name=".ui.studentservices.tuition.TuitionMenuActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_menu" >
             <intent-filter>
@@ -191,7 +191,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.tuition.TuitionRefListActivity"
+            android:name=".ui.studentservices.tuition.TuitionRefListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_refs_list" >
             <intent-filter>
@@ -202,7 +202,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.tuition.TuitionRefDetailActivity"
+            android:name=".ui.studentservices.tuition.TuitionRefDetailActivity"
             android:label="@string/title_tuition_ref_detail" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

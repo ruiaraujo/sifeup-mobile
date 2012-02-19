@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui.tuition;
+package pt.up.fe.mobile.ui.studentservices.tuition;
 
 
 

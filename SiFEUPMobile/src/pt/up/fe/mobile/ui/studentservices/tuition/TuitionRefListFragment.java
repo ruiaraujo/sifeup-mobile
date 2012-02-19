@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pt.up.fe.mobile.ui.tuition;
+package pt.up.fe.mobile.ui.studentservices.tuition;
 
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.datatypes.RefMB;
 import pt.up.fe.mobile.datatypes.YearsTuition;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.sifeup.SifeupAPI;
@@ -45,64 +46,70 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class TuitionHistoryFragment extends BaseFragment implements OnItemClickListener {
+public class TuitionRefListFragment extends BaseFragment implements OnItemClickListener {
 
+	private SimpleAdapter adapter;
+	private YearsTuition currentYear;
     private ListView list;
-    private SimpleAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionHistory");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionRefsList");
     }
     
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
-		list = (ListView) root.findViewById(R.id.generic_list);
-		new TuitionTask().execute();
-		return getParentContainer(); //this is mandatory.
+		 super.onCreateView(inflater, container, savedInstanceState);
+		 View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		 list = (ListView) root.findViewById(R.id.generic_list);
+		 new TuitionTask().execute();
+		 return getParentContainer(); //this is mandatory.
 	 }
-	
-    private void loadList()
-    {
-    	String[] from = new String[] {"year", "paid", "to_pay"};
-        int[] to = new int[] { R.id.tuition_history_year, R.id.tuition_history_paid, R.id.tuition_history_to_pay};
+    
+    private void loadList() 
+    {		
+    	String[] from = new String[] {"name", "amount", "date"};
+        int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount, R.id.tuition_ref_date};
 	    //prepare the list of all records
         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+        ArrayList<YearsTuition> history=SessionManager.tuitionHistory.getHistory();
+        currentYear=history.get(SessionManager.tuitionHistory.currentYear);
          
-        for(YearsTuition y: SessionManager.tuitionHistory.getHistory()){
+        for(RefMB r: currentYear.getReferences()){
             HashMap<String, String> map = new HashMap<String, String>();
-            
-            map.put("year", getString(R.string.lbl_year)+" "+y.getYear());
-            map.put("paid", getString(R.string.lbl_paid)+": "+y.getTotal_paid()+"€");
-            if(y.getTotal_in_debt()>0.0)
-            	map.put("to_pay", getString(R.string.lbl_still_to_pay)+": "+y.getTotal_in_debt()+"€");
+        	map.put("name", r.getName());
+        	map.put("amount", Double.toString(r.getAmount())+"€");
+        	map.put("date", r.getStartDate().format3339(true)+" "+getString(R.string.interval_separator)+" "+r.getEndDate().format3339(true));
             fillMaps.add(map);
         }
 		 
         // fill in the grid_item layout
-        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_history, from, to);
+        adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_ref, from, to);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
-        Log.i("Propinas", "List view loaded successfully");
-    }
+	}
     
-	 /** Classe privada para a busca de dados ao servidor */
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    	currentYear.setSelectedReference(position);
+    	startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));		
+	}	
+
+    /** Classe privada para a busca de dados ao servidor */
     private class TuitionTask extends AsyncTask<Void, Void, String> {
 
     	protected void onPreExecute (){
-    		showLoadingScreen();
+    		showLoadingScreen();           
     	}
 
         protected void onPostExecute(String result) {
         	if ( !result.equals("") )
         	{
 				Log.i("Propinas","Propinas Loaded successfully");
-	            loadList();
-	            showMainScreen();
-
+				loadList();
+				showMainScreen();
     		}
 			else
 			{	
@@ -115,8 +122,6 @@ public class TuitionHistoryFragment extends BaseFragment implements OnItemClickL
 					return;
 				}
 			}
-        	if ( getActivity() != null) 
-        		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
         }
 
 		@Override
@@ -152,8 +157,4 @@ public class TuitionHistoryFragment extends BaseFragment implements OnItemClickL
 		}
     }
 
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-    	SessionManager.tuitionHistory.setSelected_year(position);
-    	startActivity(new Intent(getActivity(), TuitionActivity.class));		
-	}	
 }
