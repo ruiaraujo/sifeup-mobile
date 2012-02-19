@@ -23,8 +23,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.RefMB;
-import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.datatypes.RefMB;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;

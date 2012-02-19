@@ -5,7 +5,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;

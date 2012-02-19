@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.sifeup;
 
 import pt.up.fe.mobile.ui.LoginActivity;
 import android.content.Context;

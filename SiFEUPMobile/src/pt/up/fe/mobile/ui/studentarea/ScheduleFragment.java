@@ -13,9 +13,9 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Block;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.datatypes.Block;
+import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;

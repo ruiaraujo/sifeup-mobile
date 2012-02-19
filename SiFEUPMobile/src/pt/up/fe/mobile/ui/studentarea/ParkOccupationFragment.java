@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.json.JSONException;
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Park;
-import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.datatypes.Park;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;

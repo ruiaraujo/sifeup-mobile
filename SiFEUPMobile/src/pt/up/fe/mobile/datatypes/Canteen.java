@@ -1,9 +1,10 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.datatypes;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import android.os.Parcel;
 import android.os.Parcelable;

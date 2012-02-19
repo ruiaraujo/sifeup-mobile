@@ -8,7 +8,9 @@ import java.util.List;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.*;
+import pt.up.fe.mobile.datatypes.Payment;
+import pt.up.fe.mobile.datatypes.YearsTuition;
+import pt.up.fe.mobile.sifeup.*;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 

@@ -1,4 +1,7 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.sifeup;
+
+import pt.up.fe.mobile.datatypes.FriendsData;
+import pt.up.fe.mobile.datatypes.TuitionHistory;
 
 
 /**

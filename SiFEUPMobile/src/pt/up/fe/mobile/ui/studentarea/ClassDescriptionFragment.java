@@ -1,7 +1,7 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Block;
+import pt.up.fe.mobile.datatypes.Block;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 import pt.up.fe.mobile.ui.BaseFragment;

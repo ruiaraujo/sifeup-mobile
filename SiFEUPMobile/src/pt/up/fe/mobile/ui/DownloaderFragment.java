@@ -9,8 +9,8 @@ import java.io.FileOutputStream;
 import javax.net.ssl.HttpsURLConnection;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
+import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;

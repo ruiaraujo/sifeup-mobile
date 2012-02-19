@@ -8,12 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Friend;
-import pt.up.fe.mobile.service.Profile;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.Student;
-import pt.up.fe.mobile.service.Profile.ProfileDetail;
+import pt.up.fe.mobile.datatypes.Friend;
+import pt.up.fe.mobile.datatypes.Profile;
+import pt.up.fe.mobile.datatypes.Student;
+import pt.up.fe.mobile.datatypes.Profile.ProfileDetail;
+import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;

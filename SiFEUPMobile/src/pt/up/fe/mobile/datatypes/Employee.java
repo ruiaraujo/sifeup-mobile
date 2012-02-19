@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.datatypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.datatypes.Profile.ProfileDetail;
+import pt.up.fe.mobile.datatypes.Profile.Type;
 import android.content.res.Resources;
 import android.util.Log;
 

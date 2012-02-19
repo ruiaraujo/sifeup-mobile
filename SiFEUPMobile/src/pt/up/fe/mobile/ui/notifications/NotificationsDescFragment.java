@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Notification;
+import pt.up.fe.mobile.datatypes.Notification;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;

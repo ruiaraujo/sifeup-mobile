@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.datatypes;
 
 import java.util.Vector;
 

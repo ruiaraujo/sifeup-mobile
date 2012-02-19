@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.service;
+package pt.up.fe.mobile.sifeup;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

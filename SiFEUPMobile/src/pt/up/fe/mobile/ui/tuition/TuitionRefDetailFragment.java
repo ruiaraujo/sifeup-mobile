@@ -26,7 +26,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.*;
+import pt.up.fe.mobile.datatypes.RefMB;
+import pt.up.fe.mobile.datatypes.YearsTuition;
+import pt.up.fe.mobile.sifeup.*;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 public class TuitionRefDetailFragment extends Fragment {

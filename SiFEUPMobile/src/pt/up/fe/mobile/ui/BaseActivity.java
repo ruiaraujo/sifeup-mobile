@@ -6,8 +6,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupUtils;
+import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 

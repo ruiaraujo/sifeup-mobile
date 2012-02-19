@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Friend;
-import pt.up.fe.mobile.service.SessionManager;
+import pt.up.fe.mobile.datatypes.Friend;
+import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;

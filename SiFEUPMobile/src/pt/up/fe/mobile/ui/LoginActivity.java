@@ -4,9 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.SessionManager;
-import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.SifeupUtils;
+import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
+import pt.up.fe.mobile.sifeup.SifeupUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

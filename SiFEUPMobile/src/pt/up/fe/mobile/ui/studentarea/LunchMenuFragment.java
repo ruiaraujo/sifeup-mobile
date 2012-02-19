@@ -12,9 +12,9 @@ import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.service.Canteen;
-import pt.up.fe.mobile.service.SifeupAPI;
-import pt.up.fe.mobile.service.Dish;
+import pt.up.fe.mobile.datatypes.Canteen;
+import pt.up.fe.mobile.datatypes.Dish;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
