@@ -47,26 +47,16 @@ public class Park implements Serializable
 	 * 
 	 * @param page
 	 * @return
+	 * @throws JSONException 
 	 */
-    public boolean JSONParkOccupation(String page)
+    public Park JSONParkOccupation(String page) throws JSONException
     {
-    	JSONObject jObject;
-		try 
-		{
-			jObject = new JSONObject(page);
+    	JSONObject jObject = new JSONObject(page);
 			
-			if(jObject.has("lugares")) this.places = jObject.getInt("lugares");
-			{
-				Log.e("JSON", "Park Occupation found");
-				return true;
-			}
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-    	Log.e("JSON", "Park Occupation not found");
-    	return false;
+		if(jObject.has("lugares"))
+			this.places = jObject.getInt("lugares");
+		return this;
+
     }
     
 }

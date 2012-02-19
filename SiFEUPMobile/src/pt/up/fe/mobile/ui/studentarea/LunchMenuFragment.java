@@ -4,27 +4,22 @@ package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Canteen;
 import pt.up.fe.mobile.datatypes.Dish;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
+import pt.up.fe.mobile.sifeup.CanteenUtils;
+import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.LoginActivity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +36,7 @@ import android.widget.Toast;
  * @author Ângela Igreja
  * 
  */
-public class LunchMenuFragment extends BaseFragment 
+public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 {
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  viewPager; 
@@ -79,7 +74,7 @@ public class LunchMenuFragment extends BaseFragment
         else
         {
             canteens = new ArrayList<Canteen>();
-            new LunchMenusTask().execute();
+            CanteenUtils.getCanteensReply(this);
         }
        
 		return getParentContainer();//mandatory
@@ -99,121 +94,12 @@ public class LunchMenuFragment extends BaseFragment
         indicator.setCurrentItem(0);
  	}
  	
-	
-	/**
- 	 * Lunch Menus Task
- 	 * 
- 	 */
- 	 private class LunchMenusTask extends AsyncTask<Void, Void, String> {
-
-		protected void onPreExecute (){
-			showLoadingScreen();
-		}
-
-		 protected void onPostExecute(String ret) {
-		 	if ( getActivity() == null )
-		 		return;
-		 	if ( ret.equals("") )
-			{
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-					getActivity().finish();
-					return;
-				}
-			}
-			else if ( ret.equals("Error") ){	
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
-					return;
-				}
-			}
-			else{
-				Log.e("Login","success");
-				if ( canteens.isEmpty() )
-				{
-				    showEmptyScreen(getString(R.string.lb_no_menu));
-				    return;
-				}
-			    buildPages();
-			    showMainScreen();
-			}
-		}
-
- 		@Override
- 		protected String doInBackground(Void ... theVoid) {
- 			String page = "";
- 			
- 			try 
- 			{	
-    			page = SifeupAPI.getCanteensReply();
-    			
-    			int error =	SifeupAPI.JSONError(page);
-	    		
-    			switch (error)
-	    		{
-	    			case SifeupAPI.Errors.NO_AUTH:
-	    				return "Error";
-	    			case SifeupAPI.Errors.NO_ERROR:
-	    				JSONLunchMenu(page);
-	    				return "Sucess";
-	    			case SifeupAPI.Errors.NULL_PAGE:
-	    				return "";
-	    		}
-
- 	    		return "";
- 			} catch ( JSONException e) {
- 				if ( getActivity() != null ) 
- 				//	Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
- 				e.printStackTrace();
- 			}
- 			return "";
- 		}
-     }
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){
  	    outState.putParcelableArrayList("canteens", canteens);
  	}
 
-     
-     /** 
- 	 * Canteens Parser.
- 	 * Returns true in case of correct parsing.
- 	 * 
- 	 * @param page
- 	 * @return boolean
- 	 * @throws JSONException
- 	 */
-     public boolean JSONLunchMenu(String page) throws JSONException
-     {
-     	JSONObject jObject = new JSONObject(page);
-     	     	
-     	if(jObject.has("cantinas"))
-     	{
-     		Log.e("JSON", "founded cantinas");
-     		JSONArray jArray = jObject.getJSONArray("cantinas");
-
-     		for(int i = 0; i < jArray.length(); i++)
-     		{
-    
-     			JSONObject jBlock = jArray.getJSONObject(i);
-     
-     			Canteen canteen = new Canteen();
-     			
-     			canteen.parseJson(jBlock);
-     			if (  canteen.getMenus().length > 0  )
-     			    // add canteen to canteens
-     			    this.canteens.add(canteen);
-     		}
-     		Log.e("JSON", "loaded canteens");
-     		return true;
-     	}
-     	Log.e("JSON", "canteens not found");
-     	return false;
-    }
 	
 	/**
  	 * Pager Menu Adapter
@@ -337,4 +223,33 @@ public class LunchMenuFragment extends BaseFragment
         }
 
     }
+
+	public void onError(ERROR_TYPE error) {
+		if ( getActivity() == null )
+	 		return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
+			((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			break;
+		case NETWORK:
+			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+		default:
+			//TODO: general error
+			break;
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public void onResultReceived(Object... results) {
+		canteens = (ArrayList<Canteen>) results[0];
+		if ( canteens.isEmpty() )
+		{
+		    showEmptyScreen(getString(R.string.lb_no_menu));
+		    return;
+		}
+	    buildPages();
+	    showMainScreen();
+	}
 }
