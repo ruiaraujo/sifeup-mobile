@@ -112,6 +112,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
     
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_subject_schedule) {
+        	if ( subject == null || subject.getCode() == null )
+        		return true;
 			Intent i = new Intent(getActivity() , ScheduleActivity.class);
 			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_UC) ;
 			i.putExtra(ScheduleFragment.SCHEDULE_CODE, subject.getCode()  );
