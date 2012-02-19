@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -13,6 +12,7 @@ import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.datatypes.Student;
 import pt.up.fe.mobile.datatypes.Subject;
 import pt.up.fe.mobile.datatypes.SubjectContent;
 import pt.up.fe.mobile.datatypes.Subject.Book;
@@ -21,7 +21,8 @@ import pt.up.fe.mobile.datatypes.Subject.Software;
 import pt.up.fe.mobile.datatypes.Subject.Teacher;
 import pt.up.fe.mobile.datatypes.SubjectContent.File;
 import pt.up.fe.mobile.datatypes.SubjectContent.Folder;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
+import pt.up.fe.mobile.sifeup.ResponseCommand;
+import pt.up.fe.mobile.sifeup.SubjectUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -33,13 +34,11 @@ import pt.up.fe.mobile.ui.webclient.WebviewFragment;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SubjectDescriptionFragment extends BaseFragment implements OnPageChangeListener  {
+public class SubjectDescriptionFragment extends BaseFragment implements OnPageChangeListener, ResponseCommand {
 	
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE"; 
@@ -60,8 +59,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 	private String code;
 	private String year;
 	private String period;
-    Subject subject = new Subject();
-    SubjectContent subjectContent = new SubjectContent();
+    Subject subject;
+    SubjectContent subjectContent;
     /** */
     private PagerSubjectAdapter pagerAdapter;
     
@@ -99,9 +98,13 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		viewPager.setAdapter(new PagerSubjectAdapter());
         // Find the indicator from the layout
         indicator = (TabPageIndicator)root.findViewById(R.id.indicator_subject);
+ 		// Create our custom adapter to supply pages to the viewpager.
+        pagerAdapter = new PagerSubjectAdapter();
+        viewPager.setAdapter(pagerAdapter);
         indicator.setViewPager(viewPager);
-        new SubjectDescriptionTask().execute();
-		
+        // Set the indicator as the pageChangeListener
+        indicator.setOnPageChangeListener(this);
+        SubjectUtils.getSubjectReply(code, year, period, this);		
         return getParentContainer();
 	}
 
@@ -137,120 +140,45 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
         return super.onOptionsItemSelected(item);
     }
 
-	private void buildPages(){
- 		// Create our custom adapter to supply pages to the viewpager.
-        pagerAdapter = new PagerSubjectAdapter();
+    
 
-        viewPager.setAdapter(pagerAdapter);
-        indicator.setViewPager(viewPager);
-        // Set the indicator as the pageChangeListener
-        indicator.setOnPageChangeListener(this);
-        
-        // Start at a custom position
-        indicator.setCurrentItem(0);
-        
-        
- 	}
- 	
-    /** 
-     * Private class to fetch data to server
-     * 
-     * @author Ângela Igreja
-     * 
-     */
-    private class SubjectDescriptionTask extends AsyncTask<Void, Void, String> {
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			((BaseActivity) getActivity())
+					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			return;
+		default:// TODO: add general error message
+			break;
 
-    	protected void onPreExecute (){
-    		showLoadingScreen();
-    	}
-
-        protected void onPostExecute(String result) {
-			if ( getActivity() == null )
-				 return;
-        	if ( result.equals("Success") )
-        	{
-				Log.e("Subjects","success");
-				
-				 try {
-					 buildPages();
-			         showMainScreen();
-			         Log.e("JSON", "subjects visual list loaded");
-				 }
-				 catch (Exception ex){
-					 ex.printStackTrace();
-					 if ( getActivity() != null )
-							Toast.makeText(getActivity(), "F*** Fragments", Toast.LENGTH_LONG).show();
-
-				 }
-    		}
-			else if ( result.equals("Error") ){	
-				Log.e("Login","error");
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
-					return;
-				}
-			}
-			else if ( result.equals("") )
-			{
-				if ( getActivity() != null ) 	
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-					getActivity().finish();
-					return;
-				}
-			}
-        }
-
-		@Override
-		protected String doInBackground(Void ... theVoid) 
-		{
-			String page = "";
-		  	try {
-	    			page = SifeupAPI.getSubjectDescReply(code,year,period);
-	    			int error =	SifeupAPI.JSONError(page);
-		    		
-	    			switch (error)
-		    		{
-		    			case SifeupAPI.Errors.NO_AUTH:
-		    				return "Error";
-		    			case SifeupAPI.Errors.NO_ERROR:
-		    				if (subject.JSONSubject(page) )
-		    				{
-		    					break;
-		    				}
-		    				else
-		    					return "";
-		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "";	
-		    		}
-	    			page = SifeupAPI.getSubjectContentReply(code,year,period);
-	    			error =	SifeupAPI.JSONError(page);
-		    		
-	    			switch (error)
-		    		{
-		    			case SifeupAPI.Errors.NO_AUTH:
-		    				return "Error";
-		    			case SifeupAPI.Errors.NO_ERROR:
-		    				if (subjectContent.JSONSubjectContent(page) )
-		    				{
-		    					return "Success";
-		    				}
-		    				else
-		    					return "";
-		    			case SifeupAPI.Errors.NULL_PAGE:
-		    				return "";	
-		    		}
-			} catch (JSONException e) {
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}
-
-			return "";
 		}
-    }
+	}
+
+	public void onResultReceived(Object... results) {
+		if (getActivity() == null)
+			return;
+		if (subject == null )
+		{
+			subject = (Subject) results[0];
+			SubjectUtils.getSubjectContentReply(code, year, period, this);
+			return;
+		}
+		if ( subjectContent == null )
+		{
+			subjectContent = (SubjectContent) results[0];
+			pagerAdapter.notifyDataSetChanged();
+	        // Start at a custom position
+	        indicator.setCurrentItem(0);
+	        indicator.notifyDataSetChanged();
+	        showMainScreen();	
+		}
+	}
+
     
     /**
  	 * Pager Subject Adapter
@@ -304,6 +232,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 
 		@Override
 		public int getCount() {
+			if ( subject == null  || subjectContent == null)
+				return 0;
 			return 13;
 		}
 

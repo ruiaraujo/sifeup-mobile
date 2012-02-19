@@ -9,6 +9,10 @@
     <string name="description_share">Partilhar</string>
 
     <!-- *************************************************************************************** -->
+    <!-- Downloader -->
+    <string name="msg_estimating_download">Estimando velocidade e tempo restante...</string>
+    <string name="msg_dl_speed">Velocidade: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nTempo restante: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
     <string name="lb_login_remember">Lembrar-se de mim</string>
@@ -100,6 +104,7 @@
     <string name="special_evaluation">Avaliação Especial (TE, DA, ...)</string>
     <string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string>
     <string name="comments">Observações</string>
+    <string name="subject_content">Conteúdos</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>
@@ -182,7 +187,24 @@
             <li>Não ser igual às 5 palavras-passe anteriores.</li>
             <li>Conter um misto de letras e números;</li>
         </ul></string>
-
+    <string name="lb_username">Utilizador:</string>
+    <string name="hint_username">Utilizador</string>
+    <string name="new_password_security">Força da senha: \n<xliff:g id="quota">%1$s</xliff:g></string>
+    <string name="new_password_too_short">Muito curta</string>
+    <string name="new_password_too_weak">Senha muito fraca.</string>
+    <string name="new_password_common_word">Palavra comun</string>
+    <string name="new_password_very_weak">Muito Fraca</string>
+    <string name="new_password_weak">Fraca</string>
+    <string name="new_password_medium">Média</string>
+    <string name="new_password_strong">Forte</string>
+    <string name="new_password_very_strong">Muito Forte</string>
+    <string name="confirm_new_password_empty">Confirmação da senha nova não pode estar vazia.</string>
+    <string name="new_password_empty">Senha nova não pode estar vazia.</string>
+    <string name="old_password_empty">Senha actual não pode estar vazia.</string>
+    <string name="username_empty">Utilizador não pode estar vazia.</string>
+    <string name="password_successfully_changed">Senha alterada com sucesso.</string>
+    <string name="confirmation_password_different">A confirmação é diferente da senha.</string>
+        
     <!-- Card Request -->
     <string name="title_card_request">Pedir Cartão</string>
     <string name="btn_card_request">Pedir Cartão</string>

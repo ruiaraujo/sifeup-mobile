@@ -52,7 +52,7 @@ public class Notification  implements Serializable {
 	 * 
 	 * @param page
 	 */
-    public boolean JSONNotification(JSONObject jObject){
+    public Notification JSONNotification(JSONObject jObject){
 	
     	try {
     		if(jObject.has("codigo")) this.code = jObject.getInt("codigo");
@@ -66,13 +66,13 @@ public class Notification  implements Serializable {
 			if(jObject.has("mensagem")) this.setMessage(jObject.getString("mensagem"));
 			if(jObject.has("obs")) this.setObs(jObject.getString("obs"));
 		
-			return true;
+			return this;
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
     	Log.e("JSON", "Notification not found");
-    	return false;
+    	return null;
     }
 
 	public void setLink(String link) {

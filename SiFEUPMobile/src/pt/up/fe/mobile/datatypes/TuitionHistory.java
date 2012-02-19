@@ -28,7 +28,7 @@ public class TuitionHistory {
 			jHistory = historyInfo.getJSONArray("pagamentos");
 		} catch (JSONException e1) {
 			Log.e("Propinas", "error getting the array pagamentos");
-			//e1.printStackTrace();
+			e1.printStackTrace();
 			return false;
 		}
 		for(int i=0; i<jHistory.length(); i++)
@@ -43,7 +43,7 @@ public class TuitionHistory {
 				
 			} catch (JSONException e) {
 				Log.e("Propinas", "Error getting the year from the JSON list in tuitions");
-				//e.printStackTrace();
+				e.printStackTrace();
 				return false;
 			}
 		}
