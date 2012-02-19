@@ -61,7 +61,7 @@ public class SimpleFTP {
      * Connects to an FTP server and logs in with the supplied username
      * and password.
      */
-    public synchronized void connect(String host, int port, String user, String pass) throws IOException {
+    public synchronized void connect(String host, int port, String user, String pass) throws WrongCredentials, IOException {
         if (socket != null) {
             throw new IOException("SimpleFTP is already connected. Disconnect first.");
         }
@@ -85,7 +85,7 @@ public class SimpleFTP {
         
         response = readLine();
         if (!response.startsWith("230 ")) {
-            throw new IOException("SimpleFTP was unable to log in with the supplied password: " + response);
+            throw new WrongCredentials("SimpleFTP was unable to log in with the supplied password: " + response);
         }
         
         // Now logged in.
@@ -262,6 +262,14 @@ public class SimpleFTP {
             System.out.println("< " + line);
         }
         return line;
+    }
+    
+    public class WrongCredentials extends IOException{
+
+		public WrongCredentials(String string) {
+			super(string);
+		}
+    	
     }
     
     private Socket socket = null;

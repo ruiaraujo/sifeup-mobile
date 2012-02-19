@@ -1,7 +1,8 @@
 <resources>
+
     <!-- Base application theme is the default theme. -->
     <style name="Theme" parent="@style/Theme.Sherlock.Light" />
-    
+
     <!-- Start with the Holographic Light theme -->
     <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
@@ -16,7 +17,14 @@
         <item name="android:windowBackground">@drawable/window_background_home</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
     </style>
-    
+
+    <style name="Theme.Invisible" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="Theme.SiFEUP.TabPageIndicator" parent="style/Theme.SiFEUP">
         <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
         <item name="vpiTabTextStyle">@style/TabPageIndicator.Text</item>
@@ -33,10 +41,10 @@
         <item name="selectedBold">true</item>
     </style>
 
-    
     <style name="TabPageIndicator" parent="Widget.TabPageIndicator">
         <item name="android:background">@drawable/tab_indicator</item>
     </style>
+
     <style name="TabPageIndicator.Text" parent="Widget.TabPageIndicator.Text">
         <item name="android:textColor">@color/body_text_1</item>
     </style>
@@ -51,7 +59,7 @@
         <item name="android:textColor">@color/accent_1</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
     <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
@@ -77,12 +85,11 @@
         <item name="android:textColor">@color/body_text_2</item>
         <item name="android:paddingLeft">12dip</item>
     </style>
-    
-       <style name="GrayTitle">
+
+    <style name="GrayTitle">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="android:textColor">@color/body_text_grey</item>
     </style>
-    
 
     <style name="ListItemContainerBase">
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
@@ -106,8 +113,6 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
     </style>
-
-   
 
     <!-- body content -->
 
@@ -152,7 +157,7 @@
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:background">@drawable/btn</item>
     </style>
-    
+
     <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -168,6 +173,5 @@
         <item name="android:typeface">sans</item>
         <item name="android:paddingLeft">@dimen/body_padding_medium</item>
     </style>
-    
-    
+
 </resources>

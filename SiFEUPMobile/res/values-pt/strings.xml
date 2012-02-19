@@ -270,5 +270,18 @@
     <!-- WEBVIEW -->
     <string name="title_webview">SiFEUP</string>
     <string name="description_browser">Ver no Browser</string>
-
+        
+    <!-- *************************************************************************************** -->
+    <!-- SAMBA UPLOADER -->
+    <string name="notification_uploader_title">SiFEUP Mobile</string>
+    <string name="notification_uploader_content">Enviando\n<xliff:g id="file">%1$s</xliff:g></string>
+    <string name="notification_uploader_finished">Terminado o envio de \n<xliff:g id="file">%1$s</xliff:g></string>
+    <string name="notification_uploader_error_credential_title">Credencias incorretas</string>    
+	<string name="notification_uploader_error_credential">Por favor, autentique-se no SiFEUP Mobile.</string>    
+	<string name="notification_uploader_error_host_title">Erro ao conectar</string>    
+    <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
+	<string name="notification_uploader_error_title">Erro</string>
+	<string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
+	    	
+        
 </resources>

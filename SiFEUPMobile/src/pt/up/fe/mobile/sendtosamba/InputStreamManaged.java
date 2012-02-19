@@ -1,4 +1,4 @@
-package pt.up.fe.sendtosamba;
+package pt.up.fe.mobile.sendtosamba;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,11 +46,11 @@ public class InputStreamManaged extends InputStream {
 			return ret;
 
 		// Calculate previous percentage
-		long pperc = this.__bread / this.__length;
+		long pperc = ( this.__bread * 100 ) / this.__length;
 		this.__bread += ret;
-		long nperc = this.__bread / this.__length;
+		long nperc = ( this.__bread * 100L ) / this.__length;
 		if(pperc != nperc)
-			this.__pclistener.onChanged(nperc);
+			this.__pclistener.onChanged((int)nperc);
 		
 		return ret;
 	}
