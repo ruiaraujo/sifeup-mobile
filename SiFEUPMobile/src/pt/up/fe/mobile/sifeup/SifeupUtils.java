@@ -10,33 +10,8 @@ public class SifeupUtils {
 	private SifeupUtils(){}
 	private final static String PREF_CONNECTION_TYPE =
 		"pt.up.fe.mobile.service.CONNECTION_TYPE";
-	private final static int COOKIE_VALID_TIME_IN_HOURS = 24;
 	
-	/**
-	 * Check if the cookie stored is still valid.
-	 * @param context
-	 * @return false if the login must be redone.
-	 */
-	public static boolean checkCookie(final Context context){
-        final SharedPreferences loginSettings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
-        final long now = System.currentTimeMillis();
-        final long before = loginSettings.getLong( LoginActivity.PREF_COOKIE_TIME, 0);
-        final String oldCookie = loginSettings.getString( LoginActivity.PREF_COOKIE, "");
-        if ( oldCookie.trim().length() == 0 )
-        	return false;
-        if ( ( ( now - before )/3600000 < COOKIE_VALID_TIME_IN_HOURS ) )
-        {
-        	if ( !checkConnectionType(context) )
-        		return false;
-        	SessionManager.getInstance().setCookie(oldCookie);
-        	SessionManager.getInstance().setLoginCode(loginSettings.getString(
-        										LoginActivity.PREF_USERNAME_SAVED, ""));
-        	
-        	return true;
-        }
-        return false;
-        
-	}
+
 	
 	private static boolean checkConnectionType( final Context context ){
 		final SharedPreferences settings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  

@@ -2,6 +2,7 @@ package pt.up.fe.mobile.sifeup;
 
 import pt.up.fe.mobile.datatypes.FriendsData;
 import pt.up.fe.mobile.datatypes.TuitionHistory;
+import pt.up.fe.mobile.datatypes.User;
 
 
 /**
@@ -13,7 +14,7 @@ import pt.up.fe.mobile.datatypes.TuitionHistory;
 public class SessionManager 
 {	
 	private String cookie;
-	private String loginCode;
+	private User user;
 	public static TuitionHistory tuitionHistory=new TuitionHistory();
 	public static FriendsData friends=new FriendsData();
 
@@ -53,15 +54,26 @@ public class SessionManager
 	 * @return
 	 */
 	public String getLoginCode() {
-		return loginCode;
+		return user.getUser();
 	}
 
 	/**
-	 * Set login code
-	 * @param loginCode
+	 * Get Login Code
+	 * @return
 	 */
-	public void setLoginCode(String loginCode) {
-		this.loginCode = loginCode;
+	public String getLoginPassword() {
+		return user.getPassword();
 	}
 	
+	public User getUser(){
+		return user;
+	}
+	
+	public void setUser(final User user){
+		this.user = user;
+	}
+
+	public boolean isUserLoaded(){
+		return user != null;
+	}
 }

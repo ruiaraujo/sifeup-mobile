@@ -587,6 +587,29 @@ public class SifeupAPI {
 	}	
 	
 	/**
+	 * Student query Reply from web service
+	 * @param url 
+	 * @return page
+	 */
+	public static String getReply( String url ){
+		String page = null;
+		try {
+			do {
+				HttpsURLConnection httpConn = getUncheckedConnection( url );
+				httpConn.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+				httpConn.connect();
+				page = getPage(httpConn.getInputStream());
+				httpConn.disconnect();
+				if ( page == null )
+					return null;
+			} while (page.equals(""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return page;
+	}	
+	
+	/**
 	 * Employee query Reply from web service
 	 * @param code
 	 * @return
@@ -902,7 +925,7 @@ public class SifeupAPI {
 			}
 			bis.close();
 			in.close();
-				return new String(baf.toByteArray(),"ISO-8859-1");
+			return new String(baf.toByteArray(),"ISO-8859-1");
 		}catch (IOException e) {
 			e.printStackTrace();
 		}

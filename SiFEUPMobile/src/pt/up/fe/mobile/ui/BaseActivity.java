@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
@@ -16,6 +17,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,10 +44,16 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onResume();
         // Recovering the Cookie here
         // as every activity will descend from this one.
-        if (SessionManager.getInstance().getCookie() != null) {
-
-            if (!SifeupUtils.checkCookie(this))
-                goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+        if (!SessionManager.getInstance().isUserLoaded()) {
+            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
+            final String user = loginSettings.getString(LoginActivity.PREF_USERNAME_SAVED, "");
+            final String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "") ;
+            if ( !user.equals("") && !pass.equals("") )
+            {
+            	SessionManager.getInstance().setUser(new User(user, pass, null));
+            }
+            else
+            	goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
         }
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(

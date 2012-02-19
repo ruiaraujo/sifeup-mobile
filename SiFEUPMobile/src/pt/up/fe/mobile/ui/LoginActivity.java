@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.sifeup.SifeupUtils;
@@ -165,9 +166,12 @@ public class LoginActivity extends Activity
 	        {
 		        //Take advantage of the 24h period while the session
 		        // is still active on the main server.
-	        	if ( SifeupUtils.checkCookie(this) ){
-	    	        SessionManager.getInstance().setCookie(loginSettings.getString( PREF_COOKIE, ""));
-		        	SessionManager.getInstance().setLoginCode(loginSettings.getString( PREF_USERNAME_SAVED, ""));
+	        	final String cookie =loginSettings.getString( PREF_COOKIE, "");
+	        	if ( cookie.trim().length() > 0 ){
+	    	        SessionManager.getInstance().setCookie(cookie);
+	    	        final String user = loginSettings.getString( PREF_USERNAME_SAVED, "");
+	    	        final String pass = loginSettings.getString( PREF_PASSWORD , ""); 
+		        	SessionManager.getInstance().setUser(new User(user,pass,null));
 		        	startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 	        		finish();
 	        		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
@@ -328,8 +332,7 @@ public class LoginActivity extends Activity
 					JSONObject jObject = new JSONObject(page);
 					if ( jObject.optBoolean("authenticated") )
 					{
-						SessionManager.getInstance().setLoginCode(jObject.getString("codigo"));
-						SifeupUtils.storeConnectionType(LoginActivity.this);
+						SessionManager.getInstance().setUser(new User(jObject.getString("codigo"), pass, jObject.getString("tipo")));
 						if ( jObject.getString("tipo").equals("A") )
 							return Boolean.TRUE;
 						else
