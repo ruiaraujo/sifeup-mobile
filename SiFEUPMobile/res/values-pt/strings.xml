@@ -46,16 +46,25 @@
     <!-- ABOUT -->
     <string name="bt_about">Sobre</string>
     <string name="bt_about_title">Sobre SiFEUP Mobile</string>
-    <string name="bt_about_message">ara dar aos estudantes da FEUP uma plataforma móvel para obterem 
+    <string name="bt_about_message">Para dar aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
-                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projetco</a>                                 \n\n<b>Versão: </b>.4 
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>   
+                                 \n\n<b>Versão: </b>0.5 
                                  \n
                                  01/08/2011
                                  \n\n<b>Créditos:</b>n<ul>
             <li>Faculdade de Engenharia da Universidade do Porto</li>
-\n            <li>CICA</li>
-\n            <li>Mestrado Integrado em Engenharia Informática e Computação</li>
-\n            <li>Disciplina Sistemas Distríbuidos</li>
+
+
+\n                                    <li>CICA</li>
+
+
+\n                                    <li>Mestrado Integrado em Engenharia Informática e Computação</li>
+
+
+\n                                    <li>Disciplina Sistemas Distríbuidos</li>
+
+
 \n</ul></string>
 
     <!-- MAIN  MENU -->
@@ -204,7 +213,7 @@
     <string name="username_empty">Utilizador não pode estar vazia.</string>
     <string name="password_successfully_changed">Senha alterada com sucesso.</string>
     <string name="confirmation_password_different">A confirmação é diferente da senha.</string>
-        
+
     <!-- Card Request -->
     <string name="title_card_request">Pedir Cartão</string>
     <string name="btn_card_request">Pedir Cartão</string>
@@ -292,18 +301,17 @@
     <!-- WEBVIEW -->
     <string name="title_webview">SiFEUP</string>
     <string name="description_browser">Ver no Browser</string>
-        
+
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
     <string name="notification_uploader_title">SiFEUP Mobile</string>
     <string name="notification_uploader_content">Enviando\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_finished">Terminado o envio de \n<xliff:g id="file">%1$s</xliff:g></string>
-    <string name="notification_uploader_error_credential_title">Credencias incorretas</string>    
-	<string name="notification_uploader_error_credential">Por favor, autentique-se no SiFEUP Mobile.</string>    
-	<string name="notification_uploader_error_host_title">Erro ao conectar</string>    
+    <string name="notification_uploader_error_credential_title">Credencias incorretas</string>
+    <string name="notification_uploader_error_credential">Por favor, autentique-se no SiFEUP Mobile.</string>
+    <string name="notification_uploader_error_host_title">Erro ao conectar</string>
     <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
-	<string name="notification_uploader_error_title">Erro</string>
-	<string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
-	    	
-        
+    <string name="notification_uploader_error_title">Erro</string>
+    <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
+
 </resources>

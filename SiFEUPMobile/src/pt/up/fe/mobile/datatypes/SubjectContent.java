@@ -7,7 +7,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.util.Log;
 
 /**
  * @author Ângela Igreja
@@ -212,6 +211,7 @@ public class SubjectContent implements Serializable {
 	 * 
 	 * @param page
 	 * @return Subject
+	 * @throws JSONException 
 	 */
 	public SubjectContent JSONSubjectContent(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);

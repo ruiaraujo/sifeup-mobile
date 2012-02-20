@@ -64,6 +64,8 @@ public class GoogleAnalyticsSessionManager {
 
     /**
      * Get or create an instance of GoogleAnalyticsSessionManager
+     * @param application 
+     * @return 
      */
     public static GoogleAnalyticsSessionManager getInstance( Application application ) {
         if( INSTANCE == null )
@@ -73,6 +75,7 @@ public class GoogleAnalyticsSessionManager {
 
     /**
      * Only call this if you're sure an instance has been previously created using #getInstance(Application)
+     * @return 
      */
     public static GoogleAnalyticsSessionManager getInstance() {
         return INSTANCE;

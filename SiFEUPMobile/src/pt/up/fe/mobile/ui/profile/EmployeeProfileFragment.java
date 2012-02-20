@@ -4,28 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Employee;
 import pt.up.fe.mobile.datatypes.Friend;
 import pt.up.fe.mobile.datatypes.Profile;
 import pt.up.fe.mobile.datatypes.Profile.ProfileDetail;
+import pt.up.fe.mobile.sifeup.ProfileUtils;
+import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
 
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +42,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  * @author Ângela Igreja
  */
-public class EmployeeProfileFragment extends BaseFragment implements OnItemClickListener
+public class EmployeeProfileFragment extends BaseFragment implements OnItemClickListener, ResponseCommand
 {
 	private TextView name;
 	private ListView details;
@@ -54,7 +50,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	private TextView code;
 
 	/** User Info */
-    private Employee me = new Employee();
+    private Employee me;
     private List<ProfileDetail> contents;
     
     @Override
@@ -74,7 +70,8 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		details = ((ListView)root.findViewById(R.id.profile_details));
 		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
 		String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
-		
+		if ( code == null )
+			code = SessionManager.getInstance().getLoginCode();
 		friend.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -99,114 +96,61 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			}
 		});
 		
-		
-		
-		if ( code != null )
-		{
-			new ProfileTask().execute(code);
-		}
-		else
-			new ProfileTask().execute(SessionManager.getInstance().getLoginCode());
+		ProfileUtils.getEmployeeReply(code, this);
         return getParentContainer();
     }
     
 
-
-    /** Classe privada para a busca de dados ao servidor */
-    private class ProfileTask extends AsyncTask<String, Void, String> {
-
-    	protected void onPreExecute (){
-    		showLoadingScreen();
-    	}
-
-        protected void onPostExecute(String result) {
-        	if ( getActivity() == null ) 
-        		return;
-        	if ( result.equals("Success") )
-        	{
-				Log.e("Profile","success");
-				contents = me.getProfileContents(getResources());
-				name.setText(me.getName());
-				code.setText(me.getCode());
-				if ( SessionManager.friends.isFriend(me.getCode()) )
-					friend.setChecked(true);
-				else
-					friend.setChecked(false);
-				String[] from = new String[] { "title", "content" };
-		        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
-			         // prepare the list of all records
-		         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		         for ( ProfileDetail s : contents )   
-		         { 
-		        	 HashMap<String, String> map = new HashMap<String, String>();
-		             map.put(from[0], s.title);
-		             map.put(from[1],s.content);
-		             fillMaps.add(map);
-		         }
-				 
-		         // fill in the grid_item layout
-		         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-		        		 							R.layout.list_item_profile, from, to);
-		         details.setAdapter(adapter);
-		         details.setOnItemClickListener(EmployeeProfileFragment.this);
-		         details.setSelection(0);
-		         showMainScreen();
-			}
-			else if ( result.equals("Error")) {	
-				Log.e("Profile","error");
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
-					getActivity().finish();
-					return;
-				}
-			}
-			else if ( result.equals("")) {	
-				Log.e("Profile","error");
-				if ( getActivity() != null ) 	
-				{
-					getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
-					Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-					getActivity().finish();
-					return;
-				}
-			}
-        }
-
-		@Override
-		protected String doInBackground(String ... code) {
-			String page = "";
-		  	try {
-		  		if ( code.length < 1 )
-		  			return "";
-	    			page = SifeupAPI.getEmployeeReply(code[0]);
-	    		int error =	SifeupAPI.JSONError(page);
-	    		switch (error)
-	    		{
-	    			case SifeupAPI.Errors.NO_AUTH:
-	    				return "Error";
-	    			case SifeupAPI.Errors.NO_ERROR:
-	    				//JSONEmployee(page);
-	    				if ( me.JSONSubject(page) )
-	    					return "Success";
-	    				else
-	    					return "";
-	    			case SifeupAPI.Errors.NULL_PAGE:
-	    				return "";	
-	    		}
-
-				return page;
-				
-			} catch (JSONException e) {
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}
-
-			return "";
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			((BaseActivity) getActivity()).goLogin();
+			break;
+		case NETWORK:
+			Toast.makeText(getActivity(),
+					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
+					.show();
+		default:
+			// TODO: general error
+			break;
 		}
-    }
+	}
+
+	public void onResultReceived(Object... results) {
+		if (getActivity() == null)
+			return;
+		me = (Employee) results[0];
+		contents = me.getProfileContents(getResources());
+		name.setText(me.getName());
+		code.setText(me.getCode());
+		if ( SessionManager.friends.isFriend(me.getCode()) )
+			friend.setChecked(true);
+		else
+			friend.setChecked(false);
+		String[] from = new String[] { "title", "content" };
+        int[] to = new int[] { R.id.profile_item_title, R.id.profile_item_content };
+	         // prepare the list of all records
+         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+         for ( ProfileDetail s : contents )   
+         { 
+        	 HashMap<String, String> map = new HashMap<String, String>();
+             map.put(from[0], s.title);
+             map.put(from[1],s.content);
+             fillMaps.add(map);
+         }
+		 
+         // fill in the grid_item layout
+         SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
+        		 							R.layout.list_item_profile, from, to);
+         details.setAdapter(adapter);
+         details.setOnItemClickListener(EmployeeProfileFragment.this);
+         details.setSelection(0);
+         showMainScreen();
+	}
     
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position, long id) {

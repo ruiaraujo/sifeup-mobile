@@ -12,7 +12,6 @@ import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.datatypes.Student;
 import pt.up.fe.mobile.datatypes.Subject;
 import pt.up.fe.mobile.datatypes.SubjectContent;
 import pt.up.fe.mobile.datatypes.Subject.Book;
@@ -27,7 +26,6 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
@@ -150,8 +148,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity())
-					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity) getActivity()).goLogin();
 			return;
 		default:// TODO: add general error message
 			break;

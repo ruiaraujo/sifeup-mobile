@@ -78,6 +78,7 @@ public class SearchActivity extends BaseSinglePaneActivity {
      * 
      * In this sample app we call this method from a "Clear History" menu item.  You could also 
      * implement the UI in your preferences, or any other logical place in your UI.
+     * @param context 
      */
     public static void clearSearchHistory(Context context) {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(context, 

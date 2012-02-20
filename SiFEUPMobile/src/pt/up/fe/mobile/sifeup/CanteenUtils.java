@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.datatypes.Canteen;
-import pt.up.fe.mobile.datatypes.Exam;
 import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.os.AsyncTask;
 import android.util.Log;

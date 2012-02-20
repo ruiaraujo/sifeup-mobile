@@ -1,44 +1,20 @@
-/*
- * Copyright 2011 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package pt.up.fe.mobile.ui.studentservices.tuition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.RefMB;
 import pt.up.fe.mobile.datatypes.YearsTuition;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.sifeup.TuitionUtils;
-import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,8 +97,7 @@ public class TuitionRefListFragment extends BaseFragment implements
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity())
-					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity) getActivity()).goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(),

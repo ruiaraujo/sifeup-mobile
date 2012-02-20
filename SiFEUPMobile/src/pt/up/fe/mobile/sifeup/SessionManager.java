@@ -27,7 +27,7 @@ public class SessionManager
 	
 	/**
 	 * 
-	 * @return
+	 * @return the instance of SessionManager
 	 */
 	public static SessionManager getInstance() {
 		return SessionCookieHolder.INSTANCE;
@@ -35,7 +35,7 @@ public class SessionManager
 	
 	/**
 	 * 
-	 * @return
+	 * @return the cookie
 	 */
 	public String getCookie() {
 		return cookie;
@@ -51,15 +51,15 @@ public class SessionManager
 	
 	/**
 	 * Get Login Code
-	 * @return
+	 * @return the login code
 	 */
 	public String getLoginCode() {
 		return user.getUser();
 	}
 
 	/**
-	 * Get Login Code
-	 * @return
+	 * Get Login Password
+	 * @return the login passowrd
 	 */
 	public String getLoginPassword() {
 		return user.getPassword();

@@ -1,18 +1,11 @@
 package pt.up.fe.mobile.sifeup;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.fe.mobile.datatypes.Exam;
 import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
-import pt.up.fe.mobile.ui.LoginActivity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class AuthenticationUtils {
 	private AuthenticationUtils() {
@@ -30,7 +23,7 @@ public class AuthenticationUtils {
 			if (page == null)
 				return ERROR_TYPE.NETWORK;
 			User user = JSONUser(page);
-			if ( user == null )
+			if (user == null)
 				return ERROR_TYPE.AUTHENTICATION;
 			SessionManager.getInstance().setUser(user);
 		} catch (JSONException e) {
@@ -39,7 +32,7 @@ public class AuthenticationUtils {
 		}
 		return null;
 	}
-	
+
 	private static User JSONUser(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
 		if (jObject.optBoolean("authenticated")) {
@@ -53,7 +46,7 @@ public class AuthenticationUtils {
 	private static class Authenticator extends
 			AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 		private final ResponseCommand command;
-		private final List<Exam> exams = new ArrayList<Exam>();
+		private User user;
 
 		private Authenticator(ResponseCommand com) {
 			command = com;
@@ -61,14 +54,85 @@ public class AuthenticationUtils {
 
 		protected void onPostExecute(ERROR_TYPE result) {
 			if (result == null) {
-				command.onResultReceived(exams);
+				command.onResultReceived(user);
 				return;
 			}
 			command.onError(result);
 		}
 
 		protected ERROR_TYPE doInBackground(String... code) {
-			return authenticate(code[0], code[1]);
+			String page = "";
+			try {
+				page = SifeupAPI.getAuthenticationReply(code[0], code[1]);
+				if (page == null)
+					return ERROR_TYPE.NETWORK;
+				user = JSONUser(page);
+				if (user == null)
+					return ERROR_TYPE.AUTHENTICATION;
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return ERROR_TYPE.GENERAL;
+			}
+			return null;
+		}
+
+	}
+
+	public static AsyncTask<String, Void, String> setPasswordReply(
+			String code, String oldPassword, String newPassword,
+			String confirmNewPassword, String system, ResponseCommand command) {
+		return new PasswordTask(command).execute(code, oldPassword, newPassword,
+						confirmNewPassword, system);
+	}
+
+	/** Classe privada para a busca de dados ao servidor */
+	private static class PasswordTask extends AsyncTask<String, Void, String> {
+		private final ResponseCommand com;
+		private PasswordTask(ResponseCommand com){
+			this.com = com;
+		}
+		protected void onPostExecute(String result) {
+			if (result.equals("Success")) {
+				com.onResultReceived();
+			} else if (result.equals("Error")) {
+				com.onResultReceived(errorTitle,errorContent);
+			} else if (result.equals("Net"))
+				com.onError(ERROR_TYPE.NETWORK);
+			else
+				com.onError(ERROR_TYPE.GENERAL);
+		}
+
+		protected String doInBackground(String... strings) {
+			String page = "";
+			try {
+				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(strings[0], strings[1],
+						strings[2], strings[3], strings[4]));
+				int error = SifeupAPI.JSONError(page);
+				switch (error) {
+				case SifeupAPI.Errors.NO_AUTH:
+					getError(page);
+					return "Error";
+				case SifeupAPI.Errors.NO_ERROR:
+					return "Success";
+				case SifeupAPI.Errors.NULL_PAGE:
+					return "Net";
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return "";
+		}
+
+		private String errorTitle;
+		private String errorContent;
+
+		private void getError(String page) throws JSONException {
+			JSONObject jObject = new JSONObject(page);
+			if (jObject.has("erro"))
+				errorTitle = (String) jObject.get("erro");
+			if (jObject.has("erro_msg"))
+				errorContent = (String) jObject.get("erro_msg");
 		}
 
 	}

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,20 +16,13 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Notification;
 import pt.up.fe.mobile.sifeup.NotificationUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
-import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 
 /**
  * Notifications Fragment
@@ -80,7 +72,7 @@ public class NotificationsFragment extends BaseFragment implements
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity)getActivity()).goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();

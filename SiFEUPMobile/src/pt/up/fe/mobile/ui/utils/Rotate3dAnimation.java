@@ -47,6 +47,7 @@ public class Rotate3dAnimation extends Animation {
      * @param toDegrees the end angle of the 3D rotation
      * @param centerX the X center of the 3D rotation
      * @param centerY the Y center of the 3D rotation
+     * @param depthZ 
      * @param reverse true if the translation should be reversed, false otherwise
      */
     public Rotate3dAnimation(float fromDegrees, float toDegrees,

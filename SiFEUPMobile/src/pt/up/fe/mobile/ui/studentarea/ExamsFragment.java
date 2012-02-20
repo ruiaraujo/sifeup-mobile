@@ -34,7 +34,6 @@ import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.utils.calendar.CalendarHelper;
 import pt.up.fe.mobile.utils.calendar.Event;
 
@@ -82,13 +81,10 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
-
-
 	/**
 	 * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
 	 * can be imported by most calendars.
+	 * 
 	 * @return true if correct export
 	 */
 	public boolean calendarExport() {
@@ -130,12 +126,12 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 							// iterate over schedule and add them to schedule
 							for (Exam b : exams) {
 								// new event
-								long time = getDate(b.getDate(), b.getStartTime())
-										.toMillis(false);
-								Event event = new Event(b.getCourseName(), b.getRooms(),
-										b.getType(), time, time
-												+ timeDifference(b.getStartTime(),
-														b.getEndTime()) * 60000);
+								long time = getDate(b.getDate(),
+										b.getStartTime()).toMillis(false);
+								Event event = new Event(b.getCourseName(), b
+										.getRooms(), b.getType(), time, time
+										+ timeDifference(b.getStartTime(), b
+												.getEndTime()) * 60000);
 								final Uri newEvent = calendarHelper
 										.insertEvent(calIds[which], event);
 								// check event error
@@ -196,8 +192,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity())
-					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity) getActivity()).goLogin();
 			getActivity().finish();
 			return;
 		case NETWORK:
@@ -231,11 +226,11 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		for (Exam e : exams) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			String tipo = "( " + (e.getType().contains("Mini teste") ? "M" : "E")
-					+ " ) ";
+			String tipo = "( "
+					+ (e.getType().contains("Mini teste") ? "M" : "E") + " ) ";
 			map.put("chair", tipo + e.getCourseName());
-			map.put("time", e.getWeekDay() + ", " + e.getDate() + ": " + e.getStartTime()
-					+ "-" + e.getEndTime());
+			map.put("time", e.getWeekDay() + ", " + e.getDate() + ": "
+					+ e.getStartTime() + "-" + e.getEndTime());
 			map.put("room", e.getRooms());
 			fillMaps.add(map);
 		}

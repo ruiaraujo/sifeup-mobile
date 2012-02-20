@@ -49,8 +49,8 @@ public class Notification  implements Serializable {
 	/** 
 	 * Notifications Parser
 	 * Returns true in case of correct parsing.
-	 * 
-	 * @param page
+	 * @param jObject 
+	 * @return itself
 	 */
     public Notification JSONNotification(JSONObject jObject){
 	

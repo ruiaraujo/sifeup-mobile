@@ -1,29 +1,23 @@
 package pt.up.fe.mobile.ui.search;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.commonsware.cwac.endless.EndlessAdapter;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Profile;
+import pt.up.fe.mobile.datatypes.ResultsPage;
 import pt.up.fe.mobile.datatypes.Student;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
+import pt.up.fe.mobile.sifeup.ResponseCommand;
+import pt.up.fe.mobile.sifeup.SearchUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,292 +31,163 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
- * This interface is responsible for fetching the results of 
- * research to the server and shows them a list. 
- * When loading a list item launches the activity ProfileActivity.
+ * This interface is responsible for fetching the results of research to the
+ * server and shows them a list. When loading a list item launches the activity
+ * ProfileActivity.
  * 
  * @author Ângela Igreja
- *
+ * 
  */
-public class StudentsSearchFragment extends BaseFragment implements OnItemClickListener {
-	
+public class StudentsSearchFragment extends BaseFragment implements
+		OnItemClickListener, ResponseCommand {
+
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
 	private ListAdapter adapter;
-    private String query;
-    private ListView list;
-    
-    private final static String REGEX_STUDENT_CODE = "^[0-9,;]{9}$";
+	private String query;
+	private ListView list;
+
+	private final static String REGEX_STUDENT_CODE = "^[0-9,;]{9}$";
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-        query = getArguments().get(SearchManager.QUERY).toString();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+		query = getArguments().get(SearchManager.QUERY).toString();
 
-    }
-	
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) { 
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
+		View root = inflater.inflate(R.layout.generic_list,
+				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-        new StudentsSearchTask().execute();
-    	return getParentContainer();
-    	
-    } 
-	
-	private boolean hasMoreResults(){
-		if ( results.isEmpty() )
+
+		if (query.matches(REGEX_STUDENT_CODE))
+			SearchUtils.getSingleStudentSearchReply(query, this);
+		else
+			SearchUtils.getStudentsSearchReply(query, 1, this);
+
+		return getParentContainer();
+
+	}
+
+	private boolean hasMoreResults() {
+		if (results.isEmpty())
 			return true;
-		if ( totalItemLoaded() >= results.get(0).searchSize )
+		if (totalItemLoaded() >= results.get(0).getSearchSize())
 			return false;
 		return true;
 	}
-	
-	/** Classe privada para a busca de dados ao servidor */
-    public class StudentsSearchTask extends AsyncTask<Integer, Void, String> {
 
-    	protected void onPreExecute (){
-			showLoadingScreen();
-    	}
-
-        protected void onPostExecute(String result) {
-        	if ( getActivity() == null )
-        		return;
-        	if ( result.equals("Success") )
-        	{
-        		Log.e("Search","success");
-        		
-	        /*
-		        // assumed only one page of results
-		        for(Student s : results.get(results.size()-1).students ){
-		            HashMap<String, String> map = new HashMap<String, String>();
-		            map.put("name", s.getName());
-		            map.put("course", s.getProgrammeName());
-		            fillMaps.add(map);
-		        }
-		*/		
-				// fill in the grid_item layout
-		        if ( hasMoreResults() )
-		        {
-			      //  adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_friend, 
-			        //		new String[] {"name", "course"}, new int[] { R.id.friend_name,  R.id.friend_course});
-		        	adapter = new EndlessSearchAdapter(getActivity(), 
-		        			 new SearchCustomAdapter(getActivity(), R.layout.list_item_friend, new Student[0]),
-		        			 R.layout.list_item_loading);
-		        }
-		        else
-		        {
-			        adapter = new SearchCustomAdapter(getActivity(), R.layout.list_item_friend, new Student[0]);
-
-		        }
-		        list.setAdapter(adapter);
-		        list.setOnItemClickListener(StudentsSearchFragment.this);
-		        list.setSelection(0);
-		        showMainScreen();
-		        
-    		}
-			else if ( result.equals("Error") ){	
-				Log.e("Search","error");
-				if ( getActivity() != null ) 
-				{
-					Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-					((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
-					return;
-				}
-			}
-			else if ( result.equals("") )
-			{
-				Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-				getActivity().finish();
-				return;
-			}
-			else if ( result.equals("Empty") )
-			{      
-				Toast.makeText(getActivity(), getString(R.string.toast_search_error), Toast.LENGTH_LONG).show();
-				return;
-    		}
-        }
-
-		@Override
-		protected String doInBackground(Integer ... pages) {
-			String page = "";
-		  	try {
-		  		if ( query == null )
-		  			return "";
-		  		boolean isNumber = query.matches(REGEX_STUDENT_CODE);
-		  		if ( isNumber )
-		  			page = SifeupAPI.getStudentReply(query);
-		  		else
-		  			page = SifeupAPI.getStudentsSearchReply(query , 1);
-	    		int error =	SifeupAPI.JSONError(page);
-	    		switch (error)
-	    		{
-	    			case SifeupAPI.Errors.NO_AUTH:
-	    				return "Error";
-	    			case SifeupAPI.Errors.NO_ERROR:
-	    	    		JSONStudentsSearch(page);
-	    	    		if ( results.isEmpty())
-	    	    			return "Empty";
-	    	    		else
-	    	    			return "Success";
-	    			case SifeupAPI.Errors.NULL_PAGE:
-	    				return "";
-	    		}
-	    		
-				return page;
-				
-			} catch (JSONException e) {
-				if ( getActivity() != null ) 
-					Toast.makeText(getActivity(), "F*** JSON", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}
-
-			return "";
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			((BaseActivity) getActivity()).goLogin();
+			break;
+		case NETWORK:
+			showEmptyScreen(getString(R.string.toast_server_error));
+		default:
+			showEmptyScreen(getString(R.string.toast_search_error));
+			break;
 		}
-
-    }
-    
-    /**
-     * 
-     * Holds a Search page
-     * With pageResults number
-     * of students
-     *
-     */
-    @SuppressWarnings("unused")
-    private class ResultsPage{
-    	private int searchSize; // "total" : 583
-    	private int page; // "primeiro" : 1
-    	private int pageResults; // "tam_pagina" : 15
-    	private List<Student> students = new ArrayList<Student>();
-    }
-    
-    /**
-	 * Parses a JSON String containing Student Search Info,
-	 * Stores that results page at Collection results.
-	 * @param String page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-    private boolean JSONStudentsSearch(String page) throws JSONException {
-    	JSONObject jObject = new JSONObject(page);
-		//matches against 9 digits
-    	if (  query.matches(REGEX_STUDENT_CODE) )
-    	{
-    		ResultsPage resultsPage = new ResultsPage();
-    		resultsPage.searchSize = resultsPage.page = resultsPage.pageResults = 1;
-    		Student student = new Student();
-    		if(jObject.has("codigo"))
-    			student.setCode(jObject.getString("codigo"));
-			if(jObject.has("nome"))
-				student.setName(jObject.getString("nome"));
-			if(jObject.has("curso_sigla"))
-				student.setProgrammeAcronym(jObject.getString("curso_sigla"));
-			if(jObject.has("curso_nome"))
-				student.setProgrammeName(jObject.getString("curso_nome"));
-
-			// add student to the page results
-			resultsPage.students.add(student);
-			// add page to global results
-    		results.add(resultsPage);
-    		Log.e("JSON", "loaded search");
-    		return true;
-    	}
-    	
-    	if(jObject.has("alunos")){
-    		Log.e("JSON", "founded search");
-    		
-    		// new results page
-    		ResultsPage resultsPage = new ResultsPage();
-    		if(jObject.has("total")) resultsPage.searchSize = jObject.getInt("total");
-    		if(jObject.has("primeiro")) resultsPage.page = jObject.getInt("primeiro");
-    		if(jObject.has("tam_pagina")) resultsPage.pageResults = jObject.getInt("tam_pagina");
-    		if ( resultsPage.searchSize - resultsPage.page < 15 )
-    			resultsPage.pageResults = resultsPage.searchSize - resultsPage.page;
-    		JSONArray jArray = jObject.getJSONArray("alunos");
-    		
-    		// iterate over jArray	
-    		for(int i = 0; i < jArray.length(); i++){
-    			// new JSONObject
-    			JSONObject jStudent = jArray.getJSONObject(i);
-    			// new Block
-    			Student student = new Student();
-    			
-    			if(jStudent.has("codigo")) student.setCode(""+jStudent.getString("codigo"));
-    			if(jStudent.has("nome")) student.setName(jStudent.getString("nome"));
-    			if(jStudent.has("cur_sigla")) student.setProgrammeCode(jStudent.getString("cur_sigla"));
-    			if(jStudent.has("cur_nome")) student.setProgrammeName(jStudent.getString("cur_nome"));
-    			if(jStudent.has("cur_name")) student.setProgrammeNameEn(jStudent.getString("nome"));
-    			
-    			// add student to the page results
-    			resultsPage.students.add(student);
-    		}
-    		
-    		// add page to global results
-    		results.add(resultsPage);
-    		
-    		Log.e("JSON", "loaded search");
-    		return true;
-    	}
-    	Log.e("JSON", "search not found");
-    	return false;
 	}
-    
-    
+
+	public void onResultReceived(Object... results) {
+		if (getActivity() == null)
+			return;
+		if (query.matches(REGEX_STUDENT_CODE)) {
+			if ( results == null )
+			{
+				showEmptyScreen(getString(R.string.toast_search_error));
+				return;
+			}
+			ResultsPage resultsPage = new ResultsPage();
+			resultsPage.setSearchSize(1);
+			resultsPage.setPage(1);
+			resultsPage.setPageResults(1);
+			// add student to the page results
+			resultsPage.getStudents().add((Student) results[0]);
+			// add page to global results
+			this.results.add(resultsPage);
+		} else {
+			final ResultsPage result = ( ResultsPage )results[0];
+			if ( result.getStudents().size()  == 0)
+			{
+				showEmptyScreen(getString(R.string.toast_search_error));
+				return;
+			}
+			else
+				this.results.add( result );
+		}
+		if (hasMoreResults()) {
+			adapter = new EndlessSearchAdapter(getActivity(),
+					new SearchCustomAdapter(getActivity(),
+							R.layout.list_item_friend, new Student[0]),
+					R.layout.list_item_loading);
+		} else {
+			adapter = new SearchCustomAdapter(getActivity(),
+					R.layout.list_item_friend, new Student[0]);
+
+		}
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(StudentsSearchFragment.this);
+		list.setSelection(0);
+		showMainScreen();
+	}
+
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id ) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 
-	    if ( parent.getAdapter() instanceof  EndlessSearchAdapter )
-	    {
-	        EndlessSearchAdapter a = (EndlessSearchAdapter) parent.getAdapter(); 
-	        //ignoring clicks on the pending view
-	        //see: http://stackoverflow.com/questions/7938891/disable-click-for-pending-view-of-cwac-endless-adapter
+		if (parent.getAdapter() instanceof EndlessSearchAdapter) {
+			EndlessSearchAdapter a = (EndlessSearchAdapter) parent.getAdapter();
+			// ignoring clicks on the pending view
+			// see:
+			// http://stackoverflow.com/questions/7938891/disable-click-for-pending-view-of-cwac-endless-adapter
 
-	        if( a.getItemViewType(position) == Adapter.IGNORE_ITEM_VIEW_TYPE)
-	            return;
-	    }
-    	Intent i = new Intent(getActivity() , ProfileActivity.class);
+			if (a.getItemViewType(position) == Adapter.IGNORE_ITEM_VIEW_TYPE)
+				return;
+		}
+		Intent i = new Intent(getActivity(), ProfileActivity.class);
 		// assumed only one page of results
-		Profile profile = results.get(position/15).students.get(position%15);
-		i.putExtra(Intent.EXTRA_TITLE,profile.getName() );
-		i.putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT);
-		i.putExtra(ProfileActivity.PROFILE_CODE, 
-				profile.getCode());
+		Profile profile = results.get(position / 15).getStudents().get(
+				position % 15);
+		i.putExtra(Intent.EXTRA_TITLE, profile.getName());
+		i.putExtra(ProfileActivity.PROFILE_TYPE,
+				ProfileActivity.PROFILE_STUDENT);
+		i.putExtra(ProfileActivity.PROFILE_CODE, profile.getCode());
 		startActivity(i);
 	}
 
-	
-	public class EndlessSearchAdapter extends EndlessAdapter{
+	public class EndlessSearchAdapter extends EndlessAdapter {
 
 		public EndlessSearchAdapter(Context context, ListAdapter wrapped,
 				int pendingResource) {
 			super(context, wrapped, pendingResource);
 		}
+
 		@Override
 		protected boolean cacheInBackground() throws Exception {
-			String page = SifeupAPI.getStudentsSearchReply(query ,results.size() * 15 + 1 );
-    		int error =	SifeupAPI.JSONError(page);
-    		switch (error)
-    		{
-    			case SifeupAPI.Errors.NO_AUTH:
-    				return false;
-    			case SifeupAPI.Errors.NO_ERROR:
-    	    		JSONStudentsSearch(page);
-    	    		if ( results.isEmpty() || !hasMoreResults() )
-    	    			return false;
-    	    		else
-    	    			return true;
-    			case SifeupAPI.Errors.NULL_PAGE:
-    				return false;
-    		}
-			return true;
+			ResultsPage page = SearchUtils.getStudentsSearchReply(query,
+					results.size() * 15 + 1);
+			if ( page == null )
+				return false;
+			results.add(page);
+			if (results.isEmpty() || !hasMoreResults())
+				return false;
+			else
+				return true;
 		}
-		
+
 		@Override
 		protected void appendCachedData() {
-			SearchCustomAdapter adapter = (SearchCustomAdapter)getWrappedAdapter();
+			SearchCustomAdapter adapter = (SearchCustomAdapter) getWrappedAdapter();
 			adapter.notifyDataSetChanged();
 		}
 	}
@@ -330,34 +195,37 @@ public class StudentsSearchFragment extends BaseFragment implements OnItemClickL
 	public class SearchCustomAdapter extends ArrayAdapter<Student> {
 
 		public SearchCustomAdapter(Context context, int textViewResourceId,
-		  Student[] objects) {
+				Student[] objects) {
 			super(context, textViewResourceId, objects);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
-		
-			if(row==null){
-				LayoutInflater inflater=getActivity().getLayoutInflater();
-				row=inflater.inflate(R.layout.list_item_friend, parent, false);
-			} 
+
+			if (row == null) {
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				row = inflater
+						.inflate(R.layout.list_item_friend, parent, false);
+			}
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
-			name.setText(results.get(position/15).students.get(position%15).getName());
-			TextView course =  (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position/15).students.get(position%15).getProgrammeName());
+			name.setText(results.get(position / 15).getStudents().get(
+					position % 15).getName());
+			TextView course = (TextView) row.findViewById(R.id.friend_course);
+			course.setText(results.get(position / 15).getStudents().get(
+					position % 15).getProgrammeName());
 			return row;
 		}
-		
-		public int getCount(){
+
+		public int getCount() {
 			return totalItemLoaded();
 		}
 	}
-	
-	private int totalItemLoaded(){
-		int total =0;
-		for ( ResultsPage result : results )
-			total += result.students.size();
+
+	private int totalItemLoaded() {
+		int total = 0;
+		for (ResultsPage result : results)
+			total += result.getStudents().size();
 		return total;
 	}
 

@@ -5,28 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Subject;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.sifeup.SubjectUtils;
-import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +61,7 @@ public class SubjectsFragment extends BaseFragment implements
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity())
-					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity) getActivity()).goLogin();
 			return;
 		default:// TODO: add general error message
 			break;

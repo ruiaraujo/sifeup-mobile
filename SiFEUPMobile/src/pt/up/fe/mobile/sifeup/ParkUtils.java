@@ -1,18 +1,9 @@
 package pt.up.fe.mobile.sifeup;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import pt.up.fe.mobile.datatypes.Canteen;
-import pt.up.fe.mobile.datatypes.Exam;
 import pt.up.fe.mobile.datatypes.Park;
 import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class ParkUtils {
 	private ParkUtils() {

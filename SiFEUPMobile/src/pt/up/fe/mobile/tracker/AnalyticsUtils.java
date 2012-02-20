@@ -51,6 +51,8 @@ public class AnalyticsUtils {
     
     /**
      * Returns the global {@link AnalyticsUtils} singleton object, creating one if necessary.
+     * @param context 
+     * @return 
      */
     public static AnalyticsUtils getInstance(Context context) {
         if (!ANALYTICS_ENABLED) {

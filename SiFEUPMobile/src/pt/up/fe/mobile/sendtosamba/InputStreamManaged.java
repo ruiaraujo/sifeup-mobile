@@ -3,8 +3,6 @@ package pt.up.fe.mobile.sendtosamba;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.widget.Toast;
-
 public class InputStreamManaged extends InputStream {
 	
 	private InputStream __ism = null;

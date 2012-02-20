@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.fe.mobile.datatypes.Block;
-import pt.up.fe.mobile.datatypes.Exam;
 import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;

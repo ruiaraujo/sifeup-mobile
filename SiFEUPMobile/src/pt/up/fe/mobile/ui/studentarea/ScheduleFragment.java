@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,11 +13,9 @@ import pt.up.fe.mobile.datatypes.Block;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.ScheduleUtils;
 import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.utils.calendar.CalendarHelper;
 import pt.up.fe.mobile.utils.calendar.Event;
 
@@ -37,9 +31,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -567,8 +559,7 @@ public class ScheduleFragment extends BaseFragment implements
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity())
-					.goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity) getActivity()).goLogin();
 			return;
 		default:// TODO: add general error message
 			break;

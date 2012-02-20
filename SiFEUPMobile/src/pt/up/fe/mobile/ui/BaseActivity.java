@@ -6,7 +6,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
@@ -17,7 +16,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,8 +23,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 /**
- * A base activity that defers common functionality across app activities to an
- * {@link ActivityHelper}. This class shouldn't be used directly; instead,
+ * A base activity that defers common functionality across app activities.
+ * This class shouldn't be used directly; instead,
  * activities should inherit from {@link BaseSinglePaneActivity} or
  * {@link BaseMultiPaneActivity}.
  */
@@ -45,15 +43,8 @@ public abstract class BaseActivity extends FragmentActivity {
         // Recovering the Cookie here
         // as every activity will descend from this one.
         if (!SessionManager.getInstance().isUserLoaded()) {
-            SharedPreferences loginSettings = getSharedPreferences(LoginActivity.class.getName(), MODE_PRIVATE);  
-            final String user = loginSettings.getString(LoginActivity.PREF_USERNAME_SAVED, "");
-            final String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "") ;
-            if ( !user.equals("") && !pass.equals("") )
-            {
-            	SessionManager.getInstance().setUser(new User(user, pass, null));
-            }
-            else
-            	goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
+        	if ( !SifeupUtils.loadSession(this) )
+            	goLogin();
         }
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
@@ -119,7 +110,7 @@ public abstract class BaseActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
     /**
-     * Invoke "home" action, returning to {@link com.google.android.apps.iosched.ui.HomeActivity}.
+     * Invoke "home" action, returning to {@link HomeActivity}.
      */
     public void goHome() {
         if (this instanceof HomeActivity) {
@@ -152,7 +143,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * arguments.
      * 
      * @param intent
-     * @return
+     * @return the bundle with the argument
      */
     public static Bundle intentToFragmentArguments(Intent intent) {
         Bundle arguments = new Bundle();
@@ -177,7 +168,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * Converts a fragment arguments bundle into an intent.
      * 
      * @param arguments
-     * @return
+     * @return the argument in a intent
      */
     public static Intent fragmentArgumentsToIntent(Bundle arguments) {
         Intent intent = new Intent();
@@ -218,22 +209,17 @@ public abstract class BaseActivity extends FragmentActivity {
         return null;
     }
 
-    public void goLogin() {
-        goLogin(0);
-    }
-
     /**
      * Starts the login activity. the param is used for the login activity to
      * know whether it should start logging in as soon as it is starts or not.
      * 
-     * @param logOff
+
      */
-    public void goLogin(final int logOff) {
+    public void goLogin() {
         Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, logOff);
+        i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
         startActivity(i);
-        if (logOff == 0)
-            finish();
+        finish();
         overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
 

@@ -1,12 +1,9 @@
 
 package pt.up.fe.mobile.sifeup;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 
-import pt.up.fe.mobile.datatypes.Exam;
 import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.os.AsyncTask;

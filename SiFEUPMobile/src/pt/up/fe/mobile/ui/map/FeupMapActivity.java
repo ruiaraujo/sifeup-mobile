@@ -133,7 +133,7 @@ public class FeupMapActivity extends SherlockMapActivity {
         return super.onOptionsItemSelected(item);
     }
     /**
-     * Invoke "home" action, returning to {@link com.google.android.apps.iosched.ui.HomeActivity}.
+     * Invoke "home" action, returning to {@link HomeActivity}.
      */
     public void goHome() {
         final Intent intent = new Intent(this, HomeActivity.class);

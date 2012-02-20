@@ -10,7 +10,6 @@ import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
@@ -168,7 +167,7 @@ public class FriendsListFragment extends BaseFragment implements
                             getString(R.string.toast_auth_error),
                             Toast.LENGTH_LONG).show();
                     ((BaseActivity) getActivity())
-                            .goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+                            .goLogin();
                     return;
                 }
             }

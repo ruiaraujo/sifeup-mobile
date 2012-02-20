@@ -24,7 +24,7 @@ public class SearchSuggestionHistory extends SearchRecentSuggestionsProvider {
     final static int MODE = DATABASE_MODE_QUERIES;
     
     /**
-     * The main job of the constructor is to call {@link #setupSuggestions(String, int)} with the
+     * The main job of the constructor is to call setupSuggestions(String, int) with the
      * appropriate configuration values.
      */
     public SearchSuggestionHistory() {

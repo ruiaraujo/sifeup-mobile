@@ -5,22 +5,16 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import org.json.JSONException;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Park;
 import pt.up.fe.mobile.sifeup.ParkUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
-import pt.up.fe.mobile.sifeup.SifeupAPI;
-import pt.up.fe.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +107,7 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin(LoginActivity.EXTRA_DIFFERENT_LOGIN_REVALIDATE);
+			((BaseActivity)getActivity()).goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();

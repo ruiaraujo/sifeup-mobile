@@ -4,8 +4,6 @@ import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
        
-import android.util.Log;
-
 /**
  * Class Park Occupation
  * 
@@ -46,7 +44,7 @@ public class Park implements Serializable
 	 *  Returns true in case of correct parsing.
 	 * 
 	 * @param page
-	 * @return
+	 * @return itself
 	 * @throws JSONException 
 	 */
     public Park JSONParkOccupation(String page) throws JSONException
