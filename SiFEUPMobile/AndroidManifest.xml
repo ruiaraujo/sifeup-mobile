@@ -57,11 +57,11 @@
         <!-- Phone-only activities -->
 
         <activity
-            android:name=".ui.studentarea.StudentAreaActivity"
+            android:name=".ui.studentarea.SiFEUPAreaActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_student_area" />
         <activity
-            android:name=".ui.studentservices.StudentServicesActivity"
+            android:name=".ui.studentservices.SiFEUPServicesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_student_services" />
         <activity
