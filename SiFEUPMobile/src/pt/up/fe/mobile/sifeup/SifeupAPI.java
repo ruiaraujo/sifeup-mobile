@@ -135,6 +135,11 @@ public class SifeupAPI {
 		String NAME = "notificacoes";
 	}
 	
+
+	private interface Canteens {
+		String NAME = "cantinas";
+	}
+	
 	private interface SetPassword {
 		String NAME = "mudar_password";
 		String LOGIN = "pv_login";
@@ -318,7 +323,7 @@ public class SifeupAPI {
 	 * @return 
 	 */
 	public static String getCanteensUrl(){
-		return WEBSERVICE + "cantinas";
+		return WEBSERVICE + Canteens.NAME;
 	}
 	
 	/**
