@@ -73,7 +73,9 @@ public class ClassDescriptionFragment extends BaseFragment
 		teacher.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity() , ProfileActivity.class);
+				if ( block.getTeacherCode() == null )
+					return;
+				final Intent i = new Intent(getActivity() , ProfileActivity.class);
 				i.putExtra(ProfileActivity.PROFILE_CODE, block.getTeacherCode());
 				i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_EMPLOYEE);
 				i.putExtra(Intent.EXTRA_TITLE, block.getTeacherAcronym());
