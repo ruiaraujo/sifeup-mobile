@@ -1,8 +1,10 @@
 package pt.up.fe.mobile.datatypes;
 
-import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.os.Parcel;
+import android.os.Parcelable;
        
 /**
  * Class Park Occupation
@@ -10,11 +12,22 @@ import org.json.JSONObject;
  * @author Ângela Igreja
  *
  */
-@SuppressWarnings("serial")
-public class Park implements Serializable 
+public class Park implements Parcelable 
 {
 	/** Free places in the park */
 	private int places;
+	private String name;
+	
+	public Park(){
+		places = 0;
+		name = "";
+	}
+
+	public String getPlaces() {
+		return Integer.toString(places);
+	}
+	
+
 	public String getName() {
 		return name;
 	}
@@ -23,12 +36,6 @@ public class Park implements Serializable
 		this.name = name;
 	}
 
-
-	private String name;
-
-	public String getPlaces() {
-		return Integer.toString(places);
-	}
 	
 	public int getPlacesNumber() {
 		return places;
@@ -56,5 +63,29 @@ public class Park implements Serializable
 		return this;
 
     }
+
+	public int describeContents() {
+		return 0;
+	}
+	
+    public static final Parcelable.Creator<Park> CREATOR = new Parcelable.Creator<Park>() {
+        public Park createFromParcel(Parcel in) {
+            return new Park(in);
+        }
+
+        public Park[] newArray(int size) {
+            return new Park[size];
+        }
+    };
+	
+	private Park(Parcel in){
+		places = in.readInt();
+		name = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(places);
+		dest.writeString(name);
+	}
     
 }

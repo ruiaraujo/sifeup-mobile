@@ -3,10 +3,12 @@ package pt.up.fe.mobile.datatypes;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.Time;
 import android.util.Log;
 
-public class RefMB 
+public class RefMB implements Parcelable
 {	
 	String name;
 	long entity;
@@ -14,6 +16,10 @@ public class RefMB
 	double amount;
 	Time startDate;
 	Time endDate;
+	
+	public RefMB(){
+		
+	}
 	
 	public boolean load(JSONObject jRef)
 	{
@@ -92,6 +98,44 @@ public class RefMB
 
 	public void setEndDate(Time endDate) {
 		this.endDate = endDate;
+	}
+
+	public int describeContents() {
+		return 0;
+	}
+	
+
+    public static final Parcelable.Creator<RefMB> CREATOR = new Parcelable.Creator<RefMB>() {
+        public RefMB createFromParcel(Parcel in) {
+            return new RefMB(in);
+        }
+
+        public RefMB[] newArray(int size) {
+            return new RefMB[size];
+        }
+    };
+
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeLong(entity);
+		dest.writeLong(ref);
+		dest.writeDouble(amount);
+		dest.writeString(startDate.format3339(true));
+		dest.writeString(endDate.format3339(true));
+	}
+	
+	private RefMB( Parcel in){
+		name = in.readString();
+		entity = in.readLong();
+		ref = in.readLong();
+		amount = in.readDouble();
+		String[] start=in.readString().split("-");
+		this.startDate=new Time(Time.TIMEZONE_UTC);
+		this.startDate.set(Integer.parseInt(start[2]), Integer.parseInt(start[1])-1, Integer.parseInt(start[0]));
+		String[] end=in.readString().split("-");
+		this.endDate=new Time(Time.TIMEZONE_UTC);
+		this.endDate.set(Integer.parseInt(end[2]), Integer.parseInt(end[1])-1, Integer.parseInt(end[0]));
+		
 	}
 		
 }
