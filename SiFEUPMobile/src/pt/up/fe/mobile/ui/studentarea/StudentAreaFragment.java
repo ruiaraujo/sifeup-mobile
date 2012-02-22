@@ -75,7 +75,8 @@ public class StudentAreaFragment extends ListFragment{
     	switch( position )
     	{
 	    	case 0:
-	    		 startActivity(new Intent(getActivity(),ScheduleActivity.class));
+	    		 startActivity(new Intent(getActivity(),ScheduleActivity.class)
+	    		 				.putExtra(ScheduleFragment.SCHEDULE_TYPE, ScheduleFragment.SCHEDULE_STUDENT));
 	             getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 	    		 return;
 	    	case 1:
