@@ -37,6 +37,8 @@ import android.widget.Toast;
  */
 public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 {
+	private final static String CANTEEN_KEY = "pt.up.fe.mobile.ui.studentarea.CANTEENS";
+	
 	private PagerMenuAdapter pagerAdapter;
     private ViewPager  viewPager; 
     private TitlePageIndicator indicator;
@@ -64,7 +66,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 
         if ( savedInstanceState != null )
         {
-            canteens = savedInstanceState.getParcelableArrayList("canteens");
+            canteens = savedInstanceState.getParcelableArrayList(CANTEEN_KEY);
             if ( canteens == null )
                 canteens = new ArrayList<Canteen>();
             buildPages();
@@ -96,7 +98,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){
- 	    outState.putParcelableArrayList("canteens", canteens);
+ 	    outState.putParcelableArrayList(CANTEEN_KEY,canteens);
  	}
 
 	

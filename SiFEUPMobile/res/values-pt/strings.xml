@@ -154,6 +154,10 @@
     <!-- Park Occupation -->
     <string name="title_park_occupation">Ocupação do Parque</string>
     <string name="btn_park_occupation">Ocupação do Parque</string>
+    <string name="label_student_park">Parque dos Estudantes</string>
+    <string name="label_professor_park">Parque dos Professors</string>
+    <string name="label_employee_park">Parque dos Colaboradores</string>
+    
 
     <!-- *************************************************************************************** -->
     <!-- STUDENT SERVICES -->

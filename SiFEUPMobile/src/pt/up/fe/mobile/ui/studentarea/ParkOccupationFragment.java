@@ -3,8 +3,6 @@ package pt.up.fe.mobile.ui.studentarea;
 
 import java.util.ArrayList;
 
-import java.util.List;
-
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Park;
 import pt.up.fe.mobile.sifeup.ParkUtils;
@@ -34,17 +32,19 @@ import android.widget.Toast;
  */
 public class ParkOccupationFragment extends BaseFragment implements ResponseCommand
 {    
+	
+	private final static String PARK_KEY = "pt.up.fe.mobile.ui.studentarea.PARKS";
+
     private ListView list;
     
     /** List of Parks 1, 3, 4 */
-    private List<Park> parks;
+    private ArrayList<Park> parks;
     
     private LayoutInflater mInflater;
 
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		parks = new ArrayList<Park>();		
 	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
 	}
 	
@@ -58,10 +58,37 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 		list = (ListView) root.findViewById(R.id.generic_list);
 		list.setClickable(false);
 		list.setFocusable(false);
-		ParkUtils.getParkReply("P1", this);
+		if ( savedInstanceState != null )
+        {
+			parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
+            if ( parks == null )
+            {	
+            	parks = new ArrayList<Park>();
+        		ParkUtils.getParkReply("P1", this);
+            }
+            else
+            {
+		  		ParkAdapter adapter = new ParkAdapter(getActivity(), R.layout.list_item_park);
+		        list.setAdapter(adapter);
+		        list.setClickable(false);
+	            showFastMainScreen();
+            }
+        }
+        else
+        {
+    		parks = new ArrayList<Park>();		
+    		ParkUtils.getParkReply("P1", this);
+        }
 	
 		return getParentContainer();//this is mandatory
 	}
+	
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 		if ( parks.size() != 0 )
+ 			outState.putParcelableArrayList(PARK_KEY,parks);
+ 	}
 	
 	public class ParkAdapter extends ArrayAdapter<Park>
 	{
@@ -124,15 +151,15 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 		parks.add((Park) results[0]);
 		switch (parks.size()) {
 		case 1:
-			parks.get(0).setName("P1");
+			parks.get(0).setName("P1 - " + getString(R.string.label_professor_park));
 			ParkUtils.getParkReply("P3", this);
 			break;
 		case 2:
-	  		parks.get(1).setName("P3");
+	  		parks.get(1).setName("P3 - " + getString(R.string.label_student_park));
 			ParkUtils.getParkReply("P4", this);
 			break;
 		case 3:
-	  		parks.get(2).setName("P4");
+	  		parks.get(2).setName("P4 - " + getString(R.string.label_employee_park));
 	  		ParkAdapter adapter = new ParkAdapter(getActivity(), R.layout.list_item_park);
 	         list.setAdapter(adapter);
 	         list.setClickable(false);

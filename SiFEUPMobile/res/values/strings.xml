@@ -169,6 +169,9 @@
     <!-- Park Occupation -->
     <string name="title_park_occupation">Park Occupation</string>
     <string name="btn_park_occupation">Park Occupation</string>
+    <string name="label_student_park">Students\' Park</string>
+    <string name="label_professor_park">Professors\' Park</string>
+    <string name="label_employee_park">Employees\' Park</string>
 
     <!-- *************************************************************************************** -->
     <!-- STUDENT SERVICES -->
