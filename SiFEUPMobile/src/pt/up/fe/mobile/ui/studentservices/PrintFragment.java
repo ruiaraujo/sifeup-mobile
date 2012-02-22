@@ -2,7 +2,6 @@
 
 package pt.up.fe.mobile.ui.studentservices;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +36,9 @@ import pt.up.fe.mobile.ui.BaseFragment;
  */
 public class PrintFragment extends BaseFragment implements ResponseCommand{
 
+	private final static String PRINTERS_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_QUOTA";
+
+	
     private String saldo;
     private TextView display;
     private TextView desc;
@@ -74,10 +76,31 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 				startActivity(i);
 			}
 		});
-    	PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
+    	if ( savedInstanceState != null )
+        {
+            saldo = savedInstanceState.getString(PRINTERS_KEY);
+            if ( saldo == null )
+            	PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
+            else
+            {
+            	displayData();
+                showFastMainScreen();
+            }
+        }
+        else
+        {
+        	PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
+        }
     	return getParentContainer(); //mandatory
 
     }
+    
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 		if ( saldo != null )
+ 			outState.putString(PRINTERS_KEY,saldo);
+ 	}
     
 	public void onError(ERROR_TYPE error) {
 		if ( getActivity() == null )
@@ -100,12 +123,16 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 		if ( getActivity() == null )
 			return;
 		saldo = results[0].toString();
+		displayData();
+		showMainScreen();
+	}
+	
+	private void displayData(){
 		display.setText(getString(R.string.print_balance, saldo));
 		PrintFragment.this.saldo = saldo;
 		long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
 		if ( pagesA4Black > 0 )
 			desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
-		showMainScreen();
 	}
 
 }

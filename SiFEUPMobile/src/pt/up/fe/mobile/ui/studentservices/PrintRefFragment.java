@@ -31,7 +31,9 @@ import pt.up.fe.mobile.ui.BaseFragment;
  */
 public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 	
-	RefMB ref = new RefMB();
+	private final static String PRINT_REF_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_REF";
+
+	private RefMB ref;
 	private TextView nome;
 	private TextView entidade;
 	private TextView referencia;
@@ -57,7 +59,22 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
     	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
     	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
     	root.findViewById(R.id.tableRow4).setVisibility(View.GONE);
-    	PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+    	
+    	if ( savedInstanceState != null )
+        {
+            ref = savedInstanceState.getParcelable(PRINT_REF_KEY);
+            if ( ref == null )
+            	PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+            else
+            {
+            	displayData();
+                showFastMainScreen();
+            }
+        }
+        else
+        {
+        	PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+        }
 
     	return getParentContainer(); //mandatory
 
@@ -70,6 +87,12 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
     
 
 
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 		if ( ref != null )
+ 			outState.putParcelable(PRINT_REF_KEY, ref);
+ 	}
+    
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_share) {
@@ -126,6 +149,11 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 
 	public void onResultReceived(Object... results) {
 		ref = (RefMB) results[0];
+		displayData();
+		showMainScreen();
+	}
+	
+	private void displayData(){
     	ref.setName(getString(R.string.lb_print_ref_title));
     	nome.setText(ref.getName());
 		entidade.setText(Long.toString(ref.getEntity()));
@@ -136,7 +164,6 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 		                    " " + refStr.substring(6,9));
 		valor.setText(ref.getAmount()+"€");
 		dataFim.setText(ref.getEndDate().format3339(true));
-		showMainScreen();
 	}
 
 }
