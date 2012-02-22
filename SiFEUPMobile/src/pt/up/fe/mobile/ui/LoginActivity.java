@@ -210,6 +210,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 		prefEditor.putString(PREF_PASSWORD, pass);
 		prefEditor.putString(PREF_USER_TYPE, user.getType());
 		prefEditor.commit();
+		SessionManager.getInstance().setUser(new User(user.getUser(), pass, user.getType()));
 		startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 		finish();
 		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
