@@ -104,15 +104,29 @@ public class ClassDescriptionFragment extends BaseFragment
 		
 		// Start time
 		int startTime = block.getStartTime();
-		String start = Integer.toString(startTime/3600) + ":" + Integer.toString((startTime%3600)/60);
+		StringBuilder start = new StringBuilder();
+		if ( startTime/3600 < 10 )
+			start.append("0");
+		start.append(startTime/3600);
+		start.append(":");
+		if ( ((startTime%3600)/60) <10 ) 
+			start.append("0");
+		start.append((startTime%3600)/60);
 		TextView startT = (TextView) root.findViewById(R.id.class_start_time);
-		startT.setText(getString(R.string.class_start_time,start ));
+		startT.setText(getString(R.string.class_start_time,start.toString() ));
 		
 		// End Time
 		int endTime = (int) (block.getStartTime() + block.getLectureDuration()*3600);
-		String end = Integer.toString(endTime/3600) + ":" + Integer.toString((endTime%3600)/60);
+		StringBuilder end = new StringBuilder();
+		if ( endTime/3600 < 10 )
+			start.append("0");
+		start.append(endTime/3600);
+		start.append(":");
+		if ( ((endTime%3600)/60) <10 ) 
+			start.append("0");
+		start.append((endTime%3600)/60);
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
-		endT.setText(getString(R.string.class_end_time, end));
+		endT.setText(getString(R.string.class_end_time, end.toString()));
 		
 		showMainScreen();
 		
