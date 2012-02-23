@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class UploaderService extends Service {
+public class UploaderService extends Service implements FinishedTaskListener{
 	/**
 	 * Username that should be the intent
 	 */
@@ -24,6 +24,8 @@ public class UploaderService extends Service {
 	 */
 	public final static String PASSWORD_KEY = "pt.up.fe.sendtosamba.PASSWORD";
 
+	int taskRunning = 0;
+	
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
 		Log.i("LoggerService", "Received start id " + startId + ": " + i);
@@ -39,7 +41,10 @@ public class UploaderService extends Service {
 			if (uri == null) {
 				filename = extras.getCharSequence(Intent.EXTRA_TEXT).toString();
 				if (filename == null)
+				{	
+					stopSelf();
 					return START_NOT_STICKY;
+				}
 				is = new InputStreamManaged(new ByteArrayInputStream(filename
 						.getBytes("UTF-8")));
 				is.setLength(filename.length());
@@ -61,8 +66,8 @@ public class UploaderService extends Service {
 				System.out.println("" + uri.toString().lastIndexOf('/'));
 				filename = uri.toString().substring(offset + 1);
 			}
-
-			final UploaderTask task = new UploaderTask(this, is, filename);
+			taskRunning++;
+			final UploaderTask task = new UploaderTask(this, this, is, filename);
 			task.execute(username, password);
 
 		} catch (Exception e) {
@@ -71,9 +76,7 @@ public class UploaderService extends Service {
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return START_STICKY;
-	}
-
-	
+	}	
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in
@@ -87,6 +90,12 @@ public class UploaderService extends Service {
 
 	public IBinder onBind(Intent arg0) {
 		return new LoggerServiceBinder();
+	}
+
+	public void finishedTask() {
+		taskRunning--;
+		if ( taskRunning == 0 )
+			stopSelf();
 	};
 
 	

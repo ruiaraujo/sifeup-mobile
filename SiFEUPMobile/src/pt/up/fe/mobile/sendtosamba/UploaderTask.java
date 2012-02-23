@@ -21,6 +21,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 	private final String filename;
 	private Notification notification;
 	private final Context context;
+	private final FinishedTaskListener listener;
 
 	private int error = 0;
 	private final static int WRONG_CREDENTIAL = 1;
@@ -34,11 +35,12 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
 	private final static String SERVER = "tom.fe.up.pt";
 
-	public UploaderTask(final Context con, final InputStreamManaged is,
-			final String filename) {
+	public UploaderTask(final FinishedTaskListener lis, final Context con,
+			final InputStreamManaged is, final String filename) {
 		this.is = is;
 		this.filename = filename;
 		this.context = con;
+		this.listener = lis;
 		UNIQUE_ID = (int) (R.string.app_name + System.currentTimeMillis());
 		mNotificationManager = (NotificationManager) con
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -147,24 +149,28 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 						.getString(R.string.notification_uploader_title));
 				notBuilder.setContentText(context.getString(
 						R.string.notification_uploader_finished, filename));
-			}
-			else {
+			} else {
 				switch (error) {
 				case WRONG_CREDENTIAL:
-					notBuilder.setContentTitle(context
-							.getString(R.string.notification_uploader_error_credential_title));
-					notBuilder.setContentText(context.getString(
-							R.string.notification_uploader_error_credential));
+					notBuilder
+							.setContentTitle(context
+									.getString(R.string.notification_uploader_error_credential_title));
+					notBuilder
+							.setContentText(context
+									.getString(R.string.notification_uploader_error_credential));
 					break;
 				case WRONG_HOST:
-					notBuilder.setContentTitle(context
-							.getString(R.string.notification_uploader_error_host_title));
-					notBuilder.setContentText(context.getString(
-							R.string.notification_uploader_error_host));
+					notBuilder
+							.setContentTitle(context
+									.getString(R.string.notification_uploader_error_host_title));
+					notBuilder
+							.setContentText(context
+									.getString(R.string.notification_uploader_error_host));
 					break;
 				default:
-					notBuilder.setContentTitle(context
-							.getString(R.string.notification_uploader_error_title));
+					notBuilder
+							.setContentTitle(context
+									.getString(R.string.notification_uploader_error_title));
 					notBuilder.setContentText(context.getString(
 							R.string.notification_uploader_error, filename));
 					break;
@@ -187,27 +193,40 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 			else {
 				switch (error) {
 				case WRONG_CREDENTIAL:
-					notification.setLatestEventInfo(context, context
-							.getString(R.string.notification_uploader_error_credential_title),
-							context.getString(
-									R.string.notification_uploader_error_credential), null);
+					notification
+							.setLatestEventInfo(
+									context,
+									context
+											.getString(R.string.notification_uploader_error_credential_title),
+									context
+											.getString(R.string.notification_uploader_error_credential),
+									null);
 					break;
 				case WRONG_HOST:
-					notification.setLatestEventInfo(context, context
-							.getString(R.string.notification_uploader_error_host_title),
-							context.getString(
-									R.string.notification_uploader_error_host), null);
+					notification
+							.setLatestEventInfo(
+									context,
+									context
+											.getString(R.string.notification_uploader_error_host_title),
+									context
+											.getString(R.string.notification_uploader_error_host),
+									null);
 					break;
 				default:
-					notification.setLatestEventInfo(context, context
-							.getString(R.string.notification_uploader_error_title),
-							context.getString(
-									R.string.notification_uploader_error,
-									filename), null);
+					notification
+							.setLatestEventInfo(
+									context,
+									context
+											.getString(R.string.notification_uploader_error_title),
+									context
+											.getString(
+													R.string.notification_uploader_error,
+													filename), null);
 					break;
 				}
 			}
 			mNotificationManager.notify(UNIQUE_ID, notification);
+			listener.finishedTask();
 		}
 	}
 
