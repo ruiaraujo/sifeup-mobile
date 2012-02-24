@@ -261,9 +261,9 @@ public class ChangePasswordFragment extends BaseFragment implements
 		if ( session.isUserLoaded() )
 		{
 			User user = session.getUser();
-			if (!user.equals("")
-					&& user.getUser().equals(usernameText.getText().toString())) {
-				session.setUser(new User(user.getUser(), newPasswordText.getText().toString(), user.getType()));
+			if ( user.getUser().equals(usernameText.getText().toString()) ||
+					user.getDisplayName().equals(usernameText.getText().toString()) ) {
+				session.setUser(new User(user.getDisplayName(),user.getUser(), newPasswordText.getText().toString(), user.getType()));
 			 }
 		}
 		

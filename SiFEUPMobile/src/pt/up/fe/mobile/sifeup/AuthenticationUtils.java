@@ -25,7 +25,6 @@ public class AuthenticationUtils {
 			User user = JSONUser(page);
 			if (user == null)
 				return ERROR_TYPE.AUTHENTICATION;
-			SessionManager.getInstance().setUser(user);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return ERROR_TYPE.GENERAL;
@@ -38,7 +37,7 @@ public class AuthenticationUtils {
 		if (jObject.optBoolean("authenticated")) {
 			final String user = jObject.getString("codigo");
 			final String type = jObject.getString("tipo");
-			return new User(user, null, type);
+			return new User("" , user, "", type);
 		}
 		return null;
 	}

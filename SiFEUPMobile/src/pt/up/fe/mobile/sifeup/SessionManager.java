@@ -18,6 +18,7 @@ public class SessionManager
 {	
 	
 	public static final String PREF_USERNAME = "pt.up.fe.mobile.ui.USERNAME";
+	public static final String PREF_DISPLAY_NAME = "pt.up.fe.mobile.ui.USERNAME_DISPLAY";
 	public static final String PREF_PASSWORD = "pt.up.fe.mobile.ui.PASSWORD";
 	public static final String PREF_USER_TYPE = "pt.up.fe.mobile.ui.USER_TYPE";
 	public static final String PREF_COOKIE = "pt.up.fe.mobile.ui.COOKIE";
@@ -83,6 +84,14 @@ public class SessionManager
 	public String getLoginCode() {
 		return user.getUser();
 	}
+	
+	/**
+	 * Get Login Name
+	 * @return the login name
+	 */
+	public String getLoginName() {
+		return user.getDisplayName();
+	}
 
 	/**
 	 * Get Login Password
@@ -101,6 +110,7 @@ public class SessionManager
 		SharedPreferences loginSettings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
 		final SharedPreferences.Editor prefEditor = loginSettings.edit();
 		prefEditor.putString(PREF_USERNAME, user.getUser());
+		prefEditor.putString(PREF_DISPLAY_NAME, user.getDisplayName());
 		prefEditor.putString(PREF_PASSWORD, user.getPassword());
 		prefEditor.putString(PREF_USER_TYPE, user.getType());
 		prefEditor.commit();
@@ -117,16 +127,17 @@ public class SessionManager
 	
 	public boolean loadSession(){
         SharedPreferences loginSettings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
+        final String display = loginSettings.getString(PREF_DISPLAY_NAME, "");
         final String user = loginSettings.getString(PREF_USERNAME, "");
         final String pass = loginSettings.getString(PREF_PASSWORD, "") ;
         final String type = loginSettings.getString(PREF_USER_TYPE, "") ;
         cookie = loginSettings.getString(PREF_COOKIE, "") ;
-        if ( !user.equals("") && !pass.equals("") && !type.equals("") )
+        if ( !display.equals("") && !user.equals("") && !pass.equals("") && !type.equals("") )
         {
-        	this.user = new User(user, pass, type);
+        	this.user = new User(display, user, pass, type);
         	return true;
         }
-        this.user = new User("", "", "");
+        this.user = new User("","", "", "");
         return false;
 	}
 	
@@ -134,6 +145,7 @@ public class SessionManager
 		SharedPreferences loginSettings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
 		final SharedPreferences.Editor prefEditor = loginSettings.edit();
 		prefEditor.putString(PREF_USERNAME, "");
+		prefEditor.putString(PREF_DISPLAY_NAME, "");
 		prefEditor.putString(PREF_PASSWORD, "");
 		prefEditor.putString(PREF_USER_TYPE, "");
 		prefEditor.putString(PREF_COOKIE, "");

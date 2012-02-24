@@ -4,13 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User implements Parcelable{
+	private final String displayName;
 	private final String user;
 	private final String password;
 	private final String type;
-	public User(String user, String password, String type) {
+	public User(String displayName, String user, String password, String type) {
+		this.displayName = displayName;
 		this.user = user;
 		this.password = password;
 		this.type = type;
+	}
+	public String getDisplayName() {
+		return displayName;
 	}
 	public String getUser() {
 		return user;
@@ -38,12 +43,14 @@ public class User implements Parcelable{
 	
 
 	private User(Parcel in) {
+		displayName = in.readString();
 		user = in.readString();
 		password = in.readString();
 		type = in.readString();
 	}
 	
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(displayName);
 		dest.writeString(user);
 		dest.writeString(password);
 		dest.writeString(type);

@@ -42,16 +42,13 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		// como os objectos sao declarados em xml para termos a referencia deles
-		// temos de fazer isto
 		username = (EditText) findViewById(R.id.login_username);
 		passwordEditText = (EditText) findViewById(R.id.login_pass);
 
-		// verficar se o utilizador carregou no remember me e se sim
 		// preencher os campos com as informações gravadas
 		final SessionManager session = SessionManager.getInstance(this);
 		session.loadSession();
-		user = session.getLoginCode();
+		user = session.getLoginName();
 		pass = session.getLoginPassword();
 		if (!user.equals("") && !pass.equals("")) {
 			username.setText(user);
@@ -109,9 +106,6 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 			final String cookie = session.getCookie();
 			final String type = session.getUser().getType();
 			if (!cookie.equals("") && !type.equals("")) {
-				SessionManager.getInstance().setCookie(cookie);
-				SessionManager.getInstance()
-						.setUser(new User(user, pass, type));
 				startActivity(new Intent(this, HomeActivity.class));
 				finish();
 				overridePendingTransition(R.anim.slide_right_in,
@@ -191,7 +185,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 	public void onResultReceived(Object... results) {
 		removeDialog(DIALOG_CONNECTING);
 		User user = (User) results[0];
-		SessionManager.getInstance().setUser(new User(user.getUser(), pass, user.getType()));
+		SessionManager.getInstance().setUser(new User(this.user,user.getUser(), pass, user.getType()));
 		SessionManager.tuitionHistory.setLoaded(false);
 		SessionManager.friends.setLoaded(false);
 		startActivity(new Intent(LoginActivity.this, HomeActivity.class));
