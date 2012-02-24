@@ -47,11 +47,16 @@ public class SubjectsFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.generic_list,
 				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-		SubjectUtils.getSubjectsReply(SessionManager.getInstance()
-				.getLoginCode(), Integer.toString(UIUtils
-				.secondYearOfSchoolYear() - 1), this);
 		return getParentContainer(); // this is mandatory.
 	}
+	
+
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        SubjectUtils.getSubjectsReply(SessionManager.getInstance()
+                .getLoginCode(), Integer.toString(UIUtils
+                .secondYearOfSchoolYear() - 1), this);
+    }
 
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)

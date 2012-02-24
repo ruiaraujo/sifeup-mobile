@@ -62,8 +62,12 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
         viewPager = (ViewPager)root.findViewById(R.id.pager_menu);
        
         // Find the indicator from the layout
-        indicator = (TitlePageIndicator)root.findViewById(R.id.indicator_menu);
-
+        indicator = (TitlePageIndicator)root.findViewById(R.id.indicator_menu);       
+		return getParentContainer();//mandatory
+	}
+	
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         if ( savedInstanceState != null )
         {
             canteens = savedInstanceState.getParcelableArrayList(CANTEEN_KEY);
@@ -77,9 +81,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
             canteens = new ArrayList<Canteen>();
             CanteenUtils.getCanteensReply(this);
         }
-       
-		return getParentContainer();//mandatory
-	}
+    }
 	
 	/**
  	 * Build Pages

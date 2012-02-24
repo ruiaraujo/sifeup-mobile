@@ -40,8 +40,8 @@ import pt.up.fe.mobile.utils.calendar.Event;
 public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 	/** Stores all exams from Student */
-	private ArrayList<Exam> exams = new ArrayList<Exam>();
-	final public static String PROFILE_CODE = "profile";
+	private ArrayList<Exam> exams;
+	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 	private ListView list;
 
 	@Override
@@ -57,13 +57,18 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		View root = inflater.inflate(R.layout.generic_list,
 				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-		String personCode = (String) getArguments().get(PROFILE_CODE);
-		if (personCode == null)
-			personCode = SessionManager.getInstance().getLoginCode();
-		ExamsUtils.getExamsReply(personCode, this);
-		showLoadingScreen();
 		return getParentContainer(); // this is mandatory.
 	}
+	
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        String personCode = (String) getArguments().get(PROFILE_CODE);
+        if (personCode == null)
+            personCode = SessionManager.getInstance().getLoginCode();
+        ExamsUtils.getExamsReply(personCode, this);
+    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -43,16 +43,21 @@ public class TuitionHistoryFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.generic_list,
 				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-		if (!SessionManager.tuitionHistory.isLoaded())
-			TuitionUtils.getTuitionReply(SessionManager.getInstance()
-					.getLoginCode(), this);
-		else {
-			loadList();
-			showFastMainScreen();
-		}
 
 		return getParentContainer(); // this is mandatory.
 	}
+	
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        if (!SessionManager.tuitionHistory.isLoaded())
+            TuitionUtils.getTuitionReply(SessionManager.getInstance()
+                    .getLoginCode(), this);
+        else {
+            loadList();
+            showFastMainScreen();
+        }
+    }
 
 	private void loadList() {
 		if (getActivity() == null)

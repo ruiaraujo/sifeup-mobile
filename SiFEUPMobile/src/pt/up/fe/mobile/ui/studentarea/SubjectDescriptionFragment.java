@@ -102,9 +102,12 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
         indicator.setViewPager(viewPager);
         // Set the indicator as the pageChangeListener
         indicator.setOnPageChangeListener(this);
-        SubjectUtils.getSubjectReply(code, year, period, this);		
         return getParentContainer();
 	}
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        SubjectUtils.getSubjectReply(code, year, period, this);
+    }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.subject_menu_items, menu);

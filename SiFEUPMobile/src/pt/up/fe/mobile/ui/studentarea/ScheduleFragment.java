@@ -153,10 +153,13 @@ public class ScheduleFragment extends BaseFragment implements
 		setupDay(mondayMillis + (7 * DateUtils.DAY_IN_MILLIS), 6);
 		onPageSelected(1);
 
-		updateSchedule();
-
 		return getParentContainer();
 	}
+	
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        updateSchedule();
+    }
 
 	private void increaseDay() {
 		mTitleCurrentDayIndex++;

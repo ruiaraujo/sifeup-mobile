@@ -161,8 +161,8 @@ public class BaseFragment extends Fragment {
     }
     
     @Override
-    public void onResume(){
-    	super.onResume();
+    public void onActivityCreated (Bundle savedInstanceState){
+    	super.onActivityCreated(savedInstanceState);
         // Recovering the Cookie here
         // as every activity will descend from this one.
         if (!SessionManager.getInstance().isUserLoaded()) {

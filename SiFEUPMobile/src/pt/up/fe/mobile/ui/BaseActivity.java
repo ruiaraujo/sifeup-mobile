@@ -6,8 +6,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 
@@ -40,12 +38,6 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recovering the Cookie here
-        // as every activity will descend from this one.
-        if (!SessionManager.getInstance().isUserLoaded()) {
-        	if ( !SifeupUtils.loadSession(this) )
-            	goLogin();
-        }
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
                 getClass().getSimpleName());

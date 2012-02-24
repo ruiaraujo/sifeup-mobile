@@ -57,31 +57,34 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 		View root = inflater.inflate(R.layout.generic_list, getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
 		list.setClickable(false);
-		list.setFocusable(false);
-		if ( savedInstanceState != null )
+		list.setFocusable(false);	
+		return getParentContainer();//this is mandatory
+	}
+	
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        if ( savedInstanceState != null )
         {
-			parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
+            parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
             if ( parks == null )
-            {	
-            	parks = new ArrayList<Park>();
-        		ParkUtils.getParkReply("P1", this);
+            {   
+                parks = new ArrayList<Park>();
+                ParkUtils.getParkReply("P1", this);
             }
             else
             {
-		  		ParkAdapter adapter = new ParkAdapter(getActivity(), R.layout.list_item_park);
-		        list.setAdapter(adapter);
-		        list.setClickable(false);
-	            showFastMainScreen();
+                ParkAdapter adapter = new ParkAdapter(getActivity(), R.layout.list_item_park);
+                list.setAdapter(adapter);
+                list.setClickable(false);
+                showFastMainScreen();
             }
         }
         else
         {
-    		parks = new ArrayList<Park>();		
-    		ParkUtils.getParkReply("P1", this);
+            parks = new ArrayList<Park>();      
+            ParkUtils.getParkReply("P1", this);
         }
-	
-		return getParentContainer();//this is mandatory
-	}
+    }
 	
 
  	@Override

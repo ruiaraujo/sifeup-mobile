@@ -33,7 +33,7 @@ import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 public class TuitionRefDetailFragment extends Fragment {
 
-	RefMB ref;
+    private RefMB ref;
 	private TextView nome;
 	private TextView entidade;
 	private TextView referencia;
@@ -45,27 +45,12 @@ public class TuitionRefDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/ReferenceDetail");
     }
-
-    private void loadValues() 
-    {
-    	YearsTuition y=SessionManager.tuitionHistory.getHistory().get(SessionManager.tuitionHistory.currentYear);
-		ref=y.getReferences().get(y.getSelectedReference());
-		nome.setText(ref.getName());
-		entidade.setText(""+ref.getEntity());
-		referencia.setText(""+ref.getRef());
-		valor.setText(ref.getAmount()+"€");
-		dataIni.setText(ref.getStartDate().format3339(true));
-		dataFim.setText(ref.getEndDate().format3339(true));
-	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		//loadValues();
-    	//new PrintTask().execute();
     	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, null);
     	
     	nome=(TextView)root.findViewById(R.id.tuition_ref_detail_name);
@@ -74,7 +59,14 @@ public class TuitionRefDetailFragment extends Fragment {
     	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
     	dataIni=(TextView)root.findViewById(R.id.tuition_ref_detail_date_start);
     	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
-    	loadValues();
+    	YearsTuition y=SessionManager.tuitionHistory.getHistory().get(SessionManager.tuitionHistory.currentYear);
+        ref=y.getReferences().get(y.getSelectedReference());
+        nome.setText(ref.getName());
+        entidade.setText(""+ref.getEntity());
+        referencia.setText(""+ref.getRef());
+        valor.setText(ref.getAmount()+"€");
+        dataIni.setText(ref.getStartDate().format3339(true));
+        dataFim.setText(ref.getEndDate().format3339(true));
     	return root;
 
     }

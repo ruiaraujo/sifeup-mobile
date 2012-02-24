@@ -71,12 +71,6 @@ public class StudentProfileFragment extends BaseFragment implements
 		code = ((TextView) root.findViewById(R.id.profile_code));
 		details = ((ListView) root.findViewById(R.id.profile_details));
 		friend = ((CheckBox) root.findViewById(R.id.profile_star_friend));
-		String code = getArguments().get(ProfileActivity.PROFILE_CODE)
-				.toString();
-
-		// You can't friend yourself
-		if (code.equals(SessionManager.getInstance().getLoginCode()))
-			friend.setVisibility(View.INVISIBLE);
 		friend.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -106,9 +100,21 @@ public class StudentProfileFragment extends BaseFragment implements
 					}
 				});
 
-		ProfileUtils.getStudentReply(code, this);
 		return getParentContainer();
 	}
+	
+	public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        String code = getArguments().get(ProfileActivity.PROFILE_CODE)
+                .toString();
+
+        if ( code == null )
+            code = SessionManager.getInstance().getLoginCode();
+        // You can't friend yourself
+        if (code.equals(SessionManager.getInstance().getLoginCode()))
+            friend.setVisibility(View.INVISIBLE);
+        ProfileUtils.getStudentReply(code, this);
+    }
 
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)

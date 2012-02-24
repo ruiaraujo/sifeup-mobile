@@ -59,41 +59,45 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
     	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
     	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
     	root.findViewById(R.id.tableRow4).setVisibility(View.GONE);
-    	
-    	if ( savedInstanceState != null )
+
+
+    	return getParentContainer(); //mandatory
+
+    } 
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);        
+        if ( savedInstanceState != null )
         {
             ref = savedInstanceState.getParcelable(PRINT_REF_KEY);
             if ( ref == null )
-            	PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+                PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
             else
             {
-            	displayData();
+                displayData();
                 showFastMainScreen();
             }
         }
         else
         {
-        	PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+            PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
         }
-
-    	return getParentContainer(); //mandatory
-
-    } 
+    }
     
+    @Override   
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.share_menu_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
     
-
-
  	@Override
  	public void onSaveInstanceState (Bundle outState){
  		if ( ref != null )
  			outState.putParcelable(PRINT_REF_KEY, ref);
  	}
     
-
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_share) {
         	try

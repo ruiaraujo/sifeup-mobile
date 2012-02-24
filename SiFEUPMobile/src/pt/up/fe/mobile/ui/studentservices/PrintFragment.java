@@ -76,25 +76,29 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 				startActivity(i);
 			}
 		});
-    	if ( savedInstanceState != null )
+    	return getParentContainer(); //mandatory
+
+    }
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        if ( savedInstanceState != null )
         {
             saldo = savedInstanceState.getString(PRINTERS_KEY);
             if ( saldo == null )
-            	PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
+                PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
             else
             {
-            	displayData();
+                displayData();
                 showFastMainScreen();
             }
         }
         else
         {
-        	PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
+            PrinterUtils.getPrintReply(SessionManager.getInstance().getLoginCode(), this);
         }
-    	return getParentContainer(); //mandatory
-
     }
-    
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){

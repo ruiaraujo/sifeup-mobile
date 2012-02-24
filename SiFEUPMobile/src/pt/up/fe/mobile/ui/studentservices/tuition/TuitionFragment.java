@@ -32,8 +32,12 @@ public class TuitionFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionHistory");
-        loadList();
+    }
 
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        loadList();
     }
     
     private void loadList() 

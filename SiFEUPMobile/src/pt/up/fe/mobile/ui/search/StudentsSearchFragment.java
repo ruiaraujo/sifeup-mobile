@@ -63,16 +63,17 @@ public class StudentsSearchFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.generic_list,
 				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
+		return getParentContainer();
+	}
 
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
 		if (query.matches(REGEX_STUDENT_CODE))
 			SearchUtils.getSingleStudentSearchReply(query, this);
 		else
 			SearchUtils.getStudentsSearchReply(query, 1, this);
-
-		return getParentContainer();
-
-	}
-
+    }
+    
 	private boolean hasMoreResults() {
 		if (results.isEmpty())
 			return true;

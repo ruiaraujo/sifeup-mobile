@@ -99,6 +99,17 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		ProfileUtils.getEmployeeReply(code, this);
         return getParentContainer();
     }
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
+        if ( code == null )
+            code = SessionManager.getInstance().getLoginCode();
+
+        // You can't friend yourself
+        if (code.equals(SessionManager.getInstance().getLoginCode()))
+            friend.setVisibility(View.INVISIBLE);
+        ProfileUtils.getEmployeeReply(code, this);
+    }
     
 
 	public void onError(ERROR_TYPE error) {

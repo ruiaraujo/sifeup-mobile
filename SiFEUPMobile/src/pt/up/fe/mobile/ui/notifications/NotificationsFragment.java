@@ -51,9 +51,13 @@ public class NotificationsFragment extends BaseFragment implements
         View root = inflater.inflate(R.layout.generic_list,
                 getParentContainer(), true);
         list = (ListView) root.findViewById(R.id.generic_list);
-        notifications = new ArrayList<Notification>();
-        NotificationUtils.getNotificationsReply(this);
         return getParentContainer(); // this is mandatory.
+    }
+    
+
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        NotificationUtils.getNotificationsReply(this);
     }
 
     @Override

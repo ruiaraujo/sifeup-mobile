@@ -73,8 +73,8 @@ public class FriendsListFragment extends BaseFragment implements
         inflater.inflate(R.menu.friends_menu_context, menu);
     }
 
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         new FriendsTask().execute();
     }
 

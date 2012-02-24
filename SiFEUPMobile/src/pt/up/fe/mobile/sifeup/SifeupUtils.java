@@ -15,6 +15,8 @@ public class SifeupUtils {
         final String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
         final String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "") ;
         final String type = loginSettings.getString(LoginActivity.PREF_USER_TYPE, "") ;
+        final String cookie = loginSettings.getString(LoginActivity.PREF_COOKIE, "") ;
+        SessionManager.getInstance().setCookie(cookie);
         if ( !user.equals("") && !pass.equals("") && !type.equals("") )
         {
         	SessionManager.getInstance().setUser(new User(user, pass, type));
