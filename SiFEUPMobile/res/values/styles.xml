@@ -7,6 +7,9 @@
     <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
+        
+        <!-- For Android 2.1+ -->
+        <item name="actionBarStyle">@style/ActionBar</item>
 
         <!-- custom attributes -->
         <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
