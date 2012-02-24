@@ -16,7 +16,7 @@ public class SendToSambaActivity extends Activity {
 		final SessionManager session = SessionManager.getInstance(this);
 		if ( session.loadSession() )
 		{
-			final String user = session.getLoginCode();
+			final String user = session.getLoginName();
 			final String pass = session.getLoginPassword();
 			Intent i = new Intent(this, UploaderService.class);
 			i.replaceExtras(getIntent());
