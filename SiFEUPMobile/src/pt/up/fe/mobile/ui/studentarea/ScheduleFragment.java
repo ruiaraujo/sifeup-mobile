@@ -598,6 +598,7 @@ public class ScheduleFragment extends BaseFragment implements
 			updateNowView();
 		} else {
 			mPager.setCurrentItem(1);
+            updateNowView();
 		}
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			fetchingNextWeek = false;
