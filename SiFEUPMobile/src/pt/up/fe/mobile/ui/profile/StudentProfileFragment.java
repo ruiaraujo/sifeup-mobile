@@ -109,9 +109,9 @@ public class StudentProfileFragment extends BaseFragment implements
                 .toString();
 
         if ( code == null )
-            code = SessionManager.getInstance().getLoginCode();
+            code = SessionManager.getInstance(getActivity()).getLoginCode();
         // You can't friend yourself
-        if (code.equals(SessionManager.getInstance().getLoginCode()))
+        if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
             friend.setVisibility(View.INVISIBLE);
         ProfileUtils.getStudentReply(code, this);
     }

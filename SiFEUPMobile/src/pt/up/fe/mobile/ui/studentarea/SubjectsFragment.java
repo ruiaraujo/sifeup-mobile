@@ -53,7 +53,7 @@ public class SubjectsFragment extends BaseFragment implements
 
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        SubjectUtils.getSubjectsReply(SessionManager.getInstance()
+        SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
                 .getLoginCode(), Integer.toString(UIUtils
                 .secondYearOfSchoolYear() - 1), this);
     }

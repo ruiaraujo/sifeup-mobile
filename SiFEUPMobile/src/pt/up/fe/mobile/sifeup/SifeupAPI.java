@@ -156,6 +156,11 @@ public class SifeupAPI {
 	}
 	
 	/**
+	 * The student type returned by the authenticator
+	 */
+	public final static String STUDENT_TYPE = "A"; 
+	
+	/**
 	 * Authentication Url for Web Service
 	 * @param code student code
 	 * @param password student password

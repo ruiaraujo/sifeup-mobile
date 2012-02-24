@@ -185,7 +185,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 	public void onResultReceived(Object... results) {
 		removeDialog(DIALOG_CONNECTING);
 		User user = (User) results[0];
-		SessionManager.getInstance().setUser(new User(this.user,user.getUser(), pass, user.getType()));
+		SessionManager.getInstance(this).setUser(new User(this.user,user.getUser(), pass, user.getType()));
 		SessionManager.tuitionHistory.setLoaded(false);
 		SessionManager.friends.setLoaded(false);
 		startActivity(new Intent(LoginActivity.this, HomeActivity.class));

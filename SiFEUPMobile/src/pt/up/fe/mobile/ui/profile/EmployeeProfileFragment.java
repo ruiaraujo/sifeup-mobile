@@ -69,9 +69,6 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
 		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
-		String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
-		if ( code == null )
-			code = SessionManager.getInstance().getLoginCode();
 		friend.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -101,10 +98,10 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
         super.onActivityCreated(savedInstanceState);
         String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
         if ( code == null )
-            code = SessionManager.getInstance().getLoginCode();
+            code = SessionManager.getInstance(getActivity()).getLoginCode();
 
         // You can't friend yourself
-        if (code.equals(SessionManager.getInstance().getLoginCode()))
+        if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
             friend.setVisibility(View.INVISIBLE);
         ProfileUtils.getEmployeeReply(code, this);
     }

@@ -51,7 +51,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         if (!SessionManager.tuitionHistory.isLoaded())
-            TuitionUtils.getTuitionReply(SessionManager.getInstance()
+            TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
                     .getLoginCode(), this);
         else {
             loadList();

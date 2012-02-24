@@ -68,7 +68,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         super.onActivityCreated(savedInstanceState);
         String personCode = (String) getArguments().get(PROFILE_CODE);
         if (personCode == null)
-            personCode = SessionManager.getInstance().getLoginCode();
+            personCode = SessionManager.getInstance(getActivity()).getLoginCode();
         if ( savedInstanceState != null )
         {
             exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);

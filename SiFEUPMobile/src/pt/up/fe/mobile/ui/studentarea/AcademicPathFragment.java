@@ -68,7 +68,7 @@ public class AcademicPathFragment extends BaseFragment implements
                     @Override
                     public void onClick(View v) {
                         final String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod="
-                                + SessionManager.getInstance().getLoginCode();
+                                + SessionManager.getInstance(getActivity()).getLoginCode();
                         Intent i = new Intent(getActivity(),
                                 WebviewActivity.class);
                         i.putExtra(WebviewFragment.URL_INTENT, url);
@@ -80,7 +80,7 @@ public class AcademicPathFragment extends BaseFragment implements
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance()
+        AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
                 .getLoginCode(), this);
     }
 

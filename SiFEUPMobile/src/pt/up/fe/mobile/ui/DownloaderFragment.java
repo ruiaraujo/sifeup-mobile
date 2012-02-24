@@ -95,6 +95,8 @@ public class DownloaderFragment extends DialogFragment {
 			private File myFile;
 			protected void onPostExecute(String result) //TODO: add error handling
 			{
+			    if ( getActivity() == null )
+			        return;
 				if ( result == null )
 					return;
 				DownloaderFragment.this.dismiss();
@@ -140,7 +142,7 @@ public class DownloaderFragment extends DialogFragment {
 					
 					//lastTime = downloadBegin= System.currentTimeMillis();
 					con =  SifeupAPI.getUncheckedConnection(argsDownload[0]);
-					con.setRequestProperty("Cookie", SessionManager.getInstance().getCookie());
+					con.setRequestProperty("Cookie", SessionManager.getInstance(getActivity()).getCookie());
 					con.connect();
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);
 					
