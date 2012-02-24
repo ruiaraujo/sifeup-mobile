@@ -1,5 +1,9 @@
 package pt.up.fe.mobile.sifeup;
 
+import java.util.Iterator;
+
+import org.json.JSONObject;
+
 import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.ui.LoginActivity;
 import android.content.Context;
@@ -10,6 +14,18 @@ public class SifeupUtils {
 	
 	private SifeupUtils(){}
 
+	@SuppressWarnings("unchecked")
+	public static void removeEmptyKeys(final JSONObject jObject){
+		// remove stupid mappings
+		Iterator it = jObject.keys();
+		while ( it.hasNext() )
+		{
+			String key = it.next().toString();
+			if ( jObject.optString(key).equals("") )
+				it.remove();
+		}
+	}
+	
 	public static boolean loadSession( final Context context){
         SharedPreferences loginSettings = context.getSharedPreferences(LoginActivity.class.getName(), Context.MODE_PRIVATE);  
         final String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");

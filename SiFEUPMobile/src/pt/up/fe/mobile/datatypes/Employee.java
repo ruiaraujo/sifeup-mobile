@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.sifeup.SifeupUtils;
 import android.content.res.Resources;
 
 /**
@@ -81,32 +82,33 @@ public class Employee extends Profile implements Serializable {
 	 */
 	public Employee JSONSubject(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
-		this.code = jObject.optString("codigo");
-		this.name = jObject.optString("nome");
-		this.webPage = jObject.optString("pagina_web");
-		this.acronym = jObject.optString("sigla");
-		this.state = jObject.optString("estado");
-		this.email = jObject.optString("email");
-		this.emailAlt = jObject.optString("email_alt");
-		this.phone = jObject.optString("telefone");
-		this.extPhone = jObject.optString("ext_tel");
-		if (jObject.has("voip_ext"))
-			this.voipExt = jObject.getInt("voip_ext");
-		this.mobilePhone = jObject.optString("telemovel");
+		SifeupUtils.removeEmptyKeys(jObject);
+		if(jObject.has("codigo")) this.code = jObject.getString("codigo");
+		if(jObject.has("nome")) this.name = jObject.getString("nome");
+		if(jObject.has("pagina_web")) this.webPage = jObject.getString("pagina_web");
+		if(jObject.has("sigla")) this.acronym = jObject.getString("sigla");
+		if(jObject.has("estado")) this.state = jObject.getString("estado");
+		if(jObject.has("email")) this.email = jObject.getString("email");
+		if(jObject.has("email_alt")) this.emailAlt = jObject.getString("email_alt");
+		if(jObject.has("telefone")) this.phone = jObject.getString("telefone");
+		if(jObject.has("ext_tel")) this.extPhone = jObject.getString("ext_tel");
+		if(jObject.has("voip_ext")) this.voipExt = jObject.getInt("voip_ext");
+		if(jObject.has("telemovel")) this.mobilePhone = jObject.getString("telemovel");
+		
+		if(jObject.has("salas")){
+    		JSONArray jArray = jObject.getJSONArray("salas");
+    		
+    		for(int i = 0; i < jArray.length(); i++)
+    		{
+    			Room room = new Room();
+    			
+    			JSONObject jRoom = jArray.getJSONObject(i);
+    			
+    			if(jRoom.has("cod_edi")) room.codEdi = jRoom.getString("cod_edi");
+    			if(jRoom.has("cod_sala")) room.codRoom = jRoom.getInt("cod_sala");
 
-		if (jObject.has("salas")) {
-			JSONArray jArray = jObject.getJSONArray("salas");
-
-			for (int i = 0; i < jArray.length(); i++) {
-				Room room = new Room();
-				JSONObject jRoom = jArray.getJSONObject(i);
-
-				room.codEdi = jRoom.optString("cod_edi");
-				if (jRoom.has("cod_sala"))
-					room.codRoom = jRoom.getInt("cod_sala");
-
-				this.rooms.add(room);
-			}
+    			this.rooms.add(room);
+    		}
 		}
 		return this;
 	}

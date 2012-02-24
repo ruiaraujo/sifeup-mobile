@@ -35,6 +35,7 @@ public class ProfileUtils {
 			try {
 				Student me = new Student();
 				JSONObject jObject = new JSONObject(page);
+				SifeupUtils.removeEmptyKeys(jObject);
 	            if(jObject.has("codigo"))
 	                me.setCode(jObject.getString("codigo"));
 	            if(jObject.has("nome"))

@@ -95,8 +95,6 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	    		startActivity(i);
 			}
 		});
-		
-		ProfileUtils.getEmployeeReply(code, this);
         return getParentContainer();
     }
     public void onActivityCreated (Bundle savedInstanceState){
