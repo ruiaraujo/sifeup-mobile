@@ -226,8 +226,9 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 				}
 			}
 			mNotificationManager.notify(UNIQUE_ID, notification);
-			listener.finishedTask();
 		}
+		listener.finishedTask();
+
 	}
 
 }

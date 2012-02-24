@@ -32,6 +32,18 @@ public class UploaderService extends Service implements FinishedTaskListener {
         Log.i("UploaderService", "Received start id " + startId + ": " + i);
 
         Intent intent = i;
+        if ( intent == null )
+        {
+        	if ( taskRunning == 0 )
+        	{
+	        	stopSelf();
+	        	return START_NOT_STICKY;
+        	}
+        	else
+        	{
+        		return START_STICKY;
+        	}
+        }
         Bundle extras = intent.getExtras();
         final String username = intent.getStringExtra(USERNAME_KEY);
         final String password = intent.getStringExtra(PASSWORD_KEY);
@@ -45,8 +57,15 @@ public class UploaderService extends Service implements FinishedTaskListener {
                     Toast.makeText(this,
                             getString(R.string.notification_unsupported),
                             Toast.LENGTH_SHORT).show();
-                    stopSelf();
-                    return START_NOT_STICKY;
+                    if ( taskRunning == 0 )
+                	{
+        	        	stopSelf();
+        	        	return START_NOT_STICKY;
+                	}
+                	else
+                	{
+                		return START_STICKY;
+                	}
                 }
                 is = new InputStreamManaged(new ByteArrayInputStream(filename
                         .toString().getBytes("UTF-8")));
