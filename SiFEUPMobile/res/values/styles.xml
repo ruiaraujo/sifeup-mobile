@@ -56,6 +56,10 @@
         <item name="android:background">@color/actionbar_background</item>
         <item name="android:textColor">@color/accent_1</item>
         <item name="android:titleTextStyle">@style/ActionBarText</item>
+        <!-- For Android 2.1+ -->
+        <item name="titleTextStyle">@style/ActionBarText</item>
+        <item name="background">@color/actionbar_background</item>
+        
     </style>
 
     <style name="ActionBarText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
