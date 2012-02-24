@@ -1,7 +1,10 @@
 package pt.up.fe.mobile.datatypes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /** Stores info about a exam */
-public class Exam {
+public class Exam implements Parcelable {
 	private final String type; // tipo de exame
 	private final String courseAcronym; // codigo da cadeira
 	private final String courseName; // nome da cadeira
@@ -46,6 +49,42 @@ public class Exam {
 	public String getRooms() {
 		return rooms;
 	}
+	public int describeContents() {
+		return 0;
+	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(type);
+		dest.writeString(courseAcronym);
+		dest.writeString(courseName);
+		dest.writeString(weekDay);
+		dest.writeString(date);
+		dest.writeString(type);
+		dest.writeString(startTime);
+		dest.writeString(endTime);
+		dest.writeString(rooms);
+	}
 	
+
+    public static final Parcelable.Creator<Exam> CREATOR = new Parcelable.Creator<Exam>() {
+        public Exam createFromParcel(Parcel in) {
+            return new Exam(in);
+        }
+
+        public Exam[] newArray(int size) {
+            return new Exam[size];
+        }
+    };
+	
+	private Exam(Parcel in){
+		this.type = in.readString();
+		this.courseAcronym = in.readString();
+		this.courseName = in.readString();
+		this.weekDay = in.readString();
+		this.date = in.readString();
+		this.startTime = in.readString();
+		this.endTime = in.readString();
+		this.rooms = in.readString();
+		
+	}
 	
 }

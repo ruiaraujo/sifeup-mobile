@@ -74,7 +74,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
             if ( canteens == null )
                 canteens = new ArrayList<Canteen>();
             buildPages();
-            showMainScreen();
+            showFastMainScreen();
         }
         else
         {

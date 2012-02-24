@@ -39,6 +39,8 @@ import pt.up.fe.mobile.utils.calendar.Event;
 
 public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
+	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
+	
 	/** Stores all exams from Student */
 	private ArrayList<Exam> exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
@@ -67,8 +69,31 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         String personCode = (String) getArguments().get(PROFILE_CODE);
         if (personCode == null)
             personCode = SessionManager.getInstance().getLoginCode();
-        ExamsUtils.getExamsReply(personCode, this);
+        if ( savedInstanceState != null )
+        {
+            exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
+            if ( exams == null )
+            {   
+                ExamsUtils.getExamsReply(personCode, this);
+            }
+            else
+            {
+                populateList();
+                showFastMainScreen();
+            }
+        }
+        else
+        {
+            ExamsUtils.getExamsReply(personCode, this);
+        }
     }
+    
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 		if ( exams != null )
+ 			outState.putParcelableArrayList(EXAM_KEY,exams);
+ 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -79,6 +104,8 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_export_calendar) {
+			if (exams == null || exams.isEmpty())
+				return true;
 			// export to Calendar (create event)
 			calendarExport();
 			return true;
@@ -93,9 +120,6 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	 * @return true if correct export
 	 */
 	public boolean calendarExport() {
-
-		if (exams == null || exams.isEmpty())
-			return true;
 
 		final ContentResolver cr = getActivity().getContentResolver();
 		final CalendarHelper calendarHelper = CalendarHelper.getInstance(cr);
@@ -219,7 +243,11 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			exams = (ArrayList<Exam>) results[0];
 		else
 			throw new RuntimeException("Error receiving the result");
-
+		populateList();
+		showMainScreen();
+	}
+	
+	private void populateList(){
 		if (exams.isEmpty()) {
 			showEmptyScreen(getString(R.string.label_no_exams));
 			return;
@@ -244,7 +272,6 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setClickable(false);
-		showMainScreen();
 	}
 
 }
