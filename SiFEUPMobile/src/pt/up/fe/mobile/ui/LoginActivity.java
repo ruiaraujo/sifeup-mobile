@@ -12,7 +12,6 @@ import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,10 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity implements ResponseCommand {
-	public static final String PREF_USERNAME = "pt.up.fe.mobile.ui.USERNAME";
-	public static final String PREF_PASSWORD = "pt.up.fe.mobile.ui.PASSWORD";
-	public static final String PREF_USER_TYPE = "pt.up.fe.mobile.ui.USER_TYPE";
-	public static final String PREF_COOKIE = "pt.up.fe.mobile.ui.COOKIE";
 
 	public static final String EXTRA_DIFFERENT_LOGIN = "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
 	public static final int EXTRA_DIFFERENT_LOGIN_LOGOUT = 1;
@@ -47,9 +42,6 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		SharedPreferences loginSettings = getSharedPreferences(
-				LoginActivity.class.getName(), MODE_PRIVATE);
-		final SharedPreferences.Editor prefEditor = loginSettings.edit();
 		// como os objectos sao declarados em xml para termos a referencia deles
 		// temos de fazer isto
 		username = (EditText) findViewById(R.id.login_username);
@@ -57,8 +49,10 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 
 		// verficar se o utilizador carregou no remember me e se sim
 		// preencher os campos com as informações gravadas
-		user = loginSettings.getString(PREF_USERNAME, "");
-		pass = loginSettings.getString(PREF_PASSWORD, "");
+		final SessionManager session = SessionManager.getInstance(this);
+		session.loadSession();
+		user = session.getLoginCode();
+		pass = session.getLoginPassword();
 		if (!user.equals("") && !pass.equals("")) {
 			username.setText(user);
 			passwordEditText.setText(pass);
@@ -109,15 +103,11 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 		switch (action) {
 		case EXTRA_DIFFERENT_LOGIN_LOGOUT:// if logging out the cookie is
 			// removed
-			prefEditor.putString(PREF_USERNAME, "");
-			prefEditor.putString(PREF_PASSWORD, "");
-			prefEditor.putString(PREF_USER_TYPE, "");
-			prefEditor.putString(PREF_COOKIE, "");
-			prefEditor.commit();
+			session.cleanPrefs();
 			break;
 		default: {
-			final String cookie = loginSettings.getString(PREF_COOKIE, "");
-			final String type = loginSettings.getString(PREF_USER_TYPE, "");
+			final String cookie = session.getCookie();
+			final String type = session.getUser().getType();
 			if (!cookie.equals("") && !type.equals("")) {
 				SessionManager.getInstance().setCookie(cookie);
 				SessionManager.getInstance()
@@ -201,15 +191,6 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 	public void onResultReceived(Object... results) {
 		removeDialog(DIALOG_CONNECTING);
 		User user = (User) results[0];
-		SharedPreferences loginSettings = getSharedPreferences(
-				LoginActivity.class.getName(), MODE_PRIVATE);
-		SharedPreferences.Editor prefEditor = loginSettings.edit();
-		prefEditor.putString(PREF_COOKIE, SessionManager.getInstance()
-				.getCookie());
-		prefEditor.putString(PREF_USERNAME, user.getUser());
-		prefEditor.putString(PREF_PASSWORD, pass);
-		prefEditor.putString(PREF_USER_TYPE, user.getType());
-		prefEditor.commit();
 		SessionManager.getInstance().setUser(new User(user.getUser(), pass, user.getType()));
 		SessionManager.tuitionHistory.setLoaded(false);
 		SessionManager.friends.setLoaded(false);

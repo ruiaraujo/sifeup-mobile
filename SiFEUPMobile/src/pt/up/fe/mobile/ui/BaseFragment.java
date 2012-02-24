@@ -3,7 +3,6 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.sifeup.SessionManager;
-import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.ui.utils.Rotate3dAnimation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -165,9 +164,7 @@ public class BaseFragment extends Fragment {
     	super.onActivityCreated(savedInstanceState);
         // Recovering the Cookie here
         // as every activity will descend from this one.
-        if (!SessionManager.getInstance().isUserLoaded()) {
-        	if ( !SifeupUtils.loadSession(getActivity()) )
-            	((BaseActivity)getActivity()).goLogin();
-        }
+    	if ( !SessionManager.getInstance(getActivity()).isUserLoaded()  )
+    		SessionManager.getInstance(getActivity()).loadSession();
     }
 }

@@ -7,11 +7,8 @@ import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -206,7 +203,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 				return null;
 			}
 		}.execute();
-		SharedPreferences loginSettings = getActivity().getSharedPreferences(
+		/*SharedPreferences loginSettings = getActivity().getSharedPreferences(
 				LoginActivity.class.getName(), Context.MODE_PRIVATE);
 		String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
 		String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "");
@@ -214,7 +211,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 			usernameText.setText(user);
 			actualPasswordText.setText(pass);
 
-		}
+		}*/
 		return getParentContainer();
 	}
 	private String errorTitle;
@@ -254,7 +251,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 			return;
 		}
 		//changed successfully
-		SharedPreferences loginSettings = getActivity().getSharedPreferences(
+		/*SharedPreferences loginSettings = getActivity().getSharedPreferences(
 				LoginActivity.class.getName(), Context.MODE_PRIVATE);
 		String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
 		String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "");
@@ -263,8 +260,9 @@ public class ChangePasswordFragment extends BaseFragment implements
 			SharedPreferences.Editor prefEditor = loginSettings.edit();
 			prefEditor.putString(LoginActivity.PREF_PASSWORD, newPasswordText
 					.getText().toString());
-
-		}
+		
+*/
+		
 		actualPasswordText.setText(newPasswordText.getText().toString());
 		newPasswordText.setText("");
 		confirmNewPasswordText.setText("");

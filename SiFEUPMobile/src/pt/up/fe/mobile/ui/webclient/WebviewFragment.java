@@ -5,12 +5,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
-import pt.up.fe.mobile.ui.LoginActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -151,13 +149,10 @@ public class WebviewFragment extends BaseFragment {
                 // first we fill the form
                 // then we reload the page
                 // Logging in through javascript
-                final SharedPreferences loginSettings = getActivity()
-                        .getSharedPreferences(LoginActivity.class.getName(),
-                                Context.MODE_PRIVATE);
-                final String user = loginSettings.getString(
-                        LoginActivity.PREF_USERNAME, "");
-                final String pass = loginSettings.getString(
-                        LoginActivity.PREF_PASSWORD, "");
+                final SessionManager session = SessionManager.getInstance(getActivity());
+                session.loadSession();
+                final String user = session.getLoginCode();
+                final String pass = session.getLoginPassword();
                 mWebView.loadUrl("javascript: {"
                         + "document.getElementById('user').value = '" + user
                         + "';" + "var  pass = document.getElementById('pass');"
