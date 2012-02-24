@@ -14,14 +14,15 @@ public class SearchUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
-			String name, int page, ResponseCommand command) {
+			String query, int page, ResponseCommand command) {
+	    query = query.trim().replace(" ", "%20");
 		return new FetcherTask(command, new StudentsSearchParser())
-				.execute(SifeupAPI.getStudentsSearchUrl(name, page));
+				.execute(SifeupAPI.getStudentsSearchUrl(query, page));
 	}
 
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getSingleStudentSearchReply(
-			String code,  ResponseCommand command) {
+			String code, ResponseCommand command) {
 		return new FetcherTask(new SingleStudentCom(command), new StudentsSearchParser())
 				.execute(SifeupAPI.getStudentUrl(code));
 	}
