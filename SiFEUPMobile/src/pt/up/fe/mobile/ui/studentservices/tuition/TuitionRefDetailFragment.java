@@ -16,8 +16,6 @@
 
 package pt.up.fe.mobile.ui.studentservices.tuition;
 
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,46 +26,55 @@ import android.widget.TextView;
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.RefMB;
 import pt.up.fe.mobile.datatypes.YearsTuition;
-import pt.up.fe.mobile.sifeup.*;
+import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 
 public class TuitionRefDetailFragment extends Fragment {
 
     private RefMB ref;
-	private TextView nome;
-	private TextView entidade;
-	private TextView referencia;
-	private TextView valor;
-	private TextView dataIni;
-	private TextView dataFim;
-
+    private TextView nome;
+    private TextView entidade;
+    private TextView referencia;
+    private TextView valor;
+    private TextView dataIni;
+    private TextView dataFim;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/ReferenceDetail");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView(
+                "/ReferenceDetail");
     }
 
-	@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, null);
-    	
-    	nome=(TextView)root.findViewById(R.id.tuition_ref_detail_name);
-    	entidade = ((TextView)root.findViewById(R.id.tuition_ref_detail_entity));
-    	referencia=(TextView)root.findViewById(R.id.tuition_ref_detail_reference);
-    	valor=(TextView)root.findViewById(R.id.tuition_ref_detail_amount);
-    	dataIni=(TextView)root.findViewById(R.id.tuition_ref_detail_date_start);
-    	dataFim=(TextView)root.findViewById(R.id.tuition_ref_detail_date_end);
-    	YearsTuition y=SessionManager.tuitionHistory.getHistory().get(SessionManager.tuitionHistory.currentYear);
-        ref=y.getReferences().get(y.getSelectedReference());
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb, null);
+
+        nome = (TextView) root.findViewById(R.id.tuition_ref_detail_name);
+        entidade = ((TextView) root
+                .findViewById(R.id.tuition_ref_detail_entity));
+        referencia = (TextView) root
+                .findViewById(R.id.tuition_ref_detail_reference);
+        valor = (TextView) root.findViewById(R.id.tuition_ref_detail_amount);
+        dataIni = (TextView) root
+                .findViewById(R.id.tuition_ref_detail_date_start);
+        dataFim = (TextView) root
+                .findViewById(R.id.tuition_ref_detail_date_end);
+        YearsTuition y = SessionManager.tuitionHistory.getHistory().get(
+                SessionManager.tuitionHistory.currentYear);
+        ref = y.getReferences().get(y.getSelectedReference());
+        String refStr = Long.toString(ref.getRef());
+        while (refStr.length() < 9)
+            refStr = "0" + refStr;
         nome.setText(ref.getName());
-        entidade.setText(""+ref.getEntity());
-        referencia.setText(""+ref.getRef());
-        valor.setText(ref.getAmount()+"€");
+        entidade.setText(Long.toString(ref.getEntity()));
+        referencia.setText(refStr.substring(0, 3) + " "
+                + refStr.substring(3, 6) + " " + refStr.substring(6, 9));
+        valor.setText(ref.getAmount() + "€");
         dataIni.setText(ref.getStartDate().format3339(true));
         dataFim.setText(ref.getEndDate().format3339(true));
-    	return root;
+        return root;
 
     }
 }
