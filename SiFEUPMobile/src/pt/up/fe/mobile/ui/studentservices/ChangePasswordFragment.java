@@ -2,8 +2,10 @@ package pt.up.fe.mobile.ui.studentservices;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.PasswordCheck;
+import pt.up.fe.mobile.datatypes.User;
 import pt.up.fe.mobile.sifeup.AuthenticationUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
+import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -31,6 +33,10 @@ import android.widget.Toast;
  */
 public class ChangePasswordFragment extends BaseFragment implements
 		ResponseCommand {
+
+	private String errorTitle;
+	private String errorContent;
+	
 	private EditText actualPasswordText;
 	private EditText usernameText;
 	private EditText newPasswordText;
@@ -203,19 +209,19 @@ public class ChangePasswordFragment extends BaseFragment implements
 				return null;
 			}
 		}.execute();
-		/*SharedPreferences loginSettings = getActivity().getSharedPreferences(
-				LoginActivity.class.getName(), Context.MODE_PRIVATE);
-		String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
-		String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "");
-		if (!user.equals("") && !pass.equals("")) {
-			usernameText.setText(user);
-			actualPasswordText.setText(pass);
-
-		}*/
+		final SessionManager session = SessionManager.getInstance(getActivity());
+		if ( session.isUserLoaded() )
+		{
+			String user = session.getLoginCode();
+			String pass = session.getLoginPassword();
+			if (!user.equals("") && !pass.equals("")) {
+				usernameText.setText(user);
+				actualPasswordText.setText(pass);
+	
+			}
+		}
 		return getParentContainer();
 	}
-	private String errorTitle;
-	private String errorContent;
 
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
@@ -251,17 +257,15 @@ public class ChangePasswordFragment extends BaseFragment implements
 			return;
 		}
 		//changed successfully
-		/*SharedPreferences loginSettings = getActivity().getSharedPreferences(
-				LoginActivity.class.getName(), Context.MODE_PRIVATE);
-		String user = loginSettings.getString(LoginActivity.PREF_USERNAME, "");
-		String pass = loginSettings.getString(LoginActivity.PREF_PASSWORD, "");
-		if (!user.equals("") && !pass.equals("")
-				&& user.equals(usernameText.getText().toString())) {
-			SharedPreferences.Editor prefEditor = loginSettings.edit();
-			prefEditor.putString(LoginActivity.PREF_PASSWORD, newPasswordText
-					.getText().toString());
-		
-*/
+		final SessionManager session = SessionManager.getInstance(getActivity());
+		if ( session.isUserLoaded() )
+		{
+			User user = session.getUser();
+			if (!user.equals("")
+					&& user.getUser().equals(usernameText.getText().toString())) {
+				session.setUser(new User(user.getUser(), newPasswordText.getText().toString(), user.getType()));
+			 }
+		}
 		
 		actualPasswordText.setText(newPasswordText.getText().toString());
 		newPasswordText.setText("");
