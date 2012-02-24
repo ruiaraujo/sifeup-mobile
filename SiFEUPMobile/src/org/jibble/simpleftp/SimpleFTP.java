@@ -43,6 +43,8 @@ public class SimpleFTP {
     /**
      * Connects to the default port of an FTP server and logs in as
      * anonymous/anonymous.
+     * @param host 
+     * @throws IOException 
      */
     public synchronized void connect(String host) throws IOException {
         connect(host, 21);
@@ -51,6 +53,9 @@ public class SimpleFTP {
     
     /**
      * Connects to an FTP server and logs in as anonymous/anonymous.
+     * @param host 
+     * @param port 
+     * @throws IOException 
      */
     public synchronized void connect(String host, int port) throws IOException {
         connect(host, port, "anonymous", "anonymous");
@@ -60,6 +65,12 @@ public class SimpleFTP {
     /**
      * Connects to an FTP server and logs in with the supplied username
      * and password.
+     * @param host 
+     * @param port 
+     * @param user 
+     * @param pass 
+     * @throws WrongCredentials 
+     * @throws IOException 
      */
     public synchronized void connect(String host, int port, String user, String pass) throws WrongCredentials, IOException {
         if (socket != null) {
@@ -94,6 +105,7 @@ public class SimpleFTP {
     
     /**
      * Disconnects from the FTP server.
+     * @throws IOException 
      */
     public synchronized void disconnect() throws IOException {
         try {
@@ -107,6 +119,8 @@ public class SimpleFTP {
     
     /**
      * Returns the working directory of the FTP server it is connected to.
+     * @return the working directory
+     * @throws IOException 
      */
     public synchronized String pwd() throws IOException {
         sendLine("PWD");
@@ -125,6 +139,9 @@ public class SimpleFTP {
 
     /**
      * Changes the working directory (like cd). Returns true if successful.
+     * @param dir 
+     * @return true if successfully
+     * @throws IOException 
      */   
     public synchronized boolean cwd(String dir) throws IOException {
         sendLine("CWD " + dir);
@@ -134,6 +151,9 @@ public class SimpleFTP {
 
     /**
      * Creates a directory (like mkdir). Returns true if successful.
+     * @param dir 
+     * @return true if successful.
+     * @throws IOException 
      */   
     public synchronized boolean mkd(String dir) throws IOException {
         sendLine("MKD " + dir);
@@ -146,6 +166,9 @@ public class SimpleFTP {
      * Returns true if the file transfer was successful.
      * The file is sent in passive mode to avoid NAT or firewall problems
      * at the client end.
+     * @param file 
+     * @return true if successful.
+     * @throws IOException 
      */
     public synchronized boolean stor(File file) throws IOException {
         if (file.isDirectory()) {
@@ -163,6 +186,10 @@ public class SimpleFTP {
      * Returns true if the file transfer was successful.
      * The file is sent in passive mode to avoid NAT or firewall problems
      * at the client end.
+     * @param inputStream 
+     * @param filename 
+     * @return true if successful.
+     * @throws IOException 
      */
     public synchronized boolean stor(InputStream inputStream, String filename) throws IOException {
 
@@ -216,6 +243,8 @@ public class SimpleFTP {
 
     /**
      * Enter binary mode for sending binary files.
+     * @return true if successful.
+     * @throws IOException 
      */
     public synchronized boolean bin() throws IOException {
         sendLine("TYPE I");
@@ -228,6 +257,8 @@ public class SimpleFTP {
      * Enter ASCII mode for sending text files. This is usually the default
      * mode. Make sure you use binary mode if you are sending images or
      * other binary data, as ASCII mode is likely to corrupt them.
+     * @return true if successful.
+     * @throws IOException 
      */
     public synchronized boolean ascii() throws IOException {
         sendLine("TYPE A");
@@ -264,7 +295,8 @@ public class SimpleFTP {
         return line;
     }
     
-    public class WrongCredentials extends IOException{
+    @SuppressWarnings("serial")
+	public class WrongCredentials extends IOException{
 
 		public WrongCredentials(String string) {
 			super(string);
