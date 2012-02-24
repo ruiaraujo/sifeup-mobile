@@ -35,18 +35,30 @@ public class ProfileUtils {
 			try {
 				Student me = new Student();
 				JSONObject jObject = new JSONObject(page);
-				me.setCode(jObject.optString("codigo"));
-				me.setName(jObject.optString("nome"));
-				me.setProgrammeAcronym(jObject.optString("curso_sigla"));
-				me.setProgrammeName(jObject.optString("curso_nome"));
-				me.setRegistrationYear(jObject.optString("ano_lect_matricula"));
-				me.setState(jObject.optString("estado"));
-				me.setAcademicYear(jObject.optString("ano_curricular"));
-				me.setEmail(jObject.optString("email"));
-				me.setEmailAlt(jObject.optString("email_alternativo"));
-				me.setMobile(jObject.optString("telemovel"));
-				me.setTelephone(jObject.optString("telefone"));
-				me.setBranch(jObject.optString("ramo"));
+	            if(jObject.has("codigo"))
+	                me.setCode(jObject.getString("codigo"));
+	            if(jObject.has("nome"))
+	                me.setName(jObject.getString("nome"));
+	            if(jObject.has("curso_sigla"))
+	                me.setProgrammeAcronym(jObject.getString("curso_sigla"));
+	            if(jObject.has("curso_nome"))
+	                me.setProgrammeName(jObject.getString("curso_nome"));
+	            if(jObject.has("ano_lect_matricula"))
+	                me.setRegistrationYear(jObject.getString("ano_lect_matricula"));
+	            if(jObject.has("estado"))
+	                me.setState(jObject.getString("estado"));
+	            if(jObject.has("ano_curricular"))
+	                me.setAcademicYear(jObject.getString("ano_curricular"));
+	            if(jObject.has("email"))
+	                me.setEmail(jObject.getString("email"));
+	            if(jObject.has("email_alternativo"))
+	                me.setEmailAlt(jObject.getString("email_alternativo"));
+	            if(jObject.has("telemovel"))
+	                me.setMobile(jObject.getString("telemovel"));
+	            if(jObject.has("telefone"))
+	                me.setTelephone(jObject.getString("telefone"));
+	            if(jObject.has("ramo"))
+	                me.setBranch(jObject.getString("ramo"));
 				return me;
 			} catch (JSONException e) {
 				e.printStackTrace();
