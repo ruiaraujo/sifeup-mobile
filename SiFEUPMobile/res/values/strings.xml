@@ -336,5 +336,6 @@
     <string name="notification_uploader_error_host">Please be inside FEUP\'s network or connected through VPN.</string>
     <string name="notification_uploader_error_title">Error</string>
     <string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
-
+    <string name="notification_unsupported">Unsupported Operation</string>
+    
 </resources>
