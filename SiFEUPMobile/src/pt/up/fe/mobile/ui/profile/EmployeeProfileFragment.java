@@ -132,6 +132,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		me = (Employee) results[0];
 		contents = me.getProfileContents(getResources());
 		name.setText(me.getName());
+        getActivity().getSupportActionBar().setTitle(me.getName());
 		code.setText(me.getCode());
 		if ( SessionManager.friends.isFriend(me.getCode()) )
 			friend.setChecked(true);

@@ -91,7 +91,7 @@
         <activity
             android:name=".ui.profile.ProfileActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_friends" />
+            android:label="@string/title_profile" />
         <activity
             android:name=".ui.news.NewsActivity"
             android:configChanges="orientation|keyboardHidden"

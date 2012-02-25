@@ -138,6 +138,7 @@ public class StudentProfileFragment extends BaseFragment implements
 			return;
 		me = (Student) results[0];
 		contents = me.getProfileContents(getResources());
+		getActivity().getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());
 		code.setText(me.getCode());
 		if (SessionManager.friends.isFriend(me.getCode()))
