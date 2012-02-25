@@ -36,7 +36,7 @@ public class WebviewFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         url = getArguments().getString(URL_INTENT);
-        if (url == null)
+        if (url == null && savedInstanceState != null )
             url = savedInstanceState.getString(URL_INTENT);
     }
 

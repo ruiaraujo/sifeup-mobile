@@ -66,7 +66,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        String personCode = (String) getArguments().get(PROFILE_CODE);
+        String personCode = getArguments().getString(PROFILE_CODE);
         if (personCode == null)
             personCode = SessionManager.getInstance(getActivity()).getLoginCode();
         if ( savedInstanceState != null )
@@ -248,6 +248,8 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	}
 	
 	private void populateList(){
+        if (getActivity() == null)
+            return;
 		if (exams.isEmpty()) {
 			showEmptyScreen(getString(R.string.label_no_exams));
 			return;

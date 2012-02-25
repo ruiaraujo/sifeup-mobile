@@ -93,7 +93,7 @@ public class ScheduleFragment extends BaseFragment implements
 		// Bundle args = getArguments();
 		setHasOptionsMenu(true);
 		AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
-		scheduleCode = (String) getArguments().getString(SCHEDULE_CODE);
+		scheduleCode = getArguments().getString(SCHEDULE_CODE);
 		if (scheduleCode == null)
 			scheduleCode = SessionManager.getInstance(getActivity()).getLoginCode();
 		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);

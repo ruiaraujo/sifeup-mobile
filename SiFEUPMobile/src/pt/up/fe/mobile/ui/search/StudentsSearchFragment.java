@@ -53,7 +53,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
-		query = getArguments().get(SearchManager.QUERY).toString();
+		query = getArguments().getString(SearchManager.QUERY);
 
 	}
 

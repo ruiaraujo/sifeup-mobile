@@ -246,6 +246,8 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 
 	@SuppressWarnings("unchecked")
 	public void onResultReceived(Object... results) {
+	    if ( getActivity() == null )
+	        return;
 		canteens = (ArrayList<Canteen>) results[0];
 		if ( canteens.isEmpty() )
 		{

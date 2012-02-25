@@ -72,7 +72,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
         {
             ref = savedInstanceState.getParcelable(PRINT_REF_KEY);
             if ( ref == null )
-                PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+                PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
             else
             {
                 displayData();
@@ -81,7 +81,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
         }
         else
         {
-            PrinterUtils.getPrintRefReply(getArguments().get("value").toString(), this);
+            PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
         }
     }
     

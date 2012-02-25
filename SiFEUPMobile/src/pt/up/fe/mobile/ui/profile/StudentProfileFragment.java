@@ -105,9 +105,7 @@ public class StudentProfileFragment extends BaseFragment implements
 	
 	public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        String code = getArguments().get(ProfileActivity.PROFILE_CODE)
-                .toString();
-
+        String code = getArguments().getString(ProfileActivity.PROFILE_CODE);
         if ( code == null )
             code = SessionManager.getInstance(getActivity()).getLoginCode();
         // You can't friend yourself

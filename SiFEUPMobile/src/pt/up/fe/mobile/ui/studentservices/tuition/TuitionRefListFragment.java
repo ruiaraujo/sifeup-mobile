@@ -61,8 +61,6 @@ public class TuitionRefListFragment extends BaseFragment implements
     }
 
 	private void loadList() {
-		if (getActivity() == null)
-			return;
 		String[] from = new String[] { "name", "amount", "date" };
 		int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount,
 				R.id.tuition_ref_date };
@@ -116,6 +114,8 @@ public class TuitionRefListFragment extends BaseFragment implements
 	}
 
 	public void onResultReceived(Object... results) {
+        if (getActivity() == null)
+            return;
 		if (results == null || results[0] == null)
 			return;
 		loadList();

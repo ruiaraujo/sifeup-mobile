@@ -60,8 +60,6 @@ public class TuitionHistoryFragment extends BaseFragment implements
     }
 
 	private void loadList() {
-		if (getActivity() == null)
-			return;
 		String[] from = new String[] { "year", "paid", "to_pay" };
 		int[] to = new int[] { R.id.tuition_history_year,
 				R.id.tuition_history_paid, R.id.tuition_history_to_pay };
@@ -115,6 +113,8 @@ public class TuitionHistoryFragment extends BaseFragment implements
 	}
 
 	public void onResultReceived(Object... results) {
+        if (getActivity() == null)
+            return;
 		if (results == null || results[0] == null)
 			return;
 		loadList();

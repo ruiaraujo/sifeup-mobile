@@ -7,6 +7,7 @@ import java.util.List;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
+import pt.up.fe.mobile.ui.profile.ProfileActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,10 @@ public class StudentAreaFragment extends ListFragment{
 	         
         // prepare the list of all records
         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+        
+        HashMap<String, String> profile = new HashMap<String, String>();
+        profile.put(from[0],getString(R.string.btn_profile));
+        fillMaps.add(profile);
         
         HashMap<String, String> schedule = new HashMap<String, String>();
         schedule.put(from[0],getString(R.string.btn_schedule));
@@ -74,28 +79,33 @@ public class StudentAreaFragment extends ListFragment{
     	
     	switch( position )
     	{
-	    	case 0:
+    	    case 0:
+                startActivity(new Intent(getActivity(),ProfileActivity.class)
+                                .putExtra(ProfileActivity.PROFILE_TYPE,ProfileActivity.PROFILE_STUDENT));
+                getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+                return;
+	    	case 1:
 	    		 startActivity(new Intent(getActivity(),ScheduleActivity.class)
 	    		 				.putExtra(ScheduleFragment.SCHEDULE_TYPE, ScheduleFragment.SCHEDULE_STUDENT));
 	             getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 	    		 return;
-	    	case 1:
+	    	case 2:
 		   		 startActivity(new Intent(getActivity(),ExamsActivity.class));
                  getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
-	   		case 2:
+	   		case 3:
 		   		 startActivity(new Intent(getActivity(),SubjectsActivity.class));
                  getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
-	   		case 3:
+	   		case 4:
 		   		 startActivity(new Intent(getActivity(),LunchMenuActivity.class));
                  getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
-	   		case 4:
+	   		case 5:
 		   		 startActivity(new Intent(getActivity(), AcademicPathActivity.class));
                  getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;
-	   		case 5:
+	   		case 6:
 		   		 startActivity(new Intent(getActivity(), ParkOccupationActivity.class));
                  getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				 return;

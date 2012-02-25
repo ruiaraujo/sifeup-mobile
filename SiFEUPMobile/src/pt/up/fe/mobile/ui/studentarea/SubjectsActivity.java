@@ -10,9 +10,7 @@ import android.support.v4.app.Fragment;
  *
  */
 public class SubjectsActivity extends BaseSinglePaneActivity {
-
-
-
+    
 	@Override
 	protected Fragment onCreatePane() {
 		return new SubjectsFragment();

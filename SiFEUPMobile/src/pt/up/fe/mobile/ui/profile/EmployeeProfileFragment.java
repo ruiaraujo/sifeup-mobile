@@ -96,7 +96,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     }
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        String code = getArguments().get(ProfileActivity.PROFILE_CODE).toString();
+        String code = getArguments().getString(ProfileActivity.PROFILE_CODE);
         if ( code == null )
             code = SessionManager.getInstance(getActivity()).getLoginCode();
 

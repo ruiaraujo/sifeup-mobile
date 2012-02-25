@@ -145,6 +145,8 @@
     <string name="path_link_sifeup"><u>SiFEUP WebPage</u></string>
 
     <!-- Profile -->
+    <string name="btn_profile">Profile</string>
+    <string name="title_profile">Profile</string>
     <string name="profile_title_email">Email</string>
     <string name="profile_title_email_alt">Alternative Email</string>
     <string name="profile_title_mobile">Mobile Phone</string>

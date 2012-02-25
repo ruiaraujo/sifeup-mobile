@@ -130,6 +130,8 @@
     <string name="path_link_sifeup"><u>Página Web SiFEUP</u></string>
 
     <!-- Profile -->
+    <string name="btn_profile">Perfil</string>
+    <string name="title_profile">Perfil</string>
     <string name="profile_title_email">Email</string>
     <string name="profile_title_email_alt">Email Alternativo</string>
     <string name="profile_title_mobile">Telemóvel</string>
