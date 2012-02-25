@@ -47,14 +47,14 @@
     <!-- ABOUT -->
     <string name="bt_about">About</string>
     <string name="bt_about_title">About SiFEUP Mobile</string>
-    <string name="bt_about_message">To give FEUP students a mobile platform
+    <string name="bt_about_message">This application gives FEUP students a mobile platform
                                  where they can track their academic life with ease.
                                  \n\n
                                  <a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>
                                  \n\n
-                                 <b>Version: </b>0.5
+                                 <b>Version: </b>0.4
                                  \n
-                                 01/08/2011
+                                 25/02/2012
                                  \n\n
                                  <b>Credits:</b>\n
                                  <ul>
