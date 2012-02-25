@@ -343,7 +343,8 @@ public class ScheduleFragment extends BaseFragment implements
 		Day day = mDays.get(dayIndex + 1);
 
 		final String blockId = block.getLectureAcronym() + " ("
-				+ block.getLectureType() + ")" + "\n" + block.getBuildingCode()
+				+ block.getLectureType() + ")" + "\n" + 
+		        (block.getBuildingCode()==null?"":block.getBuildingCode())
 				+ block.getRoomCode();
 		final String title = blockId;
 		final long start = block.getStartTime() * 1000 + day.timeStart;
@@ -546,8 +547,9 @@ public class ScheduleFragment extends BaseFragment implements
 	private Block findBlock(String blockId) {
 		for (Block block : schedule) {
 			String id = block.getLectureAcronym() + " ("
-					+ block.getLectureType() + ")" + "\n"
-					+ block.getBuildingCode() + block.getRoomCode();
+	                + block.getLectureType() + ")" + "\n" + 
+	                (block.getBuildingCode()==null?"":block.getBuildingCode())
+	                + block.getRoomCode();
 			if (id.equals(blockId))
 				return block;
 		}

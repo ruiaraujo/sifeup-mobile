@@ -85,11 +85,14 @@ public class ClassDescriptionFragment extends BaseFragment
 		
 		// Room
 		TextView room = (TextView) root.findViewById(R.id.class_room);
-		room.setText(getString(R.string.class_room, block.getBuildingCode() + block.getRoomCode()));
+		room.setText(getString(R.string.class_room, (block.getBuildingCode()==null?"":block.getBuildingCode())
+		                                                + block.getRoomCode()));
 		
 		room.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+			    if ( block.getBuildingCode() == null )
+			        return;
 				Intent i = new Intent(getActivity() , ScheduleActivity.class);
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_ROOM) ;
 				i.putExtra(ScheduleFragment.SCHEDULE_CODE, block.getBuildingCode() + block.getRoomCode()  );
@@ -121,16 +124,16 @@ public class ClassDescriptionFragment extends BaseFragment
 		int endTime = (int) (block.getStartTime() + block.getLectureDuration()*3600);
 		StringBuilder end = new StringBuilder();
 		if ( endTime/3600 < 10 )
-			start.append("0");
-		start.append(endTime/3600);
-		start.append(":");
+		    end.append("0");
+		end.append(endTime/3600);
+		end.append(":");
 		if ( ((endTime%3600)/60) <10 ) 
-			start.append("0");
-		start.append((endTime%3600)/60);
+		    end.append("0");
+		end.append((endTime%3600)/60);
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
 		endT.setText(getString(R.string.class_end_time, end.toString()));
 		
-		showMainScreen();
+		showFastMainScreen();
 		
 		return getParentContainer();//mandatory
 	}

@@ -106,6 +106,7 @@ public class ScheduleUtils {
 		            for (int i = 0; i < jArray.length(); i++) {
 		                // new JSONObject
 		                JSONObject jBlock = jArray.getJSONObject(i);
+		                SifeupUtils.removeEmptyKeys(jBlock);
 		                // new Block
 		                Block block = new Block();
 
