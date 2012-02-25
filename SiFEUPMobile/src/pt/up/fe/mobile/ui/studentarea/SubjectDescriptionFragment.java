@@ -165,6 +165,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		if (subject == null )
 		{
 			subject = (Subject) results[0];
+			getActivity().getSupportActionBar().setTitle(subject.getNamePt());
 			SubjectUtils.getSubjectContentReply(code, year, period, this);
 			return;
 		}
