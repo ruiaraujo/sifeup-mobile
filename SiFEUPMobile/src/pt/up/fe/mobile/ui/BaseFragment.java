@@ -35,6 +35,8 @@ public class BaseFragment extends Fragment {
     private LayoutInflater inflater;
     
     protected AsyncTask<?, ?, ?> task;
+    
+    private Object currentAnim;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -82,10 +84,12 @@ public class BaseFragment extends Fragment {
             
             @Override
             public void onAnimationEnd(Animation animation) {
+                currentAnim = invisToVis;
                 invisibleList.startAnimation(invisToVis);
                 switcher.showNext();
             }
         });
+        currentAnim = visToInvis;
         visibleList.startAnimation(visToInvis);
     }
     
@@ -117,10 +121,12 @@ public class BaseFragment extends Fragment {
         visToInvis.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator anim) {
+                currentAnim = invisToVis;
                 invisToVis.start();
                 switcher.showNext();
             }
         });
+        currentAnim = visToInvis;
         visToInvis.start();
     }
 
@@ -182,7 +188,25 @@ public class BaseFragment extends Fragment {
 
     @Override
     public void onDestroyView (){
+        super.onDestroyView();
         if ( task != null )
+        {
             task.cancel(true);
+        }
+    } 
+    @Override
+    public void onPause (){
+        super.onPause();
+        if ( currentAnim != null )
+        {
+            if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB )
+            {
+                ((Rotate3dAnimation)currentAnim).cancel();
+            }
+            else
+            {
+                ((ObjectAnimator)currentAnim).end();
+            }
+        }
     }
 }
