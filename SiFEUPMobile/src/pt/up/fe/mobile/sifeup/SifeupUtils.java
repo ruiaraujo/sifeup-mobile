@@ -11,13 +11,13 @@ public class SifeupUtils {
 	
 	private SifeupUtils(){}
 
-	@SuppressWarnings("unchecked")
 	public static void removeEmptyKeys(final JSONObject jObject){
 		// remove stupid mappings
-		Iterator it = jObject.keys();
+		@SuppressWarnings("unchecked")
+        Iterator<String> it = jObject.keys();
 		while ( it.hasNext() )
 		{
-			String key = it.next().toString();
+			String key = it.next();
 			if ( jObject.optString(key).equals("") )
 				it.remove();
 		}
