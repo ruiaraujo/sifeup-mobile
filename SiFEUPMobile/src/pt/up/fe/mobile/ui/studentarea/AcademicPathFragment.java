@@ -80,7 +80,7 @@ public class AcademicPathFragment extends BaseFragment implements
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
+        task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
                 .getLoginCode(), this);
     }
 

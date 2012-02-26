@@ -8,6 +8,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ public class BaseFragment extends Fragment {
     private ViewSwitcher switcher;
     private View emptyScreen;
     private LayoutInflater inflater;
+    
+    protected AsyncTask<?, ?, ?> task;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -175,5 +178,11 @@ public class BaseFragment extends Fragment {
         // as every activity will descend from this one.
     	if ( !SessionManager.getInstance(getActivity()).isUserLoaded()  )
     		SessionManager.getInstance(getActivity()).loadSession();
+    }
+
+    @Override
+    public void onDestroyView (){
+        if ( task != null )
+            task.cancel(true);
     }
 }

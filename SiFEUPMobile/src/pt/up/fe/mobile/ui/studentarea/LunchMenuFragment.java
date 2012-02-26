@@ -72,14 +72,16 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
         {
             canteens = savedInstanceState.getParcelableArrayList(CANTEEN_KEY);
             if ( canteens == null )
-                canteens = new ArrayList<Canteen>();
-            buildPages();
-            showFastMainScreen();
+                task = CanteenUtils.getCanteensReply(this);
+            else
+            {
+                buildPages();
+                showFastMainScreen();
+            }
         }
         else
         {
-            canteens = new ArrayList<Canteen>();
-            CanteenUtils.getCanteensReply(this);
+            task = CanteenUtils.getCanteensReply(this);
         }
     }
 	
@@ -100,7 +102,8 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){
- 	    outState.putParcelableArrayList(CANTEEN_KEY,canteens);
+ 	    if ( canteens != null )
+ 	        outState.putParcelableArrayList(CANTEEN_KEY,canteens);
  	}
 
 	

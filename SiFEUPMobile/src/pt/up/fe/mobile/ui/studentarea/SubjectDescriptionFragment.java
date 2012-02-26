@@ -107,7 +107,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 	}
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        SubjectUtils.getSubjectReply(code, year, period, this);
+        task = SubjectUtils.getSubjectReply(code, year, period, this);
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

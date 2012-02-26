@@ -64,7 +64,7 @@ public class NewsFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        new NewsTask().execute(RSSFEEDOFCHOICE);
+        task = new NewsTask().execute(RSSFEEDOFCHOICE);
     }
 
     /** Classe privada para a busca de dados ao servidor */

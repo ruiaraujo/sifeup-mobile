@@ -74,7 +74,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
             exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
             if ( exams == null )
             {   
-                ExamsUtils.getExamsReply(personCode, this);
+                task = ExamsUtils.getExamsReply(personCode, this);
             }
             else
             {
@@ -84,7 +84,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         }
         else
         {
-            ExamsUtils.getExamsReply(personCode, this);
+            task = ExamsUtils.getExamsReply(personCode, this);
         }
     }
     

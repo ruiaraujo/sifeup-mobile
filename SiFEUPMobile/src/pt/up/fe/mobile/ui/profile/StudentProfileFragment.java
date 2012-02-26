@@ -111,7 +111,7 @@ public class StudentProfileFragment extends BaseFragment implements
         // You can't friend yourself
         if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
             friend.setVisibility(View.INVISIBLE);
-        ProfileUtils.getStudentReply(code, this);
+        task = ProfileUtils.getStudentReply(code, this);
     }
 
 	public void onError(ERROR_TYPE error) {

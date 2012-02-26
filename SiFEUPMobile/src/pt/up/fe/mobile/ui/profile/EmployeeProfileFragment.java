@@ -103,7 +103,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
         // You can't friend yourself
         if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
             friend.setVisibility(View.INVISIBLE);
-        ProfileUtils.getEmployeeReply(code, this);
+        task = ProfileUtils.getEmployeeReply(code, this);
     }
     
 

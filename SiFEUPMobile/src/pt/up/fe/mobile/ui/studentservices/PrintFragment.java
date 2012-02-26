@@ -87,7 +87,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         {
             saldo = savedInstanceState.getString(PRINTERS_KEY);
             if ( saldo == null )
-                PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
+                task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
             else
             {
                 displayData();
@@ -96,7 +96,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         }
         else
         {
-            PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
+            task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
         }
     }
 

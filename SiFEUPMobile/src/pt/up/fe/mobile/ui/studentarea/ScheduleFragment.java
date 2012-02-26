@@ -616,18 +616,18 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 		switch (scheduleType) {
 		case SCHEDULE_STUDENT:
-			ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis, this);
+		    task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis, this);
 			break;
 		case SCHEDULE_EMPLOYEE:
-			ScheduleUtils.getEmployeeScheduleReply(scheduleCode, mondayMillis,
+		    task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode, mondayMillis,
 					this);
 			break;
 		case SCHEDULE_ROOM:
-			ScheduleUtils
+		    task = ScheduleUtils
 					.getRoomScheduleReply(scheduleCode, mondayMillis, this);
 			break;
 		case SCHEDULE_UC:
-			ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis, this);
+		    task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis, this);
 			break;
 		}
 	}

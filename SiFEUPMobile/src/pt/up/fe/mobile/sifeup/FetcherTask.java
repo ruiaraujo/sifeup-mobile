@@ -33,6 +33,8 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 		try {
 			if (pages.length < 1)
 				return ERROR_TYPE.GENERAL;
+			if ( isCancelled() )
+			    return null;
 			page = SifeupAPI.getReply(pages[0]);
 			int error = SifeupAPI.JSONError(page);
 			switch (error) {
@@ -56,8 +58,12 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 		String page = "";
 		try {
 			final User user = SessionManager.getInstance().getUser();
+            if ( isCancelled() )
+                return null;
 			ERROR_TYPE error = AuthenticationUtils.authenticate(user
 					.getUser(), user.getPassword());
+            if ( isCancelled() )
+                return null;
 			if (error != null)
 				return error;
 			page = SifeupAPI.getReply(url);

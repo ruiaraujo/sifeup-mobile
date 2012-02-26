@@ -57,7 +57,7 @@ public class NotificationsFragment extends BaseFragment implements
 
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        NotificationUtils.getNotificationsReply(this);
+        task = NotificationUtils.getNotificationsReply(this);
     }
 
     @Override

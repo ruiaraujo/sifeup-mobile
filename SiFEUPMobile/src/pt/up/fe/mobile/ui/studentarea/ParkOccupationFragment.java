@@ -69,7 +69,7 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
             if ( parks == null )
             {   
                 parks = new ArrayList<Park>();
-                ParkUtils.getParkReply("P1", this);
+                task = ParkUtils.getParkReply("P1", this);
             }
             else
             {
@@ -82,7 +82,7 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
         else
         {
             parks = new ArrayList<Park>();      
-            ParkUtils.getParkReply("P1", this);
+            task = ParkUtils.getParkReply("P1", this);
         }
     }
 	

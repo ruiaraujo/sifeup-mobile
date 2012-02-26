@@ -69,9 +69,9 @@ public class StudentsSearchFragment extends BaseFragment implements
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 		if (query.matches(REGEX_STUDENT_CODE))
-			SearchUtils.getSingleStudentSearchReply(query, this);
+		    task = SearchUtils.getSingleStudentSearchReply(query, this);
 		else
-			SearchUtils.getStudentsSearchReply(query, 1, this);
+		    task = SearchUtils.getStudentsSearchReply(query, 1, this);
     }
     
 	private boolean hasMoreResults() {
