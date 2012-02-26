@@ -31,11 +31,13 @@ public class BaseFragment extends Fragment {
 
     private ViewSwitcher switcher;
     private View emptyScreen;
+    private LayoutInflater inflater;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		switcher = (ViewSwitcher) inflater.inflate(R.layout.loading_view, container, false);
 		emptyScreen  =  inflater.inflate(R.layout.fragment_no_results, switcher, false);
+		this.inflater = inflater;
 		return switcher;
     }
     
@@ -145,6 +147,13 @@ public class BaseFragment extends Fragment {
         text.setText(message);
         switcher.addView(emptyScreen,1);
         flipIt();
+    }    
+    
+    protected View getEmptyScreen(final String message ){
+        View emptyScreen  =  inflater.inflate(R.layout.fragment_no_results, null);
+        TextView text = (TextView) emptyScreen.findViewById(R.id.message);
+        text.setText(message);
+        return emptyScreen;
     }    
     
     protected ViewGroup getParentContainer(){

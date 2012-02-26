@@ -125,6 +125,7 @@
     <string name="improvement_classification">Improvement of Final/Distributed Classification</string>
     <string name="comments">Comments</string>
     <string name="subject_content">Subject Content</string>
+    <string name="no_data">No data</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Academic Path</string>

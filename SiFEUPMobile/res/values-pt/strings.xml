@@ -114,6 +114,7 @@
     <string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string>
     <string name="comments">Observações</string>
     <string name="subject_content">Conteúdos</string>
+    <string name="no_data">Sem dados</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>

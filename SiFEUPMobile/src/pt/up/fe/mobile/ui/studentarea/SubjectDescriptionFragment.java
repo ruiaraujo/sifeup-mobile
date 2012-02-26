@@ -41,6 +41,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -241,256 +242,291 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		@Override
 		public Object instantiateItem(final View collection, int position) 
 		{
+            View root = null;
 			switch ( position )
 			{
 				case 0 :	
-						View root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-						TextView text = (TextView) root.findViewById(R.id.content);
+				{
+					if (  subject.getContent() != null && ! subject.getContent().equals(""))
+					{
+					    root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					    final TextView text = (TextView) root.findViewById(R.id.content);
 						text.setText(subject.getContent());
-						((ViewPager) collection).addView(root,0);
-						return root;
-						
-				case 1 :	
-						View root2 = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-						TextView text2 = (TextView) root2.findViewById(R.id.content);
-						text2.setText(subject.getObjectives());
-						((ViewPager) collection).addView(root2,0);
-						return root2;
-						
+					}
+					else
+                        root = getEmptyScreen(getString(R.string.no_data));
+					break;
+				}		
+				case 1 :
+				{
+                    if (  subject.getObjectives() != null && ! subject.getObjectives().equals(""))
+                    {
+						root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+						final TextView text = (TextView) root.findViewById(R.id.content);
+						text.setText(subject.getObjectives());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+				}		
 				case 2 :
 				{
-						ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
-						((ViewPager) collection).addView(list,0);	
-						
-						//String[] from = new String[] {"code", "name", "time"};
-						String[] from = new String[] { "name"};
-				        //int[] to = new int[] { R.id.teacher_code, R.id.teacher_name ,R.id.teacher_time };
-						int[] to = new int[] { R.id.teacher_name};
-					         // prepare the list of all records
-				        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-				        
-				        for(Teacher t : subject.getTeachers())
-				        {
-				             HashMap<String, String> map = new HashMap<String, String>();
-				     
-				          //   map.put("code", t.getCode());
-				             map.put("name", t.getName());
-				          //   map.put("time", t.getTime());
-				           
-				             fillMaps.add(map);   
-				        }
-				        
-				        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_subject_teacher, from, to);
-				        list.setAdapter(adapter);
-				        list.setOnItemClickListener(new OnItemClickListener() {
-
-							public void onItemClick(AdapterView<?> arg0, View arg1,
-									int pos, long id) {
-								Teacher b =subject.getTeachers().get(pos);
-								Intent i = new Intent(getActivity() , ProfileActivity.class);
-								i.putExtra(ProfileActivity.PROFILE_CODE, b.getCode());
-								i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_EMPLOYEE);
-								i.putExtra(Intent.EXTRA_TITLE,b.getName());
-								startActivity(i);
-												
-							}
-						});
-						return list;
+                    if ( subject.getTeachers() != null && subject.getTeachers().size() != 0 )
+                    {
+    					root = layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+    					ListView list = (ListView) root.findViewById(R.id.generic_list);
+    					String[] from = new String[] { "name"};
+    					int[] to = new int[] { R.id.teacher_name};
+    				         // prepare the list of all records
+    			        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+    			        
+    			        for(Teacher t : subject.getTeachers())
+    			        {
+    			             HashMap<String, String> map = new HashMap<String, String>();
+    			             map.put(from[0], t.getName());
+    			             fillMaps.add(map);   
+    			        }
+    			        
+    			        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_subject_teacher, from, to);
+    			        list.setAdapter(adapter);
+    			        list.setOnItemClickListener(new OnItemClickListener() {
+    
+    						public void onItemClick(AdapterView<?> arg0, View arg1,
+    								int pos, long id) {
+    							Teacher b =subject.getTeachers().get(pos);
+    							Intent i = new Intent(getActivity() , ProfileActivity.class);
+    							i.putExtra(ProfileActivity.PROFILE_CODE, b.getCode());
+    							i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_EMPLOYEE);
+    							i.putExtra(Intent.EXTRA_TITLE,b.getName());
+    							startActivity(i);
+    											
+    						}
+    					});
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                        
+                    break;
 				}
 				case 3:
-					ListView listBooks = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
-					((ViewPager) collection).addView(listBooks,0);	
-					
-					String[] fromBook = new String[] {"typeDescription", "authors", "title", "link", "isbn"};
-						
-			        int[] toBook = new int[] { R.id.typeDescription, R.id.authors, R.id.title, R.id.link, R.id.isbn};
-				    // prepare the list of all records
-			        List<HashMap<String, String>> fillMapsBooks = new ArrayList<HashMap<String, String>>();
-			        
-			        for(Book b : subject.getBibliography())
-			        {
-			             HashMap<String, String> map = new HashMap<String, String>();
-			     
-			             map.put("typeDescription", b.getTypeDescription());
-			             map.put("authors", b.getAuthors());
-			             map.put("title", b.getTitle());
-			             map.put("link", b.getLink());
-			             map.put("isbn", b.getIsbn());
-			           
-			             fillMapsBooks.add(map);  
-			             
-			         
-			        }
-			        
-			     
-			        SimpleAdapter adapterBooks = new SimpleAdapter(getActivity(), fillMapsBooks, R.layout.list_item_subject_book, fromBook, toBook);
-			        listBooks.setAdapter(adapterBooks);
-			        listBooks.setOnItemClickListener(new OnItemClickListener() {
-
-						public void onItemClick(AdapterView<?> arg0, View arg1,
-								int pos, long id) {
-							Book b =subject.getBibliography().get(pos);
-							if ( b.getLink() == null )
-								return;
-							Intent i = new Intent(Intent.ACTION_VIEW);
-							i.setData(Uri.parse(b.getLink()));
-							startActivity(i);
-											
-						}
-					});
-					return listBooks;
-					
+				{
+				    if (  subject.getBibliography() != null && subject.getBibliography().size() != 0  )
+				    {
+    					root = layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+    					ListView listBooks = (ListView) root.findViewById(R.id.generic_list);
+    					final String[] from = new String[] {"typeDescription", "authors", "title", "link", "isbn"};
+    						
+    					final int[] to = new int[] { R.id.typeDescription, R.id.authors, R.id.title, R.id.link, R.id.isbn};
+    				    // prepare the list of all records
+    			        final List<HashMap<String, String>> fillMapsBooks = new ArrayList<HashMap<String, String>>();
+    			        
+    			        for(Book b : subject.getBibliography())
+    			        {
+    			             final HashMap<String, String> map = new HashMap<String, String>();
+    			             map.put(from[0], b.getTypeDescription());
+    			             map.put(from[1], b.getAuthors());
+    			             map.put(from[2], b.getTitle());
+    			             map.put(from[3], b.getLink());
+    			             map.put(from[4], b.getIsbn());
+    			             fillMapsBooks.add(map);
+    			        }
+    			        final SimpleAdapter adapterBooks = new SimpleAdapter(getActivity(), fillMapsBooks, R.layout.list_item_subject_book, from, to);
+    			        listBooks.setAdapter(adapterBooks);
+    			        listBooks.setOnItemClickListener(new OnItemClickListener() {
+    
+    						public void onItemClick(AdapterView<?> arg0, View arg1,
+    								int pos, long id) {
+    							Book b =subject.getBibliography().get(pos);
+    							if ( b.getLink() == null )
+    								return;
+    							Intent i = new Intent(Intent.ACTION_VIEW);
+    							i.setData(Uri.parse(b.getLink()));
+    							startActivity(i);
+    											
+    						}
+    					});
+				    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+			       
+			        break;
+				}	
 				case 4:
-					ListView listSoftware = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
-					((ViewPager) collection).addView(listSoftware,0);	
-					
-					String[] fromSoftware = new String[] {"name", "description"};
-						
-			        int[] toSoftware = new int[] { R.id.name, R.id.description};
-			        
-				    // prepare the list of all records
-			        List<HashMap<String, String>> fillMapsSoftware = new ArrayList<HashMap<String, String>>();
-			        
-			        for(Software s : subject.getSoftware())
-			        {
-			             HashMap<String, String> map = new HashMap<String, String>();
-			     
-			             map.put(fromSoftware[0], s.getName());
-			             map.put(fromSoftware[1], s.getDescription());
-			             fillMapsSoftware.add(map);
-			        }
-		            SimpleAdapter adapterSoftware = new SimpleAdapter(getActivity(), fillMapsSoftware, R.layout.list_item_subject_software, fromSoftware, toSoftware);
-				    listSoftware.setAdapter(adapterSoftware);
-					return listSoftware;
-				
+				{
+                    if (  subject.getSoftware() != null && subject.getSoftware().size() != 0  )
+                    {
+    					root = layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+    					ListView listSoftware = (ListView) root.findViewById(R.id.generic_list);
+    					String[] fromSoftware = new String[] {"name", "description"};
+    			        int[] toSoftware = new int[] { R.id.name, R.id.description};
+    				    // prepare the list of all records
+    			        List<HashMap<String, String>> fillMapsSoftware = new ArrayList<HashMap<String, String>>();
+    			        
+    			        for(Software s : subject.getSoftware())
+    			        {
+    			             HashMap<String, String> map = new HashMap<String, String>();
+    			     
+    			             map.put(fromSoftware[0], s.getName());
+    			             map.put(fromSoftware[1], s.getDescription());
+    			             fillMapsSoftware.add(map);
+    			        }
+    		            SimpleAdapter adapterSoftware = new SimpleAdapter(getActivity(), fillMapsSoftware, R.layout.list_item_subject_software, fromSoftware, toSoftware);
+    				    listSoftware.setAdapter(adapterSoftware);
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+               
+				    break;
+				}
 				case 5:
-					View metodology = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView metodologyText = (TextView) metodology.findViewById(R.id.content);
-					metodologyText.setText(subject.getMetodology());
-					((ViewPager) collection).addView(metodology,0);
-					return metodology;
-					
+				{
+                    if (  subject.getMetodology() != null && ! subject.getMetodology().equals(""))
+                    {
+    					root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+    					TextView metodologyText = (TextView) root.findViewById(R.id.content);
+    					metodologyText.setText(subject.getMetodology());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+					break;
+				}	
 				case 6:	
-				{	ListView listEvaluation = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
-					((ViewPager) collection).addView(listEvaluation,0);	
-					
-					String[] fromEvaluation = new String[] {"description", /*"type",*/ "typeDesc",/* "length", "conclusionDate"*/};
-						
-			        int[] toEvaluation = new int[] { R.id.description,  /*R.id.type,*/  R.id.typeDesc,/* R.id.length, R.id.conclusionDate*/};
-			        
-				    // prepare the list of all records
-			        List<HashMap<String, String>> fillMapsEvaluation = new ArrayList<HashMap<String, String>>();
-			        
-			        for(EvaluationComponent e : subject.getEvaluation())
-			        {
-			             HashMap<String, String> map = new HashMap<String, String>();
-			     
-			             map.put("description", e.getDescription());
-			            // map.put("type", e.getType());
-			             map.put("typeDesc", e.getTypeDesc());
-			             //map.put("length", e.getLength());
-			            // map.put("conclusionDate", e.getConclusionDate());
-			             fillMapsEvaluation.add(map);
-			      
-			        }
-		            SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, fromEvaluation, toEvaluation);
-				    listEvaluation.setAdapter(adapterEvaluation);
-					return listEvaluation;
+				{	
+                    if (  subject.getSoftware() != null && subject.getSoftware().size() != 0  )
+                    {
+    				    root = layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+    				    final  ListView listEvaluation = (ListView)  root.findViewById(R.id.generic_list);
+    				    
+    				    final String[] from = new String[] {"description", "typeDesc"};
+    			        final int[] to = new int[] { R.id.description, R.id.typeDesc};
+    				    // prepare the list of all records
+    			        final List<HashMap<String, String>> fillMapsEvaluation = new ArrayList<HashMap<String, String>>();
+    			        
+    			        for(EvaluationComponent e : subject.getEvaluation())
+    			        {
+    			             final HashMap<String, String> map = new HashMap<String, String>();
+    			     
+    			             map.put(from[0], e.getDescription());
+    			             map.put(from[0], e.getTypeDesc());
+    			             fillMapsEvaluation.add(map);
+    			      
+    			        }
+    			        final SimpleAdapter adapterEvaluation = new SimpleAdapter(getActivity(), fillMapsEvaluation, R.layout.list_item_subject_evaluation_component, from, to);
+    				    listEvaluation.setAdapter(adapterEvaluation);
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+					break;
 				}	
 				case 7:
-					View admissionExams = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView admissionExamsText = (TextView) admissionExams.findViewById(R.id.content);
-					admissionExamsText.setText(subject.getFrequenceCond());
-					((ViewPager) collection).addView(admissionExams,0);
-					return admissionExams;
-
+                {
+                    if (  subject.getFrequenceCond() != null && ! subject.getFrequenceCond().equals(""))
+                    {
+    					root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+    					TextView admissionExamsText = (TextView) root.findViewById(R.id.content);
+    					admissionExamsText.setText(subject.getFrequenceCond());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+                }   
 				case 8:
-					View finalGrade = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView finalGradeText = (TextView) finalGrade.findViewById(R.id.content);
-					finalGradeText.setText(subject.getEvaluationFormula());
-					((ViewPager) collection).addView(finalGrade,0);
-					return finalGrade;
-					
+				{
+                    if (  subject.getEvaluationFormula() != null && ! subject.getEvaluationFormula().equals(""))
+                    {
+    				    root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+    					TextView finalGradeText = (TextView) root.findViewById(R.id.content);
+    					finalGradeText.setText(subject.getEvaluationFormula());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+                }
 				case 9:
-					View specialEvaluation = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView specialEvaluationText = (TextView) specialEvaluation.findViewById(R.id.content);
-					specialEvaluationText.setText(subject.getEvaluationProc());
-					((ViewPager) collection).addView(specialEvaluation,0);
-					return specialEvaluation;
-					
+                {
+                    if (  subject.getEvaluationProc() != null && ! subject.getEvaluationProc().equals(""))
+                    {
+    				    root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+    					TextView specialEvaluationText = (TextView) root.findViewById(R.id.content);
+    					specialEvaluationText.setText(subject.getEvaluationProc());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+                }
 				case 10:
-					View improvementClassification = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView improvementClassificationText = (TextView) improvementClassification.findViewById(R.id.content);
-					improvementClassificationText.setText(subject.getFrequenceCond());
-					((ViewPager) collection).addView(improvementClassification,0);
-					return improvementClassification;
-					
+                {
+                    if (  subject.getImprovementProc() != null && ! subject.getImprovementProc().equals(""))
+                    {
+				    root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView improvementClassificationText = (TextView) root.findViewById(R.id.content);
+					improvementClassificationText.setText(subject.getImprovementProc());
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+                }
 				case 11:
-					View comments = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
-					TextView commentsText = (TextView) comments.findViewById(R.id.content);
+                {
+                    if (  subject.getObservations() != null && ! subject.getObservations().equals(""))
+                    {
+				    root = layoutInflater.inflate(R.layout.subject_content, viewPager, false);
+					TextView commentsText = (TextView) root.findViewById(R.id.content);
 					commentsText.setText(subject.getObservations());
-					((ViewPager) collection).addView(comments,0);
-					return comments;
-					
+                    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+                    break;
+                }
 				case 12:
 				{
-					final ListView list = (ListView) layoutInflater.inflate(R.layout.generic_list, viewPager, false);
-					((ViewPager) collection).addView(list,0);	
-					String[] from = new String[] {"name"};
-					int[] to = new int[] {R.id.folder_name};
-					
-					// prepare the list of all records
-					List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-					 
-					for(Folder f : subjectContent.getCurrentFolder().getFolders())
-					{
-						HashMap<String, String> map = new HashMap<String, String>();
-						map.put("name", f.getName());
-						fillMaps.add(map);
-					}
-					for(File f : subjectContent.getCurrentFolder().getFiles())
-					{
-						HashMap<String, String> map = new HashMap<String, String>();
-						map.put("name", f.getName());
-						fillMaps.add(map);
-					}
-					
-					SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_folder, from, to);
-					list.setAdapter(adapter);
-					list.setOnItemClickListener(new OnItemClickListener() {
-
-						@Override
-						public void onItemClick(AdapterView<?> list, View item,
-								int position, long id) {
-							if ( position >= subjectContent.getCurrentFolder().getFolders().size()  )
-							{
-								//launch download;
-								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
-								if ( toDownload.getUrl() == null || toDownload.getUrl().trim().length() == 0)
-								{
-									DownloaderFragment.newInstance(toDownload.getName(),"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode() , toDownload.getFilename())
-														.show(getFragmentManager(), "Downloader");
-								}
-								else
-								{
-									Intent i = new Intent(Intent.ACTION_VIEW);
-									i.setData(Uri.parse(toDownload.getUrl()));
-									startActivity(i);
-								}
-								return;
-							}
-							subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getFolders().get(position));
-							pagerAdapter.notifyDataSetChanged();
-							
-					        
-						}
-					});
-					return list; 
+				    if ( subjectContent != null 
+				            && ( subjectContent.getCurrentFolder().getFolders().size() != 0
+				            || subjectContent.getCurrentFolder().getFiles().size() != 0 ))
+				    {
+    					root = layoutInflater.inflate(R.layout.generic_list, viewPager, false);
+    					root.setTag(getString(R.string.subject_content));
+    					final ListView list = (ListView) root.findViewById(R.id.generic_list);
+    					list.setAdapter(getSubjectContentAdapter());
+    					list.setOnItemClickListener(new OnItemClickListener() {
+    
+    						@Override
+    						public void onItemClick(AdapterView<?> list, View item,
+    								int position, long id) {
+    							if ( position >= subjectContent.getCurrentFolder().getFolders().size()  )
+    							{
+    								//launch download;
+    								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
+    								if ( toDownload.getUrl() == null || toDownload.getUrl().trim().length() == 0)
+    								{
+    									DownloaderFragment.newInstance(toDownload.getName(),"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode() , toDownload.getFilename())
+    														.show(getFragmentManager(), "Downloader");
+    								}
+    								else
+    								{
+    									Intent i = new Intent(Intent.ACTION_VIEW);
+    									i.setData(Uri.parse(toDownload.getUrl()));
+    									startActivity(i);
+    								}
+    								return;
+    							}
+    							subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getFolders().get(position));
+    				            View contents = viewPager.findViewWithTag(getString(R.string.subject_content));
+    	                        ((ListView) contents.findViewById(R.id.generic_list)).setAdapter(getSubjectContentAdapter());
+    					        
+    						}
+    					});
+				    }
+                    else
+                        root = getEmptyScreen(getString(R.string.no_data));
+				    break;
 				}
 						
 			}
-			
-			return null;
+			if ( root == null )
+                root = getEmptyScreen(getString(R.string.no_data));
+            ((ViewPager) collection).addView(root,0);
+            return root;
 		}
 
 		@Override
@@ -505,7 +541,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 
 		@Override
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			
 		}
 
 		@Override
@@ -515,22 +550,38 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 
 		@Override
 		public void startUpdate(View arg0) {
-			
 		}
-		
-		//This is just implemented like this so 
-		// that the view pager will update itself when notifyDataSetChanged is called.
-		public int getItemPosition(Object object) {
-	        return POSITION_NONE;
-	    }
 
+    }
+    
+    private ListAdapter getSubjectContentAdapter(){
+        String[] from = new String[] {"name"};
+        int[] to = new int[] {R.id.folder_name};
+        
+        // prepare the list of all records
+        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+         
+        for(Folder f : subjectContent.getCurrentFolder().getFolders())
+        {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(from[0], f.getName());
+            fillMaps.add(map);
+        }
+        for(File f : subjectContent.getCurrentFolder().getFiles())
+        {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(from[0], f.getName());
+            fillMaps.add(map);
+        }
+       return new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_folder, from, to);
     }
     
 	public void onBackPressed() {
 		if ( currentPage == 12 && subjectContent.getCurrentFolder().getParent() != null )
 		{
 			subjectContent.setCurrentFolder(subjectContent.getCurrentFolder().getParent());
-			pagerAdapter.notifyDataSetChanged();
+			 View contents = viewPager.findViewWithTag(getString(R.string.subject_content));
+             ((ListView) contents.findViewById(R.id.generic_list)).setAdapter(getSubjectContentAdapter());
 		}
 		else
 		{
