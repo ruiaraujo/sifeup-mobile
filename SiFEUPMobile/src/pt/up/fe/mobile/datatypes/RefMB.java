@@ -17,9 +17,7 @@ public class RefMB implements Parcelable
 	Time startDate;
 	Time endDate;
 	
-	public RefMB(){
-		
-	}
+	public RefMB(){}
 	
 	public boolean load(JSONObject jRef)
 	{
@@ -116,26 +114,40 @@ public class RefMB implements Parcelable
     };
 
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(name);
+		dest.writeInt(name != null?1:0);
+		if ( name != null )
+			dest.writeString(name);
 		dest.writeLong(entity);
 		dest.writeLong(ref);
 		dest.writeDouble(amount);
-		dest.writeString(startDate.format3339(true));
-		dest.writeString(endDate.format3339(true));
+
+		dest.writeInt(startDate != null?1:0);
+		if ( startDate != null )
+			dest.writeString(startDate.format3339(true));
+
+		dest.writeInt(endDate != null?1:0);
+		if ( endDate != null )
+			dest.writeString(endDate.format3339(true));
 	}
 	
 	private RefMB( Parcel in){
-		name = in.readString();
+		if ( in.readInt() == 1 )
+			name = in.readString();
 		entity = in.readLong();
 		ref = in.readLong();
 		amount = in.readDouble();
-		String[] start=in.readString().split("-");
-		this.startDate=new Time(Time.TIMEZONE_UTC);
-		this.startDate.set(Integer.parseInt(start[2]), Integer.parseInt(start[1])-1, Integer.parseInt(start[0]));
-		String[] end=in.readString().split("-");
-		this.endDate=new Time(Time.TIMEZONE_UTC);
-		this.endDate.set(Integer.parseInt(end[2]), Integer.parseInt(end[1])-1, Integer.parseInt(end[0]));
-		
+		if ( in.readInt() == 1 )
+		{
+			String[] start=in.readString().split("-");
+			this.startDate=new Time(Time.TIMEZONE_UTC);
+			this.startDate.set(Integer.parseInt(start[2]), Integer.parseInt(start[1])-1, Integer.parseInt(start[0]));
+		}
+		if ( in.readInt() == 1 )
+		{
+			String[] end=in.readString().split("-");
+			this.endDate=new Time(Time.TIMEZONE_UTC);
+			this.endDate.set(Integer.parseInt(end[2]), Integer.parseInt(end[1])-1, Integer.parseInt(end[0]));
+		}	
 	}
 		
 }

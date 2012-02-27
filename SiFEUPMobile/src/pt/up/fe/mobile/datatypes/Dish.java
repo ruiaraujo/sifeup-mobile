@@ -57,10 +57,16 @@ public class Dish implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(getState());
-        dest.writeString(description);
-        dest.writeInt(getType());
-        dest.writeString(descriptionType);
+    	dest.writeInt(state!=null?1:0);
+    	if ( state != null )
+    		dest.writeString(state);
+    	dest.writeInt(description!=null?1:0);
+    	if ( description != null )
+    		dest.writeString(description);
+        dest.writeInt(type);
+    	dest.writeInt(descriptionType!=null?1:0);
+    	if ( descriptionType != null )
+    		dest.writeString(descriptionType);
     }
 
     public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
@@ -74,10 +80,13 @@ public class Dish implements Parcelable {
     };
 
     private Dish(Parcel in) {
-        setState(in.readString());
-        description = in.readString();
-        setType(in.readInt());
-        descriptionType = in.readString();
+    	if ( in.readInt() == 1 )
+    		state = in.readString();
+        if ( in.readInt() == 1 )
+        	description = in.readString();
+        type = in.readInt();
+        if ( in.readInt() == 1 )
+        	descriptionType = in.readString();
     }
 
 

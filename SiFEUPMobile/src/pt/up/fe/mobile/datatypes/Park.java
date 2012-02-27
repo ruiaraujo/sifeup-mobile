@@ -80,12 +80,15 @@ public class Park implements Parcelable
 	
 	private Park(Parcel in){
 		places = in.readInt();
-		name = in.readString();
+		if ( in.readInt() == 1 )
+			name = in.readString();
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(places);
-		dest.writeString(name);
+		dest.writeInt(name!=null?1:0);
+		if ( name != null )
+			dest.writeString(name);
 	}
     
 }

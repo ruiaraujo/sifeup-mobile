@@ -121,9 +121,15 @@ public class Canteen implements Parcelable {
 
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(code);
-        out.writeString(description);
-        out.writeString(timetable);
-        out.writeValue(menus);
+        out.writeInt(description!=null?1:0);
+        if ( description != null )
+        	out.writeString(description);
+        out.writeInt(timetable!=null?1:0);
+        if ( timetable != null )
+        	out.writeString(timetable);
+        out.writeInt(menus!=null?1:0);
+        if ( menus != null )
+        	out.writeValue(menus);
     }
 
     public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {
@@ -138,9 +144,12 @@ public class Canteen implements Parcelable {
 
     private Canteen(Parcel in) {
         code = in.readInt();
-        description = in.readString();
-        timetable = in.readString();
-        menus = (Menu[]) in.readValue(Menu.class.getClassLoader());
+        if ( in.readInt() == 1 )
+        	description = in.readString();
+        if ( in.readInt() == 1 )
+        	timetable = in.readString();
+        if ( in.readInt() == 1 )
+        	menus = (Menu[]) in.readValue(Menu.class.getClassLoader());
     }
 
 }
