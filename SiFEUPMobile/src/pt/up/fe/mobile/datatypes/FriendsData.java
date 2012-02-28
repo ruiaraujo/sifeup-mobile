@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.datatypes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 import android.content.Context;
@@ -87,6 +88,7 @@ public class FriendsData {
 	
 	public String getTokenizedFriends (){
 		StringBuilder s  =new StringBuilder();
+		Collections.sort(list);
 		for ( Friend f : list )
 			s.append(f.toString() + SEPARATOR );
 		return s.toString();

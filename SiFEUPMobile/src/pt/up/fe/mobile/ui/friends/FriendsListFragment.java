@@ -73,8 +73,8 @@ public class FriendsListFragment extends BaseFragment implements
         inflater.inflate(R.menu.friends_menu_context, menu);
     }
 
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
+    public void onResume (){
+    	super.onResume();
         new FriendsTask().execute();
     }
 
@@ -96,7 +96,7 @@ public class FriendsListFragment extends BaseFragment implements
                 return true;
             Intent i = new Intent(getActivity(), ScheduleActivity.class);
             i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
-            if (SessionManager.friends.getList().get((int) info.id).getCourse() != null)
+            if (SessionManager.friends.getList().get((int) info.id).getCourse() == null)
                 i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
                         ScheduleFragment.SCHEDULE_EMPLOYEE);
             else
