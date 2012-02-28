@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.datatypes.Friend;
+import pt.up.fe.mobile.friends.Friend;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -84,19 +84,17 @@ public class FriendsListFragment extends BaseFragment implements
                 .getMenuInfo();
         switch (item.getItemId()) {
         case R.id.menu_friends_delete:
-            SessionManager.friends.removeFriend((int) info.id);
-            SessionManager.friends.saveToFile(getActivity()
-                    .getApplicationContext());
+            SessionManager.getInstance(getActivity()).removeFriend((int) info.id);
             new FriendsTask().execute();
             break;
         case R.id.menu_friends_timetable:
-            String loginCode = SessionManager.friends.getList()
+            String loginCode = SessionManager.getInstance(getActivity()).getFriendsList()
                     .get((int) info.id).getCode();
             if (getActivity() == null)
                 return true;
             Intent i = new Intent(getActivity(), ScheduleActivity.class);
             i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
-            if (SessionManager.friends.getList().get((int) info.id).getCourse() == null)
+            if (SessionManager.getInstance(getActivity()).getFriendsList().get((int) info.id).getCourse() == null)
                 i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
                         ScheduleFragment.SCHEDULE_EMPLOYEE);
             else
@@ -109,7 +107,7 @@ public class FriendsListFragment extends BaseFragment implements
 
     public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
         Intent i = new Intent(getActivity(), ProfileActivity.class);
-        Friend f = SessionManager.friends.getFriend(position);
+        Friend f = SessionManager.getInstance(getActivity()).getFriend(position);
         if (f.getCourse() != null)
             i.putExtra(ProfileActivity.PROFILE_TYPE,
                     ProfileActivity.PROFILE_STUDENT);
@@ -123,17 +121,17 @@ public class FriendsListFragment extends BaseFragment implements
     }
 
     /** Classe privada para a busca de dados ao servidor */
-    private class FriendsTask extends AsyncTask<Void, Void, String> {
+    private class FriendsTask extends AsyncTask<Void, Void, Boolean> {
 
         protected void onPreExecute() {
             showLoadingScreen();
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Boolean result) {
             if (getActivity() == null)
                 return;
-            if (!result.equals("")) {
-                if (SessionManager.friends.getList().isEmpty()) {
+            if ( result ) {
+                if (SessionManager.getInstance(getActivity()).getFriendsList().isEmpty()) {
                     showEmptyScreen(getString(R.string.label_no_friends));
                     return;
                 }
@@ -143,7 +141,7 @@ public class FriendsListFragment extends BaseFragment implements
                 int[] to = new int[] { R.id.friend_name, R.id.friend_course };
                 // prepare the list of all records
                 List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-                for (Friend f : SessionManager.friends.getList()) {
+                for (Friend f : SessionManager.getInstance(getActivity()).getFriendsList()) {
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put(from[0], f.getName());
@@ -174,13 +172,8 @@ public class FriendsListFragment extends BaseFragment implements
         }
 
         @Override
-        protected String doInBackground(Void... theVoid) {
-            if (!SessionManager.friends.isLoaded()) {
-                if (SessionManager.friends.loadFromFile(getActivity()))
-                    return "Sucess";
-            } else
-                return "Sucess";
-            return "";
+        protected Boolean doInBackground(Void... theVoid) {
+            return SessionManager.getInstance(getActivity()).loadFriends();
         }
     }
 

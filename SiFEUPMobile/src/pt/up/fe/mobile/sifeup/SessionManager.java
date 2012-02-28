@@ -1,10 +1,13 @@
 package pt.up.fe.mobile.sifeup;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import pt.up.fe.mobile.datatypes.FriendsData;
 import pt.up.fe.mobile.datatypes.TuitionHistory;
 import pt.up.fe.mobile.datatypes.User;
+import pt.up.fe.mobile.friends.DBAdapter;
+import pt.up.fe.mobile.friends.Friend;
 
 /**
  * Singleton class that holds the active Session cookie.
@@ -24,10 +27,12 @@ public class SessionManager {
     private String cookie;
     private User user;
     public static TuitionHistory tuitionHistory = new TuitionHistory();
-    public static FriendsData friends = new FriendsData();
+    private final DBAdapter storage;
+	private List<Friend> listFriends;
 
     private SessionManager(Context context) {
         this.context = context.getApplicationContext();
+        storage = DBAdapter.getInstance(this.context);
     }
 
     private static SessionManager INSTANCE;
@@ -157,4 +162,61 @@ public class SessionManager {
         prefEditor.putString(PREF_COOKIE, "");
         prefEditor.commit();
     }
+
+	public boolean loadFriends(){
+		if ( listFriends != null )
+			return true;
+		listFriends = storage.getFriends(user.getUser());
+		return listFriends != null;
+	}
+
+	public List<Friend> getFriendsList() {
+		return listFriends;
+	}
+
+	public boolean addFriend(Friend fr)
+	{
+		if ( storage.addFriend(fr, user.getUser()) )
+		{
+			if ( !listFriends.contains(fr) )
+				listFriends.add(fr);
+		}
+		else
+			return false;
+		return true;
+	}
+	
+	public boolean removeFriend(int pos)
+	{
+		if ( storage.deleteFriend(listFriends.get(pos), user.getUser()) )
+			listFriends.remove(pos);
+		else
+			return false;
+		return true;
+	}
+
+	public Friend getFriend(int position) {
+		if ( listFriends == null )
+			return null;
+		return listFriends.get(position);
+	}
+
+	public void cleanFriends() {
+		listFriends.clear();
+		listFriends = null;
+	}
+
+	public boolean isFriend(String code) {
+		if ( listFriends == null )
+			return false;
+		return listFriends.contains(new Friend(code,"",""));
+	}
+
+	public boolean removeFriend(Friend fr) {
+		if ( storage.deleteFriend(fr, user.getUser()) )
+			listFriends.remove(fr);
+		else
+			return false;
+		return true;
+	}
 }

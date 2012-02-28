@@ -187,7 +187,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 		User user = (User) results[0];
 		SessionManager.getInstance(this).setUser(new User(this.user,user.getUser(), pass, user.getType()));
 		SessionManager.tuitionHistory.setLoaded(false);
-		SessionManager.friends.setLoaded(false);
+		SessionManager.getInstance(this).cleanFriends();
 		startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 		finish();
 		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);

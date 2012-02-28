@@ -1,4 +1,4 @@
-package pt.up.fe.mobile.datatypes;
+package pt.up.fe.mobile.friends;
 
 import java.util.StringTokenizer;
 

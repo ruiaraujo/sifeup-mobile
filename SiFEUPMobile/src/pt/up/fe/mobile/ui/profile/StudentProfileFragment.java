@@ -6,10 +6,10 @@ import java.util.List;
 
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.datatypes.Friend;
 import pt.up.fe.mobile.datatypes.Profile;
 import pt.up.fe.mobile.datatypes.Student;
 import pt.up.fe.mobile.datatypes.Profile.ProfileDetail;
+import pt.up.fe.mobile.friends.Friend;
 import pt.up.fe.mobile.sifeup.ProfileUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
@@ -78,10 +78,9 @@ public class StudentProfileFragment extends BaseFragment implements
 				Friend fr = new Friend(me.getCode(), me.getName(), me
 						.getProgrammeAcronym());
 				if (friend.isChecked())
-					SessionManager.friends.addFriend(fr);
+					SessionManager.getInstance(getActivity()).addFriend(fr);
 				else
-					SessionManager.friends.removeFriend(fr);
-				SessionManager.friends.saveToFile(getActivity());
+					SessionManager.getInstance(getActivity()).removeFriend(fr);
 			}
 		});
 		((Button) root.findViewById(R.id.profile_link_schedule))
@@ -141,7 +140,7 @@ public class StudentProfileFragment extends BaseFragment implements
 		getActivity().getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());
 		code.setText(me.getCode());
-		if (SessionManager.friends.isFriend(me.getCode()))
+		if (SessionManager.getInstance(getActivity()).isFriend(me.getCode()))
 			friend.setChecked(true);
 		else
 			friend.setChecked(false);
