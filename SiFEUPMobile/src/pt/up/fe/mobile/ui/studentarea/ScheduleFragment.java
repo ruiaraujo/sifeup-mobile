@@ -183,8 +183,8 @@ public class ScheduleFragment extends BaseFragment implements
             else
             {
             	setToNow = true;
-        		onResultReceived(schedule);
-                showFastMainScreen();
+            	displaySchedule();
+            	showFastMainScreen();
             }
         }
         else
@@ -618,6 +618,11 @@ public class ScheduleFragment extends BaseFragment implements
 			return;
 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 		schedule = (ArrayList<Block>) results[0];
+		displaySchedule();
+		showMainScreen();
+	}
+	
+	private void displaySchedule(){
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			updateDay(0, mondayMillis - 3 * DateUtils.DAY_IN_MILLIS); // previous
 			// friday
@@ -647,7 +652,6 @@ public class ScheduleFragment extends BaseFragment implements
 			fetchingPreviousWeek = false;
 			setToNow = false;
 		}
-		showMainScreen();
 	}
 
 	private void updateSchedule() {
