@@ -58,6 +58,11 @@ import android.widget.Toast;
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
 		OnClickListener, ResponseCommand {
+	
+	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
+	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
+
+	
 	private ViewPager mPager;
 	private TextView mTitle;
 	private int mTitleCurrentDayIndex = -1;
@@ -95,7 +100,8 @@ public class ScheduleFragment extends BaseFragment implements
 		AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
 		scheduleCode = getArguments().getString(SCHEDULE_CODE);
 		if (scheduleCode == null)
-			scheduleCode = SessionManager.getInstance(getActivity()).getLoginCode();
+			scheduleCode = SessionManager.getInstance(getActivity())
+					.getLoginCode();
 		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);
 	}
 
@@ -155,11 +161,37 @@ public class ScheduleFragment extends BaseFragment implements
 
 		return getParentContainer();
 	}
+
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 	    if ( schedule != null )
+ 	        outState.putParcelableArrayList(SCHEDULE_KEY,schedule);
+ 	    outState.putLong(MILLISECONDS_KEY, mondayMillis);
+ 	}
 	
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        updateSchedule();
-    }
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if ( savedInstanceState != null )
+        {
+			long millis = savedInstanceState.getLong(MILLISECONDS_KEY);
+			if ( millis != 0 )
+				mondayMillis = millis;
+            schedule = savedInstanceState.getParcelableArrayList(SCHEDULE_KEY);
+            if ( schedule == null )
+        		updateSchedule();
+            else
+            {
+            	setToNow = true;
+            	displaySchedule();
+            	showFastMainScreen();
+            }
+        }
+        else
+        {
+    		updateSchedule();
+        }
+	}
 
 	private void increaseDay() {
 		mTitleCurrentDayIndex++;
@@ -342,10 +374,13 @@ public class ScheduleFragment extends BaseFragment implements
 		// Plus one because mDays.at(0) is a day of the previous week
 		Day day = mDays.get(dayIndex + 1);
 
-		final String blockId = block.getLectureAcronym() + " ("
-				+ block.getLectureType() + ")" + "\n" + 
-		        (block.getBuildingCode()==null?"":block.getBuildingCode())
-				+ block.getRoomCode();
+		final String blockId = block.getLectureAcronym()
+				+ " ("
+				+ block.getLectureType()
+				+ ")"
+				+ "\n"
+				+ (block.getBuildingCode() == null ? "" : block
+						.getBuildingCode()) + block.getRoomCode();
 		final String title = blockId;
 		final long start = block.getStartTime() * 1000 + day.timeStart;
 		final long end = start + (long) (block.getLectureDuration() * 3600000);
@@ -431,7 +466,9 @@ public class ScheduleFragment extends BaseFragment implements
 								// new event
 								String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
-								String eventLocation = b.getBuildingCode()
+								String eventLocation = (b.getBuildingCode() != null ? b
+										.getBuildingCode()
+										: "")
 										+ b.getRoomCode();
 								String description = "Professor: "
 										+ b.getTeacherAcronym();
@@ -546,10 +583,13 @@ public class ScheduleFragment extends BaseFragment implements
 
 	private Block findBlock(String blockId) {
 		for (Block block : schedule) {
-			String id = block.getLectureAcronym() + " ("
-	                + block.getLectureType() + ")" + "\n" + 
-	                (block.getBuildingCode()==null?"":block.getBuildingCode())
-	                + block.getRoomCode();
+			String id = block.getLectureAcronym()
+					+ " ("
+					+ block.getLectureType()
+					+ ")"
+					+ "\n"
+					+ (block.getBuildingCode() == null ? "" : block
+							.getBuildingCode()) + block.getRoomCode();
 			if (id.equals(blockId))
 				return block;
 		}
@@ -578,6 +618,11 @@ public class ScheduleFragment extends BaseFragment implements
 			return;
 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 		schedule = (ArrayList<Block>) results[0];
+		displaySchedule();
+		showMainScreen();
+	}
+	
+	private void displaySchedule(){
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			updateDay(0, mondayMillis - 3 * DateUtils.DAY_IN_MILLIS); // previous
 			// friday
@@ -600,14 +645,13 @@ public class ScheduleFragment extends BaseFragment implements
 			updateNowView();
 		} else {
 			mPager.setCurrentItem(1);
-            updateNowView();
+			updateNowView();
 		}
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			fetchingNextWeek = false;
 			fetchingPreviousWeek = false;
 			setToNow = false;
 		}
-		showMainScreen();
 	}
 
 	private void updateSchedule() {
@@ -616,18 +660,20 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 		switch (scheduleType) {
 		case SCHEDULE_STUDENT:
-		    task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis, this);
-			break;
-		case SCHEDULE_EMPLOYEE:
-		    task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode, mondayMillis,
+			task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis,
 					this);
 			break;
+		case SCHEDULE_EMPLOYEE:
+			task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode,
+					mondayMillis, this);
+			break;
 		case SCHEDULE_ROOM:
-		    task = ScheduleUtils
-					.getRoomScheduleReply(scheduleCode, mondayMillis, this);
+			task = ScheduleUtils.getRoomScheduleReply(scheduleCode,
+					mondayMillis, this);
 			break;
 		case SCHEDULE_UC:
-		    task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis, this);
+			task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis,
+					this);
 			break;
 		}
 	}

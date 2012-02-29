@@ -1,7 +1,9 @@
 package pt.up.fe.mobile.ui.studentarea;
 
 import pt.up.fe.mobile.R;
-import pt.up.fe.mobile.datatypes.*;
+import pt.up.fe.mobile.datatypes.AcademicPath;
+import pt.up.fe.mobile.datatypes.AcademicUC;
+import pt.up.fe.mobile.datatypes.AcademicYear;
 import pt.up.fe.mobile.sifeup.AcademicPathUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
@@ -30,6 +32,8 @@ import android.widget.Toast;
 public class AcademicPathFragment extends BaseFragment implements
         ResponseCommand {
 
+	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
+	
     /** All info about the student Academic Path */
     private AcademicPath academicPath;
 
@@ -78,10 +82,34 @@ public class AcademicPathFragment extends BaseFragment implements
         return getParentContainer(); // mandatory
     }
 
+	
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 	    if ( academicPath != null )
+ 	        outState.putParcelable(ACADEMIC_KEY,academicPath);
+ 	}
+
+    
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), this);
+        if ( savedInstanceState != null )
+        {
+            academicPath = savedInstanceState.getParcelable(ACADEMIC_KEY);
+            if ( academicPath == null )
+            	task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
+                        .getLoginCode(), this);
+            else
+            {
+                displayData();
+                showFastMainScreen();
+            }
+        }
+        else
+        {
+        	task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
+                    .getLoginCode(), this);
+        }
     }
 
     public void onError(ERROR_TYPE error) {
@@ -108,12 +136,16 @@ public class AcademicPathFragment extends BaseFragment implements
         if (getActivity() == null)
             return;
         academicPath = (AcademicPath) results[0];
+        displayData();
+        showMainScreen();
+    }
+    
+    private void displayData(){
         average.setText(getString(R.string.path_average,
                 academicPath.getAverage()));
         year.setText(getString(R.string.path_year,
                 academicPath.getCourseYears()));
         grades.setAdapter(new AcademicPathAdapter());
-        showMainScreen();
     }
 
     private class AcademicPathAdapter extends BaseExpandableListAdapter {

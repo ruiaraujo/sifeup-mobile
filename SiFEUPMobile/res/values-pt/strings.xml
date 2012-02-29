@@ -84,6 +84,7 @@
     <string name="toast_export_calendar_finished">Calendário Exportado.</string>
     <string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
     <string name="description_now">Ir para hoje</string>
+    <string name="description_schedule">Ver o Horário</string>
 
     <!-- Class Description -->
     <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>

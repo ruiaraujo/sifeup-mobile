@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.datatypes;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 /**
  * 
  * Represents a lecture.
@@ -8,8 +9,7 @@ import java.io.Serializable;
  * (time, place, teacher)
  *
  */
-@SuppressWarnings("serial")
-public class Block implements Serializable{
+public class Block implements Parcelable{
 	private int weekDay; // [0 ... 6]
 	private int startTime; // seconds from midnight
 	
@@ -28,6 +28,8 @@ public class Block implements Serializable{
 	
 	private String year; // 2010/2011
 
+	public Block(){}
+	
 	public int getWeekDay() {
 		return weekDay;
 	}
@@ -131,4 +133,62 @@ public class Block implements Serializable{
 	public String getYear() {
 		return year;
 	}
+
+	public int describeContents() {
+		return 0;
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(weekDay);
+		dest.writeInt(startTime);
+		dest.writeInt(lectureCode!=null?1:0);
+		if ( lectureCode != null ) dest.writeString(lectureCode);
+		dest.writeInt(lectureAcronym!=null?1:0);
+		if ( lectureAcronym != null ) dest.writeString(lectureAcronym);
+		dest.writeInt(lectureType!=null?1:0);
+		if ( lectureType != null ) dest.writeString(lectureType);
+		dest.writeDouble(lectureDuration);
+		dest.writeInt(classAcronym!=null?1:0);
+		if (  classAcronym != null ) dest.writeString(classAcronym);
+		dest.writeInt(teacherAcronym!=null?1:0);
+		if ( teacherAcronym != null ) dest.writeString(teacherAcronym);
+		dest.writeInt(teacherCode!=null?1:0);
+		if ( teacherCode != null ) dest.writeString(teacherCode);
+		dest.writeInt(roomCode!=null?1:0);
+		if ( roomCode != null ) dest.writeString(roomCode);
+		dest.writeInt(buildingCode!=null?1:0);
+		if ( buildingCode != null ) dest.writeString(buildingCode);
+		dest.writeInt(semester!=null?1:0);
+		if ( semester != null ) dest.writeString(semester);
+		dest.writeInt(year!=null?1:0);
+		if ( year != null ) dest.writeString(year);
+	}
+	
+	private Block(Parcel in){
+		weekDay = in.readInt();
+		startTime = in.readInt();
+		if ( in.readInt() == 1 ) lectureCode = in.readString();
+		if ( in.readInt() == 1 ) lectureAcronym = in.readString();
+		if ( in.readInt() == 1 ) lectureType = in.readString();
+		lectureDuration = in.readDouble();
+		if ( in.readInt() == 1 ) classAcronym = in.readString();
+		if ( in.readInt() == 1 ) teacherAcronym = in.readString();
+		if ( in.readInt() == 1 ) teacherCode = in.readString();
+		if ( in.readInt() == 1 ) roomCode = in.readString();
+		if ( in.readInt() == 1 ) buildingCode = in.readString();
+		if ( in.readInt() == 1 ) semester = in.readString();
+		if ( in.readInt() == 1 ) year = in.readString();
+	}
+	
+
+    public static final Parcelable.Creator<Block> CREATOR = new Parcelable.Creator<Block>() {
+        public Block createFromParcel(Parcel in) {
+            return new Block(in);
+        }
+
+        public Block[] newArray(int size) {
+            return new Block[size];
+        }
+    };
+
 }
