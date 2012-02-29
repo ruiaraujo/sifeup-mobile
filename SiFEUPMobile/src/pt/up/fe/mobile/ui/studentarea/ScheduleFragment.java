@@ -95,7 +95,8 @@ public class ScheduleFragment extends BaseFragment implements
 		AnalyticsUtils.getInstance(getActivity()).trackPageView("/exams");
 		scheduleCode = getArguments().getString(SCHEDULE_CODE);
 		if (scheduleCode == null)
-			scheduleCode = SessionManager.getInstance(getActivity()).getLoginCode();
+			scheduleCode = SessionManager.getInstance(getActivity())
+					.getLoginCode();
 		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);
 	}
 
@@ -155,11 +156,11 @@ public class ScheduleFragment extends BaseFragment implements
 
 		return getParentContainer();
 	}
-	
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        updateSchedule();
-    }
+
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		updateSchedule();
+	}
 
 	private void increaseDay() {
 		mTitleCurrentDayIndex++;
@@ -342,10 +343,13 @@ public class ScheduleFragment extends BaseFragment implements
 		// Plus one because mDays.at(0) is a day of the previous week
 		Day day = mDays.get(dayIndex + 1);
 
-		final String blockId = block.getLectureAcronym() + " ("
-				+ block.getLectureType() + ")" + "\n" + 
-		        (block.getBuildingCode()==null?"":block.getBuildingCode())
-				+ block.getRoomCode();
+		final String blockId = block.getLectureAcronym()
+				+ " ("
+				+ block.getLectureType()
+				+ ")"
+				+ "\n"
+				+ (block.getBuildingCode() == null ? "" : block
+						.getBuildingCode()) + block.getRoomCode();
 		final String title = blockId;
 		final long start = block.getStartTime() * 1000 + day.timeStart;
 		final long end = start + (long) (block.getLectureDuration() * 3600000);
@@ -431,7 +435,9 @@ public class ScheduleFragment extends BaseFragment implements
 								// new event
 								String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
-								String eventLocation = b.getBuildingCode()
+								String eventLocation = (b.getBuildingCode() != null ? b
+										.getBuildingCode()
+										: "")
 										+ b.getRoomCode();
 								String description = "Professor: "
 										+ b.getTeacherAcronym();
@@ -546,10 +552,13 @@ public class ScheduleFragment extends BaseFragment implements
 
 	private Block findBlock(String blockId) {
 		for (Block block : schedule) {
-			String id = block.getLectureAcronym() + " ("
-	                + block.getLectureType() + ")" + "\n" + 
-	                (block.getBuildingCode()==null?"":block.getBuildingCode())
-	                + block.getRoomCode();
+			String id = block.getLectureAcronym()
+					+ " ("
+					+ block.getLectureType()
+					+ ")"
+					+ "\n"
+					+ (block.getBuildingCode() == null ? "" : block
+							.getBuildingCode()) + block.getRoomCode();
 			if (id.equals(blockId))
 				return block;
 		}
@@ -600,7 +609,7 @@ public class ScheduleFragment extends BaseFragment implements
 			updateNowView();
 		} else {
 			mPager.setCurrentItem(1);
-            updateNowView();
+			updateNowView();
 		}
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			fetchingNextWeek = false;
@@ -616,18 +625,20 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 		switch (scheduleType) {
 		case SCHEDULE_STUDENT:
-		    task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis, this);
-			break;
-		case SCHEDULE_EMPLOYEE:
-		    task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode, mondayMillis,
+			task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis,
 					this);
 			break;
+		case SCHEDULE_EMPLOYEE:
+			task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode,
+					mondayMillis, this);
+			break;
 		case SCHEDULE_ROOM:
-		    task = ScheduleUtils
-					.getRoomScheduleReply(scheduleCode, mondayMillis, this);
+			task = ScheduleUtils.getRoomScheduleReply(scheduleCode,
+					mondayMillis, this);
 			break;
 		case SCHEDULE_UC:
-		    task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis, this);
+			task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis,
+					this);
 			break;
 		}
 	}
