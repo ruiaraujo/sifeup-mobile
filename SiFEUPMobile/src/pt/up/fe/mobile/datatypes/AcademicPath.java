@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 
 /**
@@ -16,7 +19,7 @@ import org.json.JSONObject;
  * Academic Path
  *
  */
-public class AcademicPath{
+public class AcademicPath implements Parcelable{
     private String code; // "numero"
 	private String state; // "estado"
 	private String courseAcronym; // "cur_codigo"
@@ -28,6 +31,7 @@ public class AcademicPath{
 	private int baseYear;
 	private List<AcademicYear> ucs = new ArrayList<AcademicYear>();
 
+	public AcademicPath(){}
 	
 	/**
 	 * Parses a JSON String containing Academic Path info,
@@ -176,4 +180,53 @@ public class AcademicPath{
 	public void setUcs(List<AcademicYear> ucs) {
 		this.ucs = ucs;
 	}
+
+	public int describeContents() {
+		return 0;
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(code!=null?1:0);
+		if ( code != null) dest.writeString(code);
+		dest.writeInt(state!=null?1:0);
+		if ( state != null) dest.writeString(state);
+		dest.writeInt(courseAcronym!=null?1:0);
+		if ( courseAcronym != null) dest.writeString(courseAcronym);
+		dest.writeInt(courseName!=null?1:0);
+		if ( courseName != null) dest.writeString(courseName);
+		dest.writeInt(courseNameEn!=null?1:0);
+		if ( courseNameEn != null) dest.writeString(courseNameEn);
+		dest.writeInt(average!=null?1:0);
+		if ( average != null) dest.writeString(average);
+		dest.writeInt(courseYears);
+		dest.writeInt(numberEntries);
+		dest.writeInt(baseYear);
+		dest.writeValue(ucs.toArray());
+	}
+	
+	private AcademicPath( Parcel in ){
+		if ( in.readInt() == 1 ) code = in.readString();
+		if ( in.readInt() == 1 ) state = in.readString();
+		if ( in.readInt() == 1 ) courseAcronym = in.readString();
+		if ( in.readInt() == 1 ) courseName = in.readString();
+		if ( in.readInt() == 1 ) courseNameEn = in.readString();
+		if ( in.readInt() == 1 ) average = in.readString();
+		courseYears = in.readInt();
+		numberEntries = in.readInt();
+		baseYear = in.readInt();
+		final AcademicYear [] years = (AcademicYear[]) in.readValue(AcademicYear.class.getClassLoader());
+		for ( AcademicYear year : years )
+			ucs.add(year);
+	}
+	
+	public static final Parcelable.Creator<AcademicPath> CREATOR = new Parcelable.Creator<AcademicPath>() {
+		public AcademicPath createFromParcel(Parcel in) {
+			return new AcademicPath(in);
+		}
+
+		public AcademicPath[] newArray(int size) {
+			return new AcademicPath[size];
+		}
+	};
+	
 }
