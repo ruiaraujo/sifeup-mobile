@@ -32,7 +32,7 @@ public class DBAdapter {
 			+ DATABASE_TABLE_FRIENDS + " (" + KEY_ID_FRIEND
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_CODE_FRIEND
 			+ " TEXT NOT NULL, " + KEY_NAME_FRIEND + " TEXT NOT NULL, "
-			+ KEY_COURSE_FRIEND + " REAL NOT NULL, " + KEY_USER_CODE
+			+ KEY_COURSE_FRIEND + " TEXT NOT NULL, " + KEY_USER_CODE
 			+ " TEXT NOT NULL  " + ");";
 
 	private final Context context;
@@ -100,7 +100,7 @@ public class DBAdapter {
 		final List<Friend> friends = new ArrayList<Friend>();
 		final Cursor mCursor = db.query(true, DATABASE_TABLE_FRIENDS,
 				null,
-				KEY_CODE_FRIEND + "='" + code + "'",
+				KEY_USER_CODE + "='" + code + "'",
 				null,
 				null,
 				null,
