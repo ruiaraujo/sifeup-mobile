@@ -176,6 +176,8 @@ public class SessionManager {
 
 	public boolean addFriend(Friend fr)
 	{
+		if ( listFriends == null )
+			return false;
 		if ( storage.addFriend(fr, user.getUser()) )
 		{
 			if ( !listFriends.contains(fr) )
@@ -188,6 +190,8 @@ public class SessionManager {
 	
 	public boolean removeFriend(int pos)
 	{
+		if ( listFriends == null )
+			return false;
 		if ( storage.deleteFriend(listFriends.get(pos), user.getUser()) )
 			listFriends.remove(pos);
 		else
@@ -202,6 +206,8 @@ public class SessionManager {
 	}
 
 	public void cleanFriends() {
+		if ( listFriends == null )
+			return;
 		listFriends.clear();
 		listFriends = null;
 	}
@@ -213,6 +219,8 @@ public class SessionManager {
 	}
 
 	public boolean removeFriend(Friend fr) {
+		if ( listFriends == null )
+			return false;
 		if ( storage.deleteFriend(fr, user.getUser()) )
 			listFriends.remove(fr);
 		else
