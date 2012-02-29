@@ -85,6 +85,7 @@
     <string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
     <string name="description_now">Go to Now</string>
+    <string name="description_schedule">See the Schedule</string>
 
     <!-- Class Description -->
     <string name="class_subject"><b>Subject:</b>
