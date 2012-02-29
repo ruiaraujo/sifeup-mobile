@@ -1,6 +1,7 @@
 package pt.up.fe.mobile.datatypes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -68,8 +69,13 @@ public class AcademicPath{
 				baseYear = Math.min(baseYear, uc.getYear());
 				AcademicYear year = null;
 				for ( int j = 0 ; j < ucs.size() ; ++j )
-				    if ( ucs.get(j).getYear() == uc.getYear() )
+				{
+					if ( ucs.get(j).getYear() == uc.getYear() )
+					{
 				        year = ucs.get(j);
+				        break;
+					}
+				}
 				// add uc to academic path
 				if ( year ==  null ) 
 				{
@@ -87,6 +93,7 @@ public class AcademicPath{
 				}
 			}
 		}
+		Collections.sort(ucs);
 		return this;
 	}
 

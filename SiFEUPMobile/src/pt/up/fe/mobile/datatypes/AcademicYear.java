@@ -5,7 +5,7 @@ import java.util.List;
 
 import pt.up.fe.mobile.datatypes.AcademicUC;
 
-public class AcademicYear {
+public class AcademicYear implements Comparable<AcademicYear>{
 
 	private int year;
 	private List<AcademicUC> firstSemester = new ArrayList<AcademicUC>();
@@ -27,5 +27,10 @@ public class AcademicYear {
 	}
 	public void setSecondSemester(List<AcademicUC> secondSemester) {
 		this.secondSemester = secondSemester;
+	}
+	
+	@Override
+	public int compareTo(AcademicYear another) {
+		return year-another.year;
 	}
 }
