@@ -58,6 +58,11 @@ import android.widget.Toast;
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
 		OnClickListener, ResponseCommand {
+	
+	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
+	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
+
+	
 	private ViewPager mPager;
 	private TextView mTitle;
 	private int mTitleCurrentDayIndex = -1;
@@ -157,9 +162,35 @@ public class ScheduleFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+
+ 	@Override
+ 	public void onSaveInstanceState (Bundle outState){
+ 	    if ( schedule != null )
+ 	        outState.putParcelableArrayList(SCHEDULE_KEY,schedule);
+ 	    outState.putLong(MILLISECONDS_KEY, mondayMillis);
+ 	}
+	
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		updateSchedule();
+		if ( savedInstanceState != null )
+        {
+			long millis = savedInstanceState.getLong(MILLISECONDS_KEY);
+			if ( millis != 0 )
+				mondayMillis = millis;
+            schedule = savedInstanceState.getParcelableArrayList(SCHEDULE_KEY);
+            if ( schedule == null )
+        		updateSchedule();
+            else
+            {
+            	setToNow = true;
+        		onResultReceived(schedule);
+                showFastMainScreen();
+            }
+        }
+        else
+        {
+    		updateSchedule();
+        }
 	}
 
 	private void increaseDay() {
