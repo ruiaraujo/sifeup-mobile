@@ -8,8 +8,8 @@ import pt.up.fe.mobile.ui.friends.FriendsActivity;
 import pt.up.fe.mobile.ui.map.FeupMapActivity;
 import pt.up.fe.mobile.ui.news.NewsActivity;
 import pt.up.fe.mobile.ui.notifications.NotificationsActivity;
-import pt.up.fe.mobile.ui.studentarea.SiFEUPAreaActivity;
-import pt.up.fe.mobile.ui.studentservices.SiFEUPServicesActivity;
+import pt.up.fe.mobile.ui.personalarea.PersonalAreaActivity;
+import pt.up.fe.mobile.ui.services.ServicesActivity;
 
 
 import android.content.Intent;
@@ -41,7 +41,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_student_area).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Student Area");
-                startActivity(new Intent(getActivity(), SiFEUPAreaActivity.class));
+                startActivity(new Intent(getActivity(), PersonalAreaActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
             
@@ -50,7 +50,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_student_services).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Student Services");
-                startActivity(new Intent(getActivity(), SiFEUPServicesActivity.class));
+                startActivity(new Intent(getActivity(), ServicesActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                     
             }

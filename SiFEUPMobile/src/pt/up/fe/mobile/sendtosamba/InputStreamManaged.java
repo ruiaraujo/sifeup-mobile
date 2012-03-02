@@ -40,7 +40,7 @@ public class InputStreamManaged extends InputStream {
 	public int read(byte[] buffer) throws IOException {
 		int ret = this.__ism.read(buffer);
 
-		if(ret == -1 || this.__pclistener == null)
+		if(ret == -1 || this.__pclistener == null || this.__length == 0)
 			return ret;
 
 		// Calculate previous percentage
