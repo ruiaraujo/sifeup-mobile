@@ -2,8 +2,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- APPLICATION -->
-    <string name="app_name">SiFEUP Mobile</string>
-    <string name="description_logo">SiFEUP Mobile</string>
+    <string name="app_name">FEUP Mobile</string>
+    <string name="description_logo">FEUP Mobile</string>
     <string name="description_home">Home</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
@@ -36,7 +36,7 @@
     <!-- *************************************************************************************** -->
     <!-- SEARCH -->
     <string name="description_search">Procurar</string>
-    <string name="search_label">SiFEUP Mobile</string>
+    <string name="search_label">FEUP Mobile</string>
     <string name="search_hint">Procurar Estudantes</string>
     <string name="title_search">Procurar</string>
     <string name="title_search_query">Procurar por \'<xliff:g id="query">%1$s</xliff:g>\'</string>
@@ -45,7 +45,7 @@
     <!-- *************************************************************************************** -->
     <!-- ABOUT -->
     <string name="bt_about">Sobre</string>
-    <string name="bt_about_title">Sobre SiFEUP Mobile</string>
+    <string name="bt_about_title">Sobre FEUP Mobile</string>
     <string name="bt_about_message">Esta aplicação dá aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
                                  \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>   
@@ -72,8 +72,8 @@
 
     <!-- *************************************************************************************** -->
     <!-- STUDENT AREA -->
-    <string name="title_student_area">Área do Estudante</string>
-    <string name="btn_student_area">Área do Estudante</string>
+    <string name="title_student_area">Área Pessoal</string>
+    <string name="btn_student_area">Área Pessoal</string>
 
     <!-- Schedule -->
     <string name="title_schedule">Horário</string>
@@ -129,7 +129,7 @@
     <string name="path_entries"><b>Número de Inscrições:</b>
 <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Nota: <xliff:g id="entries">%1$s</xliff:g></string>
-    <string name="path_link_sifeup"><u>Página Web SiFEUP</u></string>
+    <string name="path_link_sifeup"><u>Página Web Sigarra</u></string>
 
     <!-- Profile -->
     <string name="btn_profile">Perfil</string>
@@ -282,9 +282,9 @@
 
     <!-- *************************************************************************************** -->
     <!-- MAP -->
-    <string name="description_map">Mapa</string>
-    <string name="title_map">Mapa</string>
-    <string name="btn_map">Mapa</string>
+    <string name="description_map">Instalações</string>
+    <string name="title_map">Instalações</string>
+    <string name="btn_map">Instalações</string>
 
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
@@ -307,16 +307,16 @@
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->
-    <string name="title_webview">SiFEUP</string>
+    <string name="title_webview">Sigarra</string>
     <string name="description_browser">Ver no Browser</string>
 
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
-    <string name="notification_uploader_title">SiFEUP Mobile</string>
+    <string name="notification_uploader_title">FEUP Mobile</string>
     <string name="notification_uploader_content">Enviando\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_finished">Terminado o envio de \n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_error_credential_title">Credencias incorretas</string>
-    <string name="notification_uploader_error_credential">Por favor, autentique-se no SiFEUP Mobile.</string>
+    <string name="notification_uploader_error_credential">Por favor, autentique-se no FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Erro ao conectar</string>
     <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
     <string name="notification_uploader_error_title">Erro</string>
