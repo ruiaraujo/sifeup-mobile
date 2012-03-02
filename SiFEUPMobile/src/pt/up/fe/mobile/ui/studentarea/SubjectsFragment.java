@@ -31,7 +31,7 @@ public class SubjectsFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand {
 
 	/** Contains all subscribed subjects */
-	private ArrayList<Subject> subjects = new ArrayList<Subject>();
+	private ArrayList<Subject> subjects;
 	private ListView list;
 
 	@Override
