@@ -15,8 +15,8 @@ import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
-import pt.up.fe.mobile.ui.studentarea.ScheduleActivity;
-import pt.up.fe.mobile.ui.studentarea.ScheduleFragment;
+import pt.up.fe.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.fe.mobile.ui.personalarea.ScheduleFragment;
 
 
 import android.content.Intent;
