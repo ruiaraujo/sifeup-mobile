@@ -50,7 +50,10 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 	protected void onPreExecute() {
 		RemoteViews contentView = new RemoteViews(context.getPackageName(),
 				R.layout.notification_upload);
-		contentView.setProgressBar(R.id.progressBar, 100, 0, false);
+		if ( is.getLength() == 0 )
+		    contentView.setProgressBar(R.id.progressBar, 0, 0, true);
+		else
+		    contentView.setProgressBar(R.id.progressBar, 100, 0, false);
 		contentView.setTextViewText(R.id.text, context.getString(
 				R.string.notification_uploader_content, filename));
 
@@ -129,7 +132,8 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
 	protected void onProgressUpdate(Integer... values) {
 		// update the notification object
-		notification.contentView.setProgressBar(R.id.progressBar, 100,
+	    if ( is.getLength() != 0 )
+	        notification.contentView.setProgressBar(R.id.progressBar, 100,
 				values[0], false);
 		// notify the notification manager on the update.
 		mNotificationManager.notify(UNIQUE_ID, notification);
