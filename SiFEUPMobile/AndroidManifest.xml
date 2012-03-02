@@ -37,31 +37,30 @@
             android:theme="@style/Theme.SiFEUP.Home" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.studentservices.PrintActivity"
+            android:name=".ui.services.PrintActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_printing" />
         <activity
-            android:name=".ui.studentservices.PrintRefActivity"
+            android:name=".ui.services.PrintRefActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_printing" />
         <activity
-            android:name=".ui.studentarea.ExamsActivity"
+            android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_exams" />
 
         <!-- Phone-only activities -->
 
         <activity
-            android:name=".ui.studentarea.SiFEUPAreaActivity"
+            android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_student_area" />
         <activity
-            android:name=".ui.studentservices.SiFEUPServicesActivity"
+            android:name=".ui.services.ServicesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_student_services" />
         <activity
@@ -81,11 +80,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_settings" />
         <activity
-            android:name=".ui.studentarea.ScheduleActivity"
+            android:name=".ui.personalarea.ScheduleActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
-            android:name=".ui.studentarea.LunchMenuActivity"
+            android:name=".ui.personalarea.LunchMenuActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_lunch_menu" />
         <activity
@@ -105,35 +104,35 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_friends" />
         <activity
-            android:name=".ui.studentservices.UCsInscriptionsActivity"
+            android:name=".ui.services.UCsInscriptionsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_uc_inscriptions" />
         <activity
-            android:name=".ui.studentservices.ChangePasswordActivity"
+            android:name=".ui.services.ChangePasswordActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_change_password" />
         <activity
-            android:name=".ui.studentservices.CardRequestActivity"
+            android:name=".ui.services.CardRequestActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_card_request" />
         <activity
-            android:name=".ui.studentarea.ParkOccupationActivity"
+            android:name=".ui.personalarea.ParkOccupationActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_park_occupation" />
         <activity
-            android:name=".ui.studentservices.NewRequestActivity"
+            android:name=".ui.services.NewRequestActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_new_request" />
         <activity
-            android:name=".ui.studentservices.AllRequestsActivity"
+            android:name=".ui.services.AllRequestsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_all_requests" />
         <activity
-            android:name=".ui.studentservices.ScholarProfitActivity"
+            android:name=".ui.services.ScholarProfitActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_scholar_profit" />
         <activity
-            android:name=".ui.studentarea.ClassDescriptionActivity"
+            android:name=".ui.personalarea.ClassDescriptionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
@@ -141,24 +140,24 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_search" />
         <activity
-            android:name=".ui.studentarea.SubjectsActivity"
+            android:name=".ui.personalarea.SubjectsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_subjects" />
         <activity
-            android:name=".ui.studentarea.SubjectDescriptionActivity"
+            android:name=".ui.personalarea.SubjectDescriptionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/Theme.SiFEUP.TabPageIndicator"
             android:label="@string/title_subjects" />
         <activity
-            android:name=".ui.studentarea.AcademicPathActivity"
+            android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_academic_path" />
         <activity
-            android:name=".ui.studentservices.ClassesSelectionActivity"
+            android:name=".ui.services.ClassesSelectionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_classes_selection" />
         <activity
-            android:name=".ui.studentservices.tuition.TuitionActivity"
+            android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition" >
             <intent-filter>
@@ -169,7 +168,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.studentservices.tuition.TuitionHistoryActivity"
+            android:name=".ui.services.tuition.TuitionHistoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_history" >
             <intent-filter>
@@ -180,7 +179,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.studentservices.tuition.TuitionMenuActivity"
+            android:name=".ui.services.tuition.TuitionMenuActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_menu" >
             <intent-filter>
@@ -191,7 +190,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.studentservices.tuition.TuitionRefListActivity"
+            android:name=".ui.services.tuition.TuitionRefListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_tuition_refs_list" >
             <intent-filter>
@@ -202,7 +201,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.studentservices.tuition.TuitionRefDetailActivity"
+            android:name=".ui.services.tuition.TuitionRefDetailActivity"
             android:label="@string/title_tuition_ref_detail" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
