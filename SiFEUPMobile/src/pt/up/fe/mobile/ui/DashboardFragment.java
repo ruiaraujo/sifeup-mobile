@@ -4,8 +4,8 @@ package pt.up.fe.mobile.ui;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
+import pt.up.fe.mobile.ui.facilities.FeupFacilitiesActivity;
 import pt.up.fe.mobile.ui.friends.FriendsActivity;
-import pt.up.fe.mobile.ui.map.FeupMapActivity;
 import pt.up.fe.mobile.ui.news.NewsActivity;
 import pt.up.fe.mobile.ui.notifications.NotificationsActivity;
 import pt.up.fe.mobile.ui.personalarea.PersonalAreaActivity;
@@ -79,7 +79,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_map).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 fireTrackerEvent("Map");
-                startActivity(new Intent(getActivity(),FeupMapActivity.class));
+                startActivity(new Intent(getActivity(),FeupFacilitiesActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });

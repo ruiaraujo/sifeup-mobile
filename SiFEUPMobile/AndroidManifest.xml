@@ -64,7 +64,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_student_services" />
         <activity
-            android:name=".ui.map.FeupMapActivity"
+            android:name=".ui.facilities.FeupFacilitiesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_map" />
         <activity
@@ -262,8 +262,6 @@
             android:name="android.app.default_searchable"
             android:configChanges="orientation|keyboardHidden"
             android:value=".ui.search.SearchActivity" />
-
-        <uses-library android:name="com.google.android.maps" />
 
         <provider
             android:name=".ui.search.SearchSuggestionHistory"
