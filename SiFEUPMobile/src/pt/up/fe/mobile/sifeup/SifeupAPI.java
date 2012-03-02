@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class SifeupAPI {
-	final private static String WEBSERVICE = "https://www.fe.up.pt/si/";
+	final private static String WEBSERVICE = "https://sigarra.up.pt/feup/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
