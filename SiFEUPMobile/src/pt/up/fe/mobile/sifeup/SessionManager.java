@@ -1,5 +1,6 @@
 package pt.up.fe.mobile.sifeup;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -167,6 +168,7 @@ public class SessionManager {
 		if ( listFriends != null )
 			return true;
 		listFriends = storage.getFriends(user.getUser());
+		Collections.sort(listFriends);
 		return listFriends != null;
 	}
 
@@ -179,9 +181,18 @@ public class SessionManager {
 		if ( listFriends == null )
 			return false;
 		if ( storage.addFriend(fr, user.getUser()) )
-		{
-			if ( !listFriends.contains(fr) )
-				listFriends.add(fr);
+		{//sorted insertion
+		    for ( int i = 0 ; i < listFriends.size() ; ++i ) {
+		        int compare = fr.compareTo(listFriends.get(i));
+		        if ( compare < 0 )
+			    {
+		            listFriends.add(i,fr);
+		            return true;
+			    }
+		        else if ( compare == 0 )
+		            return false;
+		    }
+		    listFriends.add(fr);
 		}
 		else
 			return false;

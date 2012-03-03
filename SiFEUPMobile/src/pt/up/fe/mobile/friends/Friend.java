@@ -1,8 +1,5 @@
 package pt.up.fe.mobile.friends;
 
-import java.util.StringTokenizer;
-
-import pt.up.fe.mobile.sifeup.SifeupUtils;
 import pt.up.fe.mobile.utils.StringUtils;
 
 public class Friend implements Comparable<Friend> {
@@ -10,7 +7,6 @@ public class Friend implements Comparable<Friend> {
 	final String code;
 	final String name;
 	final String course;
-	final private static String SEPARATOR = "|";
 
 	public Friend(String code, String name, String course) {
 		this.code = code;
@@ -18,21 +14,6 @@ public class Friend implements Comparable<Friend> {
 		this.course = course;
 	}
 
-	public Friend(String untokenizedString) {
-		StringTokenizer reader = new StringTokenizer(untokenizedString,
-				SEPARATOR);
-		if (reader.countTokens() == 3) {
-			this.code = reader.nextToken();
-			this.name = reader.nextToken();
-			this.course = reader.nextToken();
-		} else if (reader.countTokens() == 2) {
-			this.code = reader.nextToken();
-			this.name = reader.nextToken();
-			this.course = null;
-		} else
-			throw new IllegalArgumentException(
-					"There must be three or two tokens");
-	}
 
 	public String getCode() {
 		return code;
@@ -56,12 +37,6 @@ public class Friend implements Comparable<Friend> {
 	@Override
 	public int hashCode() {
 		return code.hashCode();
-	}
-
-	public String toString() {
-		if (course == null)
-			return code + SEPARATOR + name;
-		return code + SEPARATOR + name + SEPARATOR + course;
 	}
 
 	@Override
