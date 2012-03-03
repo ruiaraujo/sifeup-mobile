@@ -109,6 +109,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
 			// TODO: general error
 			break;
 		}
+        getActivity().finish();
 
 	}
 

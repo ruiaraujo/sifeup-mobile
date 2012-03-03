@@ -84,6 +84,7 @@ public class NotificationsFragment extends BaseFragment implements
 			//TODO: general error
 			break;
 		}
+        getActivity().finish();
 	}
 	
 	@SuppressWarnings("unchecked")

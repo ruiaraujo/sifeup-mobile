@@ -123,6 +123,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			// TODO: general error
 			break;
 		}
+        getActivity().finish();
 	}
 
 	public void onResultReceived(Object... results) {

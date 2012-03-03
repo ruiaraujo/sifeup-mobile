@@ -90,9 +90,13 @@ public class StudentsSearchFragment extends BaseFragment implements
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
 			((BaseActivity) getActivity()).goLogin();
+            getActivity().finish();
 			break;
 		case NETWORK:
-			showEmptyScreen(getString(R.string.toast_server_error));
+            Toast.makeText(getActivity(), getString(R.string.toast_server_error),
+                    Toast.LENGTH_LONG).show();
+	        getActivity().finish();
+	        break;
 		default:
 			showEmptyScreen(getString(R.string.toast_search_error));
 			break;

@@ -130,6 +130,7 @@ public class StudentProfileFragment extends BaseFragment implements
 			// TODO: general error
 			break;
 		}
+        getActivity().finish();
 	}
 
 	public void onResultReceived(Object... results) {

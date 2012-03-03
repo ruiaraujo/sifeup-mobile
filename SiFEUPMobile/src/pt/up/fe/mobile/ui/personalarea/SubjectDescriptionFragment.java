@@ -156,8 +156,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 			return;
 		default:// TODO: add general error message
 			break;
-
 		}
+        getActivity().finish();
 	}
 
 	public void onResultReceived(Object... results) {

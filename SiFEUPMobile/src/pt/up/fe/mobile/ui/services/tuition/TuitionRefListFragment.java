@@ -110,6 +110,7 @@ public class TuitionRefListFragment extends BaseFragment implements
 			// TODO: general error
 			break;
 		}
+        getActivity().finish();
 
 	}
 

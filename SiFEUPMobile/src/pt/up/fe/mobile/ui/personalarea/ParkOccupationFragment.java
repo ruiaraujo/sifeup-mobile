@@ -145,6 +145,7 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 			//TODO: general error
 			break;
 		}
+		getActivity().finish();
 
 	}
 

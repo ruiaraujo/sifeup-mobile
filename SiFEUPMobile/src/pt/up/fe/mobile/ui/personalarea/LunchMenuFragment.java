@@ -244,6 +244,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 			//TODO: general error
 			break;
 		}
+        getActivity().finish();
 
 	}
 

@@ -120,6 +120,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 			//TODO: general error
 			break;
 		}
+        getActivity().finish();
 
 	}
 

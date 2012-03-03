@@ -70,8 +70,8 @@ public class SubjectsFragment extends BaseFragment implements
 			return;
 		default:// TODO: add general error message
 			break;
-
 		}
+        getActivity().finish();
 	}
 
 	@SuppressWarnings("unchecked")
