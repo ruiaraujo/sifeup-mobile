@@ -110,7 +110,7 @@
     <string name="btn_subjects">Subjects</string>
     <string name="title_subjects">Subjects</string>
     <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
-    <string name="lb_no_subjects">You have no subjects</string>
+    <string name="lb_no_subjects">You have no subjects inscriptions</string>
 
     <!-- Subject Description -->
     <string name="objectives">Objectives</string>
@@ -166,8 +166,8 @@
     <string name="profile_choose_email_app">Choose the email application:</string>
 
     <!-- Lunch Menu -->
-    <string name="title_lunch_menu">Lunch Menu</string>
-    <string name="btn_lunch_menu">Lunch Menu</string>
+    <string name="title_lunch_menu">Lunch Menus</string>
+    <string name="btn_lunch_menu">Lunch Menus</string>
     <string name="lb_no_menu">There are no menus</string>
 
     <!-- Park Occupation -->

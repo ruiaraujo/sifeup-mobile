@@ -96,10 +96,10 @@
     <string name="label_no_exams">Não tem exames marcados</string>
 
     <!-- Subjects -->
-    <string name="btn_subjects">Disciplinas</string>
-    <string name="title_subjects">Disciplinas</string>
+    <string name="btn_subjects">Unidades Curricalares</string>
+    <string name="title_subjects">Unidades Curricalares</string>
     <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
-    <string name="lb_no_subjects">Não tem disciplinas</string>
+    <string name="lb_no_subjects">Não tem inscrições em Unidades Curricalares</string>
 
     <!-- Subject Description -->
     <string name="objectives">Objectivos</string>
@@ -151,8 +151,8 @@
     <string name="profile_choose_email_app">Escolha a aplicação de email:</string>
 
     <!-- Lunch Menu -->
-    <string name="title_lunch_menu">Ementa</string>
-    <string name="btn_lunch_menu">Ementa</string>
+    <string name="title_lunch_menu">Ementas</string>
+    <string name="btn_lunch_menu">Ementas</string>
     <string name="lb_no_menu">Não há ementas</string>
 
     <!-- Park Occupation -->
