@@ -31,7 +31,7 @@ public class StudentServicesFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		mInflater = inflater;
-    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.studentservices, null);
+    	ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_services, null);
     	menu = (ExpandableListView) root.findViewById(R.id.studentservices_menu);
     	menu.setOnGroupClickListener(new OnGroupClickListener() {
 			
