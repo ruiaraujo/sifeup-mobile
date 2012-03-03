@@ -42,10 +42,5 @@
             iosched:dividerColor="#22000000"
             iosched:startHour="8"
             iosched:endHour="21" />
-        <View
-            android:id="@id/blocks_now"
-            android:background="@drawable/now_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
     </view>
 </view>
