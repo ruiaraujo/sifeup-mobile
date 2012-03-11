@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.datatypes.Notification;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
@@ -65,9 +66,8 @@ public class NotificationsDescFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				final String url = "https://www.fe.up.pt/si/wf_geral.not_form_view?pv_not_id="+n.getCode();
 				Intent i = new Intent(getActivity(), WebviewActivity.class);
-				i.putExtra(WebviewFragment.URL_INTENT, url);
+				i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI.getNotificationsSigarraUrl(Integer.toString(n.getCode())));
 				startActivity(i);
 			}
 		});    

@@ -30,9 +30,13 @@ public class SifeupAPI {
 	final private static String LINK_SEP = "&";
 	final private static String WEBSERVICE_SEP = "?";
 
-	private interface WebService {
+	private interface WebServices {
 		String MOBILE = "mobc_geral.";
 		String IMG = "img.";
+		String SUBJECT_CONTENTS = "conteudos_service.";
+		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
+		String NOTIFICATION_SIGARRA = "wf_geral.";
+		String ACADEMIC_PATH_SIGARRA = "alunos_ficha.";
 	}
 
 	private interface BuildingPic {
@@ -109,6 +113,11 @@ public class SifeupAPI {
 		String CODE = "pv_codigo";
 	}
 
+	private interface AcademicPathSigarra {
+		String NAME = "ficha";
+		String CODE = "p_cod";
+	}
+
 	private interface SubjectDescription {
 		String NAME = "ficha_uc";
 		String CODE = "pv_cad_codigo";
@@ -125,6 +134,21 @@ public class SifeupAPI {
 		String YEAR = "pv_ano_lectivo";
 		/** Not mandatory - if lacking assumed current. */
 		String PERIOD = "pv_periodo";
+	}
+	
+	private interface SubjectSigarraContent {
+		String NAME = "formview";
+		String CODE = "p_cad_codigo";
+		/** Not mandatory - if lacking assumed current. */
+		String YEAR = "p_ano_lectivo";
+		/** Not mandatory - if lacking assumed current. */
+		String PERIOD = "p_periodo";
+	}
+	
+
+	private interface SubjectFilesContent {
+		String NAME = "conteudos_cont";
+		String ID = "pct_id";
 	}
 
 	private interface UcSchedule {
@@ -149,6 +173,11 @@ public class SifeupAPI {
 
 	private interface Notifications {
 		String NAME = "notificacoes";
+	}
+
+	private interface NotificationsSigarra {
+		String NAME = "not_form_view";
+		String CODE = "pv_not_id";
 	}
 
 	private interface Canteens {
@@ -185,7 +214,7 @@ public class SifeupAPI {
 	 * @return Authentication Url
 	 */
 	public static String getAuthenticationUrl(String code, String password) {
-		return WEBSERVICE + WebService.MOBILE + Authentication.NAME
+		return WEBSERVICE + WebServices.MOBILE + Authentication.NAME
 				+ WEBSERVICE_SEP + Authentication.CODE + EQUALS + code
 				+ LINK_SEP + Authentication.PASSWORD + EQUALS + password;
 	}
@@ -199,7 +228,7 @@ public class SifeupAPI {
 	 * @return Schedule Url
 	 */
 	public static String getScheduleUrl(String code, String begin, String end) {
-		return WEBSERVICE + WebService.MOBILE + Schedule.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Schedule.NAME + WEBSERVICE_SEP
 				+ Schedule.CODE + EQUALS + code + LINK_SEP + Schedule.BEGIN
 				+ EQUALS + begin + LINK_SEP + Schedule.END + EQUALS + end;
 	}
@@ -210,8 +239,20 @@ public class SifeupAPI {
 	 * @return Notifications Url
 	 */
 	public static String getNotificationsUrl() {
-		return WEBSERVICE + WebService.MOBILE + Notifications.NAME;
+		return WEBSERVICE + WebServices.MOBILE + Notifications.NAME;
 	}
+	
+
+	/**
+	 * Notifications Url for Web Service
+	 * 
+	 * @return Notifications Url
+	 */
+	public static String getNotificationsSigarraUrl(String code) {
+		return WEBSERVICE + WebServices.NOTIFICATION_SIGARRA + NotificationsSigarra.NAME + WEBSERVICE_SEP +
+		NotificationsSigarra.CODE + EQUALS + code;
+	}
+
 
 	/**
 	 * Park Occupation Url for Web Service
@@ -220,7 +261,7 @@ public class SifeupAPI {
 	 * @return Park Occupation Url
 	 */
 	public static String getParkOccupationUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Park.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Park.NAME + WEBSERVICE_SEP
 				+ Park.CODE + EQUALS + code;
 	}
 
@@ -231,7 +272,7 @@ public class SifeupAPI {
 	 * @return Exams Url
 	 */
 	public static String getExamsUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Exams.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Exams.NAME + WEBSERVICE_SEP
 				+ Exams.CODE + EQUALS + code;
 	}
 
@@ -242,7 +283,7 @@ public class SifeupAPI {
 	 * @return Tuition Url
 	 */
 	public static String getTuitionUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Tuition.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Tuition.NAME + WEBSERVICE_SEP
 				+ Tuition.CODE + EQUALS + code;
 	}
 
@@ -253,7 +294,7 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getStudentUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Student.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Student.NAME + WEBSERVICE_SEP
 				+ Student.CODE + EQUALS + code;
 	}
 
@@ -265,7 +306,7 @@ public class SifeupAPI {
 	 */
 	public static String getSetPasswordUrl(String login, String actualPassword,
 			String newPassword, String confirmNewPassword, String system) {
-		return WEBSERVICE + WebService.MOBILE + SetPassword.NAME
+		return WEBSERVICE + WebServices.MOBILE + SetPassword.NAME
 				+ WEBSERVICE_SEP + SetPassword.LOGIN + EQUALS + login
 				+ LINK_SEP + SetPassword.ACTUAL_PASSWORD + EQUALS
 				+ actualPassword + LINK_SEP + SetPassword.NEW_PASSWORD + EQUALS
@@ -281,7 +322,7 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getEmployeeUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Employee.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Employee.NAME + WEBSERVICE_SEP
 				+ Employee.CODE + EQUALS + code;
 	}
 
@@ -292,8 +333,19 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getPrintingUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + Printing.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.MOBILE + Printing.NAME + WEBSERVICE_SEP
 				+ Printing.CODE + EQUALS + code;
+	}
+	
+	/**
+	 * Printing Url for Web Service
+	 * 
+	 * @param id
+	 * @return url
+	 */
+	public static String getSubjectFileContents(String id) {
+		return WEBSERVICE + WebServices.SUBJECT_CONTENTS + SubjectFilesContent.NAME + WEBSERVICE_SEP
+				+ SubjectFilesContent.ID + EQUALS + id;
 	}
 
 	/**
@@ -304,7 +356,7 @@ public class SifeupAPI {
 	 */
 	public static String getSubjectsUrl(String code, String year) {
 		return WEBSERVICE
-				+ WebService.MOBILE
+				+ WebServices.MOBILE
 				+ Subjects.NAME
 				+ WEBSERVICE_SEP
 				+ Subjects.CODE
@@ -318,11 +370,13 @@ public class SifeupAPI {
 	 * Subject Description Url for Web Service
 	 * 
 	 * @param code
-	 * @return
+	 * @param year 
+	 * @param per 
+	 * @return url
 	 */
 	public static String getSubjectDescUrl(String code, String year, String per) {
 		return WEBSERVICE
-				+ WebService.MOBILE
+				+ WebServices.MOBILE
 				+ SubjectDescription.NAME
 				+ WEBSERVICE_SEP
 				+ SubjectDescription.CODE
@@ -333,6 +387,29 @@ public class SifeupAPI {
 				+ (per == null ? "" : (LINK_SEP + SubjectDescription.PERIOD
 						+ EQUALS + per));
 	}
+	
+	/**
+	 * Subject Description Url for Web Service
+	 * 
+	 * @param code
+	 * @param year 
+	 * @param per 
+	 * @return url
+	 */
+	public static String getSubjectSigarraUrl(String code, String year, String per) {
+		return WEBSERVICE
+				+ WebServices.SUBJECT_SIGARA_LINK
+				+ SubjectSigarraContent.NAME
+				+ WEBSERVICE_SEP
+				+ SubjectSigarraContent.CODE
+				+ EQUALS
+				+ code
+				+ (year == null ? "" : (LINK_SEP + SubjectSigarraContent.YEAR
+						+ EQUALS + year))
+				+ (per == null ? "" : (LINK_SEP + SubjectSigarraContent.PERIOD
+						+ EQUALS + per));
+	}
+
 
 	/**
 	 * Subject Content Url for Web Service
@@ -342,7 +419,7 @@ public class SifeupAPI {
 	 */
 	public static String getSubjectContentUrl(String code, String year,
 			String per) {
-		return WEBSERVICE + WebService.MOBILE + SubjectContent.NAME
+		return WEBSERVICE + WebServices.MOBILE + SubjectContent.NAME
 				+ WEBSERVICE_SEP + SubjectContent.YEAR + EQUALS + year
 				+ LINK_SEP + SubjectContent.CODE + EQUALS + code + LINK_SEP
 				+ SubjectContent.PERIOD + EQUALS + per;
@@ -355,7 +432,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getPrintingRefUrl(String value) {
-		return WEBSERVICE + WebService.MOBILE + PrintingRef.NAME
+		return WEBSERVICE + WebServices.MOBILE + PrintingRef.NAME
 				+ WEBSERVICE_SEP + PrintingRef.VALUE + EQUALS + value;
 	}
 
@@ -363,13 +440,25 @@ public class SifeupAPI {
 	 * Academic Path Url for Web Service
 	 * 
 	 * @param code
-	 * @return
+	 * @return url
 	 */
 	public static String getAcademicPathUrl(String code) {
-		return WEBSERVICE + WebService.MOBILE + AcademicPath.NAME
+		return WEBSERVICE + WebServices.MOBILE + AcademicPath.NAME
 				+ WEBSERVICE_SEP + AcademicPath.CODE + EQUALS + code;
 	}
 
+	/**
+	 * Academic Path Url for Web Service
+	 * 
+	 * @param code
+	 * @return url
+	 */
+	public static String getAcademicPathSigarraUrl(String code) {
+		return WEBSERVICE + WebServices.ACADEMIC_PATH_SIGARRA + AcademicPathSigarra.NAME
+				+ WEBSERVICE_SEP + AcademicPathSigarra.CODE + EQUALS + code;
+	}
+
+	
 	/**
 	 * Students Search Url for Web Service
 	 * 
@@ -378,7 +467,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getStudentsSearchUrl(String query, Integer numPage) {
-		return WEBSERVICE + WebService.MOBILE + StudentsSearch.NAME
+		return WEBSERVICE + WebServices.MOBILE + StudentsSearch.NAME
 				+ WEBSERVICE_SEP + StudentsSearch.QUERY + EQUALS + query
 				+ LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
@@ -389,7 +478,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getCanteensUrl() {
-		return WEBSERVICE + WebService.MOBILE + Canteens.NAME;
+		return WEBSERVICE + WebServices.MOBILE + Canteens.NAME;
 	}
 
 	/**
@@ -400,7 +489,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getBuildingPicUrl(String building, String floor) {
-		return WEBSERVICE + WebService.IMG + BuildingPic.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.IMG + BuildingPic.NAME + WEBSERVICE_SEP
 				+ BuildingPic.BUILDING + EQUALS + building + LINK_SEP
 				+ BuildingPic.FLOOR + EQUALS + floor;
 	}
@@ -414,7 +503,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getRoomPicUrl(String building, String room) {
-		return WEBSERVICE + WebService.IMG + RoomPic.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.IMG + RoomPic.NAME + WEBSERVICE_SEP
 				+ RoomPic.BUILDING + EQUALS + building + LINK_SEP
 				+ RoomPic.ROOM + EQUALS + room;
 	}
@@ -428,7 +517,7 @@ public class SifeupAPI {
 	 * @return Schedule Url
 	 */
 	public static String getUcScheduleUrl(String code, String begin, String end) {
-		return WEBSERVICE + WebService.MOBILE + UcSchedule.NAME
+		return WEBSERVICE + WebServices.MOBILE + UcSchedule.NAME
 				+ WEBSERVICE_SEP + UcSchedule.CODE + EQUALS + code + LINK_SEP
 				+ Schedule.BEGIN + EQUALS + begin + LINK_SEP + Schedule.END
 				+ EQUALS + end;
@@ -444,7 +533,7 @@ public class SifeupAPI {
 	 */
 	public static String getTeacherScheduleUrl(String code, String begin,
 			String end) {
-		return WEBSERVICE + WebService.MOBILE + TeacherSchedule.NAME
+		return WEBSERVICE + WebServices.MOBILE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + Schedule.CODE + EQUALS + code + LINK_SEP
 				+ Schedule.BEGIN + EQUALS + begin + LINK_SEP + Schedule.END
 				+ EQUALS + end;
@@ -460,7 +549,7 @@ public class SifeupAPI {
 	 */
 	public static String getRoomScheduleUrl(String code, String roomCode,
 			String begin, String end) {
-		return WEBSERVICE + WebService.MOBILE + RoomSchedule.NAME
+		return WEBSERVICE + WebServices.MOBILE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.BUILDING_CODE + EQUALS + code
 				+ LINK_SEP + RoomSchedule.ROOM_CODE + EQUALS + roomCode
 				+ LINK_SEP + Schedule.BEGIN + EQUALS + begin + LINK_SEP

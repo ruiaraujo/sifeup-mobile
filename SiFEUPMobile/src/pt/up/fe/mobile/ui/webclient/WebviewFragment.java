@@ -78,7 +78,7 @@ public class WebviewFragment extends BaseFragment {
                 progressWebView.setProgress(progress);
             }
         });
-
+        
         mWebView.loadUrl(url);
         showFastMainScreen();
         return getParentContainer(); // mandatory
@@ -118,7 +118,7 @@ public class WebviewFragment extends BaseFragment {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if ( url.equals("https://www.fe.up.pt/si/inqueritos_geral.inqueritos_list") )
+            if ( url.equals("https://sigarra.up.pt/feup/inqueritos_geral.inqueritos_list") )
             {//trying to stop stupid redirections
                 view.loadUrl(WebviewFragment.this.url);
                 return true;

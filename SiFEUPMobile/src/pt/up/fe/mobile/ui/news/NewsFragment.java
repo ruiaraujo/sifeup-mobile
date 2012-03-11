@@ -41,7 +41,7 @@ public class NewsFragment extends BaseFragment implements
         AdapterView.OnItemClickListener {
 
     /** News Feed from FEUP */
-    private final String RSSFEEDOFCHOICE = "http://www.fe.up.pt/si/noticias_web.rss";
+    private final String RSSFEEDOFCHOICE = "https://sigarra.up.pt/feup/noticias_web.rss";
     private ListView list;
     private RSSFeed feed;
 

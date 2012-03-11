@@ -53,7 +53,7 @@ public class StudentServicesFragment extends Fragment
 				   		 break;
 			    	case 3:
 				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
-				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://www.fe.up.pt/si/mail_dinamico.ficheiros"));
+				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://sigarra.up.pt/feup/mail_dinamico.ficheiros"));
 		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 		    	}

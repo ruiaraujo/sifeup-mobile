@@ -1,6 +1,8 @@
 package pt.up.fe.mobile.ui.webclient;
 
+import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.ui.BaseSinglePaneActivity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
@@ -23,10 +25,20 @@ public class WebviewActivity extends BaseSinglePaneActivity {
         return super.onKeyDown(keyCode, event);
     }
     
+    @Override
     public void onBackPressed(){
         if ( fragment != null )
             fragment.onBackPressed();
         else
             super.onBackPressed();
     }
+    
+    @Override
+	protected void onNewIntent( Intent query) {
+	    fragment = new WebviewFragment();
+	    fragment.setArguments(intentToFragmentArguments(query));
+	    getSupportFragmentManager().beginTransaction()
+	        .replace(R.id.root_container, fragment)
+	        .commit();
+	}
 }

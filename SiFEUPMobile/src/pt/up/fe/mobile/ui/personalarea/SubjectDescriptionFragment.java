@@ -21,6 +21,7 @@ import pt.up.fe.mobile.datatypes.Subject.Teacher;
 import pt.up.fe.mobile.datatypes.SubjectContent.File;
 import pt.up.fe.mobile.datatypes.SubjectContent.Folder;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.sifeup.SubjectUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
@@ -127,15 +128,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
             return true;
         }
         if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
-        	StringBuilder url = new StringBuilder("https://www.fe.up.pt/si/disciplinas_geral.formview?");
-    		url.append("p_cad_codigo=");
-    		url.append(code);
-    		url.append("&p_ano_lectivo=");
-    		url.append(year);
-    		url.append("&p_periodo=" );
-    		url.append(period);
     		Intent i = new Intent(getActivity(), WebviewActivity.class);
-            i.putExtra(WebviewFragment.URL_INTENT, url.toString());
+            i.putExtra(WebviewFragment.URL_INTENT,SifeupAPI.getSubjectSigarraUrl(code, year, period));
     		startActivity(i);
             return true;
         }
@@ -499,7 +493,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
     								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
     								if ( toDownload.getUrl() == null || toDownload.getUrl().trim().length() == 0)
     								{
-    									DownloaderFragment.newInstance(toDownload.getName(),"https://www.fe.up.pt/si/conteudos_service.conteudos_cont?pct_id="+toDownload.getCode() , toDownload.getFilename())
+    									DownloaderFragment.newInstance(toDownload.getName(),SifeupAPI.getSubjectFileContents(Integer.toString(toDownload.getCode())) , toDownload.getFilename())
     														.show(getFragmentManager(), "Downloader");
     								}
     								else

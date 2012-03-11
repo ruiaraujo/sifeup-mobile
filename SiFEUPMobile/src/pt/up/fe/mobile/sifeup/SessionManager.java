@@ -161,6 +161,8 @@ public class SessionManager {
         prefEditor.putString(PREF_PASSWORD, "");
         prefEditor.putString(PREF_USER_TYPE, "");
         prefEditor.putString(PREF_COOKIE, "");
+        user = new User("", "", "", "");
+        cookie = "";
         prefEditor.commit();
     }
 

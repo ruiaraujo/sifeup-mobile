@@ -107,7 +107,6 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 			final String type = session.getUser().getType();
 			if (!cookie.equals("") && !type.equals("")) {
 				startActivity(new Intent(this, HomeActivity.class));
-				finish();
 				overridePendingTransition(R.anim.slide_right_in,
 						R.anim.slide_right_out);
 				return;
@@ -158,7 +157,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 		}
 		return null;
 	}
-
+	
 
 	public void onError(ERROR_TYPE error) {
 		removeDialog(DIALOG_CONNECTING);

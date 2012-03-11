@@ -100,15 +100,15 @@ public class DownloaderFragment extends DialogFragment {
 				if ( result == null )
 					return;
 				DownloaderFragment.this.dismiss();
+				try{
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_VIEW);
 				if ( type != null )
-				{
-					try{
-					Intent intent = new Intent();
-					intent.setAction(Intent.ACTION_VIEW);
+					intent.setData(Uri.fromFile(myFile));
+				else
 					intent.setDataAndType(Uri.fromFile(myFile), type);
-					startActivity(intent);
-					} catch (Exception e) {};
-				}
+				startActivity(intent);
+				} catch (Exception e) {};
 			}
 
 			/*protected void onProgressUpdate(Integer ... progress) {
@@ -147,7 +147,7 @@ public class DownloaderFragment extends DialogFragment {
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);
 					
 					// Append mode on
-					fos = new FileOutputStream(myFile, true);
+					fos = new FileOutputStream(myFile);
 					
 
 					dis = new DataInputStream(con.getInputStream());

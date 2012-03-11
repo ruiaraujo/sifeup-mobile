@@ -7,6 +7,7 @@ import pt.up.fe.mobile.datatypes.AcademicYear;
 import pt.up.fe.mobile.sifeup.AcademicPathUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
+import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
@@ -71,11 +72,9 @@ public class AcademicPathFragment extends BaseFragment implements
 
                     @Override
                     public void onClick(View v) {
-                        final String url = "https://www.fe.up.pt/si/ALUNOS_FICHA.FICHA?p_cod="
-                                + SessionManager.getInstance(getActivity()).getLoginCode();
                         Intent i = new Intent(getActivity(),
                                 WebviewActivity.class);
-                        i.putExtra(WebviewFragment.URL_INTENT, url);
+                        i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI.getAcademicPathSigarraUrl(SessionManager.getInstance(getActivity()).getLoginCode()));
                         startActivity(i);
                     }
                 });
