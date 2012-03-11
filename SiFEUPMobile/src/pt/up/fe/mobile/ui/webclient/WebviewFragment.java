@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -65,7 +66,9 @@ public class WebviewFragment extends BaseFragment {
                     long contentLength) {
                 String filename = getFilename(contentDisposition);
                 if (filename == null)
-                    filename = url;
+                {
+                    filename = url.substring(url.lastIndexOf('/') + 1);
+                }
                 DownloaderFragment.newInstance("Downloader", url, filename)
                         .show(getFragmentManager(), "Downloader");
 
@@ -78,6 +81,10 @@ public class WebviewFragment extends BaseFragment {
                 progressWebView.setProgress(progress);
             }
         });
+        
+        //Cleaning previous cookies
+        CookieManager cookies = CookieManager.getInstance();
+        cookies.removeAllCookie();
         
         mWebView.loadUrl(url);
         showFastMainScreen();
@@ -150,15 +157,18 @@ public class WebviewFragment extends BaseFragment {
                 // then we reload the page
                 // Logging in through javascript
                 final SessionManager session = SessionManager.getInstance(getActivity());
-                session.loadSession();
-                final String user = session.getLoginCode();
-                final String pass = session.getLoginPassword();
-                mWebView.loadUrl("javascript: {"
-                        + "document.getElementById('user').value = '" + user
-                        + "';" + "var  pass = document.getElementById('pass');"
-                        + "pass.value = '" + pass + "';"
-                        + "var frms = pass.form; " + "frms.submit(); };");
-                loggedIn = true;
+                if ( session.loadSession() ) 
+                {
+                	Toast.makeText(getActivity(), R.string.msg_authenticating, Toast.LENGTH_SHORT).show();
+	                final String user = session.getLoginCode();
+	                final String pass = session.getLoginPassword();
+	                mWebView.loadUrl("javascript: {"
+	                        + "document.getElementById('user').value = '" + user
+	                        + "';" + "var  pass = document.getElementById('pass');"
+	                        + "pass.value = '" + pass + "';"
+	                        + "var frms = pass.form; " + "frms.submit(); };");
+	                loggedIn = true;
+                }
             } else
                 WebviewFragment.this.url = url;
             progressWebView.setVisibility(View.GONE);

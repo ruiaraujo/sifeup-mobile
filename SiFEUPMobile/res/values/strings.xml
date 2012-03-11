@@ -12,6 +12,8 @@
     <!-- Downloader -->
     <string name="msg_estimating_download">Estimating download speed and time left...</string>
     <string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <string name="msg_download_finished">Finished downloading:\n <xliff:g id="file">%1$s</xliff:g></string>
+        
     <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
@@ -328,7 +330,8 @@
     <!-- WEBVIEW -->
     <string name="title_webview">Sigarra</string>
     <string name="description_browser">See in the Browser</string>
-
+    <string name="msg_authenticating">A autenticar no Sigarra</string>
+        
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
     <string name="notification_uploader_title">FEUP Mobile</string>

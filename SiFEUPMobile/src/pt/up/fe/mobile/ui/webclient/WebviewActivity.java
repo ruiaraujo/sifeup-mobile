@@ -39,6 +39,6 @@ public class WebviewActivity extends BaseSinglePaneActivity {
 	    fragment.setArguments(intentToFragmentArguments(query));
 	    getSupportFragmentManager().beginTransaction()
 	        .replace(R.id.root_container, fragment)
-	        .commit();
+	        .commitAllowingStateLoss();
 	}
 }

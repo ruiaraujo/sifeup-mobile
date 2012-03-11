@@ -148,6 +148,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 					Toast.LENGTH_LONG).show();
 			((BaseActivity) getActivity()).goLogin();
 			return;
+		case NETWORK:
+			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
 		default:// TODO: add general error message
 			break;
 		}

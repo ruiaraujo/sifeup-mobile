@@ -5,8 +5,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.sifeup.SessionManager;
@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
+import android.widget.Toast;
 
 public class DownloaderFragment extends DialogFragment {
 	private final static String TITLE_ARG = "title";
@@ -100,15 +101,19 @@ public class DownloaderFragment extends DialogFragment {
 				if ( result == null )
 					return;
 				DownloaderFragment.this.dismiss();
+				Toast.makeText(getActivity(),getString(R.string.msg_download_finished, myFile.getPath()), Toast.LENGTH_SHORT).show();
 				try{
-				Intent intent = new Intent();
-				intent.setAction(Intent.ACTION_VIEW);
-				if ( type != null )
-					intent.setData(Uri.fromFile(myFile));
-				else
-					intent.setDataAndType(Uri.fromFile(myFile), type);
-				startActivity(intent);
-				} catch (Exception e) {};
+					Intent intent = new Intent();
+					intent.setAction(Intent.ACTION_VIEW);
+					if ( type != null )
+						intent.setData(Uri.fromFile(myFile));
+					else
+						intent.setDataAndType(Uri.fromFile(myFile), type);
+					startActivity(intent);
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+				};
 			}
 
 			/*protected void onProgressUpdate(Integer ... progress) {
@@ -131,7 +136,7 @@ public class DownloaderFragment extends DialogFragment {
 			@Override
 			protected String doInBackground(String ... argsDownload) 
 			{
-				HttpsURLConnection con = null;
+				HttpURLConnection con = null;
 				DataInputStream dis;
 				FileOutputStream fos;
 				//int myProgress = 0;
@@ -141,7 +146,12 @@ public class DownloaderFragment extends DialogFragment {
 				try {
 					
 					//lastTime = downloadBegin= System.currentTimeMillis();
-					con =  SifeupAPI.getUncheckedConnection(argsDownload[0]);
+					
+					final String url = argsDownload[0];
+					if ( url.startsWith("https") )
+						con =  SifeupAPI.getUncheckedConnection(url);
+					else
+						con = (HttpURLConnection) new URL(url).openConnection();
 					con.setRequestProperty("Cookie", SessionManager.getInstance(getActivity()).getCookie());
 					con.connect();
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);
@@ -199,7 +209,8 @@ public class DownloaderFragment extends DialogFragment {
 					return "Unknown Error";
 				}
 				finally {
-					con.disconnect();
+					if ( con != null )
+						con.disconnect();
 				}
 				return filename;
 			}
