@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import pt.up.fe.mobile.R;
+import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
 import pt.up.fe.mobile.tracker.GoogleAnalyticsSessionManager;
 
@@ -38,6 +39,12 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        final SessionManager manager = SessionManager.getInstance(this);
+        if ( !manager.isUserLoaded() )
+        {
+        	if ( !manager.loadSession() )
+            	goLogin();
+        }
         // Example of how to track a pageview event
         AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
                 getClass().getSimpleName());
@@ -210,6 +217,7 @@ public abstract class BaseActivity extends FragmentActivity {
     public void goLogin() {
         Intent i = new Intent(this, LoginActivity.class);
         i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.home_enter, R.anim.home_exit);

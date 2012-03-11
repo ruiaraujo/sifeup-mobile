@@ -153,4 +153,16 @@ public class BaseFragment extends Fragment {
             currentAnim.end();
         }
     }
+    
+    public void goLogin() {
+    	if ( getActivity() == null )
+    		return;
+        Intent i = new Intent(getActivity(), LoginActivity.class);
+        i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+    }
+
 }
