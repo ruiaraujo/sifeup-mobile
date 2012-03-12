@@ -17,14 +17,12 @@
     <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
-    <string name="lb_login_remember">Remember Me</string>
     <string name="lb_login_username">Username:</string>
     <string name="lb_login_password">Password:</string>
     <string name="bt_cancel">Cancel</string>
-    <string name="bt_exit">Exit</string>
     <string name="lb_login_cancel">Connecting...</string>
     <string name="bt_login">Login</string>
-    <string name="bt_reset">Reset</string>
+    <string name="lb_show_password">Show Password</string>
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
     <string name="toast_login_error_empty_password">Password cannot be empty.</string>
     <string name="toast_login_error_wrong_password">Your username or password are wrong.</string>

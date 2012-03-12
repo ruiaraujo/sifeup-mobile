@@ -17,10 +17,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,6 +96,21 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 					}
 				});
 
+		CheckBox showPassword = (CheckBox) findViewById(R.id.show_password);
+		showPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if ( isChecked)
+                {
+                    passwordEditText.setTransformationMethod(null);
+                }
+                else
+                {
+                    passwordEditText.setTransformationMethod(new PasswordTransformationMethod());
+                }
+            }
+        });
 		// A actividade de login pode ser chamada no launcher ou caso a pessoa
 		// faça logout
 		// In case of a logout.
