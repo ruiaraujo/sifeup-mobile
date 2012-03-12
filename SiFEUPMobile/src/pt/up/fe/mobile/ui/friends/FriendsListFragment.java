@@ -8,7 +8,6 @@ import pt.up.fe.mobile.R;
 import pt.up.fe.mobile.friends.Friend;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.personalarea.ScheduleFragment;
@@ -26,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -160,14 +158,7 @@ public class FriendsListFragment extends BaseFragment implements
 
             } else {
                 Log.e("Login", "error");
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(),
-                            getString(R.string.toast_auth_error),
-                            Toast.LENGTH_LONG).show();
-                    ((BaseActivity) getActivity())
-                            .goLogin();
-                    return;
-                }
+                //TODO:
             }
         }
 

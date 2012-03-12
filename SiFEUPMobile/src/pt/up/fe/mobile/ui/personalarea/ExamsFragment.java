@@ -32,7 +32,6 @@ import pt.up.fe.mobile.sifeup.ExamsUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.utils.calendar.CalendarHelper;
 import pt.up.fe.mobile.utils.calendar.Event;
@@ -221,7 +220,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity()).goLogin();
+			goLogin();
 			getActivity().finish();
 			return;
 		case NETWORK:

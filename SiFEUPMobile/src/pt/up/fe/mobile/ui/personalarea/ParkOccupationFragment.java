@@ -8,7 +8,6 @@ import pt.up.fe.mobile.datatypes.Park;
 import pt.up.fe.mobile.sifeup.ParkUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -137,7 +136,7 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin();
+			goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();

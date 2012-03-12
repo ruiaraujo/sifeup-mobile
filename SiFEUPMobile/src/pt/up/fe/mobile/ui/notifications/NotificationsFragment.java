@@ -21,7 +21,6 @@ import pt.up.fe.mobile.datatypes.Notification;
 import pt.up.fe.mobile.sifeup.NotificationUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
 /**
@@ -76,7 +75,7 @@ public class NotificationsFragment extends BaseFragment implements
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin();
+			goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();

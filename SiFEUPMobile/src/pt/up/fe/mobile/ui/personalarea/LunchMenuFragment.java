@@ -13,7 +13,6 @@ import pt.up.fe.mobile.datatypes.Dish;
 import pt.up.fe.mobile.sifeup.CanteenUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -236,7 +235,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin();
+			goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
@@ -252,8 +251,6 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 	public void onResultReceived(Object... results) {
 	    if ( getActivity() == null )
 	        return;
-		goLogin();
-
 		canteens = (ArrayList<Canteen>) results[0];
 		if ( canteens.isEmpty() )
 		{

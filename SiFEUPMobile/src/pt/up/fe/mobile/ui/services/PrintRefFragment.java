@@ -18,7 +18,6 @@ import pt.up.fe.mobile.datatypes.RefMB;
 import pt.up.fe.mobile.sifeup.PrinterUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 
 /**
@@ -140,7 +139,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			((BaseActivity)getActivity()).goLogin();
+			goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();

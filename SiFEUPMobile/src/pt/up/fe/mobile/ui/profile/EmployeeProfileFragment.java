@@ -13,7 +13,6 @@ import pt.up.fe.mobile.sifeup.ProfileUtils;
 import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.fe.mobile.ui.personalarea.ScheduleFragment;
@@ -113,7 +112,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			((BaseActivity) getActivity()).goLogin();
+			goLogin();
 			break;
 		case NETWORK:
 			Toast.makeText(getActivity(),

@@ -9,7 +9,6 @@ import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SessionManager;
 import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.webclient.WebviewActivity;
 import pt.up.fe.mobile.ui.webclient.WebviewFragment;
@@ -118,7 +117,7 @@ public class AcademicPathFragment extends BaseFragment implements
         case AUTHENTICATION:
             Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
                     Toast.LENGTH_LONG).show();
-            ((BaseActivity) getActivity()).goLogin();
+            goLogin();
             break;
         case NETWORK:
             Toast.makeText(getActivity(),
