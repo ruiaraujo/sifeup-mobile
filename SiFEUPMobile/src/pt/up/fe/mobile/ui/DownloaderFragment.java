@@ -86,22 +86,30 @@ public class DownloaderFragment extends DialogFragment {
 	  /** Classe privada para a busca de dados ao servidor */
 		private class DownloadTask extends AsyncTask<String, Integer, Integer> {
 
+			private final static int OK = 0;
+			private final static int ERROR = -1;
+			private final static int FILE_ERROR = -2;
+			private final static int NO_MEMORY = -3;
+
+			
+			
 			private File myFile;
 			@Override
-			protected void onPostExecute(Integer result) //TODO: add error handling
+			protected void onPostExecute(Integer result)
 			{
 			    if ( getActivity() == null )
 			        return;
 				if ( result == null )
 					return;
 				DownloaderFragment.this.dismiss();
-				if ( result == 0 )
+				switch (result){
+				case OK:
 				{
 					Toast.makeText(getActivity(),getString(R.string.msg_download_finished, myFile.getPath()), Toast.LENGTH_SHORT).show();
 					try{
 						Intent intent = new Intent();
 						intent.setAction(Intent.ACTION_VIEW);
-						if ( type != null )
+						if ( type != null  && !type.trim().equals("") )
 							intent.setData(Uri.fromFile(myFile));
 						else
 							intent.setDataAndType(Uri.fromFile(myFile), type);
@@ -110,9 +118,17 @@ public class DownloaderFragment extends DialogFragment {
 					catch (Exception e) {
 						e.printStackTrace();
 					};
+					break;
 				}
-				switch (result){
-				case -1: break;
+				case ERROR: 
+					Toast.makeText(getActivity(),R.string.toast_download_error, Toast.LENGTH_SHORT).show();
+					break;
+				case FILE_ERROR:
+					Toast.makeText(getActivity(),R.string.toast_download_error_file, Toast.LENGTH_SHORT).show();
+					break;
+				case NO_MEMORY:
+					Toast.makeText(getActivity(),R.string.toast_download_no_memory, Toast.LENGTH_SHORT).show();
+					break;
 				}
 			}
 
@@ -153,12 +169,12 @@ public class DownloaderFragment extends DialogFragment {
 						filesize = con.getContentLength();
 					if ( filesize < 0  )
 						filesize = 0;
-					if ( type == null )
+					if ( type == null || type.trim().equals("") )
 					    type = con.getContentType();
 					// Checking if external storage has enough memory ...
 					android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
 					if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < filesize)
-						return -3;
+						return NO_MEMORY;
 
 					buf = new byte[65536];
 					while (/*myProgress < fileLen*/ true) {
@@ -193,17 +209,17 @@ public class DownloaderFragment extends DialogFragment {
 				}
 				catch (FileNotFoundException e)
 				{
-					return -2;
+					return FILE_ERROR;
 				}
 				catch(Exception e)
 				{
-					return -1;
+					return ERROR;
 				}
 				finally {
 					if ( con != null )
 						con.disconnect();
 				}
-				return 0;
+				return OK;
 			}
 		}
 		
