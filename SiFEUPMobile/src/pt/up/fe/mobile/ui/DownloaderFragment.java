@@ -29,28 +29,21 @@ public class DownloaderFragment extends DialogFragment {
 	private final static String URL_ARG = "url";
 	private final static String NAME_ARG = "name";
     private final static String TYPE_ARG = "type";
+    private final static String SIZE_ARG = "size";
+    
 	private String url;
 	private String filename;
 	private String type;
+	private long filesize = 0;
 	private ProgressDialog pbarDialog;
-	  public static DownloaderFragment newInstance(String title, String url , String name) {
-		  	DownloaderFragment frag = new DownloaderFragment();
-	        Bundle args = new Bundle();
-	        args.putString(TITLE_ARG, title);
-	        args.putString(URL_ARG, url);
-	        args.putString(NAME_ARG, name);
-	        frag.setArguments(args);
-	        
-	        return frag;
-	    }
-	  
-	  public static DownloaderFragment newInstance(String title, String url , String name , String type) {
+	  public static DownloaderFragment newInstance(String title, String url , String name , String type, long size) {
           DownloaderFragment frag = new DownloaderFragment();
           Bundle args = new Bundle();
           args.putString(TITLE_ARG, title);
           args.putString(URL_ARG, url);
           args.putString(NAME_ARG, name);
           args.putString(TYPE_ARG, type);
+          args.putLong(SIZE_ARG, size);
           frag.setArguments(args);
           
           return frag;
@@ -62,13 +55,15 @@ public class DownloaderFragment extends DialogFragment {
 	        url = getArguments().getString(URL_ARG);
 	        filename = getArguments().getString(NAME_ARG);
 	        type = getArguments().getString(TYPE_ARG);
+	        filesize = getArguments().getLong(SIZE_ARG, 0);
 	        final DownloadTask downloader = new DownloadTask();
 	        pbarDialog = new ProgressDialog(getActivity());
-			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			pbarDialog.setMessage("Downloading " + filename);
-			//pbarDialog.setMax(100);
+			pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			if ( filesize != 0 )
+				pbarDialog.setMax(100);
 			pbarDialog.setTitle(title);
-			pbarDialog.setCancelable(true);
+			pbarDialog.setCancelable(false);
 			pbarDialog.setOnDismissListener(new OnDismissListener() {
 				public void onDismiss(DialogInterface dialog) {
 					downloader.cancel(true);
@@ -89,57 +84,50 @@ public class DownloaderFragment extends DialogFragment {
 	    
 	  
 	  /** Classe privada para a busca de dados ao servidor */
-		private class DownloadTask extends AsyncTask<String, Integer, String> {
+		private class DownloadTask extends AsyncTask<String, Integer, Integer> {
 
-			//private long lastTime;
-			//private long downloadBegin;
 			private File myFile;
-			protected void onPostExecute(String result) //TODO: add error handling
+			@Override
+			protected void onPostExecute(Integer result) //TODO: add error handling
 			{
 			    if ( getActivity() == null )
 			        return;
 				if ( result == null )
 					return;
 				DownloaderFragment.this.dismiss();
-				Toast.makeText(getActivity(),getString(R.string.msg_download_finished, myFile.getPath()), Toast.LENGTH_SHORT).show();
-				try{
-					Intent intent = new Intent();
-					intent.setAction(Intent.ACTION_VIEW);
-					if ( type != null )
-						intent.setData(Uri.fromFile(myFile));
-					else
-						intent.setDataAndType(Uri.fromFile(myFile), type);
-					startActivity(intent);
-				} 
-				catch (Exception e) {
-					e.printStackTrace();
-				};
+				if ( result == 0 )
+				{
+					Toast.makeText(getActivity(),getString(R.string.msg_download_finished, myFile.getPath()), Toast.LENGTH_SHORT).show();
+					try{
+						Intent intent = new Intent();
+						intent.setAction(Intent.ACTION_VIEW);
+						if ( type != null )
+							intent.setData(Uri.fromFile(myFile));
+						else
+							intent.setDataAndType(Uri.fromFile(myFile), type);
+						startActivity(intent);
+					} 
+					catch (Exception e) {
+						e.printStackTrace();
+					};
+				}
+				switch (result){
+				case -1: break;
+				}
 			}
 
-			/*protected void onProgressUpdate(Integer ... progress) {
-			 	pbarDialog.setProgress((int) ( ((float)progress[0] / (float)progress[1]  ) * 100) );
-			 	long now = System.currentTimeMillis();
-				if ( (now - lastTime) >= 1000 )
-				{
-					long kbs = 0;
-					try{
-						 kbs = ( ( progress[0]/ (now - downloadBegin) )*1000/1024);
-						 
-					}catch(ArithmeticException e){
-						kbs = 0;
-					}
-				 	long eta = (long) (((float)progress[1] - progress[0] ) / kbs / 1024);
-					pbarDialog.setMessage(getString(R.string.msg_dl_speed,kbs,eta/60,eta%60));
-					lastTime = now;
-				}
-			}*/
+			protected void onProgressUpdate(Integer ... progress) {
+			 	pbarDialog.setProgress(progress[0] );
+			 	pbarDialog.setMax(100);
+			}
+			
 			@Override
-			protected String doInBackground(String ... argsDownload) 
+			protected Integer doInBackground(String ... argsDownload) 
 			{
 				HttpURLConnection con = null;
 				DataInputStream dis;
 				FileOutputStream fos;
-				//int myProgress = 0;
+				long myProgress = 0;
 				//int  fileLen;
 				int byteRead;
 				byte[] buf;
@@ -161,14 +149,16 @@ public class DownloaderFragment extends DialogFragment {
 					
 
 					dis = new DataInputStream(con.getInputStream());
-					//fileLen = Integer.MAX_VALUE;
-					//fileLen = con.getContentLength();
+					if ( filesize == 0)
+						filesize = con.getContentLength();
+					if ( filesize < 0  )
+						filesize = 0;
 					if ( type == null )
 					    type = con.getContentType();
 					// Checking if external storage has enough memory ...
-					//android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
-					//if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
-						//return "No memory";
+					android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
+					if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < filesize)
+						return -3;
 
 					buf = new byte[65536];
 					while (/*myProgress < fileLen*/ true) {
@@ -177,7 +167,7 @@ public class DownloaderFragment extends DialogFragment {
 							if ((byteRead = dis.read(buf)) != -1)
 							{
 								fos.write(buf, 0, byteRead);
-								//myProgress += byteRead;
+								myProgress += byteRead;
 							}
 							else
 							{
@@ -190,7 +180,8 @@ public class DownloaderFragment extends DialogFragment {
 						catch(Exception e){
 							return null;
 						}
-						//publishProgress((int) ((myProgress / (float) fileLen) * 100),fileLen );
+						if ( filesize != 0 )
+							publishProgress((int) (((float)myProgress / (float) filesize) * 100) );
 						if ( isCancelled() )
 						{
 							con.disconnect();
@@ -202,17 +193,17 @@ public class DownloaderFragment extends DialogFragment {
 				}
 				catch (FileNotFoundException e)
 				{
-					return "File Error";
+					return -2;
 				}
 				catch(Exception e)
 				{
-					return "Unknown Error";
+					return -1;
 				}
 				finally {
 					if ( con != null )
 						con.disconnect();
 				}
-				return filename;
+				return 0;
 			}
 		}
 		

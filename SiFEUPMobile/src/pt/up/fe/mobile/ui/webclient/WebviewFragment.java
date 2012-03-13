@@ -69,7 +69,7 @@ public class WebviewFragment extends BaseFragment {
                 {
                     filename = url.substring(url.lastIndexOf('/') + 1);
                 }
-                DownloaderFragment.newInstance("Downloader", url, filename)
+                DownloaderFragment.newInstance("Downloader", url, filename, mimetype, contentLength)
                         .show(getFragmentManager(), "Downloader");
 
             }

@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.up.fe.mobile.sifeup.SifeupUtils;
+
 /**
  * @author Ângela Igreja
  * 
@@ -121,7 +123,7 @@ public class SubjectContent implements Serializable {
 		private String filename;
 
 		/** */
-		private int size;
+		private long size;
 
 		/** */
 		private String updateDate;
@@ -172,11 +174,11 @@ public class SubjectContent implements Serializable {
 			return filename;
 		}
 
-		public void setSize(int size) {
+		public void setSize(long size) {
 			this.size = size;
 		}
 
-		public int getSize() {
+		public long getSize() {
 			return size;
 		}
 
@@ -234,6 +236,7 @@ public class SubjectContent implements Serializable {
 					for (int j = 0; j < jFiles.length(); j++) {
 						File file = new File();
 						JSONObject jFile = jFiles.getJSONObject(j);
+						SifeupUtils.removeEmptyKeys(jFile);
 						if (jFile.has("codigo"))
 							file.setCode(jFile.getInt("codigo"));
 						if (jFile.has("nome"))
@@ -245,7 +248,7 @@ public class SubjectContent implements Serializable {
 						if (jFile.has("filename"))
 							file.setFilename(jFile.getString("filename"));
 						if (jFile.has("tamanho"))
-							file.setSize(jFile.getInt("tamanho"));
+							file.setSize(jFile.getLong("tamanho"));
 						if (jFile.has("data_actualizacao"))
 							file.setUpdateDate(jFile
 									.getString("data_actualizacao"));

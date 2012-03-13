@@ -24,7 +24,6 @@ import pt.up.fe.mobile.sifeup.ResponseCommand;
 import pt.up.fe.mobile.sifeup.SifeupAPI;
 import pt.up.fe.mobile.sifeup.SubjectUtils;
 import pt.up.fe.mobile.tracker.AnalyticsUtils;
-import pt.up.fe.mobile.ui.BaseActivity;
 import pt.up.fe.mobile.ui.BaseFragment;
 import pt.up.fe.mobile.ui.DownloaderFragment;
 import pt.up.fe.mobile.ui.profile.ProfileActivity;
@@ -141,7 +140,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
 			return;
-		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 		switch (error) {
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
@@ -495,7 +493,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
     								File toDownload = subjectContent.getCurrentFolder().getFiles().get(position-subjectContent.getCurrentFolder().getFolders().size());
     								if ( toDownload.getUrl() == null || toDownload.getUrl().trim().length() == 0)
     								{
-    									DownloaderFragment.newInstance(toDownload.getName(),SifeupAPI.getSubjectFileContents(Integer.toString(toDownload.getCode())) , toDownload.getFilename())
+    									DownloaderFragment.newInstance(toDownload.getName(),SifeupAPI.getSubjectFileContents(Integer.toString(toDownload.getCode())) , toDownload.getFilename(), null, toDownload.getSize())
     														.show(getFragmentManager(), "Downloader");
     								}
     								else
