@@ -58,11 +58,10 @@ import android.widget.Toast;
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
 		OnClickListener, ResponseCommand {
-	
+
 	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
 	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
 
-	
 	private ViewPager mPager;
 	private TextView mTitle;
 	private int mTitleCurrentDayIndex = -1;
@@ -162,35 +161,30 @@ public class ScheduleFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (schedule != null)
+			outState.putParcelableArrayList(SCHEDULE_KEY, schedule);
+		outState.putLong(MILLISECONDS_KEY, mondayMillis);
+	}
 
- 	@Override
- 	public void onSaveInstanceState (Bundle outState){
- 	    if ( schedule != null )
- 	        outState.putParcelableArrayList(SCHEDULE_KEY,schedule);
- 	    outState.putLong(MILLISECONDS_KEY, mondayMillis);
- 	}
-	
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if ( savedInstanceState != null )
-        {
+		if (savedInstanceState != null) {
 			long millis = savedInstanceState.getLong(MILLISECONDS_KEY);
-			if ( millis != 0 )
+			if (millis != 0)
 				mondayMillis = millis;
-            schedule = savedInstanceState.getParcelableArrayList(SCHEDULE_KEY);
-            if ( schedule == null )
-        		updateSchedule();
-            else
-            {
-            	setToNow = true;
-            	displaySchedule();
-            	showFastMainScreen();
-            }
-        }
-        else
-        {
-    		updateSchedule();
-        }
+			schedule = savedInstanceState.getParcelableArrayList(SCHEDULE_KEY);
+			if (schedule == null)
+				updateSchedule();
+			else {
+				setToNow = true;
+				displaySchedule();
+				showFastMainScreen();
+			}
+		} else {
+			updateSchedule();
+		}
 	}
 
 	private void increaseDay() {
@@ -375,13 +369,17 @@ public class ScheduleFragment extends BaseFragment implements
 		Day day = mDays.get(dayIndex + 1);
 
 		final String blockId = block.getLectureAcronym()
+				+ block.getLectureType()
+				+ (block.getBuildingCode() == null ? "" : block
+						.getBuildingCode()) + block.getRoomCode()
+				+ block.getStartTime();
+		final String title = block.getLectureAcronym()
 				+ " ("
 				+ block.getLectureType()
 				+ ")"
 				+ "\n"
 				+ (block.getBuildingCode() == null ? "" : block
 						.getBuildingCode()) + block.getRoomCode();
-		final String title = blockId;
 		final long start = block.getStartTime() * 1000 + day.timeStart;
 		final long end = start + (long) (block.getLectureDuration() * 3600000);
 		final boolean containsStarred = false;
@@ -584,12 +582,10 @@ public class ScheduleFragment extends BaseFragment implements
 	private Block findBlock(String blockId) {
 		for (Block block : schedule) {
 			String id = block.getLectureAcronym()
-					+ " ("
 					+ block.getLectureType()
-					+ ")"
-					+ "\n"
 					+ (block.getBuildingCode() == null ? "" : block
-							.getBuildingCode()) + block.getRoomCode();
+							.getBuildingCode()) + block.getRoomCode()
+					+ block.getStartTime();
 			if (id.equals(blockId))
 				return block;
 		}
@@ -609,7 +605,7 @@ public class ScheduleFragment extends BaseFragment implements
 		default:// TODO: add general error message
 			break;
 		}
-        getActivity().finish();
+		getActivity().finish();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -621,8 +617,8 @@ public class ScheduleFragment extends BaseFragment implements
 		displaySchedule();
 		showMainScreen();
 	}
-	
-	private void displaySchedule(){
+
+	private void displaySchedule() {
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			updateDay(0, mondayMillis - 3 * DateUtils.DAY_IN_MILLIS); // previous
 			// friday
