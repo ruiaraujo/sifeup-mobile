@@ -32,7 +32,8 @@ public class SifeupAPI {
 
 	private interface WebServices {
 		String MOBILE = "mobc_geral.";
-		String IMG = "img.";
+		String FACILITIES_IMG = "img.";
+		String PEOPLE_PIC = "fotografias_service.";
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
 		String NOTIFICATION_SIGARRA = "wf_geral.";
@@ -59,6 +60,11 @@ public class SifeupAPI {
 	private interface Employee {
 		String NAME = "ficha_func";
 		String CODE = "pv_codigo";
+	}
+	
+	private interface PersonPic {
+		String NAME = "foto";
+		String CODE = "pct_cod";
 	}
 
 	private interface Tuition {
@@ -325,6 +331,18 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.MOBILE + Employee.NAME + WEBSERVICE_SEP
 				+ Employee.CODE + EQUALS + code;
 	}
+	
+
+	/**
+	 * Pic Url for Web Service
+	 * 
+	 * @param code
+	 * @return Student Url
+	 */
+	public static String getPersonPicUrl(String code) {
+		return WEBSERVICE + WebServices.PEOPLE_PIC + PersonPic.NAME + WEBSERVICE_SEP
+				+ PersonPic.CODE + EQUALS + code;
+	}
 
 	/**
 	 * Printing Url for Web Service
@@ -489,7 +507,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getBuildingPicUrl(String building, String floor) {
-		return WEBSERVICE + WebServices.IMG + BuildingPic.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.FACILITIES_IMG + BuildingPic.NAME + WEBSERVICE_SEP
 				+ BuildingPic.BUILDING + EQUALS + building + LINK_SEP
 				+ BuildingPic.FLOOR + EQUALS + floor;
 	}
@@ -503,7 +521,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getRoomPicUrl(String building, String room) {
-		return WEBSERVICE + WebServices.IMG + RoomPic.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME + WEBSERVICE_SEP
 				+ RoomPic.BUILDING + EQUALS + building + LINK_SEP
 				+ RoomPic.ROOM + EQUALS + room;
 	}
