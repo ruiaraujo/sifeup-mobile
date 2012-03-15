@@ -132,7 +132,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		if (hasMoreResults()) {
 			adapter = new EndlessSearchAdapter(getActivity(),
 					new SearchCustomAdapter(getActivity(),
-							R.layout.list_item_friend, new Student[0]),
+							R.layout.list_item_search, new Student[0]),
 					R.layout.list_item_loading);
 		} else {
 			adapter = new SearchCustomAdapter(getActivity(),
@@ -210,7 +210,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 			if (row == null) {
 				LayoutInflater inflater = getActivity().getLayoutInflater();
 				row = inflater
-						.inflate(R.layout.list_item_friend, parent, false);
+						.inflate(R.layout.list_item_search, parent, false);
 			}
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
 			name.setText(results.get(position / 15).getStudents().get(

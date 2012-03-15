@@ -19,6 +19,7 @@ import pt.up.fe.mobile.ui.personalarea.ScheduleFragment;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class EmployeeProfileFragment extends BaseFragment implements OnItemClickListener, ResponseCommand
 {
 	private TextView name;
+    private ImageView pic;
 	private ListView details;
 	private CheckBox friend;
 	private TextView code;
@@ -65,6 +68,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     	super.onCreateView(inflater, container, savedInstanceState);
 		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile, getParentContainer(), true);
 		name = ((TextView)root.findViewById(R.id.profile_name));
+        pic = (ImageView) root.findViewById(R.id.profile_pic);
 		code = ((TextView)root.findViewById(R.id.profile_code));
 		details = ((ListView)root.findViewById(R.id.profile_details));
 		friend = ((CheckBox)root.findViewById(R.id.profile_star_friend));
@@ -128,7 +132,12 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
+        if ( me != null ){
+            pic.setImageBitmap((Bitmap) results[0]);
+            return;
+        }
 		me = (Employee) results[0];
+        task = ProfileUtils.getPersonPic(me.getCode(), this);
 		contents = me.getProfileContents(getResources());
 		name.setText(me.getName());
         getActivity().getSupportActionBar().setTitle(me.getName());
