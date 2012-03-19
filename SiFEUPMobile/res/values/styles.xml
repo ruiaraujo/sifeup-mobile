@@ -4,16 +4,19 @@
     <style name="Theme" parent="@style/Theme.Sherlock.Light" />
 
     <!-- Start with the Holographic Light theme -->
-    <style name="Theme.SiFEUP" parent="@style/Theme.Sherlock.Light">
+    <style name="Theme.Sigarra" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
+        
+        <!-- Custom attrs -->
+        <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
         
         <!-- For Android 2.1+ -->
         <item name="actionBarStyle">@style/ActionBar</item>
 
     </style>
 
-    <style name="Theme.SiFEUP.Home" parent="style/Theme.SiFEUP">
+    <style name="Theme.Sigarra.Home" parent="style/Theme.Sigarra">
         <item name="android:windowBackground">@drawable/window_background_home</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
     </style>
@@ -25,7 +28,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="Theme.SiFEUP.TabPageIndicator" parent="style/Theme.SiFEUP">
+    <style name="Theme.Sigarra.TabPageIndicator" parent="style/Theme.Sigarra">
         <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
         <item name="vpiTabTextStyle">@style/TabPageIndicator.Text</item>
     </style>
