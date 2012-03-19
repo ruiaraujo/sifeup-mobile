@@ -49,7 +49,6 @@ public class StudentProfileFragment extends BaseFragment implements
 	private ImageView pic;
 	private ListView details;
 	private CheckBox friend;
-	private TextView code;
 
 	/** User Info */
 	private Student me;
@@ -71,7 +70,6 @@ public class StudentProfileFragment extends BaseFragment implements
 				getParentContainer(), true);
 		name = (TextView) root.findViewById(R.id.profile_name);
 		pic = (ImageView) root.findViewById(R.id.profile_pic);
-		code = (TextView) root.findViewById(R.id.profile_code);
 		details = (ListView) root.findViewById(R.id.profile_details);
 		friend = (CheckBox) root.findViewById(R.id.profile_star_friend);
 		friend.setOnClickListener(new OnClickListener() {
@@ -148,7 +146,6 @@ public class StudentProfileFragment extends BaseFragment implements
 		contents = me.getProfileContents(getResources());
 		getActivity().getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());
-		code.setText(me.getCode());
 		if (SessionManager.getInstance(getActivity()).isFriend(me.getCode()))
 			friend.setChecked(true);
 		else

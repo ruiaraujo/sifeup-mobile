@@ -131,6 +131,12 @@ public class Employee extends Profile implements Serializable {
 
 	public List<ProfileDetail> getProfileContents(Resources res) {
 		List<ProfileDetail> result = new ArrayList<ProfileDetail>();
+		if (code != null && !code.equals("")) {
+			result
+					.add(new ProfileDetail(res
+							.getString(R.string.profile_title_code), code,
+							null));
+		}
 		if (email != null && !email.equals("")) {
 			result
 					.add(new ProfileDetail(res
