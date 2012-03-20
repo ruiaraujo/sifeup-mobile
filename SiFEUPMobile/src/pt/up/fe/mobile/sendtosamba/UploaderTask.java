@@ -28,6 +28,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
     private int error = 0;
     private final static int WRONG_CREDENTIAL = 1;
     private final static int WRONG_HOST = 2;
+    private final static int GENERAL_ERROR = 3;
 
     private NotificationManager mNotificationManager;
 
@@ -120,7 +121,8 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
             return false;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            error= GENERAL_ERROR;
+            return false;
         } finally {
             if (ftp != null) {
                 try {

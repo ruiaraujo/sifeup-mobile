@@ -94,6 +94,8 @@ public class UploaderService extends Service implements FinishedTaskListener {
                 {
                     is.setLength(0);
                     filename = uri.toString();
+                    int offset = filename.toString().lastIndexOf('/');
+                    filename = filename.toString().substring(offset + 1);
                 }
             }
             taskRunning++;
