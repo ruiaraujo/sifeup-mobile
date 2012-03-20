@@ -26,6 +26,8 @@ import android.widget.ViewSwitcher;
  */
 public class BaseFragment extends Fragment {
 
+    public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
+
     private ViewSwitcher switcher;
     private View emptyScreen;
     private LayoutInflater inflater;

@@ -317,6 +317,7 @@
 
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
+    <string name="title_samba_uploader">Samba FEUP</string>
     <string name="notification_uploader_title">FEUP Mobile</string>
     <string name="notification_uploader_content">Enviando\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_finished">Terminado o envio de \n<xliff:g id="file">%1$s</xliff:g></string>

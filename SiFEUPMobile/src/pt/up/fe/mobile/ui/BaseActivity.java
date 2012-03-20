@@ -118,6 +118,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
         final Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
         startActivity(intent);
         overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
@@ -152,7 +153,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
         final Uri data = intent.getData();
         if (data != null) {
-            arguments.putParcelable("_uri", data);
+            arguments.putParcelable(BaseFragment.URL_INTENT, data);
         }
 
         final Bundle extras = intent.getExtras();

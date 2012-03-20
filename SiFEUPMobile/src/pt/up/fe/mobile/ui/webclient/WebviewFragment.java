@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 public class WebviewFragment extends BaseFragment {
 
-    public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
     private WebView mWebView;
     private ProgressBar progressWebView;
     private String url;
@@ -36,7 +35,7 @@ public class WebviewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        url = getArguments().getString(URL_INTENT);
+        url = getArguments().getParcelable(URL_INTENT).toString();
         if (url == null && savedInstanceState != null )
             url = savedInstanceState.getString(URL_INTENT);
     }
@@ -64,6 +63,8 @@ public class WebviewFragment extends BaseFragment {
             public void onDownloadStart(String url, String userAgent,
                     String contentDisposition, String mimetype,
                     long contentLength) {
+                if ( getActivity() == null )
+                	return;
                 String filename = getFilename(contentDisposition);
                 if (filename == null)
                 {
@@ -78,6 +79,8 @@ public class WebviewFragment extends BaseFragment {
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
+                if ( getActivity() == null )
+                	return;
                 progressWebView.setProgress(progress);
             }
         });
@@ -148,8 +151,8 @@ public class WebviewFragment extends BaseFragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (getActivity() == null)
-                return;
+            if ( getActivity() == null )
+            	return;
             if (!loggedIn) {
                 // This is a ugly hack to login
                 // This is needed because some devices are very slow
@@ -159,9 +162,13 @@ public class WebviewFragment extends BaseFragment {
                 final SessionManager session = SessionManager.getInstance(getActivity());
                 if ( session.loadSession() ) 
                 {
+                    if ( getActivity() == null )
+                    	return;
                 	Toast.makeText(getActivity(), R.string.msg_authenticating, Toast.LENGTH_SHORT).show();
 	                final String user = session.getLoginCode();
 	                final String pass = session.getLoginPassword();
+	                if ( user.equals("") || pass.equals("") )
+	                	goLogin();
 	                mWebView.loadUrl("javascript: {"
 	                        + "document.getElementById('user').value = '" + user
 	                        + "';" + "var  pass = document.getElementById('pass');"

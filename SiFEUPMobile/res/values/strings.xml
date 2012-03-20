@@ -16,7 +16,7 @@
     <string name="toast_download_no_memory">Erro: Sem memória</string>
     <string name="toast_download_error_file">Erro ao escrever no ficheiro</string>
     <string name="toast_download_error">Erro ao transferir o ficheiro</string>
-        
+
     <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
@@ -62,12 +62,16 @@
                                  <b>Credits:</b>\n
                                  <ul>
             <li>Faculty of Engineering of University of Porto</li>
+
  \n
-	                                             <li>CICA</li>
+	                                                         <li>CICA</li>
+
  \n
-	                                             <li>Master in Informatics and Computing Engineering</li>
+	                                                         <li>Master in Informatics and Computing Engineering</li>
+
  \n
-	                                             <li>Distributed Systems course</li>
+	                                                         <li>Distributed Systems course</li>
+
  \n
                                  </ul></string>
 
@@ -329,12 +333,13 @@
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->
-    <string name="title_webview">Sigarra</string>
+    <string name="title_webview">Sigarra Browser</string>
     <string name="description_browser">See in the Browser</string>
     <string name="msg_authenticating">A autenticar no Sigarra</string>
-        
+
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
+    <string name="title_samba_uploader">Samba FEUP</string>
     <string name="notification_uploader_title">FEUP Mobile</string>
     <string name="notification_uploader_content">Uploading\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_uploader_finished">Finished uploading \n<xliff:g id="file">%1$s</xliff:g></string>
@@ -345,5 +350,5 @@
     <string name="notification_uploader_error_title">Error</string>
     <string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Unsupported Operation</string>
-    
+
 </resources>
