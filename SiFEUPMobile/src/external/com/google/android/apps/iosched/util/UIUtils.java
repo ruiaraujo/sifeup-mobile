@@ -39,8 +39,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.TimeZone;
 
-import pt.up.fe.mobile.R;
-
+import pt.up.beta.mobile.R;
 /**
  * An assortment of UI helpers.
  */

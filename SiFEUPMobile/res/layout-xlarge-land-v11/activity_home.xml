@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" />
 
-    <fragment android:name="pt.up.fe.mobile.ui.DashboardFragment"
+    <fragment android:name="pt.up.beta.mobile.ui.DashboardFragment"
         android:id="@+id/fragment_dashboard"
         android:layout_marginLeft="20dp"
         android:layout_weight="1"

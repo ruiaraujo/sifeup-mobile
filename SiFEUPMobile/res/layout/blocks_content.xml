@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:iosched="http://schemas.android.com/apk/res/pt.up.fe.mobile"
+    xmlns:sigarra="http://schemas.android.com/apk/res/pt.up.beta.mobile"
     android:id="@+id/blocks_scroll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -26,7 +26,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         class="external.com.google.android.apps.iosched.ui.widget.BlocksLayout"
-        iosched:columns="2"
+        sigarra:columns="2"
         android:layerType="software" >
 
         <view
@@ -34,15 +34,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             class="external.com.google.android.apps.iosched.ui.widget.TimeRulerView"
-            iosched:dividerColor="#22000000"
-            iosched:endHour="21"
-            iosched:headerWidth="@dimen/schedule_label_header_width"
-            iosched:horizontal_Divider="true"
-            iosched:hourHeight="@dimen/schedule_hour_height"
-            iosched:labelColor="#000000"
-            iosched:labelPaddingLeft="@dimen/schedule_label_padding"
-            iosched:labelTextSize="@dimen/text_size_small"
-            iosched:startHour="8" />
+            sigarra:dividerColor="#22000000"
+            sigarra:endHour="21"
+            sigarra:headerWidth="@dimen/schedule_label_header_width"
+            sigarra:horizontal_Divider="true"
+            sigarra:hourHeight="@dimen/schedule_hour_height"
+            sigarra:labelColor="#000000"
+            sigarra:labelPaddingLeft="@dimen/schedule_label_padding"
+            sigarra:labelTextSize="@dimen/text_size_small"
+            sigarra:startHour="8" />
 
         <View
             android:id="@id/blocks_now"

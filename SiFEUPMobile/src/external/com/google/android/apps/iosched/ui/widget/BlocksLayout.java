@@ -18,7 +18,7 @@ package external.com.google.android.apps.iosched.ui.widget;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-import pt.up.fe.mobile.R;
+import pt.up.beta.mobile.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;

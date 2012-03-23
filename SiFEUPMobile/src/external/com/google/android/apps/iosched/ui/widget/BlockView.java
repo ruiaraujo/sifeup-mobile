@@ -25,8 +25,7 @@ import android.text.format.DateUtils;
 import android.widget.Button;
 
 
-import pt.up.fe.mobile.R;
-
+import pt.up.beta.mobile.R;
 /**
  * Custom view that represents a {@link Blocks#BLOCK_ID} instance, including its
  * title and time span that it occupies. Usually organized automatically by
