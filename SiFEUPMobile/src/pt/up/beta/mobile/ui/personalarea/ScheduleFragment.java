@@ -634,9 +634,9 @@ public class ScheduleFragment extends BaseFragment implements
 			addBlock(block.getWeekDay(), block);
 		mPager.setAdapter(new DayAdapter());
 		if (fetchingPreviousWeek) {
-			mPager.setCurrentItem(mDays.size() - 2);
+			mPager.setCurrentItem(mDays.size() - 2, false);
 		} else if (fetchingNextWeek) {
-			mPager.setCurrentItem(1);
+			mPager.setCurrentItem(1, false);
 		} else if (setToNow) {
 			updateNowView();
 		} else {
