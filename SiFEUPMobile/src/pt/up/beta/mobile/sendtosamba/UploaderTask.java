@@ -35,6 +35,8 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
     // Unique Identification Number for the Notification.
     // We use it on Notification start, and to cancel it.
     private final int UNIQUE_ID;
+    
+    private final String folder;
 
     private final static String SERVER = "tom.fe.up.pt";
 
@@ -44,6 +46,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
         this.filename = filename;
         this.context = con;
         this.listener = lis;
+        folder = "FEUPMobile";
         UNIQUE_ID = (int) (R.string.app_name + System.currentTimeMillis());
         mNotificationManager = (NotificationManager) con
                 .getSystemService(Context.NOTIFICATION_SERVICE);
@@ -102,8 +105,8 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
             // Set binary mode.
             ftp.bin();
             // Change to a new working directory on the FTP server.
-            ftp.mkd("SendToSamba");
-            ftp.cwd("SendToSamba");
+            ftp.mkd(folder);
+            ftp.cwd(folder);
             is.setOnPercentageChangedListener(new ManagedOnPercentageChangedListener() {
                 public void onChanged(int nperc) {
                     publishProgress(nperc);
