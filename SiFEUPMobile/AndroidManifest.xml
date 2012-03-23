@@ -15,6 +15,10 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <application
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
@@ -24,144 +28,144 @@
         <!-- Activities for both phones and tablets -->
 
         <activity
+            android:name=".ui.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:name=".ui.HomeActivity"
             android:theme="@style/Theme.Sigarra.Home" >
         </activity>
         <activity
+            android:name=".ui.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:name=".ui.LoginActivity"
             android:noHistory="true"
             android:theme="@style/Theme.Sigarra.Home" >
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.services.PrintActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_printing"
-            android:name=".ui.services.PrintActivity" />
+            android:label="@string/title_printing" />
         <activity
+            android:name=".ui.services.PrintRefActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_printing"
-            android:name=".ui.services.PrintRefActivity" />
+            android:label="@string/title_printing" />
         <activity
+            android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_exams"
-            android:name=".ui.personalarea.ExamsActivity" />
+            android:label="@string/title_exams" />
 
         <!-- Phone-only activities -->
 
         <activity
+            android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_student_area"
-            android:name=".ui.personalarea.PersonalAreaActivity" />
+            android:label="@string/title_student_area" />
         <activity
+            android:name=".ui.services.ServicesActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_student_services"
-            android:name=".ui.services.ServicesActivity" />
+            android:label="@string/title_student_services" />
         <activity
+            android:name=".ui.facilities.FeupFacilitiesActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_map"
-            android:name=".ui.facilities.FeupFacilitiesActivity" />
+            android:label="@string/title_map" />
         <activity
+            android:name=".ui.notifications.NotificationsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_notifications"
-            android:name=".ui.notifications.NotificationsActivity" />
+            android:label="@string/title_notifications" />
         <activity
+            android:name=".ui.notifications.NotificationsDescActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_notifications"
-            android:name=".ui.notifications.NotificationsDescActivity" />
+            android:label="@string/title_notifications" />
         <activity
+            android:name=".ui.map.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_settings"
-            android:name=".ui.map.SettingsActivity" />
+            android:label="@string/title_settings" />
         <activity
+            android:name=".ui.personalarea.ScheduleActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_schedule"
-            android:name=".ui.personalarea.ScheduleActivity" />
+            android:label="@string/title_schedule" />
         <activity
+            android:name=".ui.personalarea.LunchMenuActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_lunch_menu"
-            android:name=".ui.personalarea.LunchMenuActivity" />
+            android:label="@string/title_lunch_menu" />
         <activity
+            android:name=".ui.profile.ProfileActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_profile"
-            android:name=".ui.profile.ProfileActivity" />
+            android:label="@string/title_profile" />
         <activity
+            android:name=".ui.news.NewsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_news"
-            android:name=".ui.news.NewsActivity" />
+            android:label="@string/title_news" />
         <activity
+            android:name=".ui.news.NewsDescActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_news"
-            android:name=".ui.news.NewsDescActivity" />
+            android:label="@string/title_news" />
         <activity
+            android:name=".ui.friends.FriendsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_friends"
-            android:name=".ui.friends.FriendsActivity" />
+            android:label="@string/title_friends" />
         <activity
+            android:name=".ui.services.UCsInscriptionsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_uc_inscriptions"
-            android:name=".ui.services.UCsInscriptionsActivity" />
+            android:label="@string/title_uc_inscriptions" />
         <activity
+            android:name=".ui.services.ChangePasswordActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_change_password"
-            android:name=".ui.services.ChangePasswordActivity" />
+            android:label="@string/title_change_password" />
         <activity
+            android:name=".ui.services.CardRequestActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_card_request"
-            android:name=".ui.services.CardRequestActivity" />
+            android:label="@string/title_card_request" />
         <activity
+            android:name=".ui.personalarea.ParkOccupationActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_park_occupation"
-            android:name=".ui.personalarea.ParkOccupationActivity" />
+            android:label="@string/title_park_occupation" />
         <activity
+            android:name=".ui.services.NewRequestActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_new_request"
-            android:name=".ui.services.NewRequestActivity" />
+            android:label="@string/title_new_request" />
         <activity
+            android:name=".ui.services.AllRequestsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_all_requests"
-            android:name=".ui.services.AllRequestsActivity" />
+            android:label="@string/title_all_requests" />
         <activity
+            android:name=".ui.services.ScholarProfitActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_scholar_profit"
-            android:name=".ui.services.ScholarProfitActivity" />
+            android:label="@string/title_scholar_profit" />
         <activity
+            android:name=".ui.personalarea.ClassDescriptionActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_schedule"
-            android:name=".ui.personalarea.ClassDescriptionActivity" />
+            android:label="@string/title_schedule" />
         <activity
+            android:name=".ui.search.StudentsSearchActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_search"
-            android:name=".ui.search.StudentsSearchActivity" />
+            android:label="@string/title_search" />
         <activity
+            android:name=".ui.personalarea.SubjectsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_subjects"
-            android:name=".ui.personalarea.SubjectsActivity" />
+            android:label="@string/title_subjects" />
         <activity
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_subjects"
             android:name=".ui.personalarea.SubjectDescriptionActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_subjects"
             android:theme="@style/Theme.Sigarra.TabPageIndicator" />
         <activity
+            android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_academic_path"
-            android:name=".ui.personalarea.AcademicPathActivity" />
+            android:label="@string/title_academic_path" />
         <activity
+            android:name=".ui.services.ClassesSelectionActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_classes_selection"
-            android:name=".ui.services.ClassesSelectionActivity" />
+            android:label="@string/title_classes_selection" />
         <activity
+            android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_tuition"
-            android:name=".ui.services.tuition.TuitionActivity" >
-            <intent-filter >
+            android:label="@string/title_tuition" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -169,10 +173,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.services.tuition.TuitionHistoryActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_tuition_history"
-            android:name=".ui.services.tuition.TuitionHistoryActivity" >
-            <intent-filter >
+            android:label="@string/title_tuition_history" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -180,10 +184,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.services.tuition.TuitionMenuActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_tuition_menu"
-            android:name=".ui.services.tuition.TuitionMenuActivity" >
-            <intent-filter >
+            android:label="@string/title_tuition_menu" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -191,10 +195,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.services.tuition.TuitionRefListActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_tuition_refs_list"
-            android:name=".ui.services.tuition.TuitionRefListActivity" >
-            <intent-filter >
+            android:label="@string/title_tuition_refs_list" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -202,9 +206,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/title_tuition_ref_detail"
-            android:name=".ui.services.tuition.TuitionRefDetailActivity" >
-            <intent-filter >
+            android:name=".ui.services.tuition.TuitionRefDetailActivity"
+            android:label="@string/title_tuition_ref_detail" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -212,11 +216,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/title_samba_uploader"
             android:name=".sendtosamba.SendToSambaActivity"
+            android:label="@string/title_samba_uploader"
             android:noHistory="true"
             android:theme="@style/Theme.Invisible" >
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -229,11 +233,11 @@
         <service android:name=".sendtosamba.UploaderService" />
 
         <activity
+            android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_search"
-            android:launchMode="singleTop"
-            android:name=".ui.search.SearchActivity" >
-            <intent-filter >
+            android:launchMode="singleTop" >
+            <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -244,11 +248,11 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
+            android:name=".ui.webclient.WebviewActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_webview"
-            android:launchMode="singleInstance"
-            android:name=".ui.webclient.WebviewActivity" >
-            <intent-filter >
+            android:launchMode="singleInstance" >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
 
@@ -266,9 +270,9 @@
 
         <!-- Used for install referrer tracking -->
         <receiver
-            android:exported="true"
-            android:name="com.google.android.apps.analytics.AnalyticsReceiver" >
-            <intent-filter >
+            android:name="com.google.android.apps.analytics.AnalyticsReceiver"
+            android:exported="true" >
+            <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
@@ -276,13 +280,13 @@
         <!-- Other manifest items -->
 
         <meta-data
-            android:configChanges="orientation|keyboardHidden"
             android:name="android.app.default_searchable"
+            android:configChanges="orientation|keyboardHidden"
             android:value=".ui.search.SearchActivity" />
 
         <provider
-            android:authorities="pt.up.fe.mobile.SearchSuggestionProvider"
-            android:name=".ui.search.SearchSuggestionHistory" />
+            android:name=".ui.search.SearchSuggestionHistory"
+            android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
     </application>
 
 </manifest>
