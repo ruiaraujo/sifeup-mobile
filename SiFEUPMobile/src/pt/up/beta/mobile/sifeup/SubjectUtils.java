@@ -73,7 +73,7 @@ public class SubjectUtils {
 
 					// if year number is wrong, returns false
 					if (jArray.length() == 0)
-						return false;
+						return subjects;
 
 					// iterate over jArray
 					for (int i = 0; i < jArray.length(); i++) {
