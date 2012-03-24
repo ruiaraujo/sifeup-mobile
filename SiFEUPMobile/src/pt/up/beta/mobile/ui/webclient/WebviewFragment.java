@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -89,6 +90,7 @@ public class WebviewFragment extends BaseFragment {
         });
         
         //Cleaning previous cookies
+        CookieSyncManager.createInstance(getActivity().getApplicationContext());
         CookieManager cookies = CookieManager.getInstance();
         cookies.removeAllCookie();
         
