@@ -100,8 +100,8 @@
     <string name="label_no_exams">Não tem exames marcados</string>
 
     <!-- Subjects -->
-    <string name="btn_subjects">Unidades Curricalares</string>
-    <string name="title_subjects">Unidades Curricalares</string>
+    <string name="btn_subjects">Unidades Curriculares</string>
+    <string name="title_subjects">Unidades Curriculares</string>
     <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
     <string name="lb_no_subjects">Não tem inscrições em Unidades Curricalares</string>
 
