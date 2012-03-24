@@ -21,7 +21,7 @@ public class SubjectDescriptionActivity extends BaseSinglePaneActivity {
 
 	
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) < 5
+        if (android.os.Build.VERSION.SDK_INT < 5
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
         	onBackPressed();
