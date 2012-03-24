@@ -1,6 +1,8 @@
 package pt.up.beta.mobile.ui;
 
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.R;
 import android.animation.Animator;
@@ -10,7 +12,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import android.widget.ViewSwitcher;
  * @author Rui Araújo
  *
  */
-public class BaseFragment extends Fragment {
+public class BaseFragment extends SherlockFragment {
 
     public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
 

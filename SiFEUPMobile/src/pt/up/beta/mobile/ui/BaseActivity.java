@@ -1,6 +1,7 @@
 package pt.up.beta.mobile.ui;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -18,7 +19,6 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 /**
@@ -27,7 +27,7 @@ import android.view.KeyEvent;
  * activities should inherit from {@link BaseSinglePaneActivity} or
  * {@link BaseMultiPaneActivity}.
  */
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends SherlockFragmentActivity {
     protected ActionBar actionbar;
     protected void onCreate(Bundle o) {
         super.onCreate(o);

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Student;
@@ -144,7 +146,7 @@ public class StudentProfileFragment extends BaseFragment implements
 		me = (Student) results[0];
         task = ProfileUtils.getPersonPic(me.getCode(), this);
 		contents = me.getProfileContents(getResources());
-		getActivity().getSupportActionBar().setTitle(me.getName());
+		((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());
 		if (SessionManager.getInstance(getActivity()).isFriend(me.getCode()))
 			friend.setChecked(true);

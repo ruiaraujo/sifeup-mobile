@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
@@ -138,7 +140,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
         task = ProfileUtils.getPersonPic(me.getCode(), this);
 		contents = me.getProfileContents(getResources());
 		name.setText(me.getName());
-        getActivity().getSupportActionBar().setTitle(me.getName());
+        ((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());
 		if ( SessionManager.getInstance(getActivity()).isFriend(me.getCode()) )
 			friend.setChecked(true);
 		else
