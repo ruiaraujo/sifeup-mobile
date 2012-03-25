@@ -14,6 +14,7 @@ import pt.up.beta.mobile.friends.Friend;
 import pt.up.beta.mobile.sifeup.ProfileUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
@@ -21,7 +22,7 @@ import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.R;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -112,7 +113,7 @@ public class StudentProfileFragment extends BaseFragment implements
             code = SessionManager.getInstance(getActivity()).getLoginCode();
         // You can't friend yourself
         if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
-            friend.setVisibility(View.INVISIBLE);
+            friend.setVisibility(View.GONE);
         task = ProfileUtils.getStudentReply(code, this);
     }
 
@@ -139,12 +140,9 @@ public class StudentProfileFragment extends BaseFragment implements
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
-		if ( me != null ){
-		    pic.setImageBitmap((Bitmap) results[0]);
-		    return;
-		}
 		me = (Student) results[0];
-        task = ProfileUtils.getPersonPic(me.getCode(), this);
+		pic.setImageDrawable(getResources().getDrawable(R.drawable.speaker_image_empty));
+		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap(), getResources());
 		contents = me.getProfileContents(getResources());
 		((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());

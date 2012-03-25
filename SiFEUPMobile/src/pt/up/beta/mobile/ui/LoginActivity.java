@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressWarnings("deprecation")
 public class LoginActivity extends FragmentActivity implements ResponseCommand {
 
 	public static final String EXTRA_DIFFERENT_LOGIN = "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";

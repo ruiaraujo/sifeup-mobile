@@ -4,6 +4,7 @@ package pt.up.beta.mobile.ui;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import pt.up.beta.mobile.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,6 +30,8 @@ public class BaseFragment extends SherlockFragment {
 
     public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
 
+    private static ImageDownloader imageDownloader;
+    
     private ViewSwitcher switcher;
     private View emptyScreen;
     private LayoutInflater inflater;
@@ -167,5 +170,11 @@ public class BaseFragment extends SherlockFragment {
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
+
+	public static ImageDownloader getImagedownloader() {
+		if ( imageDownloader == null )
+			imageDownloader = new ImageDownloader();
+		return imageDownloader;
+	}
 
 }

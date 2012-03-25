@@ -1,8 +1,5 @@
 package pt.up.beta.mobile.ui.friends;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import pt.up.beta.mobile.friends.Friend;
 import pt.up.beta.mobile.sifeup.SessionManager;
@@ -24,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -135,22 +131,8 @@ public class FriendsListFragment extends BaseFragment implements
                 }
                 Log.i(TAG, "loading list...");
 
-                String[] from = new String[] { "name", "course" };
-                int[] to = new int[] { R.id.friend_name, R.id.friend_course };
-                // prepare the list of all records
-                List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-                for (Friend f : SessionManager.getInstance(getActivity()).getFriendsList()) {
-
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put(from[0], f.getName());
-                    if (f.getCourse() != null)
-                        map.put(from[1], f.getCourse());
-                    fillMaps.add(map);
-                }
-
                 // fill in the grid_item layout
-                SimpleAdapter adapter = new SimpleAdapter(getActivity(),
-                        fillMaps, R.layout.list_item_friend, from, to);
+                FriendAdapter adapter = new FriendAdapter(SessionManager.getInstance(getActivity()).getFriendsList(), getActivity().getLayoutInflater(), getResources(), getImagedownloader());
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(FriendsListFragment.this);
                 showMainScreen();

@@ -196,7 +196,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
             progressDialog.setCancelable(false);
             progressDialog.setMessage(getString(R.string.lb_data_fetching));
             progressDialog.setOnCancelListener(new OnCancelListener() {
-                @Override
+                @SuppressWarnings("deprecation")
+				@Override
                 public void onCancel(DialogInterface dialog) {
                     removeDialog(DIALOG_FETCHING);
                     finish();

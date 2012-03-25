@@ -11,6 +11,7 @@ import java.net.URL;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.R;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -49,7 +50,7 @@ public class DownloaderFragment extends DialogFragment {
           return frag;
       }
 
-	  @Override
+	@Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        String title = getArguments().getString(TITLE_ARG);
 	        url = getArguments().getString(URL_ARG);
@@ -69,7 +70,7 @@ public class DownloaderFragment extends DialogFragment {
 					downloader.cancel(true);
 				}
 			});
-			pbarDialog.setButton(getString(R.string.bt_cancel), new OnClickListener() {
+			pbarDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.bt_cancel), new OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					downloader.cancel(true);
 					DownloaderFragment.this.dismiss();
