@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
 import pt.up.beta.mobile.R;
@@ -34,7 +33,6 @@ public class NotificationsDescFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Notifications");
     }
 
     @Override

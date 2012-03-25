@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.R;
 
 /**
@@ -30,7 +29,6 @@ public class NewsDescFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/News");
     }
 
     @Override

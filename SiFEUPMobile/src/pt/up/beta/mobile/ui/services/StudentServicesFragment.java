@@ -1,6 +1,7 @@
 package pt.up.beta.mobile.ui.services;
 
 
+import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.services.tuition.TuitionHistoryActivity;
 import pt.up.beta.mobile.ui.services.tuition.TuitionRefListActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
@@ -26,6 +27,8 @@ public class StudentServicesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) 
 	{
         super.onCreate(savedInstanceState);
+        AnalyticsUtils.getInstance(getActivity()).trackPageView(
+                "/StudentServices");
     }
 	  @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

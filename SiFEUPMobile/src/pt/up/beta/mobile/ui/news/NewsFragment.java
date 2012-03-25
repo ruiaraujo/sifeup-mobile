@@ -24,7 +24,6 @@ import android.widget.Toast;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -44,13 +43,6 @@ public class NewsFragment extends BaseFragment implements
     private final String RSSFEEDOFCHOICE = "https://sigarra.up.pt/feup/noticias_web.rss";
     private ListView list;
     private RSSFeed feed;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/News");
-
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

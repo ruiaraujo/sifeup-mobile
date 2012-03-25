@@ -16,7 +16,6 @@ import com.actionbarsherlock.view.MenuItem;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.PrinterUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -44,7 +43,6 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Printing Ref");
     }
 
     @Override

@@ -1,7 +1,6 @@
 package pt.up.beta.mobile.ui.personalarea;
 
 import pt.up.beta.mobile.datatypes.Block;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.R;
@@ -33,7 +32,6 @@ public class ClassDescriptionFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Class Description");
         Bundle args = getArguments();
         block = (Block) args.get(BLOCK);
 	}

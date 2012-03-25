@@ -3,7 +3,6 @@ package pt.up.beta.mobile.ui.friends;
 
 import pt.up.beta.mobile.friends.Friend;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
@@ -41,7 +40,6 @@ public class FriendsListFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Friends");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

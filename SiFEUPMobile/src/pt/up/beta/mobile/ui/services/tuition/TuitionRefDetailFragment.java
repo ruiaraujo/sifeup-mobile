@@ -26,7 +26,6 @@ import android.widget.TextView;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.datatypes.YearsTuition;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.R;
 
 public class TuitionRefDetailFragment extends Fragment {
@@ -38,13 +37,6 @@ public class TuitionRefDetailFragment extends Fragment {
     private TextView valor;
     private TextView dataIni;
     private TextView dataFim;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView(
-                "/ReferenceDetail");
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

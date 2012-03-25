@@ -9,8 +9,7 @@ import java.util.List;
 
 import pt.up.beta.mobile.datatypes.Payment;
 import pt.up.beta.mobile.datatypes.YearsTuition;
-import pt.up.beta.mobile.sifeup.*;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
+import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.R;
 
 
@@ -28,11 +27,6 @@ public class TuitionFragment extends ListFragment {
 	SimpleAdapter adapter;
 	YearsTuition currentYear;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/TuitionHistory");
-    }
 
     @Override
     public void onActivityCreated (Bundle savedInstanceState){

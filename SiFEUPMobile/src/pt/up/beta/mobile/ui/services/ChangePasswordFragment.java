@@ -5,7 +5,6 @@ import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
@@ -44,13 +43,6 @@ public class ChangePasswordFragment extends BaseFragment implements
 	private TextView newPasswordSecurity;
 	private PasswordCheck checker;
 	private int currentQuality = -1;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/Change Password");
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -23,7 +23,6 @@ import pt.up.beta.mobile.datatypes.SubjectContent.Folder;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.DownloaderFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
@@ -83,7 +82,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
         code = args.get(SUBJECT_CODE).toString();
 		year = args.get(SUBJECT_YEAR).toString();
 		period = args.get(SUBJECT_PERIOD).toString();
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subject Description");
         setHasOptionsMenu(true);
     }
 	

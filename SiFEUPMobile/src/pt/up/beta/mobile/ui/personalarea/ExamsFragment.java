@@ -30,7 +30,6 @@ import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.sifeup.ExamsUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
@@ -49,7 +48,6 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

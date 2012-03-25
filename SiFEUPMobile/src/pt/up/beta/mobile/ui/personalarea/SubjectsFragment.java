@@ -9,7 +9,6 @@ import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -33,12 +32,6 @@ public class SubjectsFragment extends BaseFragment implements
 	private ArrayList<Subject> subjects;
 	private ListView list;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Subjects");
-
-	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

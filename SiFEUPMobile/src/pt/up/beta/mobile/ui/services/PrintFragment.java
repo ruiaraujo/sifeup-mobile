@@ -15,7 +15,6 @@ import android.widget.Toast;
 import pt.up.beta.mobile.sifeup.PrinterUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -46,7 +45,6 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Printing");
     }
 
     @Override

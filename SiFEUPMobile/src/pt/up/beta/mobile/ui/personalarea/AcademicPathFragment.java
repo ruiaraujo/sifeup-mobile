@@ -46,8 +46,6 @@ public class AcademicPathFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView(
-                "/Academic Path");
 
     }
 

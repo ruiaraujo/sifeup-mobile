@@ -51,7 +51,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Exams");
+		AnalyticsUtils.getInstance(getActivity()).trackPageView("/Search");
 		query = getArguments().getString(SearchManager.QUERY);
 
 	}

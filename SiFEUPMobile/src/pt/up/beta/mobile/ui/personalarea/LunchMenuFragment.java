@@ -11,7 +11,6 @@ import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;
 import pt.up.beta.mobile.sifeup.CanteenUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 import android.os.Bundle;
@@ -44,13 +43,6 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 	private ArrayList<Canteen> canteens;
     private LayoutInflater mInflater;
     
-	@Override
-    public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Lunch Menu");
-	}
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 

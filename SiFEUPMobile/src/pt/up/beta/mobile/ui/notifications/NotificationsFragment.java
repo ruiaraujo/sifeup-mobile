@@ -19,7 +19,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.NotificationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -35,14 +34,6 @@ public class NotificationsFragment extends BaseFragment implements
     private ListView list;
 
     private ArrayList<Notification> notifications;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView(
-                "/Notifications");
-
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

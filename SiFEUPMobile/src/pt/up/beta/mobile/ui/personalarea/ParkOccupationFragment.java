@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import pt.up.beta.mobile.datatypes.Park;
 import pt.up.beta.mobile.sifeup.ParkUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 import android.content.Context;
@@ -41,11 +40,6 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
     
     private LayoutInflater mInflater;
 
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-	    AnalyticsUtils.getInstance(getActivity()).trackPageView("/Park Occupation");
-	}
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) 

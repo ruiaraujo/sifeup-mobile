@@ -22,7 +22,7 @@ public class EmployeeAreaFragment extends ListFragment{
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Student Area");
+        AnalyticsUtils.getInstance(getActivity()).trackPageView("/Employee Area");
         String[] from = new String[] {"title"};
         int[] to = new int[] { R.id.list_menu_title};
 	         
