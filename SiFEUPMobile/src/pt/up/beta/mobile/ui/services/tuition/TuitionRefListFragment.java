@@ -46,12 +46,12 @@ public class TuitionRefListFragment extends BaseFragment implements
             task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
                     .getLoginCode(), this);
         else {
-            loadList();
-            showFastMainScreen();
+            if ( loadList() )
+                showFastMainScreen();
         }
     }
 
-	private void loadList() {
+	private boolean loadList() {
 		String[] from = new String[] { "name", "amount", "date" };
 		int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount,
 				R.id.tuition_ref_date };
@@ -60,7 +60,11 @@ public class TuitionRefListFragment extends BaseFragment implements
 		ArrayList<YearsTuition> history = SessionManager.tuitionHistory
 				.getHistory();
 		currentYear = history.get(SessionManager.tuitionHistory.currentYear);
-
+		if ( currentYear == null )
+		{
+		    showEmptyScreen(getString(R.string.label_no_tuition_ref));
+		    return false;
+		}
 		for (RefMB r : currentYear.getReferences()) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("name", r.getName());
@@ -76,6 +80,7 @@ public class TuitionRefListFragment extends BaseFragment implements
 				R.layout.list_item_tuition_ref, from, to);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		return true;
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
@@ -110,8 +115,8 @@ public class TuitionRefListFragment extends BaseFragment implements
             return;
 		if (results == null || results[0] == null)
 			return;
-		loadList();
-		showMainScreen();
+		if ( loadList() )
+		    showMainScreen();
 	}
 
 }

@@ -207,7 +207,8 @@
     <string name="lbl_tuition_ref_detail_amount">Amount</string>
     <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
-
+    <string name="label_no_tuition_ref">There are no available references.</string>
+    
     <!-- UCs Inscriptions -->
     <string name="title_uc_inscriptions">UCs Inscriptions</string>
     <string name="btn_uc_inscriptions">UCs Inscriptions</string>
@@ -296,7 +297,7 @@
     <string name="description_add">Add Friend</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
-    <string name="label_no_friends">You have no friends\n\nWhile seeing a profile, check the start to mark as friend.</string>
+    <string name="label_no_friends">You have no friends.\n\nWhile seeing a profile, check the start to mark as friend.</string>
 
     <!-- *************************************************************************************** -->
     <!-- NEWS -->
