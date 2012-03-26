@@ -124,7 +124,7 @@ public class UIUtils {
     public static long getCurrentTime(boolean utc) {
         Time yourDate = new Time(UIUtils.TIME_REFERENCE);
         yourDate.setToNow();
-        return yourDate.toMillis(true);
+        return yourDate.toMillis(false);
     }
     
     public static long convertToUtc(long now) {
