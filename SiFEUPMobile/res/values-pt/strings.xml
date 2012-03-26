@@ -274,7 +274,7 @@
     <string name="description_add">Adicionar Amigo</string>
     <string name="friends_context_delete">Remover Amigo</string>
     <string name="friends_context_timetable">Ver Horário</string>
-    <string name="label_no_friends">Não tem amigos</string>
+    <string name="label_no_friends">Não tem amigos\n\nAo ver um perfil, carregue na estrela para marcar como amigo.</string>
 
     <!-- *************************************************************************************** -->
     <!-- NEWS -->
