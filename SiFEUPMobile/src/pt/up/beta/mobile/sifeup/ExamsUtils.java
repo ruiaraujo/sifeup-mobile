@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class ExamsUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getExamsReply(
-			String code, ResponseCommand command) {
-		return new FetcherTask(command, new ExamsParser()).execute(SifeupAPI
+			String code, ResponseCommand command, File cache) {
+		return new FetcherTask(command, new ExamsParser(), cache).execute(SifeupAPI
 				.getExamsUrl(code));
 	}
 

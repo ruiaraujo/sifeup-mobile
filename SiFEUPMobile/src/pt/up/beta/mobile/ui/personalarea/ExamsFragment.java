@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.ui.personalarea;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import pt.up.beta.mobile.sifeup.ExamsUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
 import pt.up.beta.mobile.R;
@@ -66,12 +68,14 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         String personCode = getArguments().getString(PROFILE_CODE);
         if (personCode == null)
             personCode = SessionManager.getInstance(getActivity()).getLoginCode();
+        final File cache = new File(
+                FileUtils.getCacheDirectory(getActivity()), ExamsFragment.class.getSimpleName()  + personCode);
         if ( savedInstanceState != null )
         {
             exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
             if ( exams == null )
             {   
-                task = ExamsUtils.getExamsReply(personCode, this);
+                task = ExamsUtils.getExamsReply(personCode, this ,cache);
             }
             else
             {
@@ -81,7 +85,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         }
         else
         {
-            task = ExamsUtils.getExamsReply(personCode, this);
+            task = ExamsUtils.getExamsReply(personCode, this,cache);
         }
     }
     

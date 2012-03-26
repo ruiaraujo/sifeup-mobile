@@ -2,10 +2,13 @@
 package pt.up.beta.mobile.sifeup;
 
 
+import java.io.File;
+
 import org.json.JSONException;
 
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.FileUtils;
 import android.os.AsyncTask;
 
 public class FetcherTask extends
@@ -14,12 +17,19 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 	private final ResponseCommand command;
 	private final ParserCommand parser;
 	private Object result;
+	private File cacheResponse = null;
 
 	public FetcherTask(ResponseCommand com , ParserCommand parser) {
 		this.command = com;
 		this.parser = parser;
 	}
 
+    public FetcherTask(ResponseCommand com , ParserCommand parser, File cache ) {
+        this.command = com;
+        this.parser = parser;
+        this.cacheResponse = cache;
+    }
+    
 	protected void onPostExecute(ERROR_TYPE error) {
 		if (error == null) {
 			command.onResultReceived(this.result);
@@ -41,9 +51,22 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 			case SifeupAPI.Errors.NO_AUTH:
 				return retrieveWithAuth(pages[0]);
 			case SifeupAPI.Errors.NO_ERROR:
+			    if ( cacheResponse != null )
+			    {
+			        FileUtils.writeFile(page, cacheResponse);
+			    }
 				result = parser.parse(page);
 				return null;
 			case SifeupAPI.Errors.NULL_PAGE:
+			    if ( cacheResponse != null )
+			    {
+			        page = FileUtils.getStringFromFile(cacheResponse);
+			        if ( page != null )
+			        {
+			            result = parser.parse(page);
+		                return null;
+			        }
+			    }
 				return ERROR_TYPE.NETWORK;
 			}
 		} catch (JSONException e) {
@@ -71,6 +94,10 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 			case SifeupAPI.Errors.NO_AUTH:
 				return ERROR_TYPE.AUTHENTICATION;
 			case SifeupAPI.Errors.NO_ERROR:
+                if ( cacheResponse != null )
+                {
+                    FileUtils.writeFile(page, cacheResponse);
+                }
 				result = parser.parse(page);
 				return null;
 			case SifeupAPI.Errors.NULL_PAGE:

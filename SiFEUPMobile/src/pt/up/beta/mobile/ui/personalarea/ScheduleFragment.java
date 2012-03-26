@@ -1,10 +1,9 @@
 package pt.up.beta.mobile.ui.personalarea;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -17,6 +16,8 @@ import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
+import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
 import pt.up.beta.mobile.R;
@@ -38,7 +39,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -149,14 +149,14 @@ public class ScheduleFragment extends BaseFragment implements
                 increaseDay();
             }
         });
-        mondayMillis = firstDayofWeek();
-        setupDay(moveDayofWeek(mondayMillis, -3), 0);
+        mondayMillis = DateUtils.firstDayofWeek();
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, -3), 0);
         setupDay(mondayMillis, 1);
-        setupDay(moveDayofWeek(mondayMillis, 1), 2);
-        setupDay(moveDayofWeek(mondayMillis, 2), 3);
-        setupDay(moveDayofWeek(mondayMillis, 3), 4);
-        setupDay(moveDayofWeek(mondayMillis, 4), 5);
-        setupDay(moveDayofWeek(mondayMillis, 7), 6);
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, 1), 2);
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, 2), 3);
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, 3), 4);
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, 4), 5);
+        setupDay(DateUtils.moveDayofWeek(mondayMillis, 7), 6);
         onPageSelected(1);
 
         return getParentContainer();
@@ -248,7 +248,7 @@ public class ScheduleFragment extends BaseFragment implements
     private void movetoPreviousWeek() {
         fetchingPreviousWeek = true;
         mondayMillis = mDays.get(1).timeStart;
-        mondayMillis = moveDayofWeek(mondayMillis, -7);
+        mondayMillis = DateUtils.moveDayofWeek(mondayMillis, -7);
         updateSchedule();
     }
 
@@ -284,9 +284,9 @@ public class ScheduleFragment extends BaseFragment implements
             nowDay.scrollView.scrollTo(0, offset);
             nowDay.blocksView.requestLayout();
         } else {
-            mondayMillis = firstDayofWeek();
+            mondayMillis = DateUtils.firstDayofWeek();
             for (int i = 0; i < mDays.size(); ++i)
-                updateDay(i, moveDayofWeek(mondayMillis, i));
+                updateDay(i, DateUtils.moveDayofWeek(mondayMillis, i));
             setToNow = true;
             updateSchedule();
         }
@@ -299,7 +299,7 @@ public class ScheduleFragment extends BaseFragment implements
         // Setup data
         day.index = mDays.size();
         day.timeStart = startMillis;
-        day.timeEnd = startMillis + DateUtils.DAY_IN_MILLIS;
+        day.timeEnd = startMillis + android.text.format.DateUtils.DAY_IN_MILLIS;
         // Setup views
         day.rootView = (ViewGroup) mInflater.inflate(R.layout.blocks_content,
                 null);
@@ -318,8 +318,8 @@ public class ScheduleFragment extends BaseFragment implements
         Time date = new Time(UIUtils.TIME_REFERENCE);
         date.set(startMillis);
         date.normalize(false);
-        day.label = DateUtils.getDayOfWeekString(date.weekDay + 1,
-                DateUtils.LENGTH_LONG) + ", " + date.format("%d-%m");
+        day.label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,
+                android.text.format.DateUtils.LENGTH_LONG) + ", " + date.format("%d-%m");
         mDays.add(i, day);
     }
 
@@ -328,10 +328,10 @@ public class ScheduleFragment extends BaseFragment implements
         Time date = new Time(UIUtils.TIME_REFERENCE);
         date.set(millis);
         date.normalize(false);
-        mDays.get(index).label = DateUtils.getDayOfWeekString(date.weekDay + 1,
-                DateUtils.LENGTH_LONG) + ", " + date.format("%d-%m");
+        mDays.get(index).label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,
+                android.text.format.DateUtils.LENGTH_LONG) + ", " + date.format("%d-%m");
         mDays.get(index).timeStart = millis;
-        mDays.get(index).timeEnd = millis + DateUtils.DAY_IN_MILLIS;
+        mDays.get(index).timeEnd = millis + android.text.format.DateUtils.DAY_IN_MILLIS;
     }
 
     private void cleanBlocks() {
@@ -389,8 +389,6 @@ public class ScheduleFragment extends BaseFragment implements
 
     }
 
-    private final static TimeZone zone = TimeZone
-            .getTimeZone(UIUtils.TIME_REFERENCE);
 
     /**
      * 
@@ -401,48 +399,7 @@ public class ScheduleFragment extends BaseFragment implements
      * @return mondayMillis milliseconds of the the first day of the week
      */
 
-    private static long firstDayofWeek() {
-        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
-        yourDate.setToNow();
-        yourDate.minute = 0;
-        yourDate.hour = 0;
-        yourDate.second = 0;
-        yourDate.normalize(false);
-        if (!zone.inDaylightTime(new Date(yourDate.toMillis(false)))) {
-            yourDate.hour = 1;
-            yourDate.normalize(false);
-        }
-        int weekDay = yourDate.weekDay - 1;
-        // Our week starts at Monday
-        if (weekDay < 0)
-            weekDay = 6;
-        long mondayMillis = yourDate.toMillis(false);
-        mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
-        if (moveDayofWeek(mondayMillis, 5) < UIUtils.getCurrentTime(false))
-            mondayMillis = moveDayofWeek(mondayMillis, 7);
-        return mondayMillis;
-    }
 
-    private static long moveDayofWeek(long millis, int dayOffset) {
-        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
-        yourDate.set(millis);
-        boolean usingDst = zone.inDaylightTime(new Date(yourDate
-                .toMillis(false)));
-        yourDate.monthDay += dayOffset;
-        yourDate.normalize(false);
-        if (zone.inDaylightTime(new Date(yourDate.toMillis(false)))) {
-            if (!usingDst) {
-                yourDate.hour -= 1;
-                yourDate.normalize(false);
-            }
-        } else {
-            if (usingDst) {
-                yourDate.hour += 1;
-                yourDate.normalize(false);
-            }
-        }
-        return yourDate.toMillis(false);
-    }
 
     /**
      * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
@@ -489,7 +446,7 @@ public class ScheduleFragment extends BaseFragment implements
                                         + b.getRoomCode();
                                 String description = "Professor: "
                                         + b.getTeacherAcronym();
-                                long date = moveDayofWeek(mondayMillis,
+                                long date = pt.up.beta.mobile.utils.DateUtils.moveDayofWeek(mondayMillis,
                                         b.getWeekDay())
                                         + b.getStartTime() * 1000;
 
@@ -639,11 +596,11 @@ public class ScheduleFragment extends BaseFragment implements
 
     private void displaySchedule() {
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-            updateDay(0, moveDayofWeek(mondayMillis, -3)); // previous
+            updateDay(0, DateUtils.moveDayofWeek(mondayMillis, -3)); // previous
             // friday
             for (int i = 1; i < mDays.size() - 1; ++i)
-                updateDay(i, moveDayofWeek(mondayMillis, (i - 1)));
-            updateDay(mDays.size() - 1, moveDayofWeek(mondayMillis, 7)); // next
+                updateDay(i, DateUtils.moveDayofWeek(mondayMillis, (i - 1)));
+            updateDay(mDays.size() - 1, DateUtils.moveDayofWeek(mondayMillis, 7)); // next
                                                                          // monday
             cleanBlocks();
         }
@@ -674,22 +631,24 @@ public class ScheduleFragment extends BaseFragment implements
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
             getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
         }
+        final File cache = new File(
+                FileUtils.getCacheDirectory(getActivity()), ScheduleFragment.class.getSimpleName()  + scheduleCode);
         switch (scheduleType) {
         case SCHEDULE_STUDENT:
-            task = ScheduleUtils.getScheduleReply(scheduleCode, mondayMillis,
-                    this);
+            task = ScheduleUtils.getStudentScheduleReply(scheduleCode, mondayMillis,
+                    this, cache);
             break;
         case SCHEDULE_EMPLOYEE:
             task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode,
-                    mondayMillis, this);
+                    mondayMillis, this, cache);
             break;
         case SCHEDULE_ROOM:
             task = ScheduleUtils.getRoomScheduleReply(scheduleCode,
-                    mondayMillis, this);
+                    mondayMillis, this, cache);
             break;
         case SCHEDULE_UC:
             task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis,
-                    this);
+                    this, cache);
             break;
         }
     }

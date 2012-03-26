@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,8 @@ import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.datatypes.Block;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.DateUtils;
 import android.os.AsyncTask;
-import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -20,62 +21,62 @@ public class ScheduleUtils {
 	private ScheduleUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getScheduleReply(
-			String code, long mondayMillis, ResponseCommand command) {
+	public static AsyncTask<String, Void, ERROR_TYPE> getStudentScheduleReply(
+			String code, long mondayMillis, ResponseCommand command, File cache) {
 		Time monday = new Time(UIUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
         // Friday
-        monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+        monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
 				.getScheduleUrl(code,firstDay,lastDay));
 	}
 	
 	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeScheduleReply(
-			String code, long mondayMillis, ResponseCommand command) {
+			String code, long mondayMillis, ResponseCommand command, File cache) {
 		Time monday = new Time(UIUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
         // Friday
-        monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+        monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
 				.getTeacherScheduleUrl	(code,firstDay,lastDay));
 	}	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomScheduleReply(
-			String code, long mondayMillis, ResponseCommand command) {
+			String code, long mondayMillis, ResponseCommand command, File cache) {
 		Time monday = new Time(UIUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
         // Friday
-        monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+        monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
 				.getRoomScheduleUrl(code.substring(0,1),code.substring(1),firstDay,lastDay));
 	}
 	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getUcScheduleReply(
-			String code, long mondayMillis, ResponseCommand command) {
+			String code, long mondayMillis, ResponseCommand command, File cache) {
 		Time monday = new Time(UIUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
         // Friday
-        monday.set(mondayMillis + (4 * DateUtils.DAY_IN_MILLIS));
+        monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
 				.getUcScheduleUrl(code,firstDay,lastDay));
 	}
 
