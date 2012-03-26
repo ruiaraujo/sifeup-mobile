@@ -2,7 +2,6 @@ package pt.up.beta.mobile.ui.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -14,8 +13,8 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.utils.FileUtils;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,7 +43,7 @@ public class ImageDownloader {
 
 			// Caching code right here
 			String filename = String.valueOf(url.hashCode());
-			File f = new File(getCacheDirectory(imageView.getContext()),
+			File f = new File(FileUtils.getCacheDirectory(imageView.getContext()),
 					filename);
 
 			// Is the bitmap in our memory cache?
@@ -111,38 +110,7 @@ public class ImageDownloader {
 		return null;
 	}
 
-	// our caching functions
-	// Find the dir to save cached images
-	private static File getCacheDirectory(Context context) {
-	String sdState = android.os.Environment.getExternalStorageState();
-		File cacheDir;
 
-		if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-			cacheDir = context.getExternalCacheDir();
-		} else
-			cacheDir = context.getCacheDir();
-
-		if (!cacheDir.exists())
-			cacheDir.mkdirs();
-		return cacheDir;
-	}
-
-	private void writeFile(Bitmap bmp, File f) {
-		FileOutputStream out = null;
-
-		try {
-			out = new FileOutputStream(f);
-			bmp.compress(Bitmap.CompressFormat.PNG, 80, out);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (out != null)
-					out.close();
-			} catch (Exception ex) {
-			}
-		}
-	}
 
 	// /////////////////////
 
@@ -183,11 +151,11 @@ public class ImageDownloader {
 
 					String filename = String.valueOf(url.hashCode());
 					File f = new File(
-							getCacheDirectory(imageView.getContext()), filename);
+					        FileUtils.getCacheDirectory(imageView.getContext()), filename);
 
 					imageCache.put(f.getPath(), bitmap);
 
-					writeFile(bitmap, f);
+					FileUtils.writeFile(bitmap, f);
 				}
 			}
 		}
