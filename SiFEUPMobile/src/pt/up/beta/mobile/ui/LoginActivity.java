@@ -1,6 +1,8 @@
 package pt.up.beta.mobile.ui;
 
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -15,7 +17,6 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -30,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
-public class LoginActivity extends FragmentActivity implements ResponseCommand {
+public class LoginActivity extends SherlockActivity implements ResponseCommand {
 
 	public static final String EXTRA_DIFFERENT_LOGIN = "pt.up.fe.mobile.extra.DIFFERENT_LOGIN";
 	public static final int EXTRA_DIFFERENT_LOGIN_LOGOUT = 1;
@@ -121,6 +122,7 @@ public class LoginActivity extends FragmentActivity implements ResponseCommand {
 		case EXTRA_DIFFERENT_LOGIN_LOGOUT:// if logging out the cookie is
 			// removed
 			session.cleanPrefs();
+            passwordEditText.setText("");
 			break;
 		default: {
 			final String cookie = session.getCookie();
