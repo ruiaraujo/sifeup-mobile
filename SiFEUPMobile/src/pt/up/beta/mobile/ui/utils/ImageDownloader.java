@@ -169,7 +169,8 @@ public class ImageDownloader {
 			if (isCancelled()) {
 				bitmap = null;
 			}
-
+			if ( bitmap == null )
+				return; //nothing to do in case of error
 			if (imageViewReference != null) {
 				ImageView imageView = imageViewReference.get();
 				BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
