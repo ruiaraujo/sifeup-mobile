@@ -183,7 +183,7 @@ public class Employee extends Profile implements Serializable {
 		for (Room r : rooms) {
 			// 3 is the regular ammount. This is loop only runs in the case
 			//of positive number under 100
-			for ( int i = 0; i <  3 -Integer.toString(r.codRoom).length() ; ++i);
+			for ( int i = 0; i <  3 -Integer.toString(r.codRoom).length() ; ++i)
 				roomCode.append('0');
 			roomCode.append(r.codRoom);
 			result.add(new ProfileDetail(res
