@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -95,11 +94,8 @@ public class NewsFragment extends BaseFragment implements
             } else {
                 Log.e("News", "error");
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(),
-                            getString(R.string.news_error), Toast.LENGTH_LONG)
-                            .show();
-                    getActivity().finish();
-                    return;
+        			showRepeatTaskScreen(getString(R.string.news_error));
+        			return;
                 }
             }
         }
@@ -154,5 +150,10 @@ public class NewsFragment extends BaseFragment implements
         itemintent.putExtra("pubdate", feed.getItem(position).getPubDate());
         startActivity(itemintent);
     }
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = new NewsTask().execute(RSSFEEDOFCHOICE);
+	}
 
 }

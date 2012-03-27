@@ -116,16 +116,14 @@ public class AcademicPathFragment extends BaseFragment implements
                     Toast.LENGTH_LONG).show();
             goLogin();
             break;
-        case NETWORK:
-            Toast.makeText(getActivity(),
-                    getString(R.string.toast_server_error), Toast.LENGTH_LONG)
-                    .show();
-            break;
-        default:
-            break;
-        }
-        getActivity().finish();
-    }
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
 
     public void onResultReceived(Object... results) {
         if (getActivity() == null)
@@ -237,5 +235,11 @@ public class AcademicPathFragment extends BaseFragment implements
         }
 
     }
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
+                .getLoginCode(), this);
+	}
 
 }

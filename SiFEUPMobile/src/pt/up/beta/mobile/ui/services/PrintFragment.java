@@ -112,13 +112,12 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			//TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
-
 	}
 
 	public void onResultReceived(Object... results) {
@@ -135,6 +134,11 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 		long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
 		if ( pagesA4Black > 0 )
 			desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
 	}
 
 }

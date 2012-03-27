@@ -221,11 +221,10 @@ public class ChangePasswordFragment extends BaseFragment implements
 		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
 		switch (error) {
 		case NETWORK:
-			Toast.makeText(getActivity(),
-					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
-					.show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			// TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
 	}
@@ -266,6 +265,14 @@ public class ChangePasswordFragment extends BaseFragment implements
 				getString(R.string.password_successfully_changed),
 				Toast.LENGTH_SHORT).show();
 
+	}
+
+	protected void onRepeat() {
+		getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+		AuthenticationUtils.setPasswordReply(usernameText.getText()
+				.toString(), actualPasswordText.getText().toString(),
+				newPasswordText.getText().toString(),
+				confirmNewPasswordText.getText().toString(), "S", ChangePasswordFragment.this);
 	}
 
 	

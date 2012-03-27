@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -50,9 +49,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
 			return;
-		Toast.makeText(getActivity(), getString(R.string.toast_server_error),
-				Toast.LENGTH_SHORT).show();
-		getActivity().finish();
+		showRepeatTaskScreen(getString(R.string.toast_server_error));
 	}
 
 	@Override
@@ -62,5 +59,10 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		pic.setImageBitmap((Bitmap) results[0]);
 		pic.setMaxZoom(5);
 		showFastMainScreen();
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		task = FacilitiesUtils.getBuildingPic("", "", this);
 	}
 }

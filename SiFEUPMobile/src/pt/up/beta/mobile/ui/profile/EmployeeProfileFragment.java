@@ -52,7 +52,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     private ImageView pic;
 	private ListView details;
 	private CheckBox friend;
-
+	private String code;
 	/** User Info */
     private Employee me;
     private List<ProfileDetail> contents;
@@ -99,7 +99,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
     }
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        String code = getArguments().getString(ProfileActivity.PROFILE_CODE);
+        code = getArguments().getString(ProfileActivity.PROFILE_CODE);
         if ( code == null )
             code = SessionManager.getInstance(getActivity()).getLoginCode();
 
@@ -120,14 +120,12 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(),
-					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
-					.show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			// TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
 	}
 
 	public void onResultReceived(Object... results) {
@@ -193,5 +191,10 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			callIntent.setData(Uri.parse("tel:"+contents.get(position).content));
 			startActivity(callIntent);
 		}
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		task = ProfileUtils.getEmployeeReply(code, this);
 	}
 }

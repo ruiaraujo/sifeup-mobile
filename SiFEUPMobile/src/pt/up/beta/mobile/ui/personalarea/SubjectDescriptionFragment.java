@@ -144,11 +144,12 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 			goLogin();
 			return;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-		default:// TODO: add general error message
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
 	}
 
 	public void onResultReceived(Object... results) {
@@ -595,6 +596,15 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
     public void onPageSelected(int page) {
         currentPage = page;
     }
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		if ( subject == null )
+	        task = SubjectUtils.getSubjectReply(code, year, period, this);
+		if ( subjectContent == null )
+			SubjectUtils.getSubjectContentReply(code, year, period, this);
+
+	}
 
 
 

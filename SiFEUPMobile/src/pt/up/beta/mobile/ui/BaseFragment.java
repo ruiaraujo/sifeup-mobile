@@ -15,10 +15,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -34,6 +36,8 @@ public class BaseFragment extends SherlockFragment {
     
     private ViewSwitcher switcher;
     private View emptyScreen;
+    private View placeHolder; // to be used when the child view is
+    //replaced by "emptyScreen" view.
     private LayoutInflater inflater;
     
     protected AsyncTask<?, ?, ?> task;
@@ -93,11 +97,23 @@ public class BaseFragment extends SherlockFragment {
     }
     
     protected void showFastMainScreen(){
+    	if ( placeHolder != null )
+    	{
+            switcher.removeViewAt(1);
+            switcher.addView(placeHolder, 1);
+            placeHolder = null;
+    	}
         if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
             switcher.showNext();
     }
     
     protected void showMainScreen(){
+    	if ( placeHolder != null )
+    	{
+            switcher.removeViewAt(1);
+            switcher.addView(placeHolder, 1);
+            placeHolder = null;
+    	}
     	if ( switcher.getCurrentView() != switcher.getChildAt(1) ) 
     	    flipIt();
     }
@@ -105,13 +121,22 @@ public class BaseFragment extends SherlockFragment {
     protected void showEmptyScreen(final String message ){
         if ( switcher.getCurrentView() == switcher.getChildAt(1) ) 
             return;
-        if ( switcher.getChildAt(1) != null ) 
+        placeHolder = switcher.getChildAt(1);
+        if ( placeHolder != null ) 
         {
-            switcher.removeViewAt(1);
+            if ( switcher.getChildAt(1) != emptyScreen )
+            {
+    	        placeHolder = switcher.getChildAt(1);
+    	        if ( placeHolder != null ) 
+    	        {
+    	            switcher.removeViewAt(1);
+    	            switcher.addView(emptyScreen,1);
+
+    	        }
+            }
         }
         TextView text = (TextView) emptyScreen.findViewById(R.id.message);
         text.setText(message);
-        switcher.addView(emptyScreen,1);
         flipIt();
     }    
     
@@ -176,5 +201,35 @@ public class BaseFragment extends SherlockFragment {
 			imageDownloader = new ImageDownloader();
 		return imageDownloader;
 	}
+	
+    protected void showRepeatTaskScreen(final String message ){
+        if ( switcher.getCurrentView() == switcher.getChildAt(1) ) 
+        {
+            switcher.showNext();
+        }
+        if ( switcher.getChildAt(1) != emptyScreen )
+        {
+	        placeHolder = switcher.getChildAt(1);
+	        if ( placeHolder != null ) 
+	        {
+	            switcher.removeViewAt(1);
+	            switcher.addView(emptyScreen,1);
+	        }
+        }
+        TextView text = (TextView) emptyScreen.findViewById(R.id.message);
+        Button repeat = (Button) emptyScreen.findViewById(R.id.action);
+        repeat.setVisibility(View.VISIBLE);
+        repeat.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				BaseFragment.this.onRepeat();
+			}
+		});
+        text.setText(message);
+        switcher.showNext();
+    }    
+    
+    protected void onRepeat(){
+    	
+    }
 
 }

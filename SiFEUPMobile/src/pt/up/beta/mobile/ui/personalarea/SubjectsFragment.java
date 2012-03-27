@@ -60,11 +60,12 @@ public class SubjectsFragment extends BaseFragment implements
 			goLogin();
 			return;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
-		default:// TODO: add general error message
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,5 +127,14 @@ public class SubjectsFragment extends BaseFragment implements
 			i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).getNameEn());
 		startActivity(i);
 
+	}
+
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
+                .getLoginCode(), Integer.toString(UIUtils
+                .secondYearOfSchoolYear() - 1), this);
+		
 	}
 }

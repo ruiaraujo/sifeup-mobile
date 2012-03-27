@@ -578,11 +578,14 @@ public class ScheduleFragment extends BaseFragment implements
                     Toast.LENGTH_LONG).show();
             goLogin();
             return;
-        default:// TODO: add general error message
-            break;
-        }
-        getActivity().finish();
-    }
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
 
     @SuppressWarnings({ "unchecked", "deprecation" })
     public void onResultReceived(Object... results) {
@@ -632,7 +635,7 @@ public class ScheduleFragment extends BaseFragment implements
             getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
         }
         final File cache = new File(
-                FileUtils.getCacheDirectory(getActivity()), ScheduleFragment.class.getSimpleName()  + scheduleCode);
+                FileUtils.getCacheDirectory(getActivity()), ScheduleFragment.class.getSimpleName()  + scheduleCode + mondayMillis);
         switch (scheduleType) {
         case SCHEDULE_STUDENT:
             task = ScheduleUtils.getStudentScheduleReply(scheduleCode, mondayMillis,
@@ -652,5 +655,16 @@ public class ScheduleFragment extends BaseFragment implements
             break;
         }
     }
+    
+    @SuppressWarnings("deprecation")
+	protected void onRepeat(){
+        if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
+            getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+        }
+        else
+        	showLoadingScreen();
+        updateSchedule();
+    }
+    
 
 }

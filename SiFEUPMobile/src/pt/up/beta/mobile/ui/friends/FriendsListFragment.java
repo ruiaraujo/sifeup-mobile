@@ -67,7 +67,7 @@ public class FriendsListFragment extends BaseFragment implements
 
     public void onResume (){
     	super.onResume();
-        new FriendsTask().execute();
+        task = new FriendsTask().execute();
     }
 
     @Override
@@ -138,7 +138,8 @@ public class FriendsListFragment extends BaseFragment implements
 
             } else {
                 Log.e("Login", "error");
-                //TODO:
+    			showRepeatTaskScreen(getString(R.string.general_error));
+    			return;
             }
         }
 
@@ -147,5 +148,9 @@ public class FriendsListFragment extends BaseFragment implements
             return SessionManager.getInstance(getActivity()).loadFriends();
         }
     }
+
+	protected void onRepeat() {
+        task = new FriendsTask().execute();
+	}
 
 }

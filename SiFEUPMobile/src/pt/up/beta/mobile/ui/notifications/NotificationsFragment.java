@@ -69,12 +69,12 @@ public class NotificationsFragment extends BaseFragment implements
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			//TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -113,5 +113,11 @@ public class NotificationsFragment extends BaseFragment implements
         list.setAdapter(adapter);
         list.setOnItemClickListener(NotificationsFragment.this);
         showMainScreen();
+	}
+
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = NotificationUtils.getNotificationsReply(this);
 	}
 }

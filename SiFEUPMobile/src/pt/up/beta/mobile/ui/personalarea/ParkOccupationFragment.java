@@ -133,13 +133,12 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			//TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-		getActivity().finish();
-
 	}
 
 	public void onResultReceived(Object... results) {
@@ -161,6 +160,21 @@ public class ParkOccupationFragment extends BaseFragment implements ResponseComm
 	         list.setAdapter(adapter);
 	         list.setClickable(false);
 	         showMainScreen();
+			break;
+		}
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		switch (parks.size()) {
+		case 0:
+			ParkUtils.getParkReply("P1", this);
+			break;
+		case 1:
+			ParkUtils.getParkReply("P3", this);
+			break;
+		case 2:
+			ParkUtils.getParkReply("P4", this);
 			break;
 		}
 	}

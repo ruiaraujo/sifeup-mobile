@@ -140,13 +140,12 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			//TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
-
 	}
 
 	public void onResultReceived(Object... results) {
@@ -166,6 +165,11 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 		                    " " + refStr.substring(6,9));
 		valor.setText(ref.getAmount()+"€");
 		dataFim.setText(ref.getEndDate().format3339(true));
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
 	}
 
 }

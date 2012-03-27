@@ -89,15 +89,13 @@ public class StudentsSearchFragment extends BaseFragment implements
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
 			goLogin();
-            getActivity().finish();
 			break;
 		case NETWORK:
             Toast.makeText(getActivity(), getString(R.string.toast_server_error),
                     Toast.LENGTH_LONG).show();
-	        getActivity().finish();
 	        break;
 		default:
-			showEmptyScreen(getString(R.string.toast_search_error));
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
 	}
@@ -231,6 +229,11 @@ public class StudentsSearchFragment extends BaseFragment implements
 		for (ResultsPage result : results)
 			total += result.getStudents().size();
 		return total;
+	}
+
+	protected void onRepeat() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

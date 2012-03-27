@@ -7,7 +7,10 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
-
+	<string name="button_repeat">Repeat</string>
+	<string name="general_error">Oops!\n Something went wrong... :(</string>
+    
+    
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
     <string name="msg_estimating_download">Estimating download speed and time left...</string>

@@ -45,6 +45,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	private ArrayList<Exam> exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 	private ListView list;
+	private String personCode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        String personCode = getArguments().getString(PROFILE_CODE);
+        personCode = getArguments().getString(PROFILE_CODE);
         if (personCode == null)
             personCode = SessionManager.getInstance(getActivity()).getLoginCode();
         final File cache = new File(
@@ -223,17 +224,14 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
 			goLogin();
-			getActivity().finish();
-			return;
+			break;
 		case NETWORK:
-			Toast.makeText(getActivity(),
-					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
-					.show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
 			break;
 		default:
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-		getActivity().finish();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -275,6 +273,13 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setClickable(false);
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+		 final File cache = new File(
+	                FileUtils.getCacheDirectory(getActivity()), ExamsFragment.class.getSimpleName()  + personCode);
+        task = ExamsUtils.getExamsReply(personCode, this,cache);
 	}
 
 }

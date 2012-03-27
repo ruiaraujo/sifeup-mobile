@@ -230,13 +230,12 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(), getString(R.string.toast_server_error), Toast.LENGTH_LONG).show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			//TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -251,5 +250,10 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 		}
 	    buildPages();
 	    showMainScreen();
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = CanteenUtils.getCanteensReply(this);
 	}
 }

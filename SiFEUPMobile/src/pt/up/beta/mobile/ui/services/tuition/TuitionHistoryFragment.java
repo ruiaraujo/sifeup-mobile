@@ -93,15 +93,12 @@ public class TuitionHistoryFragment extends BaseFragment implements
 			goLogin();
 			break;
 		case NETWORK:
-			Toast.makeText(getActivity(),
-					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
-					.show();
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
 		default:
-			// TODO: general error
+			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
-        getActivity().finish();
-
 	}
 
 	public void onResultReceived(Object... results) {
@@ -111,5 +108,11 @@ public class TuitionHistoryFragment extends BaseFragment implements
 			return;
 		loadList();
 		showMainScreen();
+	}
+
+	protected void onRepeat() {
+		showLoadingScreen();
+        task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
+                .getLoginCode(), this);
 	}
 }
