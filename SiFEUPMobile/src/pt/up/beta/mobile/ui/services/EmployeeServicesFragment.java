@@ -41,11 +41,15 @@ public class EmployeeServicesFragment extends Fragment
 					int groupPosition, long id) {
 				switch( groupPosition )
 		    	{
-			    	case 0:
+		    		case 0:
+		    		 startActivity(new Intent(getActivity(),PrintActivity.class));
+	                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+		    		 break;
+			    	case 1:
 				   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
 		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
-			    	case 1:
+			    	case 2:
 				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
 				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://sigarra.up.pt/feup/mail_dinamico.ficheiros"));
 		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
@@ -71,9 +75,11 @@ public class EmployeeServicesFragment extends Fragment
     private class StudentServicesAdapter extends BaseExpandableListAdapter {
         // Sample data set.  children[i] contains the children (String[]) for groups[i].
         private String[] groups = { 
+        		getString(R.string.btn_printing), 
         		getString(R.string.btn_change_password),
         		getString(R.string.btn_dynamic_mail_files)};
         private String[][] children = {
+        		{  },
         		{  },
                 {  }
         };
