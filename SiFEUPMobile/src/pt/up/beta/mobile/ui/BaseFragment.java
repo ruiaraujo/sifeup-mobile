@@ -136,6 +136,7 @@ public class BaseFragment extends SherlockFragment {
             }
         }
         TextView text = (TextView) emptyScreen.findViewById(R.id.message);
+        emptyScreen.findViewById(R.id.action).setVisibility(View.GONE);
         text.setText(message);
         flipIt();
     }    
