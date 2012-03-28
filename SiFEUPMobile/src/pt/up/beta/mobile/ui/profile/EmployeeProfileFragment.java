@@ -133,7 +133,7 @@ public class EmployeeProfileFragment extends BaseFragment implements OnItemClick
 			return;
 		me = (Employee) results[0];
 		pic.setImageDrawable(getResources().getDrawable(R.drawable.speaker_image_empty));
-		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap(), getResources());
+		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap());
 		contents = me.getProfileContents(getResources());
 		name.setText(me.getName());
         ((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());

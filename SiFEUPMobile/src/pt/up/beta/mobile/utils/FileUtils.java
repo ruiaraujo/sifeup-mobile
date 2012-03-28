@@ -21,13 +21,30 @@ public class FileUtils {
         File cacheDir;
 
         if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            cacheDir = context.getExternalCacheDir();
+            cacheDir = context.getApplicationContext().getExternalCacheDir();
         } else
-            cacheDir = context.getCacheDir();
-
-        if (!cacheDir.exists())
-            cacheDir.mkdirs();
+            cacheDir = context.getApplicationContext().getCacheDir();
+        if ( cacheDir != null )
+            return cacheDir;
+        if (sdState.equals(android.os.Environment.MEDIA_MOUNTED) )
+        {
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    File.separator + "Android" + File.separator + "data" +
+                    File.separator + context.getPackageName());
+            if (!cacheDir.exists())
+                cacheDir.mkdirs();
+        }
         return cacheDir;
+    }
+    
+    public static File getFile(Context context, String filename) {
+        final File dir = FileUtils.getCacheDirectory(context.getApplicationContext());
+        final File cache;
+        if ( dir != null )
+            cache= new File(dir, filename);
+        else
+            cache = null;
+        return cache;
     }
 
     public static void writeFile(Bitmap bmp, File f) {

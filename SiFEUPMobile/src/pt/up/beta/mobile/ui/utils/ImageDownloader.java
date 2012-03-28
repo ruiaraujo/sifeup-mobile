@@ -33,42 +33,43 @@ public class ImageDownloader {
 	}
 
 	public void download(String url, ImageView imageView) {
-		download(url, imageView, null, null);
+		download(url, imageView, null);
 	}
 
 	// download function
-	public void download(String url, ImageView imageView, Bitmap placeholder,
-			Resources res) {
+	public void download(String url, ImageView imageView, Bitmap placeholder) {
 		if (cancelPotentialDownload(url, imageView)) {
 
 			// Caching code right here
 			String filename = String.valueOf(url.hashCode());
-			File f = new File(FileUtils.getCacheDirectory(imageView.getContext()),
+			final File f = FileUtils.getFile(imageView.getContext(),
 					filename);
-
+			
 			// Is the bitmap in our memory cache?
 			Bitmap bitmap = null;
-
-			bitmap = (Bitmap) imageCache.get(f.getPath());
-
-			if (bitmap == null) {
-
-				bitmap = BitmapFactory.decodeFile(f.getPath());
-
-				if (bitmap != null) {
-					imageCache.put(f.getPath(), bitmap);
-				}
-
+			if ( f != null )
+			{
+    			bitmap = (Bitmap) imageCache.get(f.getPath());
+    
+    			if (bitmap == null) {
+    
+    				bitmap = BitmapFactory.decodeFile(f.getPath());
+    
+    				if (bitmap != null) {
+    					imageCache.put(f.getPath(), bitmap);
+    				}
+    
+    			}
 			}
 			// No? download it
 			if (bitmap == null) {
 				final BitmapDownloaderTask task = new BitmapDownloaderTask(
 						imageView);
 				final DownloadedDrawable downloadedDrawable;
-				if (res == null || placeholder == null) {
-					downloadedDrawable = new DownloadedDrawable(task);
+				if ( placeholder == null) {
+					downloadedDrawable = new DownloadedDrawable(task, imageView.getResources());
 				} else {
-					downloadedDrawable = new DownloadedDrawable(task, res,
+					downloadedDrawable = new DownloadedDrawable(task, imageView.getResources(),
 							placeholder);
 				}
 				imageView.setImageDrawable(downloadedDrawable);
@@ -150,12 +151,13 @@ public class ImageDownloader {
 					// cache the image
 
 					String filename = String.valueOf(url.hashCode());
-					File f = new File(
-					        FileUtils.getCacheDirectory(imageView.getContext()), filename);
-
-					imageCache.put(f.getPath(), bitmap);
-
-					FileUtils.writeFile(bitmap, f);
+					
+					File f = FileUtils.getFile(imageView.getContext(), filename);
+					if ( f != null )
+					{
+    					imageCache.put(f.getPath(), bitmap);
+    					FileUtils.writeFile(bitmap, f);
+					}
 				}
 			}
 		}
@@ -172,9 +174,8 @@ public class ImageDownloader {
 					bitmapDownloaderTask);
 		}
 
-		@SuppressWarnings("deprecation")
-		public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask) {
-			super();
+		public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask ,Resources res ) {
+			super(res);
 			bitmapDownloaderTaskReference = new WeakReference<BitmapDownloaderTask>(
 					bitmapDownloaderTask);
 		}
