@@ -634,8 +634,7 @@ public class ScheduleFragment extends BaseFragment implements
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
             getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
         }
-        final File cache = new File(
-                FileUtils.getCacheDirectory(getActivity()), ScheduleFragment.class.getSimpleName()  + scheduleCode + mondayMillis);
+        final File cache = FileUtils.getFile(getActivity(), ScheduleFragment.class.getSimpleName()  + scheduleCode + mondayMillis);
         switch (scheduleType) {
         case SCHEDULE_STUDENT:
             task = ScheduleUtils.getStudentScheduleReply(scheduleCode, mondayMillis,

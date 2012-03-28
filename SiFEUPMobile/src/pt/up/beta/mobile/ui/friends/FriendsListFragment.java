@@ -130,7 +130,7 @@ public class FriendsListFragment extends BaseFragment implements
                 Log.i(TAG, "loading list...");
 
                 // fill in the grid_item layout
-                FriendAdapter adapter = new FriendAdapter(SessionManager.getInstance(getActivity()).getFriendsList(), getActivity().getLayoutInflater(), getResources(), getImagedownloader());
+                FriendAdapter adapter = new FriendAdapter(SessionManager.getInstance(getActivity()).getFriendsList(), getActivity().getLayoutInflater(), getImagedownloader());
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(FriendsListFragment.this);
                 showMainScreen();

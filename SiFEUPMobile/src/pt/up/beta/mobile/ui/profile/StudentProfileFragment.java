@@ -140,7 +140,7 @@ public class StudentProfileFragment extends BaseFragment implements
 			return;
 		me = (Student) results[0];
 		pic.setImageDrawable(getResources().getDrawable(R.drawable.speaker_image_empty));
-		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap(), getResources());
+		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap());
 		contents = me.getProfileContents(getResources());
 		((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());
 		name.setText(me.getName());

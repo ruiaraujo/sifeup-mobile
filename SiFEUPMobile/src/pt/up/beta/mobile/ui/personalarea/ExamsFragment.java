@@ -69,8 +69,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
         personCode = getArguments().getString(PROFILE_CODE);
         if (personCode == null)
             personCode = SessionManager.getInstance(getActivity()).getLoginCode();
-        final File cache = new File(
-                FileUtils.getCacheDirectory(getActivity()), ExamsFragment.class.getSimpleName()  + personCode);
+        final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
         if ( savedInstanceState != null )
         {
             exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
@@ -277,8 +276,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		 final File cache = new File(
-	                FileUtils.getCacheDirectory(getActivity()), ExamsFragment.class.getSimpleName()  + personCode);
+		final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
         task = ExamsUtils.getExamsReply(personCode, this,cache);
 	}
 

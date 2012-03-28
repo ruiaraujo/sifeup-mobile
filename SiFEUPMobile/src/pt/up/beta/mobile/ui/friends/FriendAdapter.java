@@ -6,7 +6,6 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.friends.Friend;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.utils.ImageDownloader;
-import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +19,12 @@ public class FriendAdapter extends BaseAdapter {
 	private final List<Friend> friends;
 	private final LayoutInflater inflater;
 	private final ImageDownloader imageDownloader;
-	private final Resources resources;
 
 	public FriendAdapter(List<Friend> friends, LayoutInflater inflater,
-			Resources res, ImageDownloader down) {
+			 ImageDownloader down) {
 		this.friends = friends;
 		this.inflater = inflater;
 		this.imageDownloader = down;
-		this.resources = res;
 	}
 
 	public int getCount() {
@@ -72,9 +69,9 @@ public class FriendAdapter extends BaseAdapter {
 			holder.course.setText("");
 		imageDownloader.download(SifeupAPI.getPersonPicUrl(friends
 				.get(position).getCode()), holder.pic,
-				((BitmapDrawable) resources
+				((BitmapDrawable) holder.pic.getResources()
 						.getDrawable(R.drawable.speaker_image_empty))
-						.getBitmap(), resources);
+						.getBitmap());
 		return convertView;
 	}
 
