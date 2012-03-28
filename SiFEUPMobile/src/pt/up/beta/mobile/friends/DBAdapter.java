@@ -98,6 +98,8 @@ public class DBAdapter {
 
 	public List<Friend> getFriends(String code) {
 		final List<Friend> friends = new ArrayList<Friend>();
+		if ( db == null )
+		    return friends;
 		final Cursor mCursor = db.query(true, DATABASE_TABLE_FRIENDS,
 				null,
 				KEY_USER_CODE + "='" + code + "'",
@@ -128,6 +130,8 @@ public class DBAdapter {
 	}
 
 	public boolean addFriend(Friend friend, String code) {
+	    if ( db == null )
+	        return false;
 		final ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME_FRIEND, friend.getName());
 		initialValues.put(KEY_CODE_FRIEND, friend.getCode());
@@ -139,6 +143,8 @@ public class DBAdapter {
 
 
 	public boolean deleteFriend(Friend friend, String code) {
+        if ( db == null )
+            return false;
 		return db.delete(DATABASE_TABLE_FRIENDS, KEY_CODE_FRIEND + "='"
 				+ friend.getCode() + "' AND " + KEY_USER_CODE + "='" + code
 				+ "'", null) > 0;
