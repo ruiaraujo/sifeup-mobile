@@ -3,52 +3,44 @@
     style="@style/SimpleListItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@android:drawable/list_selector_background"
     android:orientation="horizontal"
-    android:paddingLeft="25.0dp"
-	android:paddingTop="8.0dp"
-    android:background="@android:drawable/list_selector_background">
-    
-     <ImageView android:id="@+id/park_light" 
-        android:layout_width="wrap_content" 
-        android:layout_height="wrap_content" 
+    android:paddingLeft="15.0dp"
+    android:gravity="center_vertical"
+    android:paddingTop="8.0dp" >
+
+    <ImageView
+        android:id="@+id/park_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:scaleType="centerInside"
-        android:src="@drawable/green_light" />  
-        
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    style="@style/SimpleListItem"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:paddingLeft="40.0dp"
-	    android:background="@android:drawable/list_selector_background">
-		    
-	    <TextView android:id="@+id/park_name"
-	        android:layout_gravity="left|center_vertical"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        style="@style/ListItemTitle" />
-	   
-	   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-			android:paddingTop="9.0dp"
-		    android:background="@android:drawable/list_selector_background">   
-		    <TextView android:id="@+id/label_park_occupation"
-		        android:layout_gravity="left|center_vertical" 
-		       android:layout_width="wrap_content" 
-		       android:layout_height="wrap_content" 
-		       android:text="Free places: " />
-		          
-		    <TextView android:id="@+id/park_occupation"
-		       android:layout_gravity="left|center_vertical"
-		       android:layout_width="wrap_content"
-		       android:layout_height="wrap_content"
-		       style="@style/ListItemSubtitle"/>  
-	     </LinearLayout>
-	       
+        android:src="@drawable/green_light" />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/SimpleListItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/list_selector_background"
+        android:orientation="vertical"
+        android:paddingLeft="3.0dp" >
+
+        <TextView
+            android:id="@+id/park_name"
+            style="@style/ListItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical" />
+
+        <TextView
+            android:id="@+id/park_occupation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingTop="9.0dp"
+            android:text="@string/label_free_spots"
+            style="@style/ListItemSubtitle" />
     </LinearLayout>
-           
+
 </LinearLayout>
-
-
