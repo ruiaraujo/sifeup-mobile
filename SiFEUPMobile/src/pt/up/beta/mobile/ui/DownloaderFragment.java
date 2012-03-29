@@ -1,14 +1,13 @@
 package pt.up.beta.mobile.ui;
 
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.R;
 import android.app.AlertDialog;
@@ -23,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
+import android.webkit.CookieManager;
 import android.widget.Toast;
 
 public class DownloaderFragment extends DialogFragment {
@@ -142,7 +142,7 @@ public class DownloaderFragment extends DialogFragment {
 			protected Integer doInBackground(String ... argsDownload) 
 			{
 				HttpURLConnection con = null;
-				DataInputStream dis;
+				InputStream dis;
 				FileOutputStream fos;
 				long myProgress = 0;
 				//int  fileLen;
@@ -157,7 +157,8 @@ public class DownloaderFragment extends DialogFragment {
 						con =  SifeupAPI.getUncheckedConnection(url);
 					else
 						con = (HttpURLConnection) new URL(url).openConnection();
-					con.setRequestProperty("Cookie", SessionManager.getInstance(getActivity()).getCookie());
+			        CookieManager cookies = CookieManager.getInstance();
+					con.setRequestProperty("Cookie",cookies.getCookie(url) );
 					con.connect();
 					myFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + argsDownload[1]);
 					
@@ -165,7 +166,7 @@ public class DownloaderFragment extends DialogFragment {
 					fos = new FileOutputStream(myFile);
 					
 
-					dis = new DataInputStream(con.getInputStream());
+					dis = con.getInputStream();
 					if ( filesize == 0)
 						filesize = con.getContentLength();
 					if ( filesize < 0  )

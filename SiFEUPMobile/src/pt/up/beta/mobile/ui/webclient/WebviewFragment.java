@@ -36,10 +36,8 @@ public class WebviewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if ( getArguments().getParcelable(URL_INTENT) == null )
-            url = getArguments().getString(URL_INTENT);
-        else
-            url = getArguments().getParcelable(URL_INTENT).toString();
+        if ( getArguments().get(URL_INTENT) != null )
+            url = getArguments().get(URL_INTENT).toString();
         if (url == null && savedInstanceState != null )
             url = savedInstanceState.getString(URL_INTENT);
     }
@@ -93,7 +91,7 @@ public class WebviewFragment extends BaseFragment {
         CookieSyncManager.createInstance(getActivity().getApplicationContext());
         CookieManager cookies = CookieManager.getInstance();
         cookies.removeAllCookie();
-        
+        CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(url);
         showFastMainScreen();
         return getParentContainer(); // mandatory
