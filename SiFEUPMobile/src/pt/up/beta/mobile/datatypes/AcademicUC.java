@@ -11,7 +11,7 @@ import android.os.Parcelable;
  */
 
 public class AcademicUC implements Parcelable {
-	private int semester; // "reg_d_codigo"
+	private String semester; // "reg_d_codigo"
 	private int year; // "a_lectivo"
 	private String grade; // "resultado" (int or string)
 	private String courseAcronym; // "dis_codigo"
@@ -25,11 +25,11 @@ public class AcademicUC implements Parcelable {
 	public AcademicUC() {
 	}
 
-	public int getSemester() {
+	public String getSemester() {
 		return semester;
 	}
 
-	public void setSemester(int semester) {
+	public void setSemester(String semester) {
 		this.semester = semester;
 	}
 
@@ -110,7 +110,9 @@ public class AcademicUC implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(semester);
+		dest.writeInt(semester != null ? 1 : 0);
+		if (semester != null)
+			dest.writeString(semester);
 		dest.writeInt(year);
 		dest.writeInt(grade != null ? 1 : 0);
 		if (grade != null)
@@ -135,7 +137,8 @@ public class AcademicUC implements Parcelable {
 	}
 
 	private AcademicUC(Parcel in) {
-		semester = in.readInt();
+		if (in.readInt() == 1)
+			semester = in.readString();
 		year = in.readInt();
 		if (in.readInt() == 1)
 			grade = in.readString();

@@ -60,7 +60,7 @@ public class AcademicPath implements Parcelable{
 				// new UC
 				AcademicUC uc = new AcademicUC();
 				
-				if(jUc.has("reg_d_codigo")) uc.setSemester(jUc.getInt("reg_d_codigo"));
+				if(jUc.has("reg_d_codigo")) uc.setSemester(jUc.getString("reg_d_codigo"));
 				if(jUc.has("a_lectivo")) uc.setYear(jUc.getInt("a_lectivo"));
 				if(jUc.has("resultado")) uc.setGrade(jUc.getString("resultado"));
 				if(jUc.has("dis_codigo")) uc.setCourseAcronym(jUc.getString("dis_codigo"));
@@ -87,11 +87,11 @@ public class AcademicPath implements Parcelable{
 					year.setYear(uc.getYear());
 					ucs.add(year);
 				}
-				if ( uc.getSemester() == 1 )
+				if ( uc.getSemester().equals("1") )
 				{
 					year.getFirstSemester().add(uc);
 				}
-				else if ( uc.getSemester() == 2)
+				else //TODO How to deal with anual stuff
 				{
 					year.getSecondSemester().add(uc);
 				}
