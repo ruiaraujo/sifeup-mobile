@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 
 public class FileUtils {
     private FileUtils(){} //private constructor
@@ -18,10 +19,14 @@ public class FileUtils {
     // Find the dir to save cached images
     public static File getCacheDirectory(Context context) {
     String sdState = android.os.Environment.getExternalStorageState();
-        File cacheDir;
+        File cacheDir = null;
 
         if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            cacheDir = context.getApplicationContext().getExternalCacheDir();
+        	if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO  )
+            {
+        		cacheDir = context.getApplicationContext().getExternalCacheDir();
+            }
+        	
         } else
             cacheDir = context.getApplicationContext().getCacheDir();
         if ( cacheDir != null )
