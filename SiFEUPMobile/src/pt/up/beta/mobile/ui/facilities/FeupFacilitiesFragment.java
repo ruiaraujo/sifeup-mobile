@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -22,7 +23,7 @@ import pt.up.beta.mobile.R;
 public class FeupFacilitiesFragment extends BaseFragment implements
 		ResponseCommand {
 
-	private TouchImageView pic;
+	private ImageView pic;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_facility_pic, getParentContainer(), true);
-		pic = (TouchImageView) root.findViewById(R.id.facility_image);
+		pic = (ImageView) root.findViewById(R.id.facility_image);
 		return getParentContainer();
 	}
 
@@ -57,7 +58,8 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		pic.setImageBitmap((Bitmap) results[0]);
-		pic.setMaxZoom(5);
+		if ( pic instanceof TouchImageView )// Android 2.1 doesn't like our TouchImageView
+		    ((TouchImageView) pic).setMaxZoom(5);
 		showFastMainScreen();
 	}
 
