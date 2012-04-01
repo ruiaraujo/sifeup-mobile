@@ -43,11 +43,14 @@ public class Menu implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
     	dest.writeInt(state!=null?1:0);
-        dest.writeString(state);
+        if ( state != null )
+        	dest.writeString(state);
     	dest.writeInt(date!=null?1:0);
-        dest.writeString(date);
-    	dest.writeInt(dishes!=null?1:0);
-        dest.writeValue(dishes);
+        if ( date != null )
+        	dest.writeString(date);
+    	dest.writeInt(dishes!=null?dishes.length:0);
+        if ( dishes != null && dishes.length > 0 )
+        	dest.writeTypedArray(dishes,flags);
     }
     
     public static final Parcelable.Creator<Menu> CREATOR = new Parcelable.Creator<Menu>() {
@@ -65,7 +68,8 @@ public class Menu implements Parcelable {
     		state = in.readString();
     	if ( in.readInt() == 1 )
     		date = in.readString();
-    	if ( in.readInt() == 1 )
-    		dishes = (Dish[]) in.readValue(Dish.class.getClassLoader());
+    	dishes = new Dish[in.readInt()];
+    	if ( dishes.length > 0 )
+    		in.readTypedArray(dishes, Dish.CREATOR);
     }
 }
