@@ -14,6 +14,7 @@ import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -243,11 +244,15 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
 	    if ( getActivity() == null )
 	        return;
 		canteens = (ArrayList<Canteen>) results[0];
+		Parcel p = Parcel.obtain();
 		if ( canteens.isEmpty() )
 		{
 		    showEmptyScreen(getString(R.string.lb_no_menu));
 		    return;
 		}
+		canteens.get(0).writeToParcel(p, 0);
+		p.setDataPosition(0);
+		canteens.add(Canteen.CREATOR.createFromParcel(p));
 	    buildPages();
 	    showMainScreen();
 	}
