@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ImageView
+    <pt.up.beta.mobile.ui.utils.TouchImageView
         android:id="@+id/facility_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
