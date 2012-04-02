@@ -195,10 +195,6 @@
     <string name="lbl_tuition_ref_detail_date_end">Data de Fim</string>
     <string name="label_no_tuition_ref">Não tem referência disponíveis.</string>
 
-    <!-- UCs Inscriptions -->
-    <string name="title_uc_inscriptions">Inscrições em UCs</string>
-    <string name="btn_uc_inscriptions">Inscrições em UCs</string>
-
     <!-- Change Password -->
     <string name="title_change_password">Mudar Password</string>
     <string name="btn_change_password">Mudar Password</string>
@@ -230,22 +226,6 @@
     <string name="password_successfully_changed">Senha alterada com sucesso.</string>
     <string name="confirmation_password_different">A confirmação é diferente da senha.</string>
 
-    <!-- Card Request -->
-    <string name="title_card_request">Pedir Cartão</string>
-    <string name="btn_card_request">Pedir Cartão</string>
-
-    <!-- Scholar Profit -->
-    <string name="title_scholar_profit">Aproveitamento Escolar</string>
-    <string name="btn_scholar_profit">Aproveitamento Escolar</string>
-
-    <!-- Requests -->
-    <string name="title_requests">Requerimentos</string>
-    <string name="title_all_requests">Todos os Requerimentos</string>
-    <string name="title_new_request">Novo Requerimento</string>
-    <string name="btn_requests">Requerimentos</string>
-    <string name="btn_new_request">Novo Requerimento</string>
-    <string name="btn_all_request">Todos os Requerimentos</string>
-
     <!-- Printing -->
     <string name="title_printing">Saldo de Impressão</string>
     <string name="btn_printing">Saldo de Impressão</string>
@@ -258,13 +238,6 @@
     <string name="lb_print_ref_title">Referência Gerada</string>
     <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
     <string name="print_ref_share_title">Partilhar Referência</string>
-
-    <!-- Classes Selection -->
-    <string name="title_classes_selection">Selecção de Turmas</string>
-    <string name="btn_classes_selection">Selecção de Turmas</string>
-    <string name="btn_ok">Ok</string>
-    <string name="classes_selection_option">Opção <xliff:g id="option">%1$s</xliff:g></string>
-    <string name="classes_selection_submit">Submeter opções</string>
 
     <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->

@@ -112,37 +112,13 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_friends" />
         <activity
-            android:name=".ui.services.UCsInscriptionsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_uc_inscriptions" />
-        <activity
             android:name=".ui.services.ChangePasswordActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_change_password" />
         <activity
-            android:name=".ui.services.CardRequestActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_card_request" />
-        <activity
             android:name=".ui.personalarea.ParkOccupationActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_park_occupation" />
-        <activity
-            android:name=".ui.services.NewRequestActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_new_request" />
-        <activity
-            android:name=".ui.services.AllRequestsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_all_requests" />
-        <activity
-            android:name=".ui.services.ScholarProfitActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_scholar_profit" />
-        <activity
-            android:name=".ui.personalarea.ClassDescriptionActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_schedule" />
         <activity
             android:name=".ui.search.StudentsSearchActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -160,10 +136,7 @@
             android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_academic_path" />
-        <activity
-            android:name=".ui.services.ClassesSelectionActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_classes_selection" />
+        
         <activity
             android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="orientation|keyboardHidden"
