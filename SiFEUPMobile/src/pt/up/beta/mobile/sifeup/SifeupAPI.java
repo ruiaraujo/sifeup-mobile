@@ -44,6 +44,7 @@ public class SifeupAPI {
 		String NAME = "edi_img_grande";
 		String BUILDING = "p_edi";
 		String FLOOR = "p_piso";
+		String BLOCK = "p_bloco";
 	}
 
 	private interface RoomPic {
@@ -506,9 +507,10 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String getBuildingPicUrl(String building, String floor) {
+	public static String getBuildingPicUrl(String building, String block ,String floor) {
 		return WEBSERVICE + WebServices.FACILITIES_IMG + BuildingPic.NAME + WEBSERVICE_SEP
 				+ BuildingPic.BUILDING + EQUALS + building + LINK_SEP
+				+ BuildingPic.BLOCK + EQUALS + block + LINK_SEP
 				+ BuildingPic.FLOOR + EQUALS + floor;
 	}
 	
@@ -637,13 +639,16 @@ public class SifeupAPI {
 		return page;
 	}
 
+	public static String getPage(InputStream in) {
+		return getPage(in,"ISO-8859-1" );
+	}
 	/**
 	 * Fetch data
 	 * 
 	 * @param in
 	 * @return
 	 */
-	private static String getPage(InputStream in) {
+	public static String getPage(InputStream in, String encoding) {
 		try {
 			BufferedInputStream bis = new BufferedInputStream(in);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
@@ -659,7 +664,7 @@ public class SifeupAPI {
 			}
 			bis.close();
 			in.close();
-			return new String(baf.toByteArray(), "ISO-8859-1");
+			return new String(baf.toByteArray(), encoding);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,16 +1,22 @@
 package pt.up.beta.mobile.ui.facilities;
 
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import pt.up.beta.mobile.ui.utils.TouchImageView;
+import pt.up.beta.mobile.ui.utils.TouchImageView.ClickListener;
 import pt.up.beta.mobile.R;
 
 /**
@@ -21,10 +27,10 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class FeupFacilitiesFragment extends BaseFragment implements
-		ResponseCommand {
+		ResponseCommand, ClickListener {
 
 	private ImageView pic;
-
+	private List<BuildingPicHotspot> hotspots;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,27 +50,59 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		task = FacilitiesUtils.getBuildingPic("", "", this);
+		task = FacilitiesUtils.getBuildingsHotspot(getResources().openRawResource(R.raw.buildings_coordinates), this);
 	}
 
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
 			return;
-		showRepeatTaskScreen(getString(R.string.toast_server_error));
+		if ( error == ERROR_TYPE.NETWORK )
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+		else
+			showEmptyScreen(getString(R.string.general_error));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
+		if ( hotspots == null )
+		{
+			hotspots =  (List<BuildingPicHotspot>) results[0];
+			task = FacilitiesUtils.getBuildingPic("", "", "", this);
+			return;
+		}
 		pic.setImageBitmap((Bitmap) results[0]);
 		if ( pic instanceof TouchImageView )// Android 2.1 doesn't like our TouchImageView
-		    ((TouchImageView) pic).setMaxZoom(5);
+		{
+			((TouchImageView) pic).setMaxZoom(5);
+			((TouchImageView) pic).setOnClickListener(this);
+		}
 		showFastMainScreen();
 	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		task = FacilitiesUtils.getBuildingPic("", "", this);
+		if ( hotspots == null )
+			task = FacilitiesUtils.getBuildingsHotspot(getResources().openRawResource(R.raw.buildings_coordinates), this);
+		else
+			task = FacilitiesUtils.getBuildingPic("","", "", this);
+	}
+
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		if ( hotspots == null )
+			return false;
+		final int x = Math.round(e.getX());
+		final int y = Math.round(e.getY());
+		for ( BuildingPicHotspot hot : hotspots )
+		{
+			if ( hot.pointInPolygon(x, y)  ){
+				Toast.makeText(getActivity(), "Build:" + hot.getNamePt(), Toast.LENGTH_SHORT).show();
+				break;
+			}
+		}
+		return true;
 	}
 }

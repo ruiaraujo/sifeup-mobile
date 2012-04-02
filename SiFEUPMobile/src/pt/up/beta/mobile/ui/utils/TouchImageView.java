@@ -252,13 +252,24 @@ public class TouchImageView extends ImageView  {
 		setImageMatrix(matrix);
 	}
 
-
+	private ClickListener listener;
+	
+	public void setOnClickListener(ClickListener listener){
+		this.listener = listener;
+	}
+	
 	private class GestureListener extends
 			GestureDetector.SimpleOnGestureListener {
 
 		@Override
 		public boolean onDown(MotionEvent e) {
 			return true;
+		}
+		
+
+		public boolean onSingleTapUp(MotionEvent e) {
+			return onDoubleTap(e);
+			
 		}
 
 		// event when double tap occurs
@@ -278,11 +289,18 @@ public class TouchImageView extends ImageView  {
 				return false;
 			if ( touchPoint[1] < 0 || touchPoint[1] > bmHeight )
 				return false;
-			
+			e.setLocation(touchPoint[0], touchPoint[1]);
+			e.setAction(MotionEvent.ACTION_UP);
 			Log.d("Double Tap", "Tapped at: (" + touchPoint[0] + "," + touchPoint[1] + ")");
-
+			if ( listener != null )
+				listener.onDoubleTap(e);
 			return true;
 		}
+	}
+	
+	public interface ClickListener{
+
+		public boolean onDoubleTap(MotionEvent e);
 	}
 
 }
