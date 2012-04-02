@@ -1,6 +1,9 @@
 package pt.up.beta.mobile.ui.utils;
 
-public class BuildingPicHotspot {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class BuildingPicHotspot implements Parcelable{
 	private final String namePt;
 	private final String nameEn;
 	private final String buildingCode;
@@ -74,5 +77,44 @@ public class BuildingPicHotspot {
 	public int[] getFloors() {
 		return floors;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		//We build these objects by hand so
+		//we know that these string will never be null
+		dest.writeString(namePt);
+		dest.writeString(nameEn);
+		dest.writeString(buildingCode);
+		dest.writeString(buildingBlock);
+		dest.writeIntArray(polyX);
+		dest.writeIntArray(polyY);
+		dest.writeIntArray(floors);
+	}
+	
+	private BuildingPicHotspot(Parcel in){
+		namePt = in.readString();
+		nameEn = in.readString();
+		buildingCode = in.readString();
+		buildingBlock = in.readString();
+		polyX = in.createIntArray();
+		polyY = in.createIntArray();
+		floors = in.createIntArray();
+		
+	}
+	
+	public static final Parcelable.Creator<BuildingPicHotspot> CREATOR = new Parcelable.Creator<BuildingPicHotspot>() {
+		public BuildingPicHotspot createFromParcel(Parcel in) {
+			return new BuildingPicHotspot(in);
+		}
+
+		public BuildingPicHotspot[] newArray(int size) {
+			return new BuildingPicHotspot[size];
+		}
+	};
 
 }

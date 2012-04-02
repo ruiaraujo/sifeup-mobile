@@ -252,9 +252,9 @@ public class TouchImageView extends ImageView  {
 		setImageMatrix(matrix);
 	}
 
-	private ClickListener listener;
+	private OnTapListener listener;
 	
-	public void setOnClickListener(ClickListener listener){
+	public void setOnTapListener(OnTapListener listener){
 		this.listener = listener;
 	}
 	
@@ -268,7 +268,26 @@ public class TouchImageView extends ImageView  {
 		
 
 		public boolean onSingleTapUp(MotionEvent e) {
-			return onDoubleTap(e);
+
+			float x = e.getX();
+			float y = e.getY();
+			// calculate inverse matrix
+			Matrix inverse = new Matrix();
+			getImageMatrix().invert(inverse);
+
+			// map touch point from ImageView to image
+			float[] touchPoint = new float[] {x, y};
+			inverse.mapPoints(touchPoint);
+			// touchPoint now contains x and y in image's coordinate system
+			if ( touchPoint[0] < 0 || touchPoint[0] > bmWidth )
+				return false;
+			if ( touchPoint[1] < 0 || touchPoint[1] > bmHeight )
+				return false;
+			e.setLocation(touchPoint[0], touchPoint[1]);
+			Log.d("Single Tap", "Tapped at: (" + touchPoint[0] + "," + touchPoint[1] + ")");
+			if ( listener != null )
+				listener.onSingleTapUp(e);
+			return true;
 			
 		}
 
@@ -298,9 +317,11 @@ public class TouchImageView extends ImageView  {
 		}
 	}
 	
-	public interface ClickListener{
+	public interface OnTapListener{
 
 		public boolean onDoubleTap(MotionEvent e);
+		
+		public boolean onSingleTapUp(MotionEvent e);
 	}
 
 }

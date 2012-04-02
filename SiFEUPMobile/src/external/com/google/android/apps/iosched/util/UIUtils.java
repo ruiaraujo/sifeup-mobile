@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 import pt.up.beta.mobile.R;
 /**
@@ -142,6 +143,12 @@ public class UIUtils {
 
     public static boolean isHoneycombTablet(Context context) {
         return isHoneycomb() && isTablet(context);
+    }
+    
+
+    public static boolean isLocalePortuguese() {
+		final String language = Locale.getDefault().getLanguage();
+        return language.startsWith("pt");
     }
 
     

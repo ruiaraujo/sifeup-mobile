@@ -182,7 +182,8 @@ public class AcademicPathFragment extends BaseFragment implements
                         marker.getPaddingTop(), marker.getPaddingRight(),
                         marker.getPaddingBottom());
 
-                marker.setBackgroundColor(R.color.accent_1);
+                marker.setBackgroundColor(getResources().getColor(R.color.feup));
+                marker.setTextColor(getResources().getColor(R.color.body_text_white));
                 return marker;
             }
             View root = mInflater.inflate(R.layout.list_item_grade, null);

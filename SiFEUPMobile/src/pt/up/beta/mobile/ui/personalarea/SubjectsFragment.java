@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import external.com.google.android.apps.iosched.util.UIUtils;
+
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
@@ -76,7 +78,6 @@ public class SubjectsFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.lb_no_subjects));
 			return;
 		}
-		final String language = Locale.getDefault().getLanguage();
 		final String[] from = new String[] { "name", "code", "time" };
 		final int[] to = new int[] { R.id.exam_chair, R.id.exam_time,
 				R.id.exam_room };
@@ -84,7 +85,7 @@ public class SubjectsFragment extends BaseFragment implements
 		final List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		for (Subject s : subjects) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			if (language.startsWith("pt"))
+			if (UIUtils.isLocalePortuguese())
 				map.put(from[0], (s.getNamePt().trim().length() != 0) ? s
 						.getNamePt() : s.getNameEn());
 			else

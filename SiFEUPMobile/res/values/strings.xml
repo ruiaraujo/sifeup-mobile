@@ -290,7 +290,10 @@
     <string name="description_map">Facilities</string>
     <string name="title_map">Facilities</string>
     <string name="btn_map">Facilities</string>
-
+    <string name="floor_spinner">Floor <xliff:g id="floor">%1$s</xliff:g></string>
+    <string name="toast_first_map_view">Tap to see the building name.\n\nDouble tap to see the detailed view.</string>
+    <string name="toast_no_detailed_view">This building has no detailed view available</string>
+    
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
     <string name="title_settings">Settings</string>

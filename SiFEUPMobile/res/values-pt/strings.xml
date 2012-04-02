@@ -262,10 +262,13 @@
     <string name="lb_no_news">Não há notícias</string>
 
     <!-- *************************************************************************************** -->
-    <!-- MAP -->
+    <!-- Facilities -->
     <string name="description_map">Instalações</string>
     <string name="title_map">Instalações</string>
     <string name="btn_map">Instalações</string>
+    <string name="floor_spinner">Piso <xliff:g id="floor">%1$s</xliff:g></string>
+    <string name="toast_first_map_view">Clique para ver o nome do edifício.\n\nDuplo clique para ver a vista detalhada.</string>
+    <string name="toast_no_detailed_view">Este edifício não tem disponível uma vista detalhada</string>
 
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
