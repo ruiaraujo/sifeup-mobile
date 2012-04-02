@@ -600,9 +600,15 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 	protected void onRepeat() {
 		showLoadingScreen();
 		if ( subject == null )
+		{
 	        task = SubjectUtils.getSubjectReply(code, year, period, this);
+	        return;
+		}
 		if ( subjectContent == null )
+		{
 			SubjectUtils.getSubjectContentReply(code, year, period, this);
+	        return;
+		}
 
 	}
 
