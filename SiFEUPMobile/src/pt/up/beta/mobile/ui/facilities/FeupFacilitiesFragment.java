@@ -89,7 +89,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 
 		if (!welcomeScreenShown) {
 			Toast.makeText(getActivity(),
-					R.string.toast_first_map_view, Toast.LENGTH_SHORT)
+					R.string.toast_first_map_view, Toast.LENGTH_LONG)
 					.show();
 			SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(welcomeScreenShownPref, true);
