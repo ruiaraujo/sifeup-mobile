@@ -10,9 +10,8 @@ import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.R;
-
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +45,7 @@ public class SubjectsFragment extends BaseFragment implements
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(UIUtils
+                .getLoginCode(), Integer.toString(DateUtils
                 .secondYearOfSchoolYear() - 1), this);
     }
 
@@ -110,8 +109,8 @@ public class SubjectsFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
-		// assumed only one page of results
-		int secondYear = UIUtils.secondYearOfSchoolYear();
+
+		int secondYear = DateUtils.secondYearOfSchoolYear();
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subjects.get(
 				position).getAcronym());
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, Integer
@@ -133,7 +132,7 @@ public class SubjectsFragment extends BaseFragment implements
 	protected void onRepeat() {
 		showLoadingScreen();
         task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(UIUtils
+                .getLoginCode(), Integer.toString(DateUtils
                 .secondYearOfSchoolYear() - 1), this);
 		
 	}

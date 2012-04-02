@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.utils.calendar;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
+import pt.up.beta.mobile.utils.DateUtils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -37,7 +37,7 @@ public class CalendarHelper {
         event.put("description", ev.getDescription());
         event.put("dtstart",ev.getTimeStart() );
         event.put("dtend", ev.getTimeEnd() );
-        event.put("eventTimezone", UIUtils.TIME_REFERENCE );
+        event.put("eventTimezone", DateUtils.TIME_REFERENCE );
         return cr.insert(Uri.parse("content://calendar/events"), event);
     }
 }

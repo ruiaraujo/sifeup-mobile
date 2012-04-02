@@ -30,14 +30,12 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.format.Time;
 import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
 
 import java.util.Formatter;
 import java.util.List;
-import java.util.TimeZone;
 
 import pt.up.beta.mobile.R;
 /**
@@ -49,7 +47,6 @@ public class UIUtils {
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
     
-    public static String TIME_REFERENCE = "Europe/Lisbon";
 
     /**
      * Populate the given {@link TextView} with the requested text, formatting
@@ -121,18 +118,6 @@ public class UIUtils {
                 11 * Color.blue(color)) / 100) <= BRIGHTNESS_THRESHOLD;
     }
 
-    public static long getCurrentTime(boolean utc) {
-        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
-        yourDate.setToNow();
-        return yourDate.toMillis(false);
-    }
-    
-    public static long convertToUtc(long now) {
-    	TimeZone local_tz = TimeZone.getTimeZone(TIME_REFERENCE); //Gets current local TZ of phone
-        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ()); // Get Offset in ms, divide by 3600000
-        now -= tz_offset_gmt;
-        return now;
-    }
 
     public static Drawable getIconForIntent(final Context context, Intent i) {
         PackageManager pm = context.getPackageManager();
@@ -160,21 +145,4 @@ public class UIUtils {
     }
 
     
-    public static int secondYearOfSchoolYear(){
-    	Time nowT = new Time(TIME_REFERENCE);
-    	nowT.setToNow();
-    	nowT.normalize(false);
-    	if ( nowT.month >= 8 )
-    		return nowT.year+1;
-    	return nowT.year;
-    }
-    
-    public static int secondYearOfSchoolYear(long millis){
-    	Time nowT = new Time();
-    	nowT.set(millis);
-    	nowT.normalize(false);
-    	if ( nowT.month >= 8 )
-    		return nowT.year+1;
-    	return nowT.year;
-    }
 }

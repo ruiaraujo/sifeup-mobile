@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
-
 import pt.up.beta.mobile.datatypes.Block;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.utils.DateUtils;
@@ -23,7 +21,7 @@ public class ScheduleUtils {
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentScheduleReply(
 			String code, long mondayMillis, ResponseCommand command, File cache) {
-		Time monday = new Time(UIUtils.TIME_REFERENCE);
+		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
@@ -39,7 +37,7 @@ public class ScheduleUtils {
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeScheduleReply(
 			String code, long mondayMillis, ResponseCommand command, File cache) {
-		Time monday = new Time(UIUtils.TIME_REFERENCE);
+		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
@@ -53,7 +51,7 @@ public class ScheduleUtils {
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomScheduleReply(
 			String code, long mondayMillis, ResponseCommand command, File cache) {
-		Time monday = new Time(UIUtils.TIME_REFERENCE);
+		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
@@ -68,7 +66,7 @@ public class ScheduleUtils {
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getUcScheduleReply(
 			String code, long mondayMillis, ResponseCommand command, File cache) {
-		Time monday = new Time(UIUtils.TIME_REFERENCE);
+		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
         String firstDay = monday.format("%Y%m%d");
@@ -140,7 +138,7 @@ public class ScheduleUtils {
 		                    block.setBuildingCode(jBlock.getString("edi_cod"));
 		                if (jBlock.has("periodo"))
 		                    block.setSemester(jBlock.getString("periodo"));
-		                int secondYear = UIUtils.secondYearOfSchoolYear(mondayMillis);
+		                int secondYear = DateUtils.secondYearOfSchoolYear(mondayMillis);
 		                int firstYear = secondYear - 1;
 		                block.setYear(firstYear + "/" + secondYear);
 		                // add block to schedule

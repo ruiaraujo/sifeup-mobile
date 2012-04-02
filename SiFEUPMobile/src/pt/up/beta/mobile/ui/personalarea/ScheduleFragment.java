@@ -26,7 +26,6 @@ import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -257,11 +256,11 @@ public class ScheduleFragment extends BaseFragment implements
      */
     private boolean updateNowView() {
 
-        final Time nowTime = new Time(UIUtils.TIME_REFERENCE);
+        final Time nowTime = new Time(DateUtils.TIME_REFERENCE);
         nowTime.setToNow();
         if (nowTime.weekDay == 0 || nowTime.weekDay == 6)
             return false;
-        final long now = nowTime.toMillis(true);
+        final long now = nowTime.toMillis(false);
 
         Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
@@ -315,7 +314,7 @@ public class ScheduleFragment extends BaseFragment implements
         day.blocksView.setAlwaysDrawnWithCacheEnabled(true);
         // Clear out any existing sessions before inserting again
         day.blocksView.removeAllBlocks();
-        Time date = new Time(UIUtils.TIME_REFERENCE);
+        Time date = new Time(DateUtils.TIME_REFERENCE);
         date.set(startMillis);
         date.normalize(false);
         day.label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,
@@ -325,7 +324,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     private void updateDay(int index, long millis) {
 
-        Time date = new Time(UIUtils.TIME_REFERENCE);
+        Time date = new Time(DateUtils.TIME_REFERENCE);
         date.set(millis);
         date.normalize(false);
         mDays.get(index).label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,

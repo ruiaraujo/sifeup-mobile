@@ -16,9 +16,9 @@
 
 package external.com.google.android.apps.iosched.ui.widget;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.utils.DateUtils;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -126,7 +126,7 @@ public class BlocksLayout extends ViewGroup {
 
         // Align now view to match current time
         final View nowView = mNowView;
-        final long now = UIUtils.getCurrentTime(false);
+        final long now = DateUtils.getCurrentTime(false);
 
         final int top = rulerView.getTimeVerticalOffset(now);
         final int bottom = top + nowView.getMeasuredHeight();
