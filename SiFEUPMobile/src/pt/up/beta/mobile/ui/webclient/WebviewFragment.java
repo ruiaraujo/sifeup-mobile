@@ -83,6 +83,9 @@ public class WebviewFragment extends BaseFragment {
             public void onProgressChanged(WebView view, int progress) {
                 if ( getActivity() == null )
                 	return;
+                //Normalize our progress along the progress bar's scale
+               // progress = (Window.PROGRESS_END - Window.PROGRESS_START) / 100 * progress;
+                //getSherlockActivity().setSupportProgress(progress);
                 progressWebView.setProgress(progress);
             }
         });
@@ -149,7 +152,7 @@ public class WebviewFragment extends BaseFragment {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            progressWebView.setVisibility(View.VISIBLE);
+           // progressWebView.setVisibility(View.VISIBLE);
         }
 
         @Override
