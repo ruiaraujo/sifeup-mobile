@@ -56,6 +56,7 @@
     <style name="ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
         <item name="android:background">@color/actionbar_background</item>
         <item name="android:titleTextStyle">@style/ActionBarText</item>
+        
         <!-- For Android 2.1+ -->
         <item name="titleTextStyle">@style/ActionBarText</item>
         <item name="background">@color/actionbar_background</item>
@@ -74,7 +75,6 @@
 	<style name="SpinnerItemStyle" parent="@style/Widget.Sherlock.TextView.SpinnerItem">
         <item name="android:textColor">@color/feup</item>
         <item name="android:textStyle">bold</item>
-		<item name="android:textColorPrimary">@color/feup</item>
     </style>
     
     <style name="DashboardButton">
