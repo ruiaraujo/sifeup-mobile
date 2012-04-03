@@ -287,7 +287,7 @@
     <string name="lb_message">Messagem: </string>
     <string name="lb_reply_notification">Resposta </string>
     <string name="lb_obs">Comentários: </string>
-    <string name="lb_no_notification">Não tem notificações</string>
+    <string name="lb_no_notification">Não tem notificações.</string>
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->

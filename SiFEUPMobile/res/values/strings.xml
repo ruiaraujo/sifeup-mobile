@@ -311,7 +311,7 @@
     <string name="lb_message">Message: </string>
     <string name="lb_reply_notification">Reply </string>
     <string name="lb_obs">Comments: </string>
-    <string name="lb_no_notification">You have no notifications</string>
+    <string name="lb_no_notification">You have no notifications.</string>
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->
