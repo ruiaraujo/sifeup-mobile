@@ -53,7 +53,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 		final String [] floors = new String[building.getFloors().length];
 		int i = 0;
         for ( int floor : building.getFloors() )
-        	floors[i++] = "Floor " + floor;
+        	floors[i++] = getString(R.string.floor_spinner,floor);
 
         Context context = getSherlockActivity().getSupportActionBar().getThemedContext();
         ArrayAdapter<CharSequence> list = new ArrayAdapter<CharSequence>(context, R.layout.sherlock_spinner_item, floors);
