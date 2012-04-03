@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="preferExternal"
     package="pt.up.beta.mobile"
+    android:installLocation="preferExternal"
     android:versionCode="15"
-    android:versionName="0.10.1">
+    android:versionName="0.10.1" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -124,6 +124,10 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_park_occupation" />
         <activity
+            android:name=".ui.personalarea.ClassDescriptionActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_schedule" />
+        <activity
             android:name=".ui.search.StudentsSearchActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_search" />
@@ -140,7 +144,6 @@
             android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_academic_path" />
-        
         <activity
             android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -267,6 +270,7 @@
         <provider
             android:name=".ui.search.SearchSuggestionHistory"
             android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
+
     </application>
 
 </manifest>
