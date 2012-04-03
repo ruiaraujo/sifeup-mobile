@@ -6,19 +6,25 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import pt.up.beta.mobile.ui.utils.TouchImageView;
+import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
 import pt.up.beta.mobile.R;
 
 /**
@@ -29,7 +35,7 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class FeupFacilitiesDetailsFragment extends BaseFragment implements
-		ResponseCommand, OnNavigationListener {
+		ResponseCommand, OnNavigationListener, OnTapListener {
 	public final static String BUILDING_EXTRA = "pt.up.beta.mobile.ui.facilities.BUILDING";
 
 	private ImageView pic;
@@ -87,7 +93,15 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		if (error == ERROR_TYPE.NETWORK)
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
+		{
+			if ( pic.getDrawable() == null )
+				showRepeatTaskScreen(getString(R.string.toast_server_error));
+			else
+			{
+				Toast.makeText(getActivity(), R.string.toast_server_error, Toast.LENGTH_SHORT).show();
+				showFastMainScreen();
+			}
+		}
 		else
 			showEmptyScreen(getString(R.string.general_error));
 	}
@@ -96,11 +110,24 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
+		if ( results[0] instanceof String )
+		{
+			Intent i = new Intent(getActivity() , ScheduleActivity.class);
+			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_ROOM) ;
+			i.putExtra(ScheduleFragment.SCHEDULE_CODE,  results[0].toString()  );
+    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,
+    				results[0] ));
+			startActivity(i);
+			showFastMainScreen();
+			return;
+		}
+		
 		pic.setImageBitmap((Bitmap) results[0]);
 		if (pic instanceof TouchImageView)// Android 2.1 doesn't like our
 											// TouchImageView
 		{
 			((TouchImageView) pic).setMaxZoom(6);
+			((TouchImageView) pic).setOnTapListener(this);
 		}
 		showFastMainScreen();
 	}
@@ -125,4 +152,20 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 				this);
         return true;
     }
+    
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		final int x = Math.round(e.getX());
+		final int y = Math.round(e.getY());
+    	showLoadingScreen();
+		FacilitiesUtils.getRoomCode(building.getBuildingCode(),
+				building.getBuildingBlock(), Integer.toString(currentFloor), x,y,
+				this);
+		return true;
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return true;
+	}
 }

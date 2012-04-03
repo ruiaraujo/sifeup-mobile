@@ -4,21 +4,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class FacilitiesUtils {
 	private FacilitiesUtils() {
@@ -34,7 +29,51 @@ public class FacilitiesUtils {
 			InputStream file, ResponseCommand command) {
 		return new BuildingsHotspotTask(command).execute(file);
 	}
+	
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
+			String building, String block, String floor, int x , int y, ResponseCommand command) {
+		return new RoomFinderTask(command).execute(SifeupAPI.getRoomPostFinderUrl(building, block, floor, x, y));
+	}
 
+
+	private static class RoomFinderTask extends
+			AsyncTask<String, Void, ERROR_TYPE> {
+		private final ResponseCommand command;
+		private String response;
+		public RoomFinderTask(ResponseCommand command) {
+			this.command = command;
+		}
+		
+
+		@Override
+		// Once the image is downloaded, associates it to the imageView
+		protected void onPostExecute(ERROR_TYPE error) {
+			if (isCancelled()) {
+				return;
+			}
+			if (error == null)
+				command.onResultReceived(response);
+			else
+				command.onError(error);
+		}
+
+		@Override
+		protected ERROR_TYPE doInBackground(String... params) {
+			HttpResponse page = SifeupAPI.doPost(params[0], params[1]);
+			if (page == null)
+				return ERROR_TYPE.NETWORK;
+			if ( !page.containsHeader("Location") )
+				return ERROR_TYPE.GENERAL;
+			String url = page.getFirstHeader("Location").getValue();
+			String [] urlParam = url.substring(url.indexOf("?")).split("&");
+			response = urlParam[0].substring(urlParam[0].indexOf("=")+1)
+						+ urlParam[1].substring(urlParam[1].indexOf("=")+1);
+			return null;
+		}
+
+	}
+	
+	
 	private static class BuildingsHotspotTask extends
 			AsyncTask<InputStream, Void, ERROR_TYPE> {
 		private List<BuildingPicHotspot> hotspots;
@@ -131,7 +170,7 @@ public class FacilitiesUtils {
 		// Actual download method, run in the task thread
 		protected ERROR_TYPE doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
-			bitmap = downloadBitmap(params[0]);
+			bitmap = ImageDownloader.downloadBitmap(params[0]);
 			if (bitmap == null)
 				return ERROR_TYPE.NETWORK;
 			return null;
@@ -151,47 +190,4 @@ public class FacilitiesUtils {
 		}
 	}
 
-	static Bitmap downloadBitmap(String url) {
-		final AndroidHttpClient client = AndroidHttpClient
-				.newInstance("Android");
-		final HttpGet getRequest = new HttpGet(url);
-
-		try {
-			HttpResponse response = client.execute(getRequest);
-			final int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				Log.w("ImageDownloader", "Error " + statusCode
-						+ " while retrieving bitmap from " + url);
-				return null;
-			}
-
-			final HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream inputStream = null;
-				try {
-					inputStream = entity.getContent();
-					final Bitmap bitmap = BitmapFactory
-							.decodeStream(inputStream);
-
-					return bitmap;
-				} finally {
-					if (inputStream != null) {
-						inputStream.close();
-					}
-					entity.consumeContent();
-				}
-			}
-		} catch (Exception e) {
-			// Could provide a more explicit error message for IOException or
-			// IllegalStateException
-			getRequest.abort();
-			Log.w("ImageDownloader", "Error while retrieving bitmap from "
-					+ url, e);
-		} finally {
-			if (client != null) {
-				client.close();
-			}
-		}
-		return null;
-	}
 }

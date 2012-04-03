@@ -186,7 +186,7 @@ public class ImageDownloader {
 	}
 
 	// the actual download code
-	static Bitmap downloadBitmap(String url) {
+	public static Bitmap downloadBitmap(String url) {
 		HttpsURLConnection httpConn = SifeupAPI.getUncheckedConnection(url);
 		httpConn.setRequestProperty("Cookie", SessionManager.getInstance()
 				.getCookie());

@@ -3,8 +3,11 @@ package pt.up.beta.mobile.sifeup;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -17,6 +20,14 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.RedirectHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +48,7 @@ public class SifeupAPI {
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
 		String NOTIFICATION_SIGARRA = "wf_geral.";
+		String ROOM_FINDER = "salas_geral.";
 		String ACADEMIC_PATH_SIGARRA = "alunos_ficha.";
 	}
 
@@ -50,7 +62,17 @@ public class SifeupAPI {
 	private interface RoomPic {
 		String NAME = "sala_img";
 		String BUILDING = "p_edi";
+		String BLOCK = "p_bloco";
 		String ROOM = "p_sala";
+	}
+	
+	private interface RoomFinder {
+		String NAME = "click";
+		String BUILDING = "p_edi_cod_edi";
+		String BLOCK = "p_edi_cod_bloco";
+		String FLOOR = "p_piso";
+		String X = "x";
+		String Y = "y";
 	}
 
 	private interface Student {
@@ -62,7 +84,7 @@ public class SifeupAPI {
 		String NAME = "ficha_func";
 		String CODE = "pv_codigo";
 	}
-	
+
 	private interface PersonPic {
 		String NAME = "foto";
 		String CODE = "pct_cod";
@@ -142,7 +164,7 @@ public class SifeupAPI {
 		/** Not mandatory - if lacking assumed current. */
 		String PERIOD = "pv_periodo";
 	}
-	
+
 	private interface SubjectSigarraContent {
 		String NAME = "formview";
 		String CODE = "p_cad_codigo";
@@ -151,7 +173,6 @@ public class SifeupAPI {
 		/** Not mandatory - if lacking assumed current. */
 		String PERIOD = "p_periodo";
 	}
-	
 
 	private interface SubjectFilesContent {
 		String NAME = "conteudos_cont";
@@ -248,7 +269,6 @@ public class SifeupAPI {
 	public static String getNotificationsUrl() {
 		return WEBSERVICE + WebServices.MOBILE + Notifications.NAME;
 	}
-	
 
 	/**
 	 * Notifications Url for Web Service
@@ -256,10 +276,10 @@ public class SifeupAPI {
 	 * @return Notifications Url
 	 */
 	public static String getNotificationsSigarraUrl(String code) {
-		return WEBSERVICE + WebServices.NOTIFICATION_SIGARRA + NotificationsSigarra.NAME + WEBSERVICE_SEP +
-		NotificationsSigarra.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.NOTIFICATION_SIGARRA
+				+ NotificationsSigarra.NAME + WEBSERVICE_SEP
+				+ NotificationsSigarra.CODE + EQUALS + code;
 	}
-
 
 	/**
 	 * Park Occupation Url for Web Service
@@ -332,7 +352,6 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.MOBILE + Employee.NAME + WEBSERVICE_SEP
 				+ Employee.CODE + EQUALS + code;
 	}
-	
 
 	/**
 	 * Pic Url for Web Service
@@ -341,8 +360,8 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getPersonPicUrl(String code) {
-		return WEBSERVICE + WebServices.PEOPLE_PIC + PersonPic.NAME + WEBSERVICE_SEP
-				+ PersonPic.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.PEOPLE_PIC + PersonPic.NAME
+				+ WEBSERVICE_SEP + PersonPic.CODE + EQUALS + code;
 	}
 
 	/**
@@ -355,7 +374,7 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.MOBILE + Printing.NAME + WEBSERVICE_SEP
 				+ Printing.CODE + EQUALS + code;
 	}
-	
+
 	/**
 	 * Printing Url for Web Service
 	 * 
@@ -363,7 +382,8 @@ public class SifeupAPI {
 	 * @return url
 	 */
 	public static String getSubjectFileContents(String id) {
-		return WEBSERVICE + WebServices.SUBJECT_CONTENTS + SubjectFilesContent.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.SUBJECT_CONTENTS
+				+ SubjectFilesContent.NAME + WEBSERVICE_SEP
 				+ SubjectFilesContent.ID + EQUALS + id;
 	}
 
@@ -389,8 +409,8 @@ public class SifeupAPI {
 	 * Subject Description Url for Web Service
 	 * 
 	 * @param code
-	 * @param year 
-	 * @param per 
+	 * @param year
+	 * @param per
 	 * @return url
 	 */
 	public static String getSubjectDescUrl(String code, String year, String per) {
@@ -406,16 +426,17 @@ public class SifeupAPI {
 				+ (per == null ? "" : (LINK_SEP + SubjectDescription.PERIOD
 						+ EQUALS + per));
 	}
-	
+
 	/**
 	 * Subject Description Url for Web Service
 	 * 
 	 * @param code
-	 * @param year 
-	 * @param per 
+	 * @param year
+	 * @param per
 	 * @return url
 	 */
-	public static String getSubjectSigarraUrl(String code, String year, String per) {
+	public static String getSubjectSigarraUrl(String code, String year,
+			String per) {
 		return WEBSERVICE
 				+ WebServices.SUBJECT_SIGARA_LINK
 				+ SubjectSigarraContent.NAME
@@ -428,7 +449,6 @@ public class SifeupAPI {
 				+ (per == null ? "" : (LINK_SEP + SubjectSigarraContent.PERIOD
 						+ EQUALS + per));
 	}
-
 
 	/**
 	 * Subject Content Url for Web Service
@@ -473,11 +493,11 @@ public class SifeupAPI {
 	 * @return url
 	 */
 	public static String getAcademicPathSigarraUrl(String code) {
-		return WEBSERVICE + WebServices.ACADEMIC_PATH_SIGARRA + AcademicPathSigarra.NAME
-				+ WEBSERVICE_SEP + AcademicPathSigarra.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.ACADEMIC_PATH_SIGARRA
+				+ AcademicPathSigarra.NAME + WEBSERVICE_SEP
+				+ AcademicPathSigarra.CODE + EQUALS + code;
 	}
 
-	
 	/**
 	 * Students Search Url for Web Service
 	 * 
@@ -502,32 +522,59 @@ public class SifeupAPI {
 
 	/**
 	 * Building pics Url for Web Service
-	 * @param building 
-	 * @param floor 
+	 * 
+	 * @param building
+	 * @param floor
 	 * 
 	 * @return
 	 */
-	public static String getBuildingPicUrl(String building, String block ,String floor) {
-		return WEBSERVICE + WebServices.FACILITIES_IMG + BuildingPic.NAME + WEBSERVICE_SEP
-				+ BuildingPic.BUILDING + EQUALS + building + LINK_SEP
-				+ BuildingPic.BLOCK + EQUALS + block + LINK_SEP
+	public static String getBuildingPicUrl(String building, String block,
+			String floor) {
+		return WEBSERVICE + WebServices.FACILITIES_IMG + BuildingPic.NAME
+				+ WEBSERVICE_SEP + BuildingPic.BUILDING + EQUALS + building
+				+ LINK_SEP + BuildingPic.BLOCK + EQUALS + block + LINK_SEP
 				+ BuildingPic.FLOOR + EQUALS + floor;
 	}
-	
-	
+
 	/**
 	 * Room pics Url for Web Service
-	 * @param building 
-	 * @param room 
+	 * 
+	 * @param building
+	 * @param room
 	 * 
 	 * @return
 	 */
-	public static String getRoomPicUrl(String building, String room) {
-		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME + WEBSERVICE_SEP
-				+ RoomPic.BUILDING + EQUALS + building + LINK_SEP
-				+ RoomPic.ROOM + EQUALS + room;
+	public static String getRoomPicUrl(String building,String block, String room) {
+		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME
+				+ WEBSERVICE_SEP + RoomPic.BUILDING + EQUALS + building
+				+ LINK_SEP + RoomPic.BLOCK + EQUALS + block 
+				+ LINK_SEP + RoomPic.ROOM + EQUALS + room;
 	}
 	
+
+	/**
+	 * Room pics Url for Web Service
+	 * 
+	 * @param building
+	 * @param room
+	 * 
+	 * @return
+	 */
+	public static String [] getRoomPostFinderUrl(String building,String block, String floor, int x, int y) {
+		final String [] urls = new String[2];
+		urls[0] = WEBSERVICE + WebServices.ROOM_FINDER + RoomFinder.NAME;
+		try {
+			urls[1] = RoomFinder.BUILDING + EQUALS + URLEncoder.encode(building, "UTF-8") 
+					+ LINK_SEP + RoomFinder.BLOCK + EQUALS + URLEncoder.encode(block, "UTF-8")  
+					+ LINK_SEP + RoomFinder.FLOOR + EQUALS + URLEncoder.encode(floor, "UTF-8")  
+					+ LINK_SEP + RoomFinder.X + EQUALS + URLEncoder.encode(Integer.toString(x), "UTF-8") 
+					+ LINK_SEP + RoomFinder.Y + EQUALS + URLEncoder.encode(Integer.toString(y), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return urls;
+	}
+
 	/**
 	 * UC Schedule Url for Web Service
 	 * 
@@ -602,6 +649,44 @@ public class SifeupAPI {
 	}
 
 	/**
+	 * Student query Reply from web service
+	 * 
+	 * @param url
+	 * @return page
+	 */
+	public static HttpResponse doPost(String url, String urlParameters) {
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(url);
+		httpclient.setRedirectHandler(new RedirectHandler() {
+			@Override
+			public boolean isRedirectRequested(HttpResponse response,
+					HttpContext context) {
+				return false;
+			}
+			
+			@Override
+			public URI getLocationURI(HttpResponse response, HttpContext context)
+					throws ProtocolException {
+				return null;
+			}
+		});
+		try {
+			StringEntity tmp = new StringEntity(urlParameters,"UTF-8");
+
+	    	httppost.setEntity(tmp);
+			
+		    // Execute HTTP Post Request
+		    HttpResponse response = httpclient.execute(httppost);
+		    return response;
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+		    // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/**
 	 * Authentication query Reply from web service
 	 * 
 	 * @param code
@@ -640,8 +725,9 @@ public class SifeupAPI {
 	}
 
 	public static String getPage(InputStream in) {
-		return getPage(in,"ISO-8859-1" );
+		return getPage(in, "ISO-8859-1");
 	}
+
 	/**
 	 * Fetch data
 	 * 
