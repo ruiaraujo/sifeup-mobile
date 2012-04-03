@@ -77,7 +77,6 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getActivity().invalidateOptionsMenu();
 		task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
 				building.getBuildingBlock(), Integer.toString(currentFloor),
 				this);
