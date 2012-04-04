@@ -223,12 +223,15 @@ public class DownloaderFragment extends DialogFragment {
 					return null;
 				}
 				HttpEntity entity = response.getEntity();
+				final File dir;
 				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO )
-					myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-							.getAbsolutePath() + File.separator + argsDownload[1]);
+					dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+							.getAbsolutePath());
 				else
-					myFile = new File(Environment.getExternalStorageDirectory()
-							.getAbsolutePath() + File.separator + "Download" + File.separator + argsDownload[1]);
+					dir = new File(Environment.getExternalStorageDirectory()
+							.getAbsolutePath() + File.separator + "Download");
+				dir.mkdirs();
+				myFile = new File(dir,argsDownload[1] );
 				fos = new FileOutputStream(myFile);
 
 				dis = entity.getContent();
