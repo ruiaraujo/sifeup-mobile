@@ -56,7 +56,6 @@ public class SifeupAPI {
 	private interface RoomPic {
 		String NAME = "sala_img";
 		String BUILDING = "p_edi";
-		String BLOCK = "p_bloco";
 		String ROOM = "p_sala";
 	}
 
@@ -538,12 +537,10 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String getRoomPicUrl(String building, String block,
-			String room) {
+	public static String getRoomPicUrl(String building, String room) {
 		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME
 				+ WEBSERVICE_SEP + RoomPic.BUILDING + EQUALS + building
-				+ LINK_SEP + RoomPic.BLOCK + EQUALS + block + LINK_SEP
-				+ RoomPic.ROOM + EQUALS + room;
+				+ LINK_SEP + RoomPic.ROOM + EQUALS + room;
 	}
 
 	/**

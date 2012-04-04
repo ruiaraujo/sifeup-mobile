@@ -25,9 +25,19 @@ public class FacilitiesUtils {
 				building, block, floor));
 	}
 
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(
+			String building, String room, ResponseCommand command) {
+		return new BuildingsTask(command).execute(SifeupAPI.getRoomPicUrl(building, room));
+	}
+
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingsHotspot(
 			InputStream file, ResponseCommand command) {
-		return new BuildingsHotspotTask(command).execute(file);
+		return new BuildingsHotspotTask(command, null).execute(file);
+	}
+	
+	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingHotspot(
+			InputStream file, String buildingCode, ResponseCommand command) {
+		return new BuildingsHotspotTask(command,buildingCode ).execute(file);
 	}
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
@@ -78,9 +88,10 @@ public class FacilitiesUtils {
 			AsyncTask<InputStream, Void, ERROR_TYPE> {
 		private List<BuildingPicHotspot> hotspots;
 		private final ResponseCommand command;
-
-		public BuildingsHotspotTask(ResponseCommand command) {
+		private final String buildingCode;
+		public BuildingsHotspotTask(ResponseCommand command, String buildingCode) {
 			this.command = command;
+			this.buildingCode = buildingCode;
 		}
 
 		@Override
@@ -90,7 +101,21 @@ public class FacilitiesUtils {
 				return;
 			}
 			if (error == null)
-				command.onResultReceived(hotspots);
+			{
+				if ( buildingCode == null )
+					command.onResultReceived(hotspots);
+				else
+				{
+					for ( BuildingPicHotspot hot : hotspots )
+					{
+						if (buildingCode.equals(hot.getBuildingCode()) )
+						{
+							command.onResultReceived(hot);
+							return;
+						}
+					}
+				}
+			}
 			else
 				command.onError(error);
 		}
