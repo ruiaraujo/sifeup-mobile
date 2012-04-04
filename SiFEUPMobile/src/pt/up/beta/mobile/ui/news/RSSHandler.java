@@ -22,6 +22,8 @@ public class RSSHandler extends DefaultHandler
 	
 	int depth = 0;
 	int currentstate = 0;
+	
+	private final static boolean DEBUG = false;
 	/*
 	 * Constructor 
 	 */
@@ -115,7 +117,7 @@ public class RSSHandler extends DefaultHandler
 	public void characters(char ch[], int start, int length)
 	{
 		String theString = new String(ch,start,length);
-		Log.i("RSSReader","characters[" + theString + "]");
+		if ( DEBUG ) Log.i("RSSReader","characters[" + theString + "]");
 		
 		switch (currentstate)
 		{
