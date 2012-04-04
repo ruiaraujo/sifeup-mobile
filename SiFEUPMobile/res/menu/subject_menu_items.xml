@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_subject_schedule"
-        android:icon="@drawable/ic_title_today"
+        android:icon="@drawable/ic_see_schedule"
         android:title="@string/description_schedule"
         android:orderInCategory="1"
         android:showAsAction="ifRoom" />
     <item android:id="@+id/menu_go_to_subject_sigarra"
-        android:icon="@drawable/ic_title_export"
+        android:icon="@drawable/ic_see_browser"
         android:title="@string/description_browser"
         android:orderInCategory="2"
         android:showAsAction="ifRoom" />

@@ -7,7 +7,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.R;
 
 
@@ -22,9 +21,6 @@ public class HomeActivity extends BaseActivity {
 	    @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-
-	        AnalyticsUtils.getInstance(this).trackPageView("/Home");
-
 	        setContentView(R.layout.activity_home);
 	    }
 	    
@@ -36,7 +32,7 @@ public class HomeActivity extends BaseActivity {
 	        if ( UIUtils.isTablet(this) )
 	            actionbar.setDisplayOptions( 0, ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE); 
 	        else
-	            actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
+	            actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_USE_LOGO);
 
 	    }
 

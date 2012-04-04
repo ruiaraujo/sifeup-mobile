@@ -66,7 +66,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
         super.onPostCreate(savedInstanceState);
         // NOTE: there needs to be a content view set before this is called, so this method
         // should be called in onPostCreate.
-        actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP|ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME);
+        actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP|ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_USE_LOGO);
 
     }
 

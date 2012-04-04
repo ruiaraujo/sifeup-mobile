@@ -2,7 +2,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_browser"
-        android:icon="@drawable/ic_title_export"
+        android:icon="@drawable/ic_see_browser"
         android:title="@string/description_browser"
         android:orderInCategory="1"
         android:showAsAction="ifRoom" />

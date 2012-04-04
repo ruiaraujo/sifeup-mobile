@@ -1,10 +1,10 @@
 <resources>
 
     <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="@style/Theme.Sherlock.Light" />
+    <style name="Theme" parent="@style/Theme.Sherlock" />
 
     <!-- Start with the Holographic Light theme -->
-    <style name="Theme.Sigarra" parent="@style/Theme.Sherlock.Light">
+    <style name="Theme.Sigarra" parent="@style/Theme">
         <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
@@ -53,17 +53,17 @@
         <item name="android:textColor">@color/body_text_1</item>
     </style>
 
-    <style name="ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
-        <item name="android:background">@color/actionbar_background</item>
+    <style name="ActionBar" parent="@style/Widget.Sherlock.ActionBar.Solid">
+        <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:titleTextStyle">@style/ActionBarText</item>
         
         <!-- For Android 2.1+ -->
         <item name="titleTextStyle">@style/ActionBarText</item>
-        <item name="background">@color/actionbar_background</item>
+        <item name="background">@drawable/actionbar_background</item>
     </style>
     
     <style name="ActionBarText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/feup</item>
+        <item name="android:textColor">@color/body_text_white</item>
         <item name="android:textStyle">bold</item>
     </style>
     
@@ -85,7 +85,7 @@
         <item name="android:drawablePadding">2dp</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/feup</item>
+        <item name="android:textColor">@color/body_text_white</item>
         <item name="android:background">@null</item>
     </style>
 
