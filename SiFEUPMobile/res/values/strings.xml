@@ -91,7 +91,7 @@
     <string name="title_schedule">Schedule</string>
     <string name="title_schedule_arg">Schedule of <xliff:g id="code">%1$s</xliff:g></string>
     <string name="btn_schedule">Schedule</string>
-    <string name="description_export">Export</string>
+    <string name="description_export_schedule">Export schedule</string>
     <string name="toast_export_calendar_finished">Calendar Exported.</string>
     <string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>

@@ -87,7 +87,7 @@
     <string name="title_schedule">Horário</string>
     <string name="title_schedule_arg">Horário de <xliff:g id="code">%1$s</xliff:g></string>
     <string name="btn_schedule">Horário</string>
-    <string name="description_export">Exportar</string>
+    <string name="description_export_schedule">Exportar horário</string>
     <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
     <string name="toast_export_calendar_finished">Calendário Exportado.</string>
     <string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>

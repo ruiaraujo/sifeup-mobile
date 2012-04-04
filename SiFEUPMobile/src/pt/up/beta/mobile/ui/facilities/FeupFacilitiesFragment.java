@@ -12,9 +12,10 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -34,7 +35,7 @@ import pt.up.beta.mobile.R;
 public class FeupFacilitiesFragment extends BaseFragment implements
 		ResponseCommand, OnTapListener {
 
-	private ImageView pic;
+	private TouchImageView pic;
 	private List<BuildingPicHotspot> hotspots;
 	
 	static final String welcomeScreenShownPref = "welcomeScreenShown";
@@ -45,7 +46,22 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_facility_pic, getParentContainer(), true);
-		pic = (ImageView) root.findViewById(R.id.facility_image);
+		pic = (TouchImageView) root.findViewById(R.id.facility_image);
+		if ( pic.needsExternalZoom() ){
+			ZoomControls zoom =  (ZoomControls) root.findViewById(R.id.zoomControls);
+			zoom.setOnZoomInClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					pic.zoomIn();
+				}
+			});
+			zoom.setOnZoomOutClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					pic.zoomOut();
+				}
+			});
+		}
 		return getParentContainer();
 	}
 
@@ -76,14 +92,8 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			return;
 		}
 		pic.setImageBitmap((Bitmap) results[0]);
-		if (pic instanceof TouchImageView)// Android 2.1 doesn't like our
-											// TouchImageView
-		{
-			((TouchImageView) pic).setMaxZoom(6);
-			((TouchImageView) pic).setOnTapListener(this);
-		}
-		showFastMainScreen();
-
+		pic.setMaxZoom(6);
+		pic.setOnTapListener(this);
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
 
@@ -95,6 +105,9 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			editor.putBoolean(welcomeScreenShownPref, true);
 			editor.commit();
 		}
+		
+		
+		showFastMainScreen();
 	}
 
 	protected void onRepeat() {

@@ -12,10 +12,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -38,7 +39,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 		ResponseCommand, OnNavigationListener, OnTapListener {
 	public final static String BUILDING_EXTRA = "pt.up.beta.mobile.ui.facilities.BUILDING";
 
-	private ImageView pic;
+	private TouchImageView pic;
 	private BuildingPicHotspot building;
 	private int currentFloor = 0;
 
@@ -76,7 +77,22 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_facility_pic, getParentContainer(), true);
-		pic = (ImageView) root.findViewById(R.id.facility_image);
+		pic = (TouchImageView) root.findViewById(R.id.facility_image);
+		if ( pic.needsExternalZoom() ){
+			ZoomControls zoom =  (ZoomControls) root.findViewById(R.id.zoomControls);
+			zoom.setOnZoomInClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					pic.zoomIn();
+				}
+			});
+			zoom.setOnZoomOutClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					pic.zoomOut();
+				}
+			});
+		}
 		return getParentContainer();
 	}
 
@@ -124,12 +140,8 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 		}
 		
 		pic.setImageBitmap((Bitmap) results[0]);
-		if (pic instanceof TouchImageView)// Android 2.1 doesn't like our
-											// TouchImageView
-		{
-			((TouchImageView) pic).setMaxZoom(6);
-			((TouchImageView) pic).setOnTapListener(this);
-		}
+		pic.setMaxZoom(6);
+		pic.setOnTapListener(this);
 		showFastMainScreen();
 	}
 

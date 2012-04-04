@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,7 +21,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
-public class TouchImageView extends ImageView  {
+public class TouchImageView extends ImageView {
 
 	Matrix matrix = new Matrix();
 
@@ -46,6 +47,7 @@ public class TouchImageView extends ImageView  {
 
 	ScaleGestureDetector mScaleDetector;
 	GestureDetector mDoubleTapDetector;
+	OnTouchListener touchListener;
 	Context context;
 
 	public TouchImageView(Context context) {
@@ -61,20 +63,23 @@ public class TouchImageView extends ImageView  {
 	private void sharedConstructing(Context context) {
 		super.setClickable(true);
 		this.context = context;
-		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+			mScaleDetector = new ScaleGestureDetector(context,
+					new ScaleListener());
 		mDoubleTapDetector = new GestureDetector(context, new GestureListener());
 		matrix.setTranslate(1f, 1f);
 		m = new float[9];
 		setImageMatrix(matrix);
 		setScaleType(ScaleType.MATRIX);
 
-		setOnTouchListener(new OnTouchListener() {
+		setOnTouchListener(touchListener = new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				mScaleDetector.onTouchEvent(event);
+				if (mScaleDetector != null)
+					mScaleDetector.onTouchEvent(event);
 				mDoubleTapDetector.onTouchEvent(event);
-				
+
 				matrix.getValues(m);
 				float x = m[Matrix.MTRANS_X];
 				float y = m[Matrix.MTRANS_Y];
@@ -153,6 +158,75 @@ public class TouchImageView extends ImageView  {
 		maxScale = x;
 	}
 
+	public boolean needsExternalZoom() {
+		return mScaleDetector == null;
+	}
+
+	public void zoomIn() {
+		zoom(1.5f, width / 2, height / 2);
+		touchListener.onTouch(this,
+				MotionEvent.obtain(0, 0, MotionEvent.ACTION_UP, width, height,
+						0, 0, 0, 0, 0, 0, 0));
+	}
+
+	public void zoomOut() {
+		zoom(0.67f, width / 2, height / 2);
+		touchListener.onTouch(this,
+				MotionEvent.obtain(0, 0, MotionEvent.ACTION_UP, width, height,
+						0, 0, 0, 0, 0, 0, 0));
+	}
+
+	private void zoom(float mScaleFactor, float xOrig, float yOrig) {
+		float origScale = saveScale;
+		saveScale *= mScaleFactor;
+		if (saveScale > maxScale) {
+			saveScale = maxScale;
+			mScaleFactor = maxScale / origScale;
+		} else if (saveScale < minScale) {
+			saveScale = minScale;
+			mScaleFactor = minScale / origScale;
+		}
+		right = width * saveScale - width - (2 * redundantXSpace * saveScale);
+		bottom = height * saveScale - height
+				- (2 * redundantYSpace * saveScale);
+		if (origWidth * saveScale <= width || origHeight * saveScale <= height) {
+			matrix.postScale(mScaleFactor, mScaleFactor, width / 2, height / 2);
+			if (mScaleFactor < 1) {
+				matrix.getValues(m);
+				float x = m[Matrix.MTRANS_X];
+				float y = m[Matrix.MTRANS_Y];
+				if (mScaleFactor < 1) {
+					if (Math.round(origWidth * saveScale) < width) {
+						if (y < -bottom)
+							matrix.postTranslate(0, -(y + bottom));
+						else if (y > 0)
+							matrix.postTranslate(0, -y);
+					} else {
+						if (x < -right)
+							matrix.postTranslate(-(x + right), 0);
+						else if (x > 0)
+							matrix.postTranslate(-x, 0);
+					}
+				}
+			}
+		} else {
+			matrix.postScale(mScaleFactor, mScaleFactor, xOrig, yOrig);
+			matrix.getValues(m);
+			float x = m[Matrix.MTRANS_X];
+			float y = m[Matrix.MTRANS_Y];
+			if (mScaleFactor < 1) {
+				if (x < -right)
+					matrix.postTranslate(-(x + right), 0);
+				else if (x > 0)
+					matrix.postTranslate(-x, 0);
+				if (y < -bottom)
+					matrix.postTranslate(0, -(y + bottom));
+				else if (y > 0)
+					matrix.postTranslate(0, -y);
+			}
+		}
+	}
+
 	private class ScaleListener extends
 			ScaleGestureDetector.SimpleOnScaleGestureListener {
 		@Override
@@ -165,58 +239,7 @@ public class TouchImageView extends ImageView  {
 		public boolean onScale(ScaleGestureDetector detector) {
 			float mScaleFactor = (float) Math.min(
 					Math.max(.95f, detector.getScaleFactor()), 1.05);
-			float origScale = saveScale;
-			saveScale *= mScaleFactor;
-			if (saveScale > maxScale) {
-				saveScale = maxScale;
-				mScaleFactor = maxScale / origScale;
-			} else if (saveScale < minScale) {
-				saveScale = minScale;
-				mScaleFactor = minScale / origScale;
-			}
-			right = width * saveScale - width
-					- (2 * redundantXSpace * saveScale);
-			bottom = height * saveScale - height
-					- (2 * redundantYSpace * saveScale);
-			if (origWidth * saveScale <= width
-					|| origHeight * saveScale <= height) {
-				matrix.postScale(mScaleFactor, mScaleFactor, width / 2,
-						height / 2);
-				if (mScaleFactor < 1) {
-					matrix.getValues(m);
-					float x = m[Matrix.MTRANS_X];
-					float y = m[Matrix.MTRANS_Y];
-					if (mScaleFactor < 1) {
-						if (Math.round(origWidth * saveScale) < width) {
-							if (y < -bottom)
-								matrix.postTranslate(0, -(y + bottom));
-							else if (y > 0)
-								matrix.postTranslate(0, -y);
-						} else {
-							if (x < -right)
-								matrix.postTranslate(-(x + right), 0);
-							else if (x > 0)
-								matrix.postTranslate(-x, 0);
-						}
-					}
-				}
-			} else {
-				matrix.postScale(mScaleFactor, mScaleFactor,
-						detector.getFocusX(), detector.getFocusY());
-				matrix.getValues(m);
-				float x = m[Matrix.MTRANS_X];
-				float y = m[Matrix.MTRANS_Y];
-				if (mScaleFactor < 1) {
-					if (x < -right)
-						matrix.postTranslate(-(x + right), 0);
-					else if (x > 0)
-						matrix.postTranslate(-x, 0);
-					if (y < -bottom)
-						matrix.postTranslate(0, -(y + bottom));
-					else if (y > 0)
-						matrix.postTranslate(0, -y);
-				}
-			}
+			zoom(mScaleFactor, detector.getFocusX(), detector.getFocusY());
 			return true;
 
 		}
@@ -253,11 +276,11 @@ public class TouchImageView extends ImageView  {
 	}
 
 	private OnTapListener listener;
-	
-	public void setOnTapListener(OnTapListener listener){
+
+	public void setOnTapListener(OnTapListener listener) {
 		this.listener = listener;
 	}
-	
+
 	private class GestureListener extends
 			GestureDetector.SimpleOnGestureListener {
 
@@ -265,7 +288,6 @@ public class TouchImageView extends ImageView  {
 		public boolean onDown(MotionEvent e) {
 			return true;
 		}
-		
 
 		public boolean onSingleTapUp(MotionEvent e) {
 
@@ -276,19 +298,20 @@ public class TouchImageView extends ImageView  {
 			getImageMatrix().invert(inverse);
 
 			// map touch point from ImageView to image
-			float[] touchPoint = new float[] {x, y};
+			float[] touchPoint = new float[] { x, y };
 			inverse.mapPoints(touchPoint);
 			// touchPoint now contains x and y in image's coordinate system
-			if ( touchPoint[0] < 0 || touchPoint[0] > bmWidth )
+			if (touchPoint[0] < 0 || touchPoint[0] > bmWidth)
 				return false;
-			if ( touchPoint[1] < 0 || touchPoint[1] > bmHeight )
+			if (touchPoint[1] < 0 || touchPoint[1] > bmHeight)
 				return false;
 			e.setLocation(touchPoint[0], touchPoint[1]);
-			Log.d("Single Tap", "Tapped at: (" + touchPoint[0] + "," + touchPoint[1] + ")");
-			if ( listener != null )
+			Log.d("Single Tap", "Tapped at: (" + touchPoint[0] + ","
+					+ touchPoint[1] + ")");
+			if (listener != null)
 				listener.onSingleTapUp(e);
 			return true;
-			
+
 		}
 
 		// event when double tap occurs
@@ -301,26 +324,27 @@ public class TouchImageView extends ImageView  {
 			getImageMatrix().invert(inverse);
 
 			// map touch point from ImageView to image
-			float[] touchPoint = new float[] {x, y};
+			float[] touchPoint = new float[] { x, y };
 			inverse.mapPoints(touchPoint);
 			// touchPoint now contains x and y in image's coordinate system
-			if ( touchPoint[0] < 0 || touchPoint[0] > bmWidth )
+			if (touchPoint[0] < 0 || touchPoint[0] > bmWidth)
 				return false;
-			if ( touchPoint[1] < 0 || touchPoint[1] > bmHeight )
+			if (touchPoint[1] < 0 || touchPoint[1] > bmHeight)
 				return false;
 			e.setLocation(touchPoint[0], touchPoint[1]);
 			e.setAction(MotionEvent.ACTION_UP);
-			Log.d("Double Tap", "Tapped at: (" + touchPoint[0] + "," + touchPoint[1] + ")");
-			if ( listener != null )
+			Log.d("Double Tap", "Tapped at: (" + touchPoint[0] + ","
+					+ touchPoint[1] + ")");
+			if (listener != null)
 				listener.onDoubleTap(e);
 			return true;
 		}
 	}
-	
-	public interface OnTapListener{
+
+	public interface OnTapListener {
 
 		public boolean onDoubleTap(MotionEvent e);
-		
+
 		public boolean onSingleTapUp(MotionEvent e);
 	}
 
