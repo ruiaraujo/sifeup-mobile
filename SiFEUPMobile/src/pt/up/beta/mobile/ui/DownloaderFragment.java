@@ -30,6 +30,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
@@ -222,9 +223,12 @@ public class DownloaderFragment extends DialogFragment {
 					return null;
 				}
 				HttpEntity entity = response.getEntity();
-				myFile = new File(Environment.getDownloadCacheDirectory()
+				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO )
+					myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 							.getAbsolutePath() + File.separator + argsDownload[1]);
-
+				else
+					myFile = new File(Environment.getExternalStorageDirectory()
+							.getAbsolutePath() + File.separator + "Download" + File.separator + argsDownload[1]);
 				fos = new FileOutputStream(myFile);
 
 				dis = entity.getContent();
@@ -258,6 +262,7 @@ public class DownloaderFragment extends DialogFragment {
 							break;
 						}
 					} catch (Exception e) {
+						e.printStackTrace();
 						return null;
 					}
 					if (filesize != 0)
@@ -270,8 +275,10 @@ public class DownloaderFragment extends DialogFragment {
 					}
 				}
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 				return FILE_ERROR;
 			} catch (Exception e) {
+				e.printStackTrace();
 				return ERROR;
 			} finally {
 				if (httpclient != null)

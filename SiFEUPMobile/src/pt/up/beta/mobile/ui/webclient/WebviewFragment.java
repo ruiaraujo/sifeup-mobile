@@ -51,6 +51,11 @@ public class WebviewFragment extends BaseFragment {
         mWebView = (WebView) root.findViewById(R.id.webview);
         progressWebView = (ProgressBar) root
                 .findViewById(R.id.webview_progress);
+        return getParentContainer(); // mandatory
+    }
+    
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         final WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -59,7 +64,6 @@ public class WebviewFragment extends BaseFragment {
         webSettings.setSavePassword(false);
         webSettings.setSaveFormData(false);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebViewClient(new FeupWebViewClient());
         mWebView.setDownloadListener(new DownloadListener() {
             public void onDownloadStart(String url, String userAgent,
@@ -97,9 +101,7 @@ public class WebviewFragment extends BaseFragment {
         CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(url);
         showFastMainScreen();
-        return getParentContainer(); // mandatory
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.webclient_menu_items, menu);
@@ -152,7 +154,7 @@ public class WebviewFragment extends BaseFragment {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-           // progressWebView.setVisibility(View.VISIBLE);
+        	progressWebView.setVisibility(View.VISIBLE);
         }
 
         @Override
