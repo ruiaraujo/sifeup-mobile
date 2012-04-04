@@ -105,12 +105,13 @@
 <xliff:g id="teacher"> %1$s</xliff:g></string>
     <string name="class_room"><b>Room:</b>
 <xliff:g id="room">%1$s</xliff:g></string>
-    <string name="class_team"><b>Team:</b>
+    <string name="class_team"><b>Class:</b>
 <xliff:g id="team">%1$s</xliff:g></string>
     <string name="class_start_time"><b>Start time:</b>
 <xliff:g id="start_time">%1$s</xliff:g></string>
     <string name="class_end_time"><b>End time:</b>
 <xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="toast_too_many_rooms">There is more than one room to map.</string>
 
     <!-- Exams -->
     <string name="title_exams">Exams</string>

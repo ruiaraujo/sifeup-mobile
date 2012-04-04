@@ -165,7 +165,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_map) {
 			if (block.getBuildingCode() == null) {
-				Toast.makeText(getActivity(), "There is more than one room to map.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), R.string.toast_too_many_rooms, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 			final Intent intent = new Intent(getActivity(),

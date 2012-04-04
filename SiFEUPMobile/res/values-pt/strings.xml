@@ -7,9 +7,8 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
-	<string name="button_repeat">Repetir</string>
-	<string name="general_error">Oops!\n Alguma coisa correu mal... :(</string>
-	
+    <string name="button_repeat">Repetir</string>
+    <string name="general_error">Oops!\n Alguma coisa correu mal... :(</string>
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
@@ -20,7 +19,7 @@
     <string name="toast_download_no_memory_card">Erro: Sem cartão de memória disponível.</string>
     <string name="toast_download_error_file">Erro ao escrever no ficheiro</string>
     <string name="toast_download_error">Erro ao transferir o ficheiro</string>
-        
+
     <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
@@ -56,23 +55,15 @@
     <string name="bt_about_title">Sobre FEUP Mobile</string>
     <string name="bt_about_message">Esta aplicação dá aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
-                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>   
-                                 \n\n<b>Versão: </b>0.10.1 
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>                                 \n\n<b>Versão: </b>0.10.1 
                                  \n
                                  03/04/2012
-                                 \n\n<b>Créditos:</b><ul>
+                                 \n\n<b>Créditos:</b>
+<ul>
             <li>Faculdade de Engenharia da Universidade do Porto</li>
-
-
-\n                                    <li>CICA</li>
-
-
-\n                                    <li>Mestrado Integrado em Engenharia Informática e Computação</li>
-
-
-\n                                    <li>Disciplina Sistemas Distríbuidos</li>
-
-
+\n                                                            <li>CICA</li>
+\n                                                            <li>Mestrado Integrado em Engenharia Informática e Computação</li>
+\n                                                            <li>Disciplina Sistemas Distríbuidos</li>
 \n</ul></string>
 
     <!-- MAIN  MENU -->
@@ -95,8 +86,17 @@
     <string name="description_schedule">Ver o Horário</string>
 
     <!-- Class Description -->
+    <string name="class_subject"><b>Subject:</b>
+<xliff:g id="subject"> %1$s</xliff:g></string>
     <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>
-    <string name="class_room">Sala: <xliff:g id="teacher">%1$s</xliff:g></string>
+    <string name="class_room">Sala: <xliff:g id="room">%1$s</xliff:g></string>
+    <string name="class_team"><b>Turma:</b>
+<xliff:g id="team">%1$s</xliff:g></string>
+    <string name="class_start_time"><b>Hora de início:</b>
+<xliff:g id="start_time">%1$s</xliff:g></string>
+    <string name="class_end_time"><b>Hora de fim:</b>
+<xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="toast_too_many_rooms">Há mais que uma sala para mapear.</string>
 
     <!-- Exams -->
     <string name="title_exams">Exames</string>
@@ -309,5 +309,5 @@
     <string name="notification_uploader_error_title">Erro</string>
     <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Operação não suportada</string>
-    
+
 </resources>
