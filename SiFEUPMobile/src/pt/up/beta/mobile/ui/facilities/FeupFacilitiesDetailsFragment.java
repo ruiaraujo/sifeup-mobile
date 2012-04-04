@@ -117,6 +117,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 			i.putExtra(ScheduleFragment.SCHEDULE_CODE,  results[0].toString()  );
     		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,
     				results[0] ));
+    		Toast.makeText(getActivity(), results[0].toString(), Toast.LENGTH_SHORT).show();
 			startActivity(i);
 			showFastMainScreen();
 			return;

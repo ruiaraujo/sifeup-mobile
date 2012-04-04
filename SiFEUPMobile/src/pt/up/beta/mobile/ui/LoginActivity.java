@@ -53,13 +53,10 @@ public class LoginActivity extends SherlockActivity implements ResponseCommand {
 
 		// preencher os campos com as informações gravadas
 		final SessionManager session = SessionManager.getInstance(this);
-		session.loadSession();
 		user = session.getLoginName();
 		pass = session.getLoginPassword();
-		if (!user.equals("") && !pass.equals("")) {
-			username.setText(user);
-			passwordEditText.setText(pass);
-		}
+		username.setText(user);
+		passwordEditText.setText(pass);
 		findViewById(R.id.login_confirm).setOnClickListener(
 				new OnClickListener() {
 					@Override
@@ -125,9 +122,7 @@ public class LoginActivity extends SherlockActivity implements ResponseCommand {
             passwordEditText.setText("");
 			break;
 		default: {
-			final String cookie = session.getCookie();
-			final String type = session.getUser().getType();
-			if (!cookie.equals("") && !type.equals("")) {
+			if (session.getCookies().size() > 0  && session.isUserLoaded()) {
 				startActivity(new Intent(this, HomeActivity.class));
 				overridePendingTransition(R.anim.slide_right_in,
 						R.anim.slide_right_out);

@@ -17,6 +17,7 @@
     <string name="msg_dl_speed">Velocidade: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nTempo restante: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
     <string name="msg_download_finished">Transferência terminada:\n <xliff:g id="file">%1$s</xliff:g></string>
     <string name="toast_download_no_memory">Erro: Sem memória</string>
+    <string name="toast_download_no_memory_card">Erro: Sem cartão de memória disponível.</string>
     <string name="toast_download_error_file">Erro ao escrever no ficheiro</string>
     <string name="toast_download_error">Erro ao transferir o ficheiro</string>
         

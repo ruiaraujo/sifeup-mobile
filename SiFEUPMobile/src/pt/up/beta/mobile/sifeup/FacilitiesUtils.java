@@ -59,15 +59,15 @@ public class FacilitiesUtils {
 
 		@Override
 		protected ERROR_TYPE doInBackground(String... params) {
-			HttpResponse page = SifeupAPI.doPost(params[0], params[1]);
+			HttpResponse page = SifeupAPI.post(params[0], params[1]);
 			if (page == null)
 				return ERROR_TYPE.NETWORK;
 			if ( !page.containsHeader("Location") )
 				return ERROR_TYPE.GENERAL;
 			String url = page.getFirstHeader("Location").getValue();
 			String [] urlParam = url.substring(url.indexOf("?")).split("&");
-			response = urlParam[0].substring(urlParam[0].indexOf("=")+1)
-						+ urlParam[1].substring(urlParam[1].indexOf("=")+1);
+			response = urlParam[0].substring(urlParam[0].indexOf("=")+1).trim()
+						+ urlParam[1].substring(urlParam[1].indexOf("=")+1).trim();
 			return null;
 		}
 

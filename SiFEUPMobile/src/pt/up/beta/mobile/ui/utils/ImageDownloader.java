@@ -7,11 +7,10 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.util.ByteArrayBuffer;
 
-import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.FileUtils;
 
@@ -42,35 +41,34 @@ public class ImageDownloader {
 
 			// Caching code right here
 			String filename = String.valueOf(url.hashCode());
-			final File f = FileUtils.getFile(imageView.getContext(),
-					filename);
-			
+			final File f = FileUtils.getFile(imageView.getContext(), filename);
+
 			// Is the bitmap in our memory cache?
 			Bitmap bitmap = null;
-			if ( f != null )
-			{
-    			bitmap = (Bitmap) imageCache.get(f.getPath());
-    
-    			if (bitmap == null) {
-    
-    				bitmap = BitmapFactory.decodeFile(f.getPath());
-    
-    				if (bitmap != null) {
-    					imageCache.put(f.getPath(), bitmap);
-    				}
-    
-    			}
+			if (f != null) {
+				bitmap = (Bitmap) imageCache.get(f.getPath());
+
+				if (bitmap == null) {
+
+					bitmap = BitmapFactory.decodeFile(f.getPath());
+
+					if (bitmap != null) {
+						imageCache.put(f.getPath(), bitmap);
+					}
+
+				}
 			}
 			// No? download it
 			if (bitmap == null) {
 				final BitmapDownloaderTask task = new BitmapDownloaderTask(
 						imageView);
 				final DownloadedDrawable downloadedDrawable;
-				if ( placeholder == null) {
-					downloadedDrawable = new DownloadedDrawable(task, imageView.getResources());
+				if (placeholder == null) {
+					downloadedDrawable = new DownloadedDrawable(task,
+							imageView.getResources());
 				} else {
-					downloadedDrawable = new DownloadedDrawable(task, imageView.getResources(),
-							placeholder);
+					downloadedDrawable = new DownloadedDrawable(task,
+							imageView.getResources(), placeholder);
 				}
 				imageView.setImageDrawable(downloadedDrawable);
 				task.execute(url);
@@ -111,8 +109,6 @@ public class ImageDownloader {
 		return null;
 	}
 
-
-
 	// /////////////////////
 
 	// download asynctask
@@ -138,8 +134,8 @@ public class ImageDownloader {
 			if (isCancelled()) {
 				bitmap = null;
 			}
-			if ( bitmap == null )
-				return; //nothing to do in case of error
+			if (bitmap == null)
+				return; // nothing to do in case of error
 			if (imageViewReference != null) {
 				ImageView imageView = imageViewReference.get();
 				BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
@@ -151,12 +147,12 @@ public class ImageDownloader {
 					// cache the image
 
 					String filename = String.valueOf(url.hashCode());
-					
-					File f = FileUtils.getFile(imageView.getContext(), filename);
-					if ( f != null )
-					{
-    					imageCache.put(f.getPath(), bitmap);
-    					FileUtils.writeFile(bitmap, f);
+
+					File f = FileUtils
+							.getFile(imageView.getContext(), filename);
+					if (f != null) {
+						imageCache.put(f.getPath(), bitmap);
+						FileUtils.writeFile(bitmap, f);
 					}
 				}
 			}
@@ -174,7 +170,8 @@ public class ImageDownloader {
 					bitmapDownloaderTask);
 		}
 
-		public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask ,Resources res ) {
+		public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask,
+				Resources res) {
 			super(res);
 			bitmapDownloaderTaskReference = new WeakReference<BitmapDownloaderTask>(
 					bitmapDownloaderTask);
@@ -187,42 +184,36 @@ public class ImageDownloader {
 
 	// the actual download code
 	public static Bitmap downloadBitmap(String url) {
-		HttpsURLConnection httpConn = SifeupAPI.getUncheckedConnection(url);
-		httpConn.setRequestProperty("Cookie", SessionManager.getInstance()
-				.getCookie());
+		HttpResponse response = SifeupAPI.get(url);
+		if (response == null)
+			return null;
 		Bitmap bitmap;
 		try {
-			httpConn.connect();
-
-			try {
-				BufferedInputStream bis = new BufferedInputStream(
-						httpConn.getInputStream());
-				ByteArrayBuffer baf = new ByteArrayBuffer(50);
-				int read = 0;
-				int bufSize = 512;
-				byte[] buffer = new byte[bufSize];
-				while (true) {
-					read = bis.read(buffer);
-					if (read == -1) {
-						break;
-					}
-					baf.append(buffer, 0, read);
-				}
-				bis.close();
-				httpConn.getInputStream().close();
-				bitmap = BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
-						baf.length());
-			} catch (IOException e) {
-				e.printStackTrace();
+			HttpEntity entity = response.getEntity();
+			if (entity == null)
 				return null;
+			BufferedInputStream bis = new BufferedInputStream(
+					entity.getContent());
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int read = 0;
+			int bufSize = 512;
+			byte[] buffer = new byte[bufSize];
+			while (true) {
+				read = bis.read(buffer);
+				if (read == -1) {
+					break;
+				}
+				baf.append(buffer, 0, read);
 			}
+			bis.close();
+			bitmap = BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
+					baf.length());
+			entity.consumeContent();
+			return bitmap;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
-		} finally {
-			httpConn.disconnect();
 		}
-		return bitmap;
+		return null;
 
 	}
 }

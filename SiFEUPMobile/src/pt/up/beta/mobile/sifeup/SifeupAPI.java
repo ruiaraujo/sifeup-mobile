@@ -4,29 +4,23 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.RedirectHandler;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
@@ -65,7 +59,7 @@ public class SifeupAPI {
 		String BLOCK = "p_bloco";
 		String ROOM = "p_sala";
 	}
-	
+
 	private interface RoomFinder {
 		String NAME = "click";
 		String BUILDING = "p_edi_cod_edi";
@@ -544,13 +538,13 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String getRoomPicUrl(String building,String block, String room) {
+	public static String getRoomPicUrl(String building, String block,
+			String room) {
 		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME
 				+ WEBSERVICE_SEP + RoomPic.BUILDING + EQUALS + building
-				+ LINK_SEP + RoomPic.BLOCK + EQUALS + block 
-				+ LINK_SEP + RoomPic.ROOM + EQUALS + room;
+				+ LINK_SEP + RoomPic.BLOCK + EQUALS + block + LINK_SEP
+				+ RoomPic.ROOM + EQUALS + room;
 	}
-	
 
 	/**
 	 * Room pics Url for Web Service
@@ -560,15 +554,21 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String [] getRoomPostFinderUrl(String building,String block, String floor, int x, int y) {
-		final String [] urls = new String[2];
+	public static String[] getRoomPostFinderUrl(String building, String block,
+			String floor, int x, int y) {
+		final String[] urls = new String[2];
 		urls[0] = WEBSERVICE + WebServices.ROOM_FINDER + RoomFinder.NAME;
 		try {
-			urls[1] = RoomFinder.BUILDING + EQUALS + URLEncoder.encode(building, "UTF-8") 
-					+ LINK_SEP + RoomFinder.BLOCK + EQUALS + URLEncoder.encode(block, "UTF-8")  
-					+ LINK_SEP + RoomFinder.FLOOR + EQUALS + URLEncoder.encode(floor, "UTF-8")  
-					+ LINK_SEP + RoomFinder.X + EQUALS + URLEncoder.encode(Integer.toString(x), "UTF-8") 
-					+ LINK_SEP + RoomFinder.Y + EQUALS + URLEncoder.encode(Integer.toString(y), "UTF-8");
+			urls[1] = RoomFinder.BUILDING + EQUALS
+					+ URLEncoder.encode(building, "UTF-8") + LINK_SEP
+					+ RoomFinder.BLOCK + EQUALS
+					+ URLEncoder.encode(block, "UTF-8") + LINK_SEP
+					+ RoomFinder.FLOOR + EQUALS
+					+ URLEncoder.encode(floor, "UTF-8") + LINK_SEP
+					+ RoomFinder.X + EQUALS
+					+ URLEncoder.encode(Integer.toString(x), "UTF-8")
+					+ LINK_SEP + RoomFinder.Y + EQUALS
+					+ URLEncoder.encode(Integer.toString(y), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -623,6 +623,30 @@ public class SifeupAPI {
 				+ Schedule.END + EQUALS + end;
 	}
 
+	private static DefaultHttpClient httpclient;
+	private static HttpContext localContext;
+
+	public static synchronized DefaultHttpClient getHttpClient() {
+		if (httpclient == null) {
+			httpclient = new DefaultHttpClient();
+
+			// Create local HTTP context
+			localContext = new BasicHttpContext();
+			// Bind custom cookie store to the local context
+			localContext.setAttribute(ClientContext.COOKIE_STORE, SessionManager.getInstance().getCookieStore());
+		}
+		return httpclient;
+	}
+
+	public static HttpResponse get(String url) {
+		try {
+			return  getHttpClient().execute(new HttpGet(url), localContext); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
 	 * Student query Reply from web service
 	 * 
@@ -633,14 +657,20 @@ public class SifeupAPI {
 		String page = null;
 		try {
 			do {
-				HttpsURLConnection httpConn = getUncheckedConnection(url);
-				httpConn.setRequestProperty("Cookie", SessionManager
-						.getInstance().getCookie());
-				httpConn.connect();
-				page = getPage(httpConn.getInputStream());
-				httpConn.disconnect();
+				HttpResponse response = get(url);
+				if ( response == null )
+					return null;
+				HttpEntity entity = response.getEntity();
+				if (entity == null)
+					return null;
+				String charset = getContentCharSet(entity);
+				if (charset == null) {
+					charset = HTTP.DEFAULT_CONTENT_CHARSET;
+				}
+				page = getPage(entity.getContent(), charset);
 				if (page == null)
 					return null;
+				entity.consumeContent();
 			} while (page.equals(""));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -654,8 +684,8 @@ public class SifeupAPI {
 	 * @param url
 	 * @return page
 	 */
-	public static HttpResponse doPost(String url, String urlParameters) {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
+	public static HttpResponse post(String url, String urlParameters) {
+		DefaultHttpClient httpclient = getHttpClient();
 		HttpPost httppost = new HttpPost(url);
 		httpclient.setRedirectHandler(new RedirectHandler() {
 			@Override
@@ -663,7 +693,6 @@ public class SifeupAPI {
 					HttpContext context) {
 				return false;
 			}
-			
 			@Override
 			public URI getLocationURI(HttpResponse response, HttpContext context)
 					throws ProtocolException {
@@ -671,62 +700,43 @@ public class SifeupAPI {
 			}
 		});
 		try {
-			StringEntity tmp = new StringEntity(urlParameters,"UTF-8");
-
-	    	httppost.setEntity(tmp);
-			
-		    // Execute HTTP Post Request
-		    HttpResponse response = httpclient.execute(httppost);
-		    return response;
+			StringEntity tmp = new StringEntity(urlParameters, "UTF-8");
+			httppost.setEntity(tmp);
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+			tmp.consumeContent();
+			return response;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-		    // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
-	/**
-	 * Authentication query Reply from web service
-	 * 
-	 * @param code
-	 * @param pass
-	 * @return
-	 */
-	public static String getAuthenticationReply(String code, String pass) {
-		String page = null;
-		try {
-			do {
-				HttpsURLConnection httpConn = getUncheckedConnection(getAuthenticationUrl(
-						code, pass));
-				httpConn.connect();
-				page = getPage(httpConn.getInputStream());
-				if (page == null || page.equals("")) {
-					httpConn.disconnect();
-					continue;
-				}
-				// Saving cookie for later using throughout the program
-				String cookie = "";
-				String headerName = null;
-				for (int i = 1; (headerName = httpConn.getHeaderFieldKey(i)) != null; i++) {
-					if (headerName.equalsIgnoreCase("Set-Cookie")) {
-						cookie += httpConn.getHeaderField(i) + ";";
-					}
-				}
-				SessionManager.getInstance().setCookie(cookie);
-				Log.e("Login cookie", cookie);
 
-				httpConn.disconnect();
-			} while (page.equals(""));
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static String getContentCharSet(final HttpEntity entity)
+			throws ParseException {
+		if (entity == null) {
+			throw new IllegalArgumentException("HTTP entity may not be null");
 		}
-		return page;
+		String charset = null;
+		if (entity.getContentType() != null) {
+			HeaderElement values[] = entity.getContentType().getElements();
+			if (values.length > 0) {
+				NameValuePair param = values[0].getParameterByName("charset");
+				if (param != null) {
+					charset = param.getValue();
+				}
+			}
+		}
+		return charset;
 	}
+	
 
 	public static String getPage(InputStream in) {
-		return getPage(in, "ISO-8859-1");
+		return getPage(in,HTTP.DEFAULT_CONTENT_CHARSET);
 	}
+
 
 	/**
 	 * Fetch data
@@ -739,8 +749,7 @@ public class SifeupAPI {
 			BufferedInputStream bis = new BufferedInputStream(in);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
 			int read = 0;
-			int bufSize = 512;
-			byte[] buffer = new byte[bufSize];
+			byte[] buffer = new byte[512];
 			while (true) {
 				read = bis.read(buffer);
 				if (read == -1) {
@@ -751,58 +760,6 @@ public class SifeupAPI {
 			bis.close();
 			in.close();
 			return new String(baf.toByteArray(), encoding);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static HttpsURLConnection getUncheckedConnection(String url) {
-		try {
-			X509TrustManager tm = new X509TrustManager() {
-				@Override
-				public X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-
-				@Override
-				public void checkServerTrusted(
-						X509Certificate[] paramArrayOfX509Certificate,
-						String paramString) throws CertificateException {
-
-				}
-
-				@Override
-				public void checkClientTrusted(
-						X509Certificate[] paramArrayOfX509Certificate,
-						String paramString) throws CertificateException {
-				}
-			};
-
-			SSLContext ctx = SSLContext.getInstance("TLS");
-			ctx.init(null, new TrustManager[] { tm }, null);
-			HttpsURLConnection httpConn = (HttpsURLConnection) new URL(url)
-					.openConnection();
-			httpConn.setSSLSocketFactory(ctx.getSocketFactory());
-			httpConn.setHostnameVerifier(new HostnameVerifier() {
-				@Override
-				public boolean verify(String paramString,
-						SSLSession paramSSLSession) {
-					return true;
-				}
-			});
-			return httpConn;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
