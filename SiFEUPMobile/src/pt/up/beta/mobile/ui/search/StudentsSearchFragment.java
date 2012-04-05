@@ -232,8 +232,11 @@ public class StudentsSearchFragment extends BaseFragment implements
 	}
 
 	protected void onRepeat() {
-		// TODO Auto-generated method stub
-		
+		showLoadingScreen();
+		if (query.matches(REGEX_STUDENT_CODE))
+		    task = SearchUtils.getSingleStudentSearchReply(query, this);
+		else
+		    task = SearchUtils.getStudentsSearchReply(query, 1, this);
 	}
 
 }
