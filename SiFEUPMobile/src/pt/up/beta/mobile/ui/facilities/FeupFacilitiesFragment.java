@@ -44,11 +44,11 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(
+		final ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_facility_pic, getParentContainer(), true);
 		pic = (TouchImageView) root.findViewById(R.id.facility_image);
-		if ( pic.needsExternalZoom() ){
-			ZoomControls zoom =  (ZoomControls) root.findViewById(R.id.zoomControls);
+		final ZoomControls zoom =  (ZoomControls) root.findViewById(R.id.zoomControls);
+		if ( zoom != null) { //it will be null for Android 3.0+
 			zoom.setOnZoomInClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
