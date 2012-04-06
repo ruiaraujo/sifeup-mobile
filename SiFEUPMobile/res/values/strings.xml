@@ -191,9 +191,9 @@
     <string name="label_free_spots">Free spots: <xliff:g id="pages">%1$s</xliff:g></string>
 
     <!-- *************************************************************************************** -->
-    <!-- STUDENT SERVICES -->
-    <string name="title_student_services">Student Services</string>
-    <string name="btn_student_services">Student Services</string>
+    <!-- SERVICES -->
+    <string name="title_student_services">Services</string>
+    <string name="btn_student_services">Services</string>
 
     <!-- Tuition -->
     <string name="title_tuition">Payments</string>
