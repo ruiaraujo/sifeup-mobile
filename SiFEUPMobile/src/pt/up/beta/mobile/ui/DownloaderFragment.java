@@ -3,6 +3,7 @@ package pt.up.beta.mobile.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class DownloaderFragment extends DialogFragment {
 	private String type;
 	private long filesize = 0;
 	private ProgressDialog pbarDialog;
+	private boolean alreadyDismissed = false;
 	private AsyncTask<String, Integer, Integer> task;
 
 	public static DownloaderFragment newInstance(String title, String url,
@@ -72,6 +74,8 @@ public class DownloaderFragment extends DialogFragment {
 		url = getArguments().getString(URL_ARG);
 		filename = getArguments().getString(NAME_ARG);
 		type = getArguments().getString(TYPE_ARG);
+		if ( type == null )
+			filename = filterDots(filename);
 		filesize = getArguments().getLong(SIZE_ARG, 0);
 		final DownloadTask downloader = new DownloadTask();
 		pbarDialog = new ProgressDialog(getActivity());
@@ -90,21 +94,47 @@ public class DownloaderFragment extends DialogFragment {
 				getString(R.string.bt_cancel), new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						downloader.cancel(true);
-						DownloaderFragment.this.dismiss();
+						pbarDialog.dismiss();
 					}
 				});
 
 		task = downloader.execute(url, filename);
-
+		setRetainInstance(true);
+		alreadyDismissed = false;
 		return pbarDialog;
 
-	}
+	}  
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (task != null)
-			task.cancel(true);
+	public void onSaveInstanceState(Bundle saved){
+		alreadyDismissed = true;
 	}
+	
+	@Override
+    public void onDestroy() {
+        // Make the thread go away.
+		task.cancel(true);
+		super.onDestroy();
+    }
+
+	private static String filterDots(String filename) {
+		if ( filename == null)
+			return null;
+		final String [] filtered = filename.split("\\.");
+		if ( filtered.length <= 2 )
+			return filename;
+		final StringBuilder st = new StringBuilder();
+		for ( int i = 0; i < filtered.length -1 ; ++i )
+		{
+			st.append(filtered[i]);
+			if ( i+1 < filtered.length -1 )
+				st.append("_");
+		}
+		st.append(".");
+		st.append(filtered[filtered.length -1]);
+		return st.toString();
+	}
+
 
 	/** Classe privada para a busca de dados ao servidor */
 	private class DownloadTask extends AsyncTask<String, Integer, Integer> {
@@ -123,7 +153,10 @@ public class DownloaderFragment extends DialogFragment {
 				return;
 			if (result == null)
 				return;
-			DownloaderFragment.this.dismiss();
+			if ( !alreadyDismissed )
+				DownloaderFragment.this.dismiss();
+			else
+				pbarDialog.dismiss();
 			switch (result) {
 			case OK: {
 				Toast.makeText(
@@ -175,8 +208,8 @@ public class DownloaderFragment extends DialogFragment {
 		@Override
 		protected Integer doInBackground(String... argsDownload) {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
-			InputStream dis;
-			FileOutputStream fos;
+			InputStream dis = null;
+			FileOutputStream fos = null;
 			long myProgress = 0;
 			int byteRead;
 			byte[] buf;
@@ -232,6 +265,10 @@ public class DownloaderFragment extends DialogFragment {
 							.getAbsolutePath() + File.separator + "Download");
 				dir.mkdirs();
 				myFile = new File(dir,argsDownload[1] );
+				if ( myFile.exists() )
+				{
+					myFile = getNonExistantFile(dir,argsDownload[1] );
+				}
 				fos = new FileOutputStream(myFile);
 
 				dis = entity.getContent();
@@ -274,26 +311,51 @@ public class DownloaderFragment extends DialogFragment {
 						httpclient.getConnectionManager().shutdown();
 						dis.close();
 						fos.close();
+						myFile.delete();
 						return null;
 					}
 				}
+				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+				if ( myFile != null )
+					myFile.delete();
 				return FILE_ERROR;
 			} catch (Exception e) {
 				e.printStackTrace();
+				if ( myFile != null )
+					myFile.delete();
 				return ERROR;
 			} finally {
 				if (httpclient != null)
 					httpclient.getConnectionManager().shutdown();
+					try {
+						if ( dis != null )
+							dis.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					try {
+						if ( fos != null )
+							fos.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			}
+			if ( isCancelled() && myFile != null )
+				myFile.delete();
+			while ( getActivity() == null && !isCancelled() )
+			{
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			return OK;
 		}
 	}
 
-	// MoodleSessionTest=pjKRLc5W2K;
-	// MoodleSession=cbe2c632ba311b111317fb1cf778ac6b;
-	// MOODLEID_=%25E6%25C9N%2514%25E1%2525%25E1
 	private static List<Cookie> androidCookieToApacheCookie(
 			String cookiesAndroid, String url) {
 		final List<Cookie> cookies = new ArrayList<Cookie>();
@@ -311,6 +373,20 @@ public class DownloaderFragment extends DialogFragment {
 			cookies.add(c);
 		}
 		return cookies;
+	}
+
+	private static File getNonExistantFile(File baseDir, String filename) {
+		if ( baseDir == null || filename == null )
+			return null;
+		File nonExistant;
+		int finalDot = filename.lastIndexOf("."), tries = 1;
+		if ( finalDot < 0 )
+			finalDot = filename.length();
+		do{
+			nonExistant = new File(baseDir, filename.substring(0,finalDot) + "(" + tries + ")" + filename.substring(finalDot));
+			tries++;
+		} while ( nonExistant.exists() );
+		return nonExistant;
 	}
 
 	private static String getDomain(String url) {
