@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui;
+package pt.up.beta.mobile.ui.dialogs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,7 +79,7 @@ public class DownloaderFragment extends DialogFragment {
 		filesize = getArguments().getLong(SIZE_ARG, 0);
 		final DownloadTask downloader = new DownloadTask();
 		pbarDialog = new ProgressDialog(getActivity());
-		pbarDialog.setMessage("Downloading " + filename);
+		pbarDialog.setMessage(getString(R.string.msg_downloading,filename));
 		pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		if (filesize != 0)
 			pbarDialog.setMax(100);
@@ -99,6 +99,7 @@ public class DownloaderFragment extends DialogFragment {
 				});
 
 		task = downloader.execute(url, filename);
+		setCancelable(false);
 		setRetainInstance(true);
 		alreadyDismissed = false;
 		return pbarDialog;

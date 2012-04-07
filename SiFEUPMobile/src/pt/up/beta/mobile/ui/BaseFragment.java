@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +33,7 @@ import android.widget.ViewSwitcher;
 public class BaseFragment extends SherlockFragment {
 
     public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
-
+    protected final static String DIALOG = "dialog";
     private static ImageDownloader imageDownloader;
     
     private ViewSwitcher switcher;
@@ -231,6 +233,16 @@ public class BaseFragment extends SherlockFragment {
     
     protected void onRepeat(){
     	
+    }
+    
+    protected void removeDialog(String dialog) {    // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(dialog);
+        if (prev != null) {
+            ft.remove(prev).commitAllowingStateLoss();
+        }
     }
 
 }

@@ -7,7 +7,7 @@ import com.actionbarsherlock.view.MenuItem;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.DownloaderFragment;
+import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;

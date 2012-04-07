@@ -14,8 +14,8 @@ import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.ScheduleUtils;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
@@ -566,11 +566,10 @@ public class ScheduleFragment extends BaseFragment implements
         return null;
     }
 
-    @SuppressWarnings("deprecation")
     public void onError(ERROR_TYPE error) {
         if (getActivity() == null)
             return;
-        getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        removeDialog(DIALOG);
         switch (error) {
         case AUTHENTICATION:
             Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
@@ -586,11 +585,11 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 	}
 
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings("unchecked")
     public void onResultReceived(Object... results) {
         if (getActivity() == null)
             return;
-        getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        removeDialog(DIALOG);
         schedule = (ArrayList<Block>) results[0];
         displaySchedule();
         showMainScreen();
@@ -628,10 +627,9 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void updateSchedule() {
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-            getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
         }
         final File cache = FileUtils.getFile(getActivity(), ScheduleFragment.class.getSimpleName()  + scheduleCode + mondayMillis);
         switch (scheduleType) {
@@ -654,10 +652,9 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
     
-    @SuppressWarnings("deprecation")
 	protected void onRepeat(){
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-            getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
         }
         else
         	showLoadingScreen();

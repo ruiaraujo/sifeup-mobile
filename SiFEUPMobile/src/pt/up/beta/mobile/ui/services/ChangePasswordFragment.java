@@ -5,8 +5,8 @@ import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -119,7 +119,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 					confirmNewPasswordText.requestFocus();
 					return;
 				}
-				getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+	            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
 				AuthenticationUtils.setPasswordReply(usernameText.getText()
 						.toString(), actualPasswordText.getText().toString(),
 						newPasswordText.getText().toString(),
@@ -218,7 +218,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
 			return;
-		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+		removeDialog(DIALOG);
 		switch (error) {
 		case NETWORK:
 			showRepeatTaskScreen(getString(R.string.toast_server_error));
@@ -232,8 +232,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
-
-		getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+		removeDialog(DIALOG);
 		if (results.length > 0) { //error while setting it
 			errorTitle = results[0].toString();
 			errorContent = results[1].toString();
@@ -268,7 +267,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 	}
 
 	protected void onRepeat() {
-		getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+        ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
 		AuthenticationUtils.setPasswordReply(usernameText.getText()
 				.toString(), actualPasswordText.getText().toString(),
 				newPasswordText.getText().toString(),

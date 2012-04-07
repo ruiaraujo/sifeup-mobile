@@ -11,12 +11,7 @@ import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
 import pt.up.beta.mobile.R;
 
-
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -184,30 +179,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
         intent.putExtras(arguments);
         intent.removeExtra("_uri");
         return intent;
-    }
-
-    public static final int DIALOG_FETCHING = 3000;
-
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-        case DIALOG_FETCHING: {
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage(getString(R.string.lb_data_fetching));
-            progressDialog.setOnCancelListener(new OnCancelListener() {
-                @SuppressWarnings("deprecation")
-				@Override
-                public void onCancel(DialogInterface dialog) {
-                    removeDialog(DIALOG_FETCHING);
-                    finish();
-                }
-            });
-            progressDialog.setIndeterminate(false);
-            return progressDialog;
-        }
-        }
-        return null;
     }
 
     /**

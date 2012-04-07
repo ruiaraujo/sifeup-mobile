@@ -12,8 +12,7 @@
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
-    <string name="msg_estimating_download">Estimando velocidade e tempo restante...</string>
-    <string name="msg_dl_speed">Velocidade: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nTempo restante: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <string name="msg_downloading">Transferindo <xliff:g id="file">%1$s</xliff:g></string>
     <string name="msg_download_finished">Transferência terminada:\n <xliff:g id="file">%1$s</xliff:g></string>
     <string name="toast_download_no_memory">Erro: Sem memória</string>
     <string name="toast_download_no_memory_card">Erro: Sem cartão de memória disponível.</string>

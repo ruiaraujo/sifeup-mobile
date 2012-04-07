@@ -13,8 +13,7 @@
     
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
-    <string name="msg_estimating_download">Estimating download speed and time left...</string>
-    <string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <string name="msg_downloading">Downloading <xliff:g id="file">%1$s</xliff:g></string>
     <string name="msg_download_finished">Finished downloading:\n <xliff:g id="file">%1$s</xliff:g></string>
     <string name="toast_download_no_memory">Error: Out of memory!</string>
     <string name="toast_download_no_memory_card">Error: No memory card available.</string>
