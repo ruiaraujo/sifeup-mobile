@@ -89,7 +89,7 @@ public class AcademicUC implements Parcelable {
 		this.type = type;
 	}
 
-	public String getName() {
+	public String getNamePt() {
 		return name;
 	}
 

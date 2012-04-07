@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.datatypes.SubjectContent;
@@ -158,7 +159,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		if (subject == null )
 		{
 			subject = (Subject) results[0];
-			((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(subject.getNamePt());
+			String title = subject.getNamePt();
+			if (!UIUtils.isLocalePortuguese() &&  subject.getNameEn().trim().length() > 0)
+				title = subject.getNameEn();
+			getSherlockActivity().getSupportActionBar().setTitle(title);
 			SubjectUtils.getSubjectContentReply(code, year, period, this);
 			return;
 		}

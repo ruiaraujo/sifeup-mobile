@@ -1,5 +1,10 @@
 package pt.up.beta.mobile.ui.personalarea;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 import pt.up.beta.mobile.datatypes.AcademicPath;
 import pt.up.beta.mobile.datatypes.AcademicUC;
 import pt.up.beta.mobile.datatypes.AcademicYear;
@@ -16,9 +21,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +34,7 @@ import android.widget.Toast;
  * 
  */
 public class AcademicPathFragment extends BaseFragment implements
-        ResponseCommand {
+        ResponseCommand, OnChildClickListener {
 
 	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
 	
@@ -45,9 +50,9 @@ public class AcademicPathFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -55,29 +60,11 @@ public class AcademicPathFragment extends BaseFragment implements
         mInflater = inflater;
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path,
                 getParentContainer(), true);
-
         grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
-
         year = (TextView) root.findViewById(R.id.path_year);
-
         average = (TextView) root.findViewById(R.id.path_average);
-
-        // TODO: colocar talvez este link no menu de cima
-        ((TextView) root.findViewById(R.id.path_link_sifeup))
-                .setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(getActivity(),
-                                WebviewActivity.class);
-                        i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI.getAcademicPathSigarraUrl(SessionManager.getInstance(getActivity()).getLoginCode()));
-                        startActivity(i);
-                    }
-                });
         return getParentContainer(); // mandatory
     }
-
-	
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){
@@ -85,7 +72,6 @@ public class AcademicPathFragment extends BaseFragment implements
  	        outState.putParcelable(ACADEMIC_KEY,academicPath);
  	}
 
-    
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if ( savedInstanceState != null )
@@ -106,6 +92,26 @@ public class AcademicPathFragment extends BaseFragment implements
                     .getLoginCode(), this);
         }
     }
+    
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.webclient_menu_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_browser) {
+            Intent i = new Intent(getActivity(),
+                    WebviewActivity.class);
+            i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI.getAcademicPathSigarraUrl(SessionManager.getInstance(getActivity()).getLoginCode()));
+            startActivity(i);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void onError(ERROR_TYPE error) {
         if (getActivity() == null)
@@ -139,6 +145,7 @@ public class AcademicPathFragment extends BaseFragment implements
         year.setText(getString(R.string.path_year,
                 academicPath.getCourseYears()));
         grades.setAdapter(new AcademicPathAdapter());
+        grades.setOnChildClickListener(this);
     }
 
     private class AcademicPathAdapter extends BaseExpandableListAdapter {
@@ -191,7 +198,7 @@ public class AcademicPathFragment extends BaseFragment implements
                     .findViewById(R.id.grade_subject_name);
             TextView gradeNumber = (TextView) root
                     .findViewById(R.id.grade_number);
-            gradeName.setText(uc.getName());
+            gradeName.setText(uc.getNamePt());
             gradeNumber.setText(getString(R.string.path_grade, uc.getGrade()));
             return root;
         }
@@ -232,7 +239,9 @@ public class AcademicPathFragment extends BaseFragment implements
         }
 
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
+            if ( getChild(groupPosition, childPosition) == null )
+            	return false;
+            return true;
         }
 
     }
@@ -241,6 +250,30 @@ public class AcademicPathFragment extends BaseFragment implements
 		showLoadingScreen();
 		task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
                 .getLoginCode(), this);
+	}
+
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+        AcademicUC uc = (AcademicUC)parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
+		if ( uc == null )
+			return true;
+		if (getActivity() == null)
+			return true;
+		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
+
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, uc.getCourseAcronym());
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, Integer
+				.toString(uc.getYear())
+				+ "/" + Integer.toString(uc.getYear()+1));
+		final String semester = uc.getSemester().equals("A")?uc.getSemester():uc.getSemester()+"S";
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, semester);
+		String title = uc.getNamePt();
+		if (!UIUtils.isLocalePortuguese() && uc.getNameEn().trim().length() > 0)
+			title = uc.getNameEn();
+		i.putExtra(Intent.EXTRA_TITLE,title );
+		startActivity(i);
+        return true;
 	}
 
 }

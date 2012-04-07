@@ -3,7 +3,6 @@ package pt.up.beta.mobile.ui.personalarea;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -119,12 +118,11 @@ public class SubjectsFragment extends BaseFragment implements
 				+ "/" + Integer.toString(secondYear));
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, subjects.get(
 				position).getSemestre());
+		String title = subjects.get(position).getNamePt();
+		if (!UIUtils.isLocalePortuguese() &&  subjects.get(position).getNameEn().trim().length() > 0)
+			title = subjects.get(position).getNameEn();
+		i.putExtra(Intent.EXTRA_TITLE,title );
 
-		final String language = Locale.getDefault().getLanguage();
-		if (language.startsWith("pt"))
-			i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).getNamePt());
-		else
-			i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).getNameEn());
 		startActivity(i);
 
 	}
