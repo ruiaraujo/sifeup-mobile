@@ -147,6 +147,7 @@ public class LoginActivity extends SherlockFragmentActivity implements ResponseC
 		case NETWORK:
 			Toast.makeText(this, getString(R.string.toast_server_error),
 					Toast.LENGTH_SHORT).show();
+			break;
 		default:
 			Toast.makeText(this, getString(R.string.general_error),
 					Toast.LENGTH_SHORT).show();
