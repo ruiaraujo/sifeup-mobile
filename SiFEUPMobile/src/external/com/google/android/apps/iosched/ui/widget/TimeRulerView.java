@@ -17,9 +17,9 @@
 package external.com.google.android.apps.iosched.ui.widget;
 
 
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.utils.DateUtils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -90,7 +90,7 @@ public class TimeRulerView extends View {
      * milliseconds since epoch).
      */
     public int getTimeVerticalOffset(long timeMillis) {
-        Time time = new Time(UIUtils.TIME_REFERENCE);
+        Time time = new Time(DateUtils.TIME_REFERENCE);
         time.set(timeMillis);
 
         final int minutes = ((time.hour - mStartHour) * 60) + time.minute;

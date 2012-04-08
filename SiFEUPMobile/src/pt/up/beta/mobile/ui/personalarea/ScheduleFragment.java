@@ -14,8 +14,8 @@ import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.ScheduleUtils;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
@@ -26,7 +26,6 @@ import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
 import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
 import external.com.google.android.apps.iosched.util.MotionEventUtils;
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -257,11 +256,11 @@ public class ScheduleFragment extends BaseFragment implements
      */
     private boolean updateNowView() {
 
-        final Time nowTime = new Time(UIUtils.TIME_REFERENCE);
+        final Time nowTime = new Time(DateUtils.TIME_REFERENCE);
         nowTime.setToNow();
         if (nowTime.weekDay == 0 || nowTime.weekDay == 6)
             return false;
-        final long now = nowTime.toMillis(true);
+        final long now = nowTime.toMillis(false);
 
         Day nowDay = null; // effectively Day corresponding to today
         for (Day day : mDays) {
@@ -315,7 +314,7 @@ public class ScheduleFragment extends BaseFragment implements
         day.blocksView.setAlwaysDrawnWithCacheEnabled(true);
         // Clear out any existing sessions before inserting again
         day.blocksView.removeAllBlocks();
-        Time date = new Time(UIUtils.TIME_REFERENCE);
+        Time date = new Time(DateUtils.TIME_REFERENCE);
         date.set(startMillis);
         date.normalize(false);
         day.label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,
@@ -325,7 +324,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     private void updateDay(int index, long millis) {
 
-        Time date = new Time(UIUtils.TIME_REFERENCE);
+        Time date = new Time(DateUtils.TIME_REFERENCE);
         date.set(millis);
         date.normalize(false);
         mDays.get(index).label = android.text.format.DateUtils.getDayOfWeekString(date.weekDay + 1,
@@ -567,11 +566,10 @@ public class ScheduleFragment extends BaseFragment implements
         return null;
     }
 
-    @SuppressWarnings("deprecation")
     public void onError(ERROR_TYPE error) {
         if (getActivity() == null)
             return;
-        getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        removeDialog(DIALOG);
         switch (error) {
         case AUTHENTICATION:
             Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
@@ -587,11 +585,11 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 	}
 
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings("unchecked")
     public void onResultReceived(Object... results) {
         if (getActivity() == null)
             return;
-        getActivity().removeDialog(BaseActivity.DIALOG_FETCHING);
+        removeDialog(DIALOG);
         schedule = (ArrayList<Block>) results[0];
         displaySchedule();
         showMainScreen();
@@ -629,10 +627,9 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void updateSchedule() {
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-            getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
         }
         final File cache = FileUtils.getFile(getActivity(), ScheduleFragment.class.getSimpleName()  + scheduleCode + mondayMillis);
         switch (scheduleType) {
@@ -655,10 +652,9 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
     
-    @SuppressWarnings("deprecation")
 	protected void onRepeat(){
         if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-            getActivity().showDialog(BaseActivity.DIALOG_FETCHING);
+            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
         }
         else
         	showLoadingScreen();

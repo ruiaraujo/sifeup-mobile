@@ -43,17 +43,25 @@ public class User implements Parcelable{
 	
 
 	private User(Parcel in) {
-		displayName = in.readString();
-		user = in.readString();
-		password = in.readString();
-		type = in.readString();
+		if ( in.readInt() == 1 ) displayName = in.readString();
+		else displayName = null;
+		if ( in.readInt() == 1 ) user = in.readString();
+		else user = null;
+		if ( in.readInt() == 1 ) password = in.readString();
+		else password = null;
+		if ( in.readInt() == 1 ) type = in.readString();
+		else type = null;
 	}
 	
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(displayName);
-		dest.writeString(user);
-		dest.writeString(password);
-		dest.writeString(type);
+		dest.writeInt(displayName!=null?1:0);
+		if ( displayName != null ) dest.writeString(displayName);
+		dest.writeInt(user!=null?1:0);
+		if ( user != null ) dest.writeString(user);
+		dest.writeInt(password!=null?1:0);
+		if ( password != null ) dest.writeString(password);
+		dest.writeInt(type!=null?1:0);
+		if ( type != null ) dest.writeString(type);
 	}
 	
 }

@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.datatypes.SubjectContent;
@@ -24,7 +25,7 @@ import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.DownloaderFragment;
+import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
@@ -158,7 +159,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 		if (subject == null )
 		{
 			subject = (Subject) results[0];
-			((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(subject.getNamePt());
+			String title = subject.getNamePt();
+			if (!UIUtils.isLocalePortuguese() &&  subject.getNameEn().trim().length() > 0)
+				title = subject.getNameEn();
+			getSherlockActivity().getSupportActionBar().setTitle(title);
 			SubjectUtils.getSubjectContentReply(code, year, period, this);
 			return;
 		}
@@ -600,9 +604,15 @@ public class SubjectDescriptionFragment extends BaseFragment implements OnPageCh
 	protected void onRepeat() {
 		showLoadingScreen();
 		if ( subject == null )
+		{
 	        task = SubjectUtils.getSubjectReply(code, year, period, this);
+	        return;
+		}
 		if ( subjectContent == null )
+		{
 			SubjectUtils.getSubjectContentReply(code, year, period, this);
+	        return;
+		}
 
 	}
 

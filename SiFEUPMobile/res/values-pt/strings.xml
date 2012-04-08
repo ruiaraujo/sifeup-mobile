@@ -7,19 +7,18 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
-	<string name="button_repeat">Repetir</string>
-	<string name="general_error">Oops!\n Alguma coisa correu mal... :(</string>
-	
+    <string name="button_repeat">Repetir</string>
+    <string name="general_error">Oops!\n Alguma coisa correu mal... :(</string>
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
-    <string name="msg_estimating_download">Estimando velocidade e tempo restante...</string>
-    <string name="msg_dl_speed">Velocidade: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nTempo restante: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <string name="msg_downloading">Transferindo <xliff:g id="file">%1$s</xliff:g></string>
     <string name="msg_download_finished">Transferência terminada:\n <xliff:g id="file">%1$s</xliff:g></string>
     <string name="toast_download_no_memory">Erro: Sem memória</string>
+    <string name="toast_download_no_memory_card">Erro: Sem cartão de memória disponível.</string>
     <string name="toast_download_error_file">Erro ao escrever no ficheiro</string>
     <string name="toast_download_error">Erro ao transferir o ficheiro</string>
-        
+
     <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
@@ -55,23 +54,16 @@
     <string name="bt_about_title">Sobre FEUP Mobile</string>
     <string name="bt_about_message">Esta aplicação dá aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
-                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>   
-                                 \n\n<b>Versão: </b>0.9.2 
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>                                 
+                                 \n\n<b>Versão: </b>0.12.0
                                  \n
-                                 31/03/2012
-                                 \n\n<b>Créditos:</b><ul>
+                                 07/04/2012
+                                 \n\n<b>Créditos:</b>
+<ul>
             <li>Faculdade de Engenharia da Universidade do Porto</li>
-
-
-\n                                    <li>CICA</li>
-
-
-\n                                    <li>Mestrado Integrado em Engenharia Informática e Computação</li>
-
-
-\n                                    <li>Disciplina Sistemas Distríbuidos</li>
-
-
+\n                                                            <li>CICA</li>
+\n                                                            <li>Mestrado Integrado em Engenharia Informática e Computação</li>
+\n                                                            <li>Disciplina Sistemas Distríbuidos</li>
 \n</ul></string>
 
     <!-- MAIN  MENU -->
@@ -86,7 +78,7 @@
     <string name="title_schedule">Horário</string>
     <string name="title_schedule_arg">Horário de <xliff:g id="code">%1$s</xliff:g></string>
     <string name="btn_schedule">Horário</string>
-    <string name="description_export">Exportar</string>
+    <string name="description_export_schedule">Exportar horário</string>
     <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
     <string name="toast_export_calendar_finished">Calendário Exportado.</string>
     <string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
@@ -94,8 +86,17 @@
     <string name="description_schedule">Ver o Horário</string>
 
     <!-- Class Description -->
+    <string name="class_subject"><b>Subject:</b>
+<xliff:g id="subject"> %1$s</xliff:g></string>
     <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>
-    <string name="class_room">Sala: <xliff:g id="teacher">%1$s</xliff:g></string>
+    <string name="class_room">Sala: <xliff:g id="room">%1$s</xliff:g></string>
+    <string name="class_team"><b>Turma:</b>
+<xliff:g id="team">%1$s</xliff:g></string>
+    <string name="class_start_time"><b>Hora de início:</b>
+<xliff:g id="start_time">%1$s</xliff:g></string>
+    <string name="class_end_time"><b>Hora de fim:</b>
+<xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="toast_too_many_rooms">Há mais que uma sala para mapear.</string>
 
     <!-- Exams -->
     <string name="title_exams">Exames</string>
@@ -171,7 +172,7 @@
     <string name="label_free_spots">Lugares livres: <xliff:g id="pages">%1$s</xliff:g></string>
 
     <!-- *************************************************************************************** -->
-    <!-- STUDENT SERVICES -->
+    <!-- SERVICES -->
     <string name="title_student_services">Serviços</string>
     <string name="btn_student_services">Serviços</string>
 
@@ -194,10 +195,6 @@
     <string name="lbl_tuition_ref_detail_date_start">Data de Início</string>
     <string name="lbl_tuition_ref_detail_date_end">Data de Fim</string>
     <string name="label_no_tuition_ref">Não tem referência disponíveis.</string>
-
-    <!-- UCs Inscriptions -->
-    <string name="title_uc_inscriptions">Inscrições em UCs</string>
-    <string name="btn_uc_inscriptions">Inscrições em UCs</string>
 
     <!-- Change Password -->
     <string name="title_change_password">Mudar Password</string>
@@ -230,22 +227,6 @@
     <string name="password_successfully_changed">Senha alterada com sucesso.</string>
     <string name="confirmation_password_different">A confirmação é diferente da senha.</string>
 
-    <!-- Card Request -->
-    <string name="title_card_request">Pedir Cartão</string>
-    <string name="btn_card_request">Pedir Cartão</string>
-
-    <!-- Scholar Profit -->
-    <string name="title_scholar_profit">Aproveitamento Escolar</string>
-    <string name="btn_scholar_profit">Aproveitamento Escolar</string>
-
-    <!-- Requests -->
-    <string name="title_requests">Requerimentos</string>
-    <string name="title_all_requests">Todos os Requerimentos</string>
-    <string name="title_new_request">Novo Requerimento</string>
-    <string name="btn_requests">Requerimentos</string>
-    <string name="btn_new_request">Novo Requerimento</string>
-    <string name="btn_all_request">Todos os Requerimentos</string>
-
     <!-- Printing -->
     <string name="title_printing">Saldo de Impressão</string>
     <string name="btn_printing">Saldo de Impressão</string>
@@ -258,13 +239,6 @@
     <string name="lb_print_ref_title">Referência Gerada</string>
     <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
     <string name="print_ref_share_title">Partilhar Referência</string>
-
-    <!-- Classes Selection -->
-    <string name="title_classes_selection">Selecção de Turmas</string>
-    <string name="btn_classes_selection">Selecção de Turmas</string>
-    <string name="btn_ok">Ok</string>
-    <string name="classes_selection_option">Opção <xliff:g id="option">%1$s</xliff:g></string>
-    <string name="classes_selection_submit">Submeter opções</string>
 
     <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->
@@ -289,10 +263,13 @@
     <string name="lb_no_news">Não há notícias</string>
 
     <!-- *************************************************************************************** -->
-    <!-- MAP -->
+    <!-- Facilities -->
     <string name="description_map">Instalações</string>
     <string name="title_map">Instalações</string>
     <string name="btn_map">Instalações</string>
+    <string name="floor_spinner">Piso <xliff:g id="floor">%1$s</xliff:g></string>
+    <string name="toast_first_map_view">Clique para ver o nome do edifício.\n\nDuplo clique para ver a vista detalhada.</string>
+    <string name="toast_no_detailed_view">Este edifício não tem disponível uma vista detalhada</string>
 
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
@@ -311,7 +288,7 @@
     <string name="lb_message">Messagem: </string>
     <string name="lb_reply_notification">Resposta </string>
     <string name="lb_obs">Comentários: </string>
-    <string name="lb_no_notification">Não tem notificações</string>
+    <string name="lb_no_notification">Não tem notificações.</string>
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->
@@ -332,5 +309,5 @@
     <string name="notification_uploader_error_title">Erro</string>
     <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Operação não suportada</string>
-    
+
 </resources>

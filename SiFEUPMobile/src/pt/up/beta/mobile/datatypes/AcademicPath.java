@@ -29,9 +29,11 @@ public class AcademicPath implements Parcelable{
 	private int courseYears; // "anos_curso"
 	private int numberEntries; // "inscricoes_ucs"
 	private int baseYear;
-	private List<AcademicYear> ucs = new ArrayList<AcademicYear>();
+	private final List<AcademicYear> ucs;
 
-	public AcademicPath(){}
+	public AcademicPath(){
+		 ucs = new ArrayList<AcademicYear>();
+	}
 	
 	/**
 	 * Parses a JSON String containing Academic Path info,
@@ -177,10 +179,6 @@ public class AcademicPath implements Parcelable{
 		return ucs;
 	}
 
-	public void setUcs(List<AcademicYear> ucs) {
-		this.ucs = ucs;
-	}
-
 	public int describeContents() {
 		return 0;
 	}
@@ -201,7 +199,7 @@ public class AcademicPath implements Parcelable{
 		dest.writeInt(courseYears);
 		dest.writeInt(numberEntries);
 		dest.writeInt(baseYear);
-		dest.writeValue(ucs.toArray());
+		dest.writeTypedList(ucs);
 	}
 	
 	private AcademicPath( Parcel in ){
@@ -213,10 +211,10 @@ public class AcademicPath implements Parcelable{
 		if ( in.readInt() == 1 ) average = in.readString();
 		courseYears = in.readInt();
 		numberEntries = in.readInt();
-		baseYear = in.readInt();
-		final AcademicYear [] years = (AcademicYear[]) in.readValue(AcademicYear.class.getClassLoader());
-		for ( AcademicYear year : years )
-			ucs.add(year);
+		baseYear = in.readInt();		
+		ucs = new ArrayList<AcademicYear>();
+		in.readTypedList(ucs, AcademicYear.CREATOR);
+
 	}
 	
 	public static final Parcelable.Creator<AcademicPath> CREATOR = new Parcelable.Creator<AcademicPath>() {

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
-
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -32,6 +30,7 @@ import pt.up.beta.mobile.sifeup.ExamsUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
@@ -201,7 +200,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 	}
 
 	private Time getDate(String dateStr, String time) {
-		Time date = new Time(UIUtils.TIME_REFERENCE);
+		Time date = new Time(DateUtils.TIME_REFERENCE);
 		StringTokenizer s = new StringTokenizer(dateStr, "-");
 		String year = s.nextToken();
 		String month = s.nextToken();

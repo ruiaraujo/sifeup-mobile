@@ -1,5 +1,8 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +18,8 @@ public class SearchUtils {
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
 			String query, int page, ResponseCommand command) {
-	    query = query.trim().replace(" ", "%20");
 		return new FetcherTask(command, new StudentsSearchParser())
-				.execute(SifeupAPI.getStudentsSearchUrl(query, page));
+				.execute(SifeupAPI.getStudentsSearchUrl(encode(query), page));
 	}
 
 
@@ -28,10 +30,19 @@ public class SearchUtils {
 	}
 	
 	
-	public static ResultsPage getStudentsSearchReply(String name, int page) {
-		final String res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(name, page));
+	public static ResultsPage getStudentsSearchReply(String query, int page)  {
+		final String res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(encode(query), page));
 		StudentsSearchParser parser = new StudentsSearchParser();
 		return (ResultsPage) parser.parse(res);
+	}
+	
+	private static String encode(String s){
+	    try {
+			return URLEncoder.encode(s.trim(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	    return "";
 	}
 
 	/**

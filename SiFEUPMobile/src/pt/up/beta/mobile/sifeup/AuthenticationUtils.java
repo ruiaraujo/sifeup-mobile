@@ -19,7 +19,7 @@ public class AuthenticationUtils {
 	public static ERROR_TYPE authenticate(String code, String password) {
 		String page = "";
 		try {
-			page = SifeupAPI.getAuthenticationReply(code, password);
+			page = SifeupAPI.getReply(SifeupAPI.getAuthenticationUrl(code, password));
 			if (page == null)
 				return ERROR_TYPE.NETWORK;
 			User user = JSONUser(page);
@@ -62,7 +62,7 @@ public class AuthenticationUtils {
 		protected ERROR_TYPE doInBackground(String... code) {
 			String page = "";
 			try {
-				page = SifeupAPI.getAuthenticationReply(code[0], code[1]);
+				page = SifeupAPI.getReply(SifeupAPI.getAuthenticationUrl(code[0], code[1]));
 				if (page == null)
 					return ERROR_TYPE.NETWORK;
 				user = JSONUser(page);

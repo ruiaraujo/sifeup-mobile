@@ -3,16 +3,16 @@ package pt.up.beta.mobile.ui.personalarea;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.R;
-
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +46,7 @@ public class SubjectsFragment extends BaseFragment implements
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(UIUtils
+                .getLoginCode(), Integer.toString(DateUtils
                 .secondYearOfSchoolYear() - 1), this);
     }
 
@@ -77,7 +77,6 @@ public class SubjectsFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.lb_no_subjects));
 			return;
 		}
-		final String language = Locale.getDefault().getLanguage();
 		final String[] from = new String[] { "name", "code", "time" };
 		final int[] to = new int[] { R.id.exam_chair, R.id.exam_time,
 				R.id.exam_room };
@@ -85,7 +84,7 @@ public class SubjectsFragment extends BaseFragment implements
 		final List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		for (Subject s : subjects) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			if (language.startsWith("pt"))
+			if (UIUtils.isLocalePortuguese())
 				map.put(from[0], (s.getNamePt().trim().length() != 0) ? s
 						.getNamePt() : s.getNameEn());
 			else
@@ -110,8 +109,8 @@ public class SubjectsFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
-		// assumed only one page of results
-		int secondYear = UIUtils.secondYearOfSchoolYear();
+
+		int secondYear = DateUtils.secondYearOfSchoolYear();
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subjects.get(
 				position).getAcronym());
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, Integer
@@ -119,12 +118,11 @@ public class SubjectsFragment extends BaseFragment implements
 				+ "/" + Integer.toString(secondYear));
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, subjects.get(
 				position).getSemestre());
+		String title = subjects.get(position).getNamePt();
+		if (!UIUtils.isLocalePortuguese() &&  subjects.get(position).getNameEn().trim().length() > 0)
+			title = subjects.get(position).getNameEn();
+		i.putExtra(Intent.EXTRA_TITLE,title );
 
-		final String language = Locale.getDefault().getLanguage();
-		if (language.startsWith("pt"))
-			i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).getNamePt());
-		else
-			i.putExtra(Intent.EXTRA_TITLE, subjects.get(position).getNameEn());
 		startActivity(i);
 
 	}
@@ -133,7 +131,7 @@ public class SubjectsFragment extends BaseFragment implements
 	protected void onRepeat() {
 		showLoadingScreen();
         task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(UIUtils
+                .getLoginCode(), Integer.toString(DateUtils
                 .secondYearOfSchoolYear() - 1), this);
 		
 	}

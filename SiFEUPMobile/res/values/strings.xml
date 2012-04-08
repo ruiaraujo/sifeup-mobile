@@ -13,10 +13,10 @@
     
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
-    <string name="msg_estimating_download">Estimating download speed and time left...</string>
-    <string name="msg_dl_speed">Download speed: <xliff:g id="kbs">%1$s</xliff:g> kb/s\nEstimaded time left: <xliff:g id="minutes">%1$s</xliff:g>:<xliff:g id="seconds">%1$s</xliff:g></string>
+    <string name="msg_downloading">Downloading <xliff:g id="file">%1$s</xliff:g></string>
     <string name="msg_download_finished">Finished downloading:\n <xliff:g id="file">%1$s</xliff:g></string>
     <string name="toast_download_no_memory">Error: Out of memory!</string>
+    <string name="toast_download_no_memory_card">Error: No memory card available.</string>
     <string name="toast_download_error_file">Error while writing the file</string>
     <string name="toast_download_error">Error while downloading file</string>
 
@@ -58,9 +58,9 @@
                                  \n\n
                                  <a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>
                                  \n\n
-                                 <b>Version: </b>0.9.2
+                                 <b>Version: </b>0.12.0
                                  \n
-                                 31/03/2012
+                                 07/04/2012
                                  \n\n
                                  <b>Credits:</b>\n
                                  <ul>
@@ -90,7 +90,7 @@
     <string name="title_schedule">Schedule</string>
     <string name="title_schedule_arg">Schedule of <xliff:g id="code">%1$s</xliff:g></string>
     <string name="btn_schedule">Schedule</string>
-    <string name="description_export">Export</string>
+    <string name="description_export_schedule">Export schedule</string>
     <string name="toast_export_calendar_finished">Calendar Exported.</string>
     <string name="toast_export_calendar_error">Failed to find Google Calendar on your device.</string>
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
@@ -104,12 +104,13 @@
 <xliff:g id="teacher"> %1$s</xliff:g></string>
     <string name="class_room"><b>Room:</b>
 <xliff:g id="room">%1$s</xliff:g></string>
-    <string name="class_team"><b>Team:</b>
+    <string name="class_team"><b>Class:</b>
 <xliff:g id="team">%1$s</xliff:g></string>
     <string name="class_start_time"><b>Start time:</b>
 <xliff:g id="start_time">%1$s</xliff:g></string>
     <string name="class_end_time"><b>End time:</b>
 <xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="toast_too_many_rooms">There is more than one room to map.</string>
 
     <!-- Exams -->
     <string name="title_exams">Exams</string>
@@ -189,9 +190,9 @@
     <string name="label_free_spots">Free spots: <xliff:g id="pages">%1$s</xliff:g></string>
 
     <!-- *************************************************************************************** -->
-    <!-- STUDENT SERVICES -->
-    <string name="title_student_services">Student Services</string>
-    <string name="btn_student_services">Student Services</string>
+    <!-- SERVICES -->
+    <string name="title_student_services">Services</string>
+    <string name="btn_student_services">Services</string>
 
     <!-- Tuition -->
     <string name="title_tuition">Payments</string>
@@ -213,10 +214,6 @@
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
     <string name="label_no_tuition_ref">There are no available references.</string>
     
-    <!-- UCs Inscriptions -->
-    <string name="title_uc_inscriptions">UCs Inscriptions</string>
-    <string name="btn_uc_inscriptions">UCs Inscriptions</string>
-
     <!-- Change Password -->
     <string name="title_change_password">Change Password</string>
     <string name="btn_change_password">Change Password</string>
@@ -255,22 +252,6 @@
     <string name="password_successfully_changed">Password successfully changed.</string>
     <string name="confirmation_password_different">The confirmation is different from the password.</string>
 
-    <!-- Card Request -->
-    <string name="title_card_request">Card Request</string>
-    <string name="btn_card_request">Card Request</string>
-
-    <!-- Scholar Profit -->
-    <string name="title_scholar_profit">Scholar Profit</string>
-    <string name="btn_scholar_profit">Scholar Profit</string>
-
-    <!-- Requests -->
-    <string name="title_requests">Requests</string>
-    <string name="title_all_requests">All Requests</string>
-    <string name="title_new_request">New Request</string>
-    <string name="btn_requests">Requests</string>
-    <string name="btn_new_request">New Request</string>
-    <string name="btn_all_request">All Requests</string>
-
     <!-- Printing -->
     <string name="title_printing">Printing Quota</string>
     <string name="btn_printing">Printing Quota</string>
@@ -284,12 +265,6 @@
     <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
     <string name="print_ref_share_title">Share Reference</string>
 
-    <!-- Classes Selection -->
-    <string name="title_classes_selection">Classes Selection</string>
-    <string name="btn_classes_selection">Classes Selection</string>
-    <string name="btn_ok">Ok</string>
-    <string name="classes_selection_option">Option <xliff:g id="option">%1$s</xliff:g></string>
-    <string name="classes_selection_submit">Submit Options</string> <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->
     <string name="title_dynamic_mail_files">Dynamic Email Files</string>
     <string name="btn_dynamic_mail_files">Dynamic Email Files</string>
@@ -316,7 +291,10 @@
     <string name="description_map">Facilities</string>
     <string name="title_map">Facilities</string>
     <string name="btn_map">Facilities</string>
-
+    <string name="floor_spinner">Floor <xliff:g id="floor">%1$s</xliff:g></string>
+    <string name="toast_first_map_view">Tap to see the building name.\n\nDouble tap to see the detailed view.</string>
+    <string name="toast_no_detailed_view">This building has no detailed view available</string>
+    
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
     <string name="title_settings">Settings</string>
@@ -334,7 +312,7 @@
     <string name="lb_message">Message: </string>
     <string name="lb_reply_notification">Reply </string>
     <string name="lb_obs">Comments: </string>
-    <string name="lb_no_notification">You have no notifications</string>
+    <string name="lb_no_notification">You have no notifications.</string>
 
     <!-- *************************************************************************************** -->
     <!-- WEBVIEW -->

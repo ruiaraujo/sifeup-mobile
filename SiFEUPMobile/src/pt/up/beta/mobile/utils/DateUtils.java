@@ -4,15 +4,15 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.text.format.Time;
-import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class DateUtils {
     private DateUtils(){} //private constructor
+    public static String TIME_REFERENCE = "Europe/Lisbon";
 
     private final static TimeZone zone = TimeZone
-            .getTimeZone(UIUtils.TIME_REFERENCE);
+            .getTimeZone(TIME_REFERENCE);
     public static long firstDayofWeek() {
-        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
+        Time yourDate = new Time(TIME_REFERENCE);
         yourDate.setToNow();
         yourDate.minute = 0;
         yourDate.hour = 0;
@@ -28,13 +28,13 @@ public class DateUtils {
             weekDay = 6;
         long mondayMillis = yourDate.toMillis(false);
         mondayMillis -= (weekDay * 24 * 60 * 60 * 1000);
-        if (moveDayofWeek(mondayMillis, 5) < UIUtils.getCurrentTime(false))
+        if (moveDayofWeek(mondayMillis, 5) < getCurrentTime(false))
             mondayMillis = moveDayofWeek(mondayMillis, 7);
         return mondayMillis;
     }
 
     public static long moveDayofWeek(long millis, int dayOffset) {
-        Time yourDate = new Time(UIUtils.TIME_REFERENCE);
+        Time yourDate = new Time(TIME_REFERENCE);
         yourDate.set(millis);
         boolean usingDst = zone.inDaylightTime(new Date(yourDate
                 .toMillis(false)));
@@ -52,5 +52,38 @@ public class DateUtils {
             }
         }
         return yourDate.toMillis(false);
+    }
+    
+
+    public static int secondYearOfSchoolYear(){
+    	Time nowT = new Time(TIME_REFERENCE);
+    	nowT.setToNow();
+    	nowT.normalize(false);
+    	if ( nowT.month >= 8 )
+    		return nowT.year+1;
+    	return nowT.year;
+    }
+    
+    public static int secondYearOfSchoolYear(long millis){
+    	Time nowT = new Time();
+    	nowT.set(millis);
+    	nowT.normalize(false);
+    	if ( nowT.month >= 8 )
+    		return nowT.year+1;
+    	return nowT.year;
+    }
+    
+
+    public static long getCurrentTime(boolean utc) {
+        Time yourDate = new Time(TIME_REFERENCE);
+        yourDate.setToNow();
+        return yourDate.toMillis(false);
+    }
+    
+    public static long convertToUtc(long now) {
+    	TimeZone local_tz = TimeZone.getTimeZone(TIME_REFERENCE); //Gets current local TZ of phone
+        long tz_offset_gmt = local_tz.getOffset(System.currentTimeMillis ()); // Get Offset in ms, divide by 3600000
+        now -= tz_offset_gmt;
+        return now;
     }
 }

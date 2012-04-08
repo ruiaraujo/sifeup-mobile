@@ -94,11 +94,9 @@ public class StudentProfileFragment extends BaseFragment implements
 					public void onClick(View v) {
 						Intent i = new Intent(getActivity(),
 								ScheduleActivity.class);
-						i
-								.putExtra(ScheduleFragment.SCHEDULE_CODE, me
-										.getCode());
-						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-								ScheduleFragment.SCHEDULE_STUDENT);
+						i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
+						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_STUDENT);
+			    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,me.getName()));
 						startActivity(i);
 					}
 				});

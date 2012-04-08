@@ -8,9 +8,17 @@ import android.view.KeyEvent;
 
 public class WebviewActivity extends BaseSinglePaneActivity {
 
-    WebviewFragment fragment;
+	WebviewFragment fragment;
     
 
+   /* @Override
+	protected void onCreate(Bundle savedInstanceState) {
+        //This has to be called before setContentView and you must use the
+        //class in com.actionbarsherlock.view and NOT android.view
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+		super.onCreate(savedInstanceState);
+	}
+*/
     @Override
     protected Fragment onCreatePane() {
         return fragment = new WebviewFragment();

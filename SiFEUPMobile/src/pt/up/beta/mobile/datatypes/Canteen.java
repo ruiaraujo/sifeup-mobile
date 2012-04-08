@@ -127,9 +127,9 @@ public class Canteen implements Parcelable {
         out.writeInt(timetable!=null?1:0);
         if ( timetable != null )
         	out.writeString(timetable);
-        out.writeInt(menus!=null?1:0);
-        if ( menus != null )
-        	out.writeValue(menus);
+        out.writeInt(menus!=null?menus.length:0);
+        if ( menus != null && menus.length > 0)
+        	out.writeTypedArray(menus, flags);
     }
 
     public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {
@@ -148,8 +148,9 @@ public class Canteen implements Parcelable {
         	description = in.readString();
         if ( in.readInt() == 1 )
         	timetable = in.readString();
-        if ( in.readInt() == 1 )
-        	menus = (Menu[]) in.readValue(Menu.class.getClassLoader());
+    	this.menus = new Menu[in.readInt()];
+        if ( menus.length > 0)
+        	in.readTypedArray(menus, Menu.CREATOR);
     }
 
 }

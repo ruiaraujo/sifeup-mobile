@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.utils.calendar;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
+import pt.up.beta.mobile.utils.DateUtils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -31,7 +31,7 @@ public class CalendarHelperICS extends CalendarHelper {
         event.put(CalendarContract.Events.DESCRIPTION, ev.getDescription());
         event.put(CalendarContract.Events.DTSTART,ev.getTimeStart() );
         event.put(CalendarContract.Events.DTEND, ev.getTimeEnd() );
-        event.put(CalendarContract.Events.EVENT_TIMEZONE, UIUtils.TIME_REFERENCE );
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, DateUtils.TIME_REFERENCE );
         return cr.insert(CalendarContract.Events.CONTENT_URI, event);
     }
 }

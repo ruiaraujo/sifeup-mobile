@@ -1,21 +1,10 @@
 <resources>
-    <!-- Start with the Holographic Light theme -->
-    <style name="Theme.Sigarra" parent="@style/Theme.Sherlock.Light">
-        <item name="android:windowBackground">@drawable/window_background</item>
-        <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="actionBarStyle">@style/ActionBar</item>
-        
-        <!-- Custom attrs -->
-        <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
-    </style>
-
+    
     <style name="Theme.Sigarra.Home" parent="style/Theme.Sigarra">
         <item name="android:windowBackground">@drawable/window_background_home</item>
         <item name="android:actionBarStyle">@null</item>
         <item name="actionBarStyle">@null</item>
     </style>
-
-
 
     <style name="ListItemContainerBase">
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
@@ -30,7 +19,7 @@
         <item name="android:drawablePadding">3dp</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/accent_1</item>
+        <item name="android:textColor">@color/feup</item>
         <item name="android:background">@null</item>
     </style>
 

@@ -11,22 +11,6 @@
 		android:paddingLeft="20dip"
 		android:orientation="vertical">
 		
-		<!-- <TextView android:id="@+id/path_course"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-		 	android:layout_gravity="center_vertical"
-		 	android:paddingBottom="8dip"
-		    android:textStyle="bold"
-		 	android:textSize="16.0sp"/>	-->
-		
-		<!-- <TextView android:id="@+id/path_state"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-		 	android:layout_gravity="center_vertical"
-		 	android:paddingBottom="8dip"
-		    android:textStyle="bold"
-		 	android:textSize="16.0sp"/> -->
-			
 		<TextView android:id="@+id/path_average"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
@@ -35,14 +19,6 @@
 		    android:textStyle="bold"
 		 	android:textSize="16.0sp"/>	
 		
-		<!-- <TextView android:id="@+id/path_entries"
-			android:layout_height="wrap_content"
-		 	android:layout_width="wrap_content"
-		 	android:layout_gravity="center_vertical"
-		 	android:paddingBottom="8dip"	
-		 	android:textStyle="bold"
-		 	android:textSize="16.0sp"/> -->
-		
 		 <TextView android:id="@+id/path_year"
 			android:layout_height="wrap_content"
 		 	android:layout_width="wrap_content"
@@ -50,15 +26,7 @@
 		 	android:paddingBottom="8dip"
 		 	android:textStyle="bold"
 		 	android:textSize="16.0sp"/>	
-		
-		 <TextView android:id="@+id/path_link_sifeup"
-			android:layout_height="wrap_content"
-		 	android:layout_width="wrap_content"
-		 	android:layout_gravity="center"
-			android:paddingTop="10dip"
-		 	android:textSize="16.0sp"
-		 	android:textColor="@color/hyperlink"
-		 	android:text="@string/path_link_sifeup"/>		
+				
 		 	
 	</LinearLayout>
 	
