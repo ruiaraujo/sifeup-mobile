@@ -17,8 +17,15 @@ import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -625,7 +632,14 @@ public class SifeupAPI {
 
 	public static synchronized DefaultHttpClient getHttpClient() {
 		if (httpclient == null) {
-			httpclient = new DefaultHttpClient();
+		    
+		    BasicHttpParams params = new BasicHttpParams();
+		    SchemeRegistry schemeRegistry = new SchemeRegistry();
+		    schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		    final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+		    schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
+		    ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+			httpclient = new DefaultHttpClient(cm, params);
 
 			// Create local HTTP context
 			localContext = new BasicHttpContext();
