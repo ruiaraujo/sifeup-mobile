@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -270,7 +271,6 @@
         <provider
             android:name=".ui.search.SearchSuggestionHistory"
             android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
-
     </application>
 
 </manifest>

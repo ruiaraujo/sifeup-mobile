@@ -24,7 +24,9 @@ import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
@@ -164,6 +166,11 @@ public class DownloaderFragment extends DialogFragment {
 						getActivity(),
 						getString(R.string.msg_download_finished,
 								myFile.getPath()), Toast.LENGTH_SHORT).show();
+				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 )
+				{
+					DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+					manager.addCompletedDownload(filename, url, true, type, myFile.getAbsolutePath(), filesize, false);
+				}
 				try {
 					Intent intent = new Intent();
 					intent.setAction(Intent.ACTION_VIEW);
@@ -359,10 +366,15 @@ public class DownloaderFragment extends DialogFragment {
 						e.printStackTrace();
 					}
 			}
+			if ( filesize == 0 )
+				filesize = myProgress;
 			if ( isCancelled() && myFile != null )
 				myFile.delete();
 			while ( getActivity() == null && !isCancelled() )
 			{
+				/**
+				 * Wait for the activity to be available.
+				 */
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
