@@ -249,7 +249,23 @@ public class DownloaderFragment extends DialogFragment {
 				List<Cookie> cookies = androidCookieToApacheCookie(
 						CookieManager.getInstance().getCookie(url), url);
 				for (Cookie cookie : cookies)
-					cookieStore.addCookie(cookie);
+				{
+					/**
+					 * Only add cookies still not present ion the cookies store.
+					 */
+					boolean found = false;
+					for ( Cookie alreadyAdded : cookieStore.getCookies() )
+					{
+						if ( cookie.getName().equals(alreadyAdded.getName()) && 
+								cookie.getDomain().equals(alreadyAdded.getDomain()))
+						{
+							found = true;
+							break;
+						}
+					}
+					if ( !found )
+						cookieStore.addCookie(cookie);
+				}
 				HttpResponse response = httpclient.execute(new HttpGet(url),
 						localContext);
 				if (response == null) {
