@@ -281,23 +281,20 @@ public class ScheduleFragment extends BaseFragment implements
             mPager.setCurrentItem(nowDay.index);
             final int offset = (int) (nowDay.scrollView.getHeight() * timeOffset);
             if (nowDay.scrollView.getHeight() == 0)
-            { // the layout may not have been when the activity is being open.
+            { // the layout may not have been initialized when the activity is being open.
                 //so we scroll after the layout has been done.
                 final Day selectedDay = nowDay;
                 nowDay.scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         selectedDay.scrollView.scrollTo(0, (int) (selectedDay.scrollView.getHeight() * timeOffset));
-                        selectedDay.blocksView.requestLayout();
+                        selectedDay.scrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
                 });
             }
             nowDay.scrollView.scrollTo(0, offset);
-            nowDay.blocksView.requestLayout();
         } else {
             mondayMillis = DateUtils.firstDayofWeek();
-            for (int i = 0; i < mDays.size(); ++i)
-                updateDay(i, DateUtils.moveDayofWeek(mondayMillis, i));
             setToNow = true;
             updateSchedule();
         }
@@ -344,6 +341,7 @@ public class ScheduleFragment extends BaseFragment implements
                 android.text.format.DateUtils.LENGTH_LONG) + ", " + date.format("%d-%m");
         mDays.get(index).timeStart = millis;
         mDays.get(index).timeEnd = millis + android.text.format.DateUtils.DAY_IN_MILLIS;
+        mDays.get(index).nowView.setVisibility(View.GONE);
     }
 
     private void cleanBlocks() {
