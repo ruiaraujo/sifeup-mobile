@@ -45,6 +45,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -273,13 +274,24 @@ public class ScheduleFragment extends BaseFragment implements
         }
         if (nowDay != null) {
             long hours = (now - nowDay.timeStart) / 3600000;
-            double timeOffset = (double) (hours - nowDay.blocksView
+            final double timeOffset = (double) (hours - nowDay.blocksView
                     .getTimeRulerStartHour())
                     / (double) nowDay.blocksView.getTimeRulerHours();
             // Scroll to show "now" in center
             mPager.setCurrentItem(nowDay.index);
-            nowDay.nowView.invalidate();
             final int offset = (int) (nowDay.scrollView.getHeight() * timeOffset);
+            if (nowDay.scrollView.getHeight() == 0)
+            { // the layout may not have been when the activity is being open.
+                //so we scroll after the layout has been done.
+                final Day selectedDay = nowDay;
+                nowDay.scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        selectedDay.scrollView.scrollTo(0, (int) (selectedDay.scrollView.getHeight() * timeOffset));
+                        selectedDay.blocksView.requestLayout();
+                    }
+                });
+            }
             nowDay.scrollView.scrollTo(0, offset);
             nowDay.blocksView.requestLayout();
         } else {
@@ -309,7 +321,8 @@ public class ScheduleFragment extends BaseFragment implements
 
         day.blocksView = (BlocksLayout) day.rootView.findViewById(R.id.blocks);
         day.nowView = day.rootView.findViewById(R.id.blocks_now);
-
+        day.nowView.setVisibility(View.GONE);
+        
         day.blocksView.setDrawingCacheEnabled(true);
         day.blocksView.setAlwaysDrawnWithCacheEnabled(true);
         // Clear out any existing sessions before inserting again
