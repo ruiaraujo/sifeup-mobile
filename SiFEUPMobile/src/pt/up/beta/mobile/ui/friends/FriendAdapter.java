@@ -35,8 +35,11 @@ public class FriendAdapter extends BaseAdapter {
 		return friends.get(position);
 	}
 
+	/**
+	 * This is used in the list fragment for the context menu.
+	 */
 	public long getItemId(int position) {
-		return friends.get(position).hashCode();
+		return position;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
