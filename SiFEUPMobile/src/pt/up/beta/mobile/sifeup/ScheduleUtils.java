@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.datatypes.Block;
+import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.os.AsyncTask;
@@ -95,7 +95,7 @@ public class ScheduleUtils {
 				JSONObject jObject = new JSONObject(page);
 
 		        // clear old schedule
-		        List<Block> schedule = new ArrayList<Block>();
+		        List<ScheduleBlock> schedule = new ArrayList<ScheduleBlock>();
 
 		        if (jObject.has("horario")) {
 		            Log.e("JSON", "founded schedule");
@@ -107,7 +107,7 @@ public class ScheduleUtils {
 		                JSONObject jBlock = jArray.getJSONObject(i);
 		                SifeupUtils.removeEmptyKeys(jBlock);
 		                // new Block
-		                Block block = new Block();
+		                ScheduleBlock block = new ScheduleBlock();
 
 		                if (jBlock.has("dia"))
 		                    block.setWeekDay(jBlock.getInt("dia") - 2); // Monday is
@@ -124,7 +124,7 @@ public class ScheduleUtils {
 		                    block.setLectureDuration(jBlock.getDouble("aula_duracao"));
 		                if (jBlock.has("turma_sigla"))
 		                    block.setClassAcronym(jBlock.getString("turma_sigla"));
-		                if (jBlock.has("doc_sigla"))
+		              /*  if (jBlock.has("doc_sigla"))
 		                    block.setTeacherAcronym(jBlock.getString("doc_sigla"));
 		                if (jBlock.has("doc_codigo"))
 		                    block.setTeacherCode(jBlock.getString("doc_codigo"));
@@ -136,6 +136,7 @@ public class ScheduleUtils {
 
 		                if (jBlock.has("edi_cod"))
 		                    block.setBuildingCode(jBlock.getString("edi_cod"));
+		                    */
 		                if (jBlock.has("periodo"))
 		                    block.setSemester(jBlock.getString("periodo"));
 		                int secondYear = DateUtils.secondYearOfSchoolYear(mondayMillis);

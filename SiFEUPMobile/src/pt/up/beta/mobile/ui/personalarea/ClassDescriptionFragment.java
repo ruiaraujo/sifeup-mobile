@@ -4,7 +4,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import pt.up.beta.mobile.datatypes.Block;
+import pt.up.beta.mobile.datatypes.ScheduleBlock;
+import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
@@ -31,14 +32,14 @@ public class ClassDescriptionFragment extends BaseFragment {
 	 * The key for the student code in the intent.
 	 */
 	final public static String BLOCK = "pt.up.fe.mobile.ui.studentarea.BLOCK";
-	private Block block;
+	private ScheduleBlock block;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		Bundle args = getArguments();
-		block = (Block) args.get(BLOCK);
+		block = (ScheduleBlock) args.get(BLOCK);
 	}
 
 	@Override
@@ -78,43 +79,43 @@ public class ClassDescriptionFragment extends BaseFragment {
 		TextView teacher = (TextView) root.findViewById(R.id.class_teacher);
 
 		teacher.setText(getString(R.string.class_teacher,
-				block.getTeacherAcronym()));
+				block.getTeachers().get(0).getName()));
 		teacher.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (block.getTeacherCode() == null)
+				if (block.getTeachers().get(0).getCode() == null)
 					return;
 				final Intent i = new Intent(getActivity(),
 						ProfileActivity.class);
-				i.putExtra(ProfileActivity.PROFILE_CODE, block.getTeacherCode());
+				i.putExtra(ProfileActivity.PROFILE_CODE, block.getTeachers().get(0).getCode());
 				i.putExtra(ProfileActivity.PROFILE_TYPE,
 						ProfileActivity.PROFILE_EMPLOYEE);
-				i.putExtra(Intent.EXTRA_TITLE, block.getTeacherAcronym());
+				i.putExtra(Intent.EXTRA_TITLE, block.getTeachers().get(0).getName());
 				startActivity(i);
 			}
 		});
-
+		final ScheduleRoom room = block.getRooms().get(0);
 		// Room
-		TextView room = (TextView) root.findViewById(R.id.class_room);
-		room.setText(getString(
+		TextView roomTextView = (TextView) root.findViewById(R.id.class_room);
+		roomTextView.setText(getString(
 				R.string.class_room,
-				(block.getBuildingCode() == null ? "" : block.getBuildingCode())
-						+ block.getRoomCode()));
+				(room.getBuildingCode() == null ? "" : room.getBuildingCode())
+						+ room.getRoomCode()));
 
-		room.setOnClickListener(new OnClickListener() {
+		roomTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (block.getBuildingCode() == null)
+				if (room.getBuildingCode() == null)
 					return;
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_ROOM);
 				i.putExtra(ScheduleFragment.SCHEDULE_CODE,
-						block.getBuildingCode() + block.getRoomCode());
+						room.getBuildingCode() + room.getRoomCode());
 				i.putExtra(
 						Intent.EXTRA_TITLE,
 						getString(R.string.title_schedule_arg,
-								block.getBuildingCode() + block.getRoomCode()));
+								room.getBuildingCode() + room.getRoomCode()));
 
 				startActivity(i);
 			}
@@ -163,15 +164,16 @@ public class ClassDescriptionFragment extends BaseFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		final ScheduleRoom room = block.getRooms().get(0);
 		if (item.getItemId() == R.id.menu_map) {
-			if (block.getBuildingCode() == null) {
+			if (room.getBuildingCode() == null) {
 				Toast.makeText(getActivity(), R.string.toast_too_many_rooms, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 			final Intent intent = new Intent(getActivity(),
 					FeupFacilitiesDetailsActivity.class);
 			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA,
-					block.getBuildingCode() + block.getRoomCode());
+					room.getBuildingCode() + room.getRoomCode());
 			startActivity(intent);
 			return true;
 		}

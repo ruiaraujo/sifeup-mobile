@@ -9,7 +9,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import pt.up.beta.mobile.datatypes.Block;
+import pt.up.beta.mobile.datatypes.ScheduleBlock;
+import pt.up.beta.mobile.datatypes.ScheduleRoom;
+import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.ScheduleUtils;
 import pt.up.beta.mobile.sifeup.SessionManager;
@@ -69,7 +71,7 @@ public class ScheduleFragment extends BaseFragment implements
     private int mTitleCurrentDayIndex = -1;
     private View mLeftIndicator;
     private View mRightIndicator;
-    private ArrayList<Block> schedule = new ArrayList<Block>();
+    private ArrayList<ScheduleBlock> schedule = new ArrayList<ScheduleBlock>();
     private List<Day> mDays = new ArrayList<Day>();
     private long mondayMillis;
     private LayoutInflater mInflater;
@@ -366,25 +368,25 @@ public class ScheduleFragment extends BaseFragment implements
         private long timeEnd = -1;
     }
 
-    private void addBlock(int dayIndex, Block block) {
+    private void addBlock(int dayIndex, ScheduleBlock block) {
         if (getActivity() == null) {
             return;
         }
         // Plus one because mDays.at(0) is a day of the previous week
         Day day = mDays.get(dayIndex + 1);
-
+        ScheduleRoom room = block.getRooms().get(0);
         final String blockId = block.getLectureAcronym()
                 + block.getLectureType()
-                + (block.getBuildingCode() == null ? "" : block
-                        .getBuildingCode()) + block.getRoomCode()
+                + (room.getBuildingCode() == null ? "" : room
+                        .getBuildingCode()) + room.getRoomCode()
                 + block.getStartTime();
         final String title = block.getLectureAcronym()
                 + " ("
                 + block.getLectureType()
                 + ")"
                 + "\n"
-                + (block.getBuildingCode() == null ? "" : block
-                        .getBuildingCode()) + block.getRoomCode();
+                + (room.getBuildingCode() == null ? "" : room
+                        .getBuildingCode()) + room.getRoomCode();
         final long start = block.getStartTime() * 1000 + day.timeStart;
         final long end = start + (long) (block.getLectureDuration() * 3600000);
         final boolean containsStarred = false;
@@ -447,15 +449,17 @@ public class ScheduleFragment extends BaseFragment implements
                         public void onClick(DialogInterface dialog, int which) {
 
                             // iterate over schedule and add them to schedule
-                            for (Block b : schedule) {
+                            for (ScheduleBlock b : schedule) {
                                 // new event
+                                ScheduleRoom room = b.getRooms().get(0);
+                                ScheduleTeacher teacher = b.getTeachers().get(0);
                                 String title = b.getLectureAcronym() + " ("
                                         + b.getLectureType() + ")";
-                                String eventLocation = (b.getBuildingCode() != null ? b
+                                String eventLocation = (room.getBuildingCode() != null ? room
                                         .getBuildingCode() : "")
-                                        + b.getRoomCode();
+                                        + room.getRoomCode();
                                 String description = "Professor: "
-                                        + b.getTeacherAcronym();
+                                        + teacher.getName();
                                 long date = pt.up.beta.mobile.utils.DateUtils.moveDayofWeek(mondayMillis,
                                         b.getWeekDay())
                                         + b.getStartTime() * 1000;
@@ -552,7 +556,7 @@ public class ScheduleFragment extends BaseFragment implements
     @Override
     public void onClick(View view) {
         if (view instanceof BlockView) {
-            Block block = findBlock(((BlockView) view).getBlockId());
+            ScheduleBlock block = findBlock(((BlockView) view).getBlockId());
             if (block == null)
                 Toast.makeText(getActivity(), "Something stupid happened",
                         Toast.LENGTH_SHORT).show();
@@ -564,12 +568,13 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
-    private Block findBlock(String blockId) {
-        for (Block block : schedule) {
+    private ScheduleBlock findBlock(String blockId) {
+        for (ScheduleBlock block : schedule) {
+            ScheduleRoom room = block.getRooms().get(0);
             String id = block.getLectureAcronym()
                     + block.getLectureType()
-                    + (block.getBuildingCode() == null ? "" : block
-                            .getBuildingCode()) + block.getRoomCode()
+                    + (room.getBuildingCode() == null ? "" : room
+                            .getBuildingCode()) + room.getRoomCode()
                     + block.getStartTime();
             if (id.equals(blockId))
                 return block;
@@ -601,7 +606,7 @@ public class ScheduleFragment extends BaseFragment implements
         if (getActivity() == null)
             return;
         removeDialog(DIALOG);
-        schedule = (ArrayList<Block>) results[0];
+        schedule = (ArrayList<ScheduleBlock>) results[0];
         displaySchedule();
         showMainScreen();
     }
@@ -618,7 +623,7 @@ public class ScheduleFragment extends BaseFragment implements
         }
 
         Log.e("Schedule", "success");
-        for (Block block : schedule)
+        for (ScheduleBlock block : schedule)
             addBlock(block.getWeekDay(), block);
         mPager.setAdapter(new DayAdapter());
         if (fetchingPreviousWeek) {

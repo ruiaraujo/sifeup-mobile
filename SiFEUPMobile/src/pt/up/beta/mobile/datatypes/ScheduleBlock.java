@@ -1,5 +1,8 @@
 package pt.up.beta.mobile.datatypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 /**
@@ -9,7 +12,7 @@ import android.os.Parcelable;
  * (time, place, teacher)
  *
  */
-public class Block implements Parcelable{
+public class ScheduleBlock implements Parcelable{
 	private int weekDay; // [0 ... 6]
 	private int startTime; // seconds from midnight
 	
@@ -19,16 +22,18 @@ public class Block implements Parcelable{
 	private double lectureDuration; // 2; 1,5 (in hours)
 	private String classAcronym; // 3MIEIC1
 	
-	private String teacherAcronym; // RMA
-	private String teacherCode; // 466651
+	private final List<ScheduleTeacher> teachers;
+	private final List<ScheduleRoom> rooms;
 	
-	private String roomCode; // 002
-	private String buildingCode; // B
+
 	private String semester; // 2S
 	
 	private String year; // 2010/2011
 
-	public Block(){}
+	public ScheduleBlock(){
+		teachers = new ArrayList<ScheduleTeacher>();
+		rooms = new ArrayList<ScheduleRoom>();
+	}
 	
 	public int getWeekDay() {
 		return weekDay;
@@ -86,38 +91,6 @@ public class Block implements Parcelable{
 		this.classAcronym = classAcronym;
 	}
 
-	public String getTeacherAcronym() {
-		return teacherAcronym;
-	}
-
-	public void setTeacherAcronym(String teacherAcronym) {
-		this.teacherAcronym = teacherAcronym;
-	}
-
-	public String getTeacherCode() {
-		return teacherCode;
-	}
-
-	public void setTeacherCode(String teacherCode) {
-		this.teacherCode = teacherCode;
-	}
-
-	public String getRoomCode() {
-		return roomCode;
-	}
-
-	public void setRoomCode(String roomCode) {
-		this.roomCode = roomCode;
-	}
-
-	public String getBuildingCode() {
-		return buildingCode;
-	}
-
-	public void setBuildingCode(String buildingCode) {
-		this.buildingCode = buildingCode;
-	}
-
 	public String getSemester() {
 		return semester;
 	}
@@ -133,7 +106,23 @@ public class Block implements Parcelable{
 	public String getYear() {
 		return year;
 	}
+	
+	public void addTeacher(ScheduleTeacher teacher){
+		teachers.add(teacher);
+	}
 
+	public List<ScheduleTeacher> getTeachers(){
+		return teachers;
+	}
+	
+	public void addRoom(ScheduleRoom room){
+		rooms.add(room);
+	}
+
+	public List<ScheduleRoom> getRooms(){
+		return rooms;
+	}
+	
 	public int describeContents() {
 		return 0;
 	}
@@ -150,21 +139,15 @@ public class Block implements Parcelable{
 		dest.writeDouble(lectureDuration);
 		dest.writeInt(classAcronym!=null?1:0);
 		if (  classAcronym != null ) dest.writeString(classAcronym);
-		dest.writeInt(teacherAcronym!=null?1:0);
-		if ( teacherAcronym != null ) dest.writeString(teacherAcronym);
-		dest.writeInt(teacherCode!=null?1:0);
-		if ( teacherCode != null ) dest.writeString(teacherCode);
-		dest.writeInt(roomCode!=null?1:0);
-		if ( roomCode != null ) dest.writeString(roomCode);
-		dest.writeInt(buildingCode!=null?1:0);
-		if ( buildingCode != null ) dest.writeString(buildingCode);
 		dest.writeInt(semester!=null?1:0);
 		if ( semester != null ) dest.writeString(semester);
 		dest.writeInt(year!=null?1:0);
 		if ( year != null ) dest.writeString(year);
+		dest.writeTypedList(teachers);
+		dest.writeTypedList(rooms);
 	}
 	
-	private Block(Parcel in){
+	private ScheduleBlock(Parcel in){
 		weekDay = in.readInt();
 		startTime = in.readInt();
 		if ( in.readInt() == 1 ) lectureCode = in.readString();
@@ -172,22 +155,22 @@ public class Block implements Parcelable{
 		if ( in.readInt() == 1 ) lectureType = in.readString();
 		lectureDuration = in.readDouble();
 		if ( in.readInt() == 1 ) classAcronym = in.readString();
-		if ( in.readInt() == 1 ) teacherAcronym = in.readString();
-		if ( in.readInt() == 1 ) teacherCode = in.readString();
-		if ( in.readInt() == 1 ) roomCode = in.readString();
-		if ( in.readInt() == 1 ) buildingCode = in.readString();
 		if ( in.readInt() == 1 ) semester = in.readString();
 		if ( in.readInt() == 1 ) year = in.readString();
+		teachers = new ArrayList<ScheduleTeacher>();
+		in.readTypedList(teachers, ScheduleTeacher.CREATOR);
+		rooms = new ArrayList<ScheduleRoom>();
+		in.readTypedList(rooms, ScheduleRoom.CREATOR);
 	}
 	
 
-    public static final Parcelable.Creator<Block> CREATOR = new Parcelable.Creator<Block>() {
-        public Block createFromParcel(Parcel in) {
-            return new Block(in);
+    public static final Parcelable.Creator<ScheduleBlock> CREATOR = new Parcelable.Creator<ScheduleBlock>() {
+        public ScheduleBlock createFromParcel(Parcel in) {
+            return new ScheduleBlock(in);
         }
 
-        public Block[] newArray(int size) {
-            return new Block[size];
+        public ScheduleBlock[] newArray(int size) {
+            return new ScheduleBlock[size];
         }
     };
 
