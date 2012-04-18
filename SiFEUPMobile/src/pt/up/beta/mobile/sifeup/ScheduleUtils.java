@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
+import pt.up.beta.mobile.datatypes.ScheduleRoom;
+import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.os.AsyncTask;
@@ -124,19 +126,52 @@ public class ScheduleUtils {
 		                    block.setLectureDuration(jBlock.getDouble("aula_duracao"));
 		                if (jBlock.has("turma_sigla"))
 		                    block.setClassAcronym(jBlock.getString("turma_sigla"));
-		              /*  if (jBlock.has("doc_sigla"))
-		                    block.setTeacherAcronym(jBlock.getString("doc_sigla"));
-		                if (jBlock.has("doc_codigo"))
-		                    block.setTeacherCode(jBlock.getString("doc_codigo"));
-		                if (jBlock.has("sala_cod")) {
-		                    block.setRoomCode(jBlock.getString("sala_cod"));
-		                    while (block.getRoomCode().length() < 3)
-		                        block.setRoomCode("0" + block.getRoomCode());
+		               
+		                //Adding teachers
+		                if ( jBlock.has("doc_codigo") ){
+		                	final String code = jBlock.getString("doc_codigo"); 
+		                	final String name = jBlock.getString("doc_sigla");
+		                	block.addTeacher(new ScheduleTeacher(code, name));
+		                }
+		                else
+		                {
+		                	JSONArray teachers = jBlock.optJSONArray("docentes");
+		                	if ( teachers != null ){
+		                		for ( int j = 0 ; j < teachers.length(); ++j ){
+		                			JSONObject teacher = teachers.getJSONObject(j);
+		                			final String code = teacher.getString("doc_codigo"); 
+				                	final String name = teacher.getString("doc_sigla");
+				                	block.addTeacher(new ScheduleTeacher(code, name));
+		                		}
+		                	}
+		                }
+		                // adding the rooms
+		                if ( jBlock.has("edi_cod") ){
+		                	final String code = jBlock.getString("edi_cod"); 
+		                	final String buildingBlock = jBlock.optString("bloco");
+		                	String room = jBlock.getString("sala_cod");
+			                    while (room.length() < 3)
+			                        room = "0" + room;
+
+		                	block.addRoom(new ScheduleRoom(code,buildingBlock, room));
+		                }
+		                else
+		                {
+		                	JSONArray rooms = jBlock.optJSONArray("salas");
+		                	if ( rooms != null ){
+		                		for ( int j = 0 ; j < rooms.length(); ++j ){
+		                			JSONObject room = rooms.getJSONObject(j);
+				                	final String code = room.getString("edi_cod"); 
+				                	final String buildingBlock = room.optString("bloco");
+				                	String roomStr = room.getString("sala_cod");
+					                    while (room.length() < 3)
+					                        roomStr = "0" + roomStr;
+
+				                	block.addRoom(new ScheduleRoom(code,buildingBlock, roomStr));
+		                		}
+		                	}
 		                }
 
-		                if (jBlock.has("edi_cod"))
-		                    block.setBuildingCode(jBlock.getString("edi_cod"));
-		                    */
 		                if (jBlock.has("periodo"))
 		                    block.setSemester(jBlock.getString("periodo"));
 		                int secondYear = DateUtils.secondYearOfSchoolYear(mondayMillis);
