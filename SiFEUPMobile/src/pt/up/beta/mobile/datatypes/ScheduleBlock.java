@@ -21,6 +21,7 @@ public class ScheduleBlock implements Parcelable{
 	private String lectureType; // T|TP|P
 	private double lectureDuration; // 2; 1,5 (in hours)
 	private String classAcronym; // 3MIEIC1
+    private String roomCod; // in case of mutiple rooms this holds a string nice to show.
 	
 	private final List<ScheduleTeacher> teachers;
 	private final List<ScheduleRoom> rooms;
@@ -107,7 +108,15 @@ public class ScheduleBlock implements Parcelable{
 		return year;
 	}
 	
-	public void addTeacher(ScheduleTeacher teacher){
+	public String getRoomCod() {
+        return roomCod;
+    }
+
+    public void setRoomCod(String roomCod) {
+        this.roomCod = roomCod;
+    }
+
+    public void addTeacher(ScheduleTeacher teacher){
 		teachers.add(teacher);
 	}
 
@@ -143,6 +152,8 @@ public class ScheduleBlock implements Parcelable{
 		if ( semester != null ) dest.writeString(semester);
 		dest.writeInt(year!=null?1:0);
 		if ( year != null ) dest.writeString(year);
+        dest.writeInt(roomCod!=null?1:0);
+        if ( roomCod != null ) dest.writeString(roomCod);
 		dest.writeTypedList(teachers);
 		dest.writeTypedList(rooms);
 	}
@@ -157,6 +168,7 @@ public class ScheduleBlock implements Parcelable{
 		if ( in.readInt() == 1 ) classAcronym = in.readString();
 		if ( in.readInt() == 1 ) semester = in.readString();
 		if ( in.readInt() == 1 ) year = in.readString();
+        if ( in.readInt() == 1 ) roomCod = in.readString();
 		teachers = new ArrayList<ScheduleTeacher>();
 		in.readTypedList(teachers, ScheduleTeacher.CREATOR);
 		rooms = new ArrayList<ScheduleRoom>();

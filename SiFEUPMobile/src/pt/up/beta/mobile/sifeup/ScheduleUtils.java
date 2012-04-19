@@ -152,11 +152,12 @@ public class ScheduleUtils {
 		                	String room = jBlock.getString("sala_cod");
 			                    while (room.length() < 3)
 			                        room = "0" + room;
-
+			                block.setRoomCod(code+room);
 		                	block.addRoom(new ScheduleRoom(code,buildingBlock, room));
 		                }
 		                else
 		                {
+                            block.setRoomCod(jBlock.getString("sala_cod"));
 		                	JSONArray rooms = jBlock.optJSONArray("salas");
 		                	if ( rooms != null ){
 		                		for ( int j = 0 ; j < rooms.length(); ++j ){
@@ -164,7 +165,7 @@ public class ScheduleUtils {
 				                	final String code = room.getString("edi_cod"); 
 				                	final String buildingBlock = room.optString("bloco");
 				                	String roomStr = room.getString("sala_cod");
-					                    while (room.length() < 3)
+					                    while (roomStr.length() < 3)
 					                        roomStr = "0" + roomStr;
 
 				                	block.addRoom(new ScheduleRoom(code,buildingBlock, roomStr));

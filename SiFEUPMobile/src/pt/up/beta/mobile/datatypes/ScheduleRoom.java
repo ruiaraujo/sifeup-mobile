@@ -9,7 +9,7 @@ public class ScheduleRoom implements Parcelable {
 	private final String buildingCode; // B
 	private final String blockCode; // ii
 	
-	public ScheduleRoom(String roomCode, String buildingCode, String blockCode) {
+	public ScheduleRoom(String buildingCode, String blockCode, String roomCode) {
 		this.roomCode = roomCode;
 		this.buildingCode = buildingCode;
 		this.blockCode = blockCode;

@@ -32,12 +32,12 @@ public class FacilitiesUtils {
 
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingsHotspot(
 			InputStream file, ResponseCommand command) {
-		return new BuildingsHotspotTask(command, null).execute(file);
+		return new BuildingsHotspotTask(command, null, null).execute(file);
 	}
 	
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingHotspot(
-			InputStream file, String buildingCode, ResponseCommand command) {
-		return new BuildingsHotspotTask(command,buildingCode ).execute(file);
+			InputStream file, String buildingCode, String blockCode, ResponseCommand command) {
+		return new BuildingsHotspotTask(command,buildingCode,blockCode ).execute(file);
 	}
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
@@ -89,9 +89,14 @@ public class FacilitiesUtils {
 		private List<BuildingPicHotspot> hotspots;
 		private final ResponseCommand command;
 		private final String buildingCode;
-		public BuildingsHotspotTask(ResponseCommand command, String buildingCode) {
+        private final String blockCode;
+		public BuildingsHotspotTask(ResponseCommand command, String buildingCode, String blockCode) {
 			this.command = command;
 			this.buildingCode = buildingCode;
+			if ( blockCode != null )
+			    this.blockCode = blockCode;
+			else
+                this.blockCode = "";
 		}
 
 		@Override
@@ -108,7 +113,7 @@ public class FacilitiesUtils {
 				{
 					for ( BuildingPicHotspot hot : hotspots )
 					{
-						if (buildingCode.equals(hot.getBuildingCode()) )
+						if (buildingCode.equals(hot.getBuildingCode()) && blockCode.equals(hot.getBuildingBlock()) )
 						{
 							command.onResultReceived(hot);
 							return;

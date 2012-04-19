@@ -10,7 +10,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
-import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.ScheduleUtils;
@@ -374,19 +373,16 @@ public class ScheduleFragment extends BaseFragment implements
         }
         // Plus one because mDays.at(0) is a day of the previous week
         Day day = mDays.get(dayIndex + 1);
-        ScheduleRoom room = block.getRooms().get(0);
         final String blockId = block.getLectureAcronym()
                 + block.getLectureType()
-                + (room.getBuildingCode() == null ? "" : room
-                        .getBuildingCode()) + room.getRoomCode()
+                + block.getRoomCod()
                 + block.getStartTime();
         final String title = block.getLectureAcronym()
                 + " ("
                 + block.getLectureType()
                 + ")"
                 + "\n"
-                + (room.getBuildingCode() == null ? "" : room
-                        .getBuildingCode()) + room.getRoomCode();
+                + block.getRoomCod();
         final long start = block.getStartTime() * 1000 + day.timeStart;
         final long end = start + (long) (block.getLectureDuration() * 3600000);
         final boolean containsStarred = false;
@@ -451,13 +447,10 @@ public class ScheduleFragment extends BaseFragment implements
                             // iterate over schedule and add them to schedule
                             for (ScheduleBlock b : schedule) {
                                 // new event
-                                ScheduleRoom room = b.getRooms().get(0);
                                 ScheduleTeacher teacher = b.getTeachers().get(0);
                                 String title = b.getLectureAcronym() + " ("
                                         + b.getLectureType() + ")";
-                                String eventLocation = (room.getBuildingCode() != null ? room
-                                        .getBuildingCode() : "")
-                                        + room.getRoomCode();
+                                String eventLocation = b.getRoomCod();
                                 String description = "Professor: "
                                         + teacher.getName();
                                 long date = pt.up.beta.mobile.utils.DateUtils.moveDayofWeek(mondayMillis,
@@ -570,11 +563,9 @@ public class ScheduleFragment extends BaseFragment implements
 
     private ScheduleBlock findBlock(String blockId) {
         for (ScheduleBlock block : schedule) {
-            ScheduleRoom room = block.getRooms().get(0);
             String id = block.getLectureAcronym()
                     + block.getLectureType()
-                    + (room.getBuildingCode() == null ? "" : room
-                            .getBuildingCode()) + room.getRoomCode()
+                    + block.getRoomCod()
                     + block.getStartTime();
             if (id.equals(blockId))
                 return block;
