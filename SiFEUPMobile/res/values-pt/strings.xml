@@ -88,8 +88,8 @@
     <!-- Class Description -->
     <string name="class_subject"><b>Subject:</b>
 <xliff:g id="subject"> %1$s</xliff:g></string>
-    <string name="class_teacher">Professor: <xliff:g id="teacher">%1$s</xliff:g></string>
-    <string name="class_room">Sala: <xliff:g id="room">%1$s</xliff:g></string>
+    <string name="class_teacher"><b>Professores</b></string>
+    <string name="class_room"><b>Salas</b></string>
     <string name="class_team"><b>Turma:</b>
 <xliff:g id="team">%1$s</xliff:g></string>
     <string name="class_start_time"><b>Hora de início:</b>
@@ -101,7 +101,7 @@
     <!-- Exams -->
     <string name="title_exams">Exames</string>
     <string name="btn_exams">Exames</string>
-    <string name="label_no_exams">Não tem exames marcados</string>
+    <string name="label_no_exams">Não tem exames marcados.</string>
 
     <!-- Subjects -->
     <string name="btn_subjects">Unidades Curriculares</string>

@@ -60,4 +60,9 @@ public class ScheduleRoom implements Parcelable {
             return new ScheduleRoom[size];
         }
     };
+    
+	@Override
+	public String toString(){
+		return buildingCode+roomCode;
+	}
 }

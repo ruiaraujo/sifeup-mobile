@@ -94,7 +94,6 @@
             android:label="@string/title_settings" />
         <activity
             android:name=".ui.personalarea.ScheduleActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
             android:name=".ui.personalarea.LunchMenuActivity"
@@ -126,7 +125,6 @@
             android:label="@string/title_park_occupation" />
         <activity
             android:name=".ui.personalarea.ClassDescriptionActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
             android:name=".ui.search.StudentsSearchActivity"

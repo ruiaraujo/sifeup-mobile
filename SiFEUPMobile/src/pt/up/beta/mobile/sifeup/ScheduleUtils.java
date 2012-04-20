@@ -130,8 +130,9 @@ public class ScheduleUtils {
 		                //Adding teachers
 		                if ( jBlock.has("doc_codigo") ){
 		                	final String code = jBlock.getString("doc_codigo"); 
-		                	final String name = jBlock.getString("doc_sigla");
-		                	block.addTeacher(new ScheduleTeacher(code, name));
+		                	final String name = jBlock.getString("doc_nome");
+		                	final String acronym = jBlock.getString("doc_sigla");
+		                	block.addTeacher(new ScheduleTeacher(code, acronym, name));
 		                }
 		                else
 		                {
@@ -140,8 +141,9 @@ public class ScheduleUtils {
 		                		for ( int j = 0 ; j < teachers.length(); ++j ){
 		                			JSONObject teacher = teachers.getJSONObject(j);
 		                			final String code = teacher.getString("doc_codigo"); 
-				                	final String name = teacher.getString("doc_sigla");
-				                	block.addTeacher(new ScheduleTeacher(code, name));
+				                	final String name = teacher.getString("doc_nome");
+				                	final String acronym = teacher.getString("doc_sigla");
+				                	block.addTeacher(new ScheduleTeacher(code, acronym, name));
 		                		}
 		                	}
 		                }

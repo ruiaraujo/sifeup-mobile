@@ -100,10 +100,8 @@
     <!-- Class Description -->
     <string name="class_subject"><b>Subject:</b>
 <xliff:g id="subject"> %1$s</xliff:g></string>
-    <string name="class_teacher"><b>Teacher:</b>
-<xliff:g id="teacher"> %1$s</xliff:g></string>
-    <string name="class_room"><b>Room:</b>
-<xliff:g id="room">%1$s</xliff:g></string>
+    <string name="class_teacher"><b>Teachers</b></string>
+    <string name="class_room"><b>Room:</b></string>
     <string name="class_team"><b>Class:</b>
 <xliff:g id="team">%1$s</xliff:g></string>
     <string name="class_start_time"><b>Start time:</b>

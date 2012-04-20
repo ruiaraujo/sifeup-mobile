@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;
+import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
@@ -18,6 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -37,9 +42,14 @@ public class ClassDescriptionFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		Bundle args = getArguments();
-		block = (ScheduleBlock) args.get(BLOCK);
+		block = (ScheduleBlock) getArguments().getParcelable(BLOCK);
+		if ( block == null && savedInstanceState != null )
+			block = savedInstanceState.getParcelable(BLOCK);
 	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(BLOCK, block);
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,38 +84,40 @@ public class ClassDescriptionFragment extends BaseFragment {
 			}
 		});
 
-		// Teacher
-		TextView teacher = (TextView) root.findViewById(R.id.class_teacher);
-
-		teacher.setText(getString(R.string.class_teacher,
-				block.getTeachers().get(0).getName()));
-		teacher.setOnClickListener(new OnClickListener() {
+		// Teachers
+		ListView teachers = (ListView) root.findViewById(R.id.list_teachers);
+		teachers.setAdapter(new ArrayAdapter<ScheduleTeacher>(getActivity(),
+				android.R.layout.simple_list_item_1, block.getTeachers()
+						.toArray(new ScheduleTeacher[0])));
+		teachers.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				if (block.getTeachers().get(0).getCode() == null)
+			public void onItemClick(AdapterView<?> adapter, View listview,
+					int position, long id) {
+				final ScheduleTeacher teacher = block.getTeachers().get(
+						position);
+				if (teacher.getCode() == null)
 					return;
 				final Intent i = new Intent(getActivity(),
 						ProfileActivity.class);
-				i.putExtra(ProfileActivity.PROFILE_CODE, block.getTeachers().get(0).getCode());
+				i.putExtra(ProfileActivity.PROFILE_CODE, teacher.getCode());
 				i.putExtra(ProfileActivity.PROFILE_TYPE,
 						ProfileActivity.PROFILE_EMPLOYEE);
-				i.putExtra(Intent.EXTRA_TITLE, block.getTeachers().get(0).getName());
+				i.putExtra(Intent.EXTRA_TITLE, teacher.getName());
 				startActivity(i);
 			}
 		});
-		final ScheduleRoom room = block.getRooms().get(0);
-		// Room
-		TextView roomTextView = (TextView) root.findViewById(R.id.class_room);
-		roomTextView.setText(getString(
-				R.string.class_room,
-				(room.getBuildingCode() == null ? "" : room.getBuildingCode())
-						+ room.getRoomCode()));
 
-		roomTextView.setOnClickListener(new OnClickListener() {
+		// Rooms
+		ListView rooms = (ListView) root.findViewById(R.id.list_rooms);
+		rooms.setAdapter(new ArrayAdapter<ScheduleRoom>(getActivity(),
+				android.R.layout.simple_list_item_1, block.getRooms().toArray(
+						new ScheduleRoom[0])));
+
+		rooms.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				if (room.getBuildingCode() == null)
-					return;
+			public void onItemClick(AdapterView<?> adapter, View listview,
+					int position, long id) {
+				final ScheduleRoom room = block.getRooms().get(position);
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_ROOM);
@@ -167,8 +179,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		if (item.getItemId() == R.id.menu_map) {
 			final Intent intent = new Intent(getActivity(),
 					FeupFacilitiesDetailsActivity.class);
-			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA,
-					room);
+			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
 			startActivity(intent);
 			return true;
 		}

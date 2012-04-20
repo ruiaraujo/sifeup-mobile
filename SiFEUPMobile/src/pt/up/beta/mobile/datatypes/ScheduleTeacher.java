@@ -12,11 +12,13 @@ import android.os.Parcelable;
 public class ScheduleTeacher implements Parcelable {
 
 	private final String code;
+	private final String accronym;
 	private final String name;
 
-	public ScheduleTeacher(String code, String name) {
+	public ScheduleTeacher(String code, String accronym, String name) {
 		this.code = code;
 		this.name = name;
+		this.accronym = accronym;
 	}
 
 	public String getName() {
@@ -25,6 +27,10 @@ public class ScheduleTeacher implements Parcelable {
 
 	public String getCode() {
 		return code;
+	}
+
+	public String getAccronym() {
+		return accronym;
 	}
 
 	@Override
@@ -40,6 +46,9 @@ public class ScheduleTeacher implements Parcelable {
 		dest.writeInt(name != null ? 1 : 0);
 		if (name != null)
 			dest.writeString(name);
+		dest.writeInt(accronym != null ? 1 : 0);
+		if (accronym != null)
+			dest.writeString(accronym);
 	}
 
 	private ScheduleTeacher(Parcel in) {
@@ -51,6 +60,10 @@ public class ScheduleTeacher implements Parcelable {
 			name = in.readString();
 		else
 			name = null;
+		if (in.readInt() == 1)
+			accronym = in.readString();
+		else
+			accronym = null;
 	}
 
 	public static final Parcelable.Creator<ScheduleTeacher> CREATOR = new Parcelable.Creator<ScheduleTeacher>() {
@@ -63,4 +76,8 @@ public class ScheduleTeacher implements Parcelable {
 		}
 	};
 
+	@Override
+	public String toString(){
+		return name;
+	}
 }
