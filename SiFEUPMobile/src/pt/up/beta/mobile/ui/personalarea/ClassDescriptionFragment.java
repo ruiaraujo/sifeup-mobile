@@ -1,5 +1,7 @@
 package pt.up.beta.mobile.ui.personalarea;
 
+import java.util.List;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,10 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -85,16 +84,11 @@ public class ClassDescriptionFragment extends BaseFragment {
 		});
 
 		// Teachers
-		ListView teachers = (ListView) root.findViewById(R.id.list_teachers);
-		teachers.setAdapter(new ArrayAdapter<ScheduleTeacher>(getActivity(),
-				android.R.layout.simple_list_item_1, block.getTeachers()
-						.toArray(new ScheduleTeacher[0])));
-		teachers.setOnItemClickListener(new OnItemClickListener() {
+		LinearLayout teachersContainer = (LinearLayout) root.findViewById(R.id.list_teachers);
+		OnClickListener teacherClick = new OnClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View listview,
-					int position, long id) {
-				final ScheduleTeacher teacher = block.getTeachers().get(
-						position);
+			public void onClick(View v) {
+				final ScheduleTeacher teacher = (ScheduleTeacher) v.getTag();
 				if (teacher.getCode() == null)
 					return;
 				final Intent i = new Intent(getActivity(),
@@ -105,19 +99,26 @@ public class ClassDescriptionFragment extends BaseFragment {
 				i.putExtra(Intent.EXTRA_TITLE, teacher.getName());
 				startActivity(i);
 			}
-		});
-
+		};
+		List<ScheduleTeacher> teachers = block.getTeachers();
+		for ( ScheduleTeacher teacher : teachers )
+		{
+		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    llItem.setText(teacher.toString());
+		    // To know wich item has been clicked
+		    llItem.setTag(teacher);
+		    // In the onClickListener just get the id using getTag() on the view
+		    llItem.setOnClickListener(teacherClick);
+		    teachersContainer.addView(llItem);
+		}
+		
+		
 		// Rooms
-		ListView rooms = (ListView) root.findViewById(R.id.list_rooms);
-		rooms.setAdapter(new ArrayAdapter<ScheduleRoom>(getActivity(),
-				android.R.layout.simple_list_item_1, block.getRooms().toArray(
-						new ScheduleRoom[0])));
-
-		rooms.setOnItemClickListener(new OnItemClickListener() {
+		LinearLayout roomsContainer = (LinearLayout) root.findViewById(R.id.list_rooms);
+		OnClickListener roomClick = new OnClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View listview,
-					int position, long id) {
-				final ScheduleRoom room = block.getRooms().get(position);
+			public void onClick(View v) {
+				final ScheduleRoom room = (ScheduleRoom) v.getTag();
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_ROOM);
@@ -126,11 +127,23 @@ public class ClassDescriptionFragment extends BaseFragment {
 				i.putExtra(
 						Intent.EXTRA_TITLE,
 						getString(R.string.title_schedule_arg,
-								room.getBuildingCode() + room.getRoomCode()));
+								room.toString()));
 
-				startActivity(i);
+				startActivity(i);				
 			}
-		});
+		};
+		List<ScheduleRoom> rooms = block.getRooms();
+		for ( ScheduleRoom room : rooms )
+		{
+		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    llItem.setText(room.toString());
+		    // To know wich item has been clicked
+		    llItem.setTag(room);
+		    // In the onClickListener just get the id using getTag() on the view
+		    llItem.setOnClickListener(roomClick);
+		    roomsContainer.addView(llItem);
+		}
+		
 
 		// Team
 		TextView team = (TextView) root.findViewById(R.id.class_team);

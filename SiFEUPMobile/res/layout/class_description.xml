@@ -1,12 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:orientation="vertical"
+        android:paddingBottom="25dip"
         android:paddingLeft="30dip" >
 
         <TextView
@@ -23,30 +23,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:paddingBottom="25dip"
             android:textSize="16.0sp"
             android:text="@string/class_teacher" />
 
-        <ListView
+        <LinearLayout
             android:id="@+id/list_teachers"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
+            android:layout_height="wrap_content"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
 
         <TextView
             android:id="@+id/class_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:paddingBottom="25dip"
             android:textSize="16.0sp"
             android:text="@string/class_room" />
 
-        <ListView
+        <LinearLayout
             android:id="@+id/list_rooms"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
+            android:layout_height="wrap_content"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
 
         <TextView
             android:id="@+id/class_team"
