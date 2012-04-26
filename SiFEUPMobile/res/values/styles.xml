@@ -1,8 +1,5 @@
 <resources>
 
-    <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="@style/Theme.Sherlock.Light" />
-
     <!-- Start with the Holographic Light theme -->
     <style name="Theme.Sigarra" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@drawable/window_background</item>
