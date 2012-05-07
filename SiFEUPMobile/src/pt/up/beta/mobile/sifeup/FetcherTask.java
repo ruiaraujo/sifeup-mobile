@@ -61,7 +61,7 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 			    if ( cacheResponse != null )
 			    {
 			        page = FileUtils.getStringFromFile(cacheResponse);
-			        if ( page != null )
+			        if ( page != null && !page.trim().equals(""))
 			        {
 			            result = parser.parse(page);
 		                return null;
