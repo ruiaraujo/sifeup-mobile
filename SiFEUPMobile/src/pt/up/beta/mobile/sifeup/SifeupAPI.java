@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.ProtocolException;
@@ -18,20 +20,24 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.params.ConnManagerPNames;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import pt.up.beta.mobile.sifeup.sslhack.EasySSLSocketFactory;
 
 import android.util.Log;
 
@@ -632,26 +638,33 @@ public class SifeupAPI {
 
 	public static synchronized DefaultHttpClient getHttpClient() {
 		if (httpclient == null) {
-		    
-		    BasicHttpParams params = new BasicHttpParams();
-		    SchemeRegistry schemeRegistry = new SchemeRegistry();
-		    schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		    final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
-		    schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-		    ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+			Scheme httpsScheme = new Scheme("https", new EasySSLSocketFactory(), 443);
+			SchemeRegistry schemeRegistry = new SchemeRegistry();
+			schemeRegistry.register(httpsScheme);
+
+			HttpParams params = new BasicHttpParams();
+			params.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30);
+			params.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
+					new ConnPerRouteBean(30));
+			params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
+			ClientConnectionManager cm = new ThreadSafeClientConnManager(
+					params, schemeRegistry);
 			httpclient = new DefaultHttpClient(cm, params);
 
 			// Create local HTTP context
 			localContext = new BasicHttpContext();
 			// Bind custom cookie store to the local context
-			localContext.setAttribute(ClientContext.COOKIE_STORE, SessionManager.getInstance().getCookieStore());
+			localContext.setAttribute(ClientContext.COOKIE_STORE,
+					SessionManager.getInstance().getCookieStore());
 		}
 		return httpclient;
 	}
 
 	public static HttpResponse get(String url) {
 		try {
-			return  getHttpClient().execute(new HttpGet(url), localContext); 
+			return getHttpClient().execute(new HttpGet(url), localContext);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -669,7 +682,7 @@ public class SifeupAPI {
 		try {
 			do {
 				HttpResponse response = get(url);
-				if ( response == null )
+				if (response == null)
 					return null;
 				HttpEntity entity = response.getEntity();
 				if (entity == null)
@@ -704,6 +717,7 @@ public class SifeupAPI {
 					HttpContext context) {
 				return false;
 			}
+
 			@Override
 			public URI getLocationURI(HttpResponse response, HttpContext context)
 					throws ProtocolException {
@@ -742,12 +756,10 @@ public class SifeupAPI {
 		}
 		return charset;
 	}
-	
 
 	public static String getPage(InputStream in) {
-		return getPage(in,HTTP.DEFAULT_CONTENT_CHARSET);
+		return getPage(in, HTTP.DEFAULT_CONTENT_CHARSET);
 	}
-
 
 	/**
 	 * Fetch data
