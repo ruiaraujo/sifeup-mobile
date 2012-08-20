@@ -75,6 +75,10 @@ public class AuthenticationUtils {
 			return null;
 		}
 
+        @Override
+        protected void onCancelled() {
+        	command.onError(ERROR_TYPE.CANCELLED);
+        }
 	}
 
 	public static AsyncTask<String, Void, String> setPasswordReply(
