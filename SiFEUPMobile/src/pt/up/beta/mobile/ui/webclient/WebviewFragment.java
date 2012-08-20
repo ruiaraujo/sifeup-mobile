@@ -8,6 +8,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -54,7 +55,8 @@ public class WebviewFragment extends BaseFragment {
         return getParentContainer(); // mandatory
     }
     
-    public void onActivityCreated (Bundle savedInstanceState){
+    @TargetApi(11)
+	public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         final WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);

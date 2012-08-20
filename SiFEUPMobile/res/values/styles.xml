@@ -15,7 +15,7 @@
         <item name="actionBarStyle">@style/ActionBar</item>
     </style>
 
-    <style name="Theme.Sigarra.Home" parent="style/Theme.Sigarra">
+    <style name="Theme.Sigarra.Home" parent="@style/Theme.Sigarra">
         <item name="android:windowBackground">@drawable/window_background_home</item>
     </style>
 
