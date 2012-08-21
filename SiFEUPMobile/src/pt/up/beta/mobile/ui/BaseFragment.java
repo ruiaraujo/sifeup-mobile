@@ -9,6 +9,7 @@ import pt.up.beta.mobile.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -59,7 +60,8 @@ public class BaseFragment extends SherlockFragment {
     private Interpolator accelerator = new AccelerateInterpolator();
     private Interpolator decelerator = new DecelerateInterpolator();
     
-    private void flipIt() {
+    @TargetApi(11)
+	private void flipIt() {
         if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB )
         {
             switcher.showNext();
@@ -179,7 +181,8 @@ public class BaseFragment extends SherlockFragment {
             task.cancel(true);
         }
     } 
-    @Override
+    @TargetApi(11)
+	@Override
     public void onPause (){
         super.onPause();
         if ( currentAnim != null )
@@ -191,8 +194,8 @@ public class BaseFragment extends SherlockFragment {
     public void goLogin() {
     	if ( getActivity() == null )
     		return;
-        Intent i = new Intent(getActivity(), LoginActivity.class);
-        i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
+        Intent i = new Intent(getActivity(), LauncherActivity.class);
+      //  i.putExtra(LauncherActivity.EXTRA_DIFFERENT_LOGIN, LauncherActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         getActivity().finish();

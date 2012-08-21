@@ -16,26 +16,33 @@
 
 package pt.up.beta.mobile.authenticator;
 
+import pt.up.beta.mobile.AccountAuthenticatorActivity;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.ui.dialogs.AboutDialogFragment;
+import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,7 +50,10 @@ import android.widget.TextView;
  * Activity which displays login screen to the user.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity
-		implements ResponseCommand {
+		implements ResponseCommand, OnDismissListener {
+
+	private static final String DIALOG_AUTHENTICATING = "connecting";
+	private static final String DIALOG_ABOUT = "about";
 	/** The Intent flag to confirm credentials. */
 	public static final String PARAM_CONFIRM_CREDENTIALS = "confirmCredentials";
 
@@ -56,6 +66,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	/** The Intent extra to store username. */
 	public static final String PARAM_AUTHTOKEN_TYPE = "authtokenType";
 
+	public static final String RESULT_USER = "user";
+
+	
 	/** The tag used to log to adb console. */
 	private static final String TAG = "AuthenticatorActivity";
 	private AccountManager mAccountManager;
@@ -63,18 +76,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	/** Keep track of the login task so can cancel it if requested */
 	private AsyncTask<String, Void, ERROR_TYPE> mAuthTask = null;
 
-	/** Keep track of the progress dialog so we can dismiss it */
-	private ProgressDialog mProgressDialog = null;
-
 	/**
 	 * If set we are just checking that the user knows their credentials; this
 	 * doesn't cause the user's password or authToken to be changed on the
 	 * device.
 	 */
 	private Boolean mConfirmCredentials = false;
-
-	/** for posting authentication attempts back to UI thread */
-	// private final Handler mHandler = new Handler();
 
 	private TextView mMessage;
 
@@ -98,6 +105,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		Log.i(TAG, "onCreate(" + icicle + ")");
 		super.onCreate(icicle);
 		mAccountManager = AccountManager.get(this);
+		SessionManager.getInstance(this);
 		Log.i(TAG, "loading data from Intent");
 		final Intent intent = getIntent();
 		mUsername = intent.getStringExtra(PARAM_USERNAME);
@@ -105,40 +113,33 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		mConfirmCredentials = intent.getBooleanExtra(PARAM_CONFIRM_CREDENTIALS,
 				false);
 		Log.i(TAG, "    request new: " + mRequestNewAccount);
-		requestWindowFeature(Window.FEATURE_LEFT_ICON);
-		setContentView(R.layout.login_activity);
-		getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-				android.R.drawable.ic_dialog_alert);
+		setContentView(R.layout.login);
 		mMessage = (TextView) findViewById(R.id.message);
-		mUsernameEdit = (EditText) findViewById(R.id.username_edit);
-		mPasswordEdit = (EditText) findViewById(R.id.password_edit);
-		if (!TextUtils.isEmpty(mUsername))
-			mUsernameEdit.setText(mUsername);
-		mMessage.setText(getMessage());
-	}
+		mUsernameEdit = (EditText) findViewById(R.id.login_username);
+		mPasswordEdit = (EditText) findViewById(R.id.login_pass);
 
-	/*
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Dialog onCreateDialog(int id ) {
-		final ProgressDialog dialog = new ProgressDialog(this);
-		dialog.setMessage(getText(R.string.lb_login_cancel));
-		dialog.setIndeterminate(true);
-		dialog.setCancelable(true);
-		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				Log.i(TAG, "user cancelling authentication");
-				if (mAuthTask != null) {
-					mAuthTask.cancel(true);
+		final CheckBox showPassword = (CheckBox) findViewById(R.id.show_password);
+		showPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
+					mPasswordEdit.setTransformationMethod(null);
+				} else {
+					mPasswordEdit
+							.setTransformationMethod(new PasswordTransformationMethod());
 				}
 			}
 		});
-		// We save off the progress dialog in a field so that we can dismiss
-		// it later. We can't just call dismissDialog(0) because the system
-		// can lose track of our dialog if there's an orientation change.
-		mProgressDialog = dialog;
-		return dialog;
+		if (!TextUtils.isEmpty(mUsername))
+			mUsernameEdit.setText(mUsername);
+		mMessage.setText(R.string.login_activity_newaccount_text);
+	}
+
+	public void showAbout(View view) {
+		AboutDialogFragment.newInstance().show(getSupportFragmentManager(),
+				DIALOG_ABOUT);
 	}
 
 	/**
@@ -160,6 +161,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			// Show a progress dialog, and kick off a background task to perform
 			// the user login attempt.
 			showProgress();
+
 			mAuthTask = AuthenticationUtils.authenticate(mUsername, mPassword,
 					this);
 		}
@@ -194,19 +196,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	 * @param result
 	 *            the confirmCredentials result.
 	 */
-	private void finishLogin(String authToken) {
+	private void finishLogin(User user) {
 
 		Log.i(TAG, "finishLogin()");
 		final Account account = new Account(mUsername, Constants.ACCOUNT_TYPE);
 		if (mRequestNewAccount) {
-			mAccountManager.addAccountExplicitly(account, mPassword, null);
+			mAccountManager.addAccountExplicitly(account, mPassword,
+					null);
 			// Set contacts sync for this account.
 			ContentResolver.setSyncAutomatically(account,
 					ContactsContract.AUTHORITY, true);
 		} else {
-			mAccountManager.setPassword(account, mPassword);
+			mAccountManager.setPassword(account, user.getPassword());
 		}
+		mAccountManager.setUserData(account, Constants.USER_TYPE,user.getType());
+		mAccountManager.setUserData(account, Constants.USER_NAME,user.getUser());
 		final Intent intent = new Intent();
+		intent.putExtra(RESULT_USER, new User(mUsername, user.getUser(), mPassword, user.getType()));
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
 		setAccountAuthenticatorResult(intent.getExtras());
@@ -234,19 +240,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	/**
 	 * Shows the progress UI for a lengthy operation.
 	 */
-	@SuppressWarnings("deprecation")
 	private void showProgress() {
-		showDialog(0);
+		ProgressDialogFragment.newInstance(
+				getString(R.string.lb_login_authenticating), true).show(
+				getSupportFragmentManager(), DIALOG_AUTHENTICATING);
+
 	}
 
 	/**
 	 * Hides the progress UI for a lengthy operation.
 	 */
 	private void hideProgress() {
-		if (mProgressDialog != null) {
-			mProgressDialog.dismiss();
-			mProgressDialog = null;
-		}
+		removeDialog(DIALOG_AUTHENTICATING);
 	}
 
 	public void onError(ERROR_TYPE error) {
@@ -272,9 +277,29 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		hideProgress();
 		User user = (User) results[0];
 		if (!mConfirmCredentials) {
-			finishLogin(user.getType());
+			finishLogin(user);
 		} else {
 			finishConfirmCredentials(true);
+		}
+	}
+
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+
+		Log.i(TAG, "user cancelling authentication");
+		if (mAuthTask != null) {
+			mAuthTask.cancel(true);
+		}
+	}
+
+	protected void removeDialog(String dialog) {
+		// DialogFragment.show() will take care of adding the fragment
+		// in a transaction. We also want to remove any currently showing
+		// dialog, so make our own transaction and take care of that here.
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(dialog);
+		if (prev != null) {
+			ft.remove(prev).commitAllowingStateLoss();
 		}
 	}
 }

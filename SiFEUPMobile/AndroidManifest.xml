@@ -51,11 +51,10 @@
             android:theme="@style/Theme.Sigarra.Home" >
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.LauncherActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:noHistory="true"
-            android:theme="@style/Theme.Sigarra.Home" >
+            android:theme="@style/Theme.Invisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -282,39 +281,41 @@
         <provider
             android:name=".ui.search.SearchSuggestionHistory"
             android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
-        
-        
+
         <!-- The authenticator service -->
         <service
             android:name=".authenticator.AuthenticationService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
-                <action
-                    android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
         <activity
             android:name=".authenticator.AuthenticatorActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog"
-            android:excludeFromRecents="true"
             android:configChanges="orientation"
-            >
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:theme="@style/Theme.Sigarra.Home" >
+
             <!--
                 No intent-filter here! This activity is only ever launched by
                 someone who explicitly knows the class name
             -->
         </activity>
-         <service
+
+        <service
             android:name=".syncadapter.SyncService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
-                <action
-                    android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />

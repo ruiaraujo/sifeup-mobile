@@ -26,4 +26,9 @@ public class Constants {
      * Authtoken type string.
      */
     public static final String AUTHTOKEN_TYPE = "pt.up.beta.mobile";
+    
+    
+    public static final String USER_TYPE = "pt.up.beta.mobile.USER_TYPE";
+    
+    public static final String USER_NAME = "pt.up.beta.mobile.USER_NAME";
 }

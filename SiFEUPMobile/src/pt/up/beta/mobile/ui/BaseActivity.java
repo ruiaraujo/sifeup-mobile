@@ -188,8 +188,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
      */
     public void goLogin() {
-        Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra(LoginActivity.EXTRA_DIFFERENT_LOGIN, LoginActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
+        Intent i = new Intent(this, LauncherActivity.class);
+       // i.putExtra(LauncherActivity.EXTRA_DIFFERENT_LOGIN, LauncherActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         finish();

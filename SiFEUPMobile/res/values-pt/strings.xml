@@ -25,7 +25,7 @@
     <string name="lb_login_username">Utilizador:</string>
     <string name="lb_login_password">Senha:</string>
     <string name="bt_cancel">Cancelar</string>
-    <string name="lb_login_cancel">Conectando...</string>
+    
     <string name="bt_login">Login</string>
     <string name="lb_show_password">Mostrar Senha</string>
     <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
