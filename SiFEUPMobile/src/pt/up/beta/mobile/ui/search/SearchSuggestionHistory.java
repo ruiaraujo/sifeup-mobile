@@ -15,13 +15,13 @@ public class SearchSuggestionHistory extends SearchRecentSuggestionsProvider {
      * Manifest file, and any time you instantiate a 
      * {@link android.provider.SearchRecentSuggestions} helper class. 
      */
-    final static String AUTHORITY = "pt.up.fe.mobile.SearchSuggestionProvider";
+	public final static String AUTHORITY = "pt.up.fe.mobile.SearchSuggestionProvider";
     /**
      * These flags determine the operating mode of the suggestions provider.  This value should 
      * not change from run to run, because when it does change, your suggestions database may 
      * be wiped.
      */
-    final static int MODE = DATABASE_MODE_QUERIES;
+    public final static int MODE = DATABASE_MODE_QUERIES;
     
     /**
      * The main job of the constructor is to call setupSuggestions(String, int) with the

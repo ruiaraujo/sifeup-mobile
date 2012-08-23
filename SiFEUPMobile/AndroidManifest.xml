@@ -280,7 +280,14 @@
 
         <provider
             android:name=".ui.search.SearchSuggestionHistory"
-            android:authorities="pt.up.fe.mobile.SearchSuggestionProvider" />
+            android:authorities="pt.up.fe.mobile.SearchSuggestionProvider"
+            android:exported="true" />
+        <provider
+            android:name=".content.SigarraProvider"
+    		android:label="Sigarra"
+            android:authorities="pt.up.fe.mobile.content.SigarraProvider"
+            android:exported="true"
+            android:syncable="true" />
 
         <!-- The authenticator service -->
         <service
@@ -319,9 +326,6 @@
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
-            <meta-data
-                android:name="android.provider.CONTACTS_STRUCTURE"
-                android:resource="@xml/contacts" />
         </service>
     </application>
 
