@@ -39,7 +39,7 @@ import pt.up.beta.mobile.R;
 public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
-	
+
 	/** Stores all exams from Student */
 	private ArrayList<Exam> exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
@@ -60,40 +60,34 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		list = (ListView) root.findViewById(R.id.generic_list);
 		return getParentContainer(); // this is mandatory.
 	}
-	
 
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        personCode = getArguments().getString(PROFILE_CODE);
-        if (personCode == null)
-            personCode = SessionManager.getInstance(getActivity()).getLoginCode();
-        final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
-        if ( savedInstanceState != null )
-        {
-            exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
-            if ( exams == null )
-            {   
-                task = ExamsUtils.getExamsReply(personCode, this ,cache);
-            }
-            else
-            {
-                populateList();
-                showFastMainScreen();
-            }
-        }
-        else
-        {
-            task = ExamsUtils.getExamsReply(personCode, this,cache);
-        }
-    }
-    
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		personCode = getArguments().getString(PROFILE_CODE);
+		if (personCode == null)
+			personCode = SessionManager.getInstance(getActivity())
+					.getLoginCode();
+		final File cache = FileUtils.getFile(getActivity(),
+				ExamsFragment.class.getSimpleName() + personCode);
+		if (savedInstanceState != null) {
+			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
+			if (exams == null) {
+				task = ExamsUtils.getExamsReply(personCode, this, cache);
+			} else {
+				if (populateList())
+					showFastMainScreen();
+			}
+		} else {
+			task = ExamsUtils.getExamsReply(personCode, this, cache);
+		}
+	}
 
- 	@Override
- 	public void onSaveInstanceState (Bundle outState){
- 		if ( exams != null )
- 			outState.putParcelableArrayList(EXAM_KEY,exams);
- 	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (exams != null)
+			outState.putParcelableArrayList(EXAM_KEY, exams);
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -128,10 +122,9 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 		if (cursor == null) {
 			if (getActivity() != null)
-				Toast
-						.makeText(getActivity(),
-								R.string.toast_export_calendar_error,
-								Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(),
+						R.string.toast_export_calendar_error, Toast.LENGTH_LONG)
+						.show();
 			return false;
 		}
 		// Iterate over calendars to store names and ids
@@ -159,8 +152,8 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 										b.getStartTime()).toMillis(false);
 								Event event = new Event(b.getCourseName(), b
 										.getRooms(), b.getType(), time, time
-										+ timeDifference(b.getStartTime(), b
-												.getEndTime()) * 60000);
+										+ timeDifference(b.getStartTime(),
+												b.getEndTime()) * 60000);
 								final Uri newEvent = calendarHelper
 										.insertEvent(calIds[which], event);
 								// check event error
@@ -170,11 +163,10 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 							}
 							dialog.dismiss();
 							if (getActivity() != null)
-								Toast
-										.makeText(
-												getActivity(),
-												R.string.toast_export_calendar_finished,
-												Toast.LENGTH_LONG).show();
+								Toast.makeText(
+										getActivity(),
+										R.string.toast_export_calendar_finished,
+										Toast.LENGTH_LONG).show();
 
 						}
 
@@ -208,9 +200,9 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		s = new StringTokenizer(time, ":");
 		String hour = s.nextToken();
 		String minute = s.nextToken();
-		date.set(0, Integer.valueOf(minute), Integer.valueOf(hour), Integer
-				.valueOf(day), Integer.valueOf(month) - 1, Integer
-				.valueOf(year));
+		date.set(0, Integer.valueOf(minute), Integer.valueOf(hour),
+				Integer.valueOf(day), Integer.valueOf(month) - 1,
+				Integer.valueOf(year));
 		return date;
 	}
 
@@ -240,16 +232,16 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			exams = (ArrayList<Exam>) results[0];
 		else
 			throw new RuntimeException("Error receiving the result");
-		populateList();
-		showMainScreen();
+		if (populateList())
+			showMainScreen();
 	}
-	
-	private void populateList(){
-        if (getActivity() == null)
-            return;
+
+	private boolean populateList() {
+		if (getActivity() == null)
+			return false;
 		if (exams.isEmpty()) {
 			showEmptyScreen(getString(R.string.label_no_exams));
-			return;
+			return false;
 		}
 
 		String[] from = new String[] { "chair", "time", "room" };
@@ -261,8 +253,9 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			String tipo = "( "
 					+ (e.getType().contains("Mini teste") ? "M" : "E") + " ) ";
 			map.put("chair", tipo + e.getCourseName());
-			map.put("time", e.getWeekDay() + ", " + e.getDate() + ": "
-					+ e.getStartTime() + "-" + e.getEndTime());
+			map.put("time",
+					e.getWeekDay() + ", " + e.getDate() + ": "
+							+ e.getStartTime() + "-" + e.getEndTime());
 			map.put("room", e.getRooms());
 			fillMaps.add(map);
 		}
@@ -271,12 +264,14 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setClickable(false);
+		return true;
 	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
-        task = ExamsUtils.getExamsReply(personCode, this,cache);
+		final File cache = FileUtils.getFile(getActivity(),
+				ExamsFragment.class.getSimpleName() + personCode);
+		task = ExamsUtils.getExamsReply(personCode, this, cache);
 	}
 
 }
