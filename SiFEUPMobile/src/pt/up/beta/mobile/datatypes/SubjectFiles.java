@@ -15,9 +15,9 @@ import pt.up.beta.mobile.sifeup.SifeupUtils;
  * 
  */
 @SuppressWarnings("serial")
-public class SubjectContent implements Serializable {
+public class SubjectFiles implements Serializable {
 
-	public SubjectContent() {
+	public SubjectFiles() {
 		root = new Folder();
 		root.level = 0;
 		current = root;
@@ -215,7 +215,7 @@ public class SubjectContent implements Serializable {
 	 * @return Subject
 	 * @throws JSONException 
 	 */
-	public SubjectContent JSONSubjectContent(String page) throws JSONException {
+	public SubjectFiles JSONSubjectContent(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
 
 		if (jObject.has("pastas")) {

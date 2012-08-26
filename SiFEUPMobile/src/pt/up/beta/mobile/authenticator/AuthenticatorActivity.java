@@ -19,6 +19,7 @@ package pt.up.beta.mobile.authenticator;
 import pt.up.beta.mobile.AccountAuthenticatorActivity;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraProvider;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -33,7 +34,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -205,7 +205,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 					null);
 			// Set contacts sync for this account.
 			ContentResolver.setSyncAutomatically(account,
-					ContactsContract.AUTHORITY, true);
+					SigarraProvider.AUTHORITY, true);
 		} else {
 			mAccountManager.setPassword(account, user.getPassword());
 		}

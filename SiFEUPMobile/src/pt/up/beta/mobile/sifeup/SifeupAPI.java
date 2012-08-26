@@ -419,7 +419,7 @@ public class SifeupAPI {
 	 * @param per
 	 * @return url
 	 */
-	public static String getSubjectDescUrl(String code, String year, String per) {
+	public static String getSubjectContentUrl(String code, String year, String per) {
 		return WEBSERVICE
 				+ WebServices.MOBILE
 				+ SubjectDescription.NAME
@@ -462,7 +462,7 @@ public class SifeupAPI {
 	 * @param code
 	 * @return
 	 */
-	public static String getSubjectContentUrl(String code, String year,
+	public static String getSubjectFilestUrl(String code, String year,
 			String per) {
 		return WEBSERVICE + WebServices.MOBILE + SubjectContent.NAME
 				+ WEBSERVICE_SEP + SubjectContent.YEAR + EQUALS + year

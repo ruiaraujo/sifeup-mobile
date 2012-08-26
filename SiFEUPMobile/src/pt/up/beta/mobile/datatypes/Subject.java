@@ -8,13 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.up.beta.mobile.content.tables.SubjectsTable;
+
+import android.database.Cursor;
 import android.util.Log;
 
 /**
  * @author Rui Araújo
  * 
  */
-@SuppressWarnings( { "unused", "serial" })
+@SuppressWarnings({ "unused", "serial" })
 public class Subject implements Serializable {
 	/** Subject code - EIC0083 */
 	private String code;
@@ -154,7 +157,7 @@ public class Subject implements Serializable {
 		return semestre;
 	}
 
-	public void setSemestre(String semestre) {
+	public void setSemester(String semestre) {
 		this.semestre = semestre;
 	}
 
@@ -543,8 +546,8 @@ public class Subject implements Serializable {
 
 	/**
 	 * Subject Description Parser Stores Description of Subject in
-	 * @link{SubjectDescriptionFragment} Returns true in case of correct
-	 * parsing.
+	 * 
+	 * @link{SubjectDescriptionFragment Returns true in case of correct parsing.
 	 * 
 	 * @param page
 	 * @return Subject
@@ -716,6 +719,57 @@ public class Subject implements Serializable {
 		}
 
 		return res;
+	}
+
+	public static List<Subject> parseSubjectList(final String page)
+			throws JSONException {
+		final List<Subject> subjects = new ArrayList<Subject>();
+		final JSONObject jObject = new JSONObject(page);
+
+		if (jObject.has("inscricoes")) {
+			Log.v("JSON", "founded disciplines");
+			final JSONArray jArray = jObject.getJSONArray("inscricoes");
+
+			// iterate over jArray
+			for (int i = 0; i < jArray.length(); i++) {
+				// new JSONObject
+				final JSONObject jSubject = jArray.getJSONObject(i);
+				final Subject subject = new Subject();
+
+				if (jSubject.has("dis_codigo"))
+					subject.setCode(jSubject.getString("dis_codigo"));
+				if (jSubject.has("ano_curricular"))
+					subject.setYear(jSubject.getString("ano_curricular"));
+				subject.setNamePt(jSubject.optString("nome"));
+				subject.setNameEn(jSubject.optString("name"));
+				subject.setSemester(jSubject.optString("periodo"));
+
+				// add block to schedule
+				subjects.add(subject);
+			}
+		}
+		return subjects;
+	}
+
+	public static List<Subject> parseCursor(Cursor cursor) {
+		final List<Subject> subjects = new ArrayList<Subject>();
+		if (cursor.moveToFirst()) {
+			do {
+				final Subject subject = new Subject();
+				subject.setCode(cursor.getString(cursor
+						.getColumnIndex(SubjectsTable.COLUMN_CODE)));
+				subject.setYear(cursor.getString(cursor
+						.getColumnIndex(SubjectsTable.COLUMN_YEAR)));
+				subject.setNamePt(cursor.getString(cursor
+						.getColumnIndex(SubjectsTable.COLUMN_NAME_PT)));
+				subject.setNameEn(cursor.getString(cursor
+						.getColumnIndex(SubjectsTable.COLUMN_NAME_EN)));
+				subject.setSemester(cursor.getString(cursor
+						.getColumnIndex(SubjectsTable.COLUMN_PERIOD)));
+				subjects.add(subject);
+			} while (cursor.moveToNext());
+		}
+		return subjects;
 	}
 
 }

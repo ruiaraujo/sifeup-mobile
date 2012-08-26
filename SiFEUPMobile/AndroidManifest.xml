@@ -286,7 +286,7 @@
             android:name=".content.SigarraProvider"
     		android:label="Sigarra"
             android:authorities="pt.up.fe.mobile.content.SigarraProvider"
-            android:exported="true"
+            android:exported="false"
             android:syncable="true" />
 
         <!-- The authenticator service -->
