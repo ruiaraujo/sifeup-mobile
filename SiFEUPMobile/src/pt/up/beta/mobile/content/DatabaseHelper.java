@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.content.tables;
+package pt.up.beta.mobile.content;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -8,8 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.content.tables.SubjectsTable;
-
+import pt.up.beta.mobile.content.SigarraContract;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -757,15 +756,15 @@ public class Subject implements Serializable {
 			do {
 				final Subject subject = new Subject();
 				subject.setCode(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_CODE)));
+						.getColumnIndex(SigarraContract.SubjectsColumns.CODE)));
 				subject.setYear(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_YEAR)));
+						.getColumnIndex(SigarraContract.SubjectsColumns.YEAR)));
 				subject.setNamePt(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_NAME_PT)));
+						.getColumnIndex(SigarraContract.SubjectsColumns.NAME_PT)));
 				subject.setNameEn(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_NAME_EN)));
+						.getColumnIndex(SigarraContract.SubjectsColumns.NAME_EN)));
 				subject.setSemester(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_PERIOD)));
+						.getColumnIndex(SigarraContract.SubjectsColumns.PERIOD)));
 				subjects.add(subject);
 			} while (cursor.moveToNext());
 		}

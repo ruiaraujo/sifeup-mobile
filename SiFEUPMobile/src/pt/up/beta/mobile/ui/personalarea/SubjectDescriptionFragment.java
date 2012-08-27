@@ -7,8 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.content.SigarraProvider;
-import pt.up.beta.mobile.content.tables.SubjectsTable;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.datatypes.Subject.Book;
 import pt.up.beta.mobile.datatypes.Subject.EvaluationComponent;
@@ -656,31 +655,30 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
 		return new CursorLoader(getActivity(),
-				SigarraProvider.CONTENT_SUBJECTS_URI, new String[] {
-						SubjectsTable.COLUMN_CONTENT,
-						SubjectsTable.COLUMN_FILES },
-				SubjectsTable.COLUMN_USER_CODE + "=? AND "
-						+ SubjectsTable.COLUMN_CODE + "=? AND "
-						+ SubjectsTable.COLUMN_PERIOD + "=? AND "
-						+ SubjectsTable.COLUMN_YEAR + "=?", new String[] {
+				SigarraContract.Subjects.CONTENT_URI, new String[] {
+						SigarraContract.SubjectsColumns.CONTENT,
+						SigarraContract.SubjectsColumns.FILES },
+				SigarraContract.Subjects.SUBJECT_SELECTION,
+				SigarraContract.Subjects.getSubjectsSelectionArgs(
 						SessionManager.getInstance(getActivity())
-								.getLoginCode(), code, period, year }, null);
+								.getLoginCode(), code, period, year), null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		try {
 			if (cursor.moveToFirst()) {
-				subject = new Subject().JSONSubject(cursor.getString(cursor
-						.getColumnIndex(SubjectsTable.COLUMN_CONTENT)));
+				subject = new Subject()
+						.JSONSubject(cursor.getString(cursor
+								.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)));
 				String title = subject.getNamePt();
 				if (!UIUtils.isLocalePortuguese()
 						&& !TextUtils.isEmpty(subject.getNameEn().trim()))
 					title = subject.getNameEn();
 				getSherlockActivity().getSupportActionBar().setTitle(title);
-				subjectFiles = new SubjectFiles().JSONSubjectContent(cursor
-						.getString(cursor
-								.getColumnIndex(SubjectsTable.COLUMN_CONTENT)));
+				subjectFiles = new SubjectFiles()
+						.JSONSubjectContent(cursor.getString(cursor
+								.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)));
 				pagerAdapter.notifyDataSetChanged();
 				// Start at a custom position
 				indicator.setCurrentItem(0);

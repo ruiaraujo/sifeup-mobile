@@ -19,7 +19,7 @@ package pt.up.beta.mobile.authenticator;
 import pt.up.beta.mobile.AccountAuthenticatorActivity;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.content.SigarraProvider;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
@@ -205,7 +205,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 					null);
 			// Set contacts sync for this account.
 			ContentResolver.setSyncAutomatically(account,
-					SigarraProvider.AUTHORITY, true);
+					SigarraContract.CONTENT_AUTHORITY, true);
 		} else {
 			mAccountManager.setPassword(account, user.getPassword());
 		}

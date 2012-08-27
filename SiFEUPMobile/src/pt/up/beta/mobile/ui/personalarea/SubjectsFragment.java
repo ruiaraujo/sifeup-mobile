@@ -5,12 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.content.SigarraProvider;
-import pt.up.beta.mobile.content.tables.SubjectsTable;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.content.Intent;
@@ -27,11 +24,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectsFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand, LoaderCallbacks<Cursor> {
+		OnItemClickListener, LoaderCallbacks<Cursor> {
 
 	/** Contains all subscribed subjects */
 	private List<Subject> subjects;
@@ -48,69 +44,7 @@ public class SubjectsFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		/*
-		 * task =
-		 * SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity
-		 * ()) .getLoginCode(), Integer.toString(DateUtils
-		 * .secondYearOfSchoolYear() - 1), this);
-		 */
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
-	}
-
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			return;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		subjects = (ArrayList<Subject>) results[0];
-		if (subjects.isEmpty()) {
-			showEmptyScreen(getString(R.string.lb_no_subjects));
-			return;
-		}
-		final String[] from = new String[] { "name", "code", "time" };
-		final int[] to = new int[] { R.id.exam_chair, R.id.exam_time,
-				R.id.exam_room };
-		// prepare the list of all records
-		final List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		for (Subject s : subjects) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			if (UIUtils.isLocalePortuguese())
-				map.put(from[0],
-						(s.getNamePt().trim().length() != 0) ? s.getNamePt()
-								: s.getNameEn());
-			else
-				map.put(from[0],
-						(s.getNameEn().trim().length() != 0) ? s.getNameEn()
-								: s.getNamePt());
-			map.put(from[1], s.getAcronym());
-			map.put(from[2],
-					getString(R.string.subjects_year, s.getYear(),
-							s.getSemestre()));
-			fillMaps.add(map);
-		}
-		// fill in the grid_item layout
-		final SimpleAdapter adapter = new SimpleAdapter(getActivity(),
-				fillMaps, R.layout.list_item_exam, from, to);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(SubjectsFragment.this);
-		showMainScreen();
 	}
 
 	@Override
@@ -140,25 +74,20 @@ public class SubjectsFragment extends BaseFragment implements
 
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		task = SubjectUtils.getSubjectsReply(
-				SessionManager.getInstance(getActivity()).getLoginCode(),
-				Integer.toString(DateUtils.secondYearOfSchoolYear() - 1), this);
-
-	}
-
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
 		return new CursorLoader(getActivity(),
-				SigarraProvider.CONTENT_SUBJECTS_URI, new String[] {
-						SubjectsTable.COLUMN_CODE, SubjectsTable.COLUMN_YEAR,
-						SubjectsTable.COLUMN_PERIOD,
-						SubjectsTable.COLUMN_NAME_PT,
-						SubjectsTable.COLUMN_NAME_EN },
-				SubjectsTable.COLUMN_USER_CODE + "=?",
-				new String[] { SessionManager.getInstance(getActivity())
-						.getLoginCode() }, SubjectsTable.COLUMN_PERIOD);
+				SigarraContract.Subjects.CONTENT_URI, new String[] {
+						SigarraContract.SubjectsColumns.CODE,
+						SigarraContract.SubjectsColumns.YEAR,
+						SigarraContract.SubjectsColumns.PERIOD,
+						SigarraContract.SubjectsColumns.NAME_PT,
+						SigarraContract.SubjectsColumns.NAME_EN },
+				SigarraContract.Subjects.USER_SUBJECTS,
+				SigarraContract.Subjects
+						.getUserSubjectsSelectionArgs(SessionManager
+								.getInstance(getActivity()).getLoginCode()),
+				null);
 	}
 
 	@Override

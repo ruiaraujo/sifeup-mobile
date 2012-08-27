@@ -21,8 +21,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.content.SigarraProvider;
-import pt.up.beta.mobile.content.tables.SubjectsTable;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
@@ -60,6 +59,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			final int secondYear = DateUtils.secondYearOfSchoolYear();
 			final String year = Integer.toString(secondYear - 1) + "/"
 					+ Integer.toString(secondYear);
+			final ContentValues  [] values = new ContentValues[subjects.size()];
+			int i = 0;
 			for (Subject subject : subjects) {
 				final String subjectContent = SifeupAPI.getReply(SifeupAPI
 						.getSubjectContentUrl(subject.getCode(), year,
@@ -67,18 +68,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				final String subjectFiles = SifeupAPI.getReply(SifeupAPI
 						.getSubjectFilestUrl(subject.getCode(), year,
 								subject.getSemestre()));
-				final ContentValues values = new ContentValues();
-				values.put(SubjectsTable.COLUMN_USER_CODE, userCode);
-				values.put(SubjectsTable.COLUMN_CODE, subject.getCode());
-				values.put(SubjectsTable.COLUMN_YEAR, year);
-				values.put(SubjectsTable.COLUMN_PERIOD, subject.getSemestre());
-				values.put(SubjectsTable.COLUMN_NAME_PT, subject.getNamePt());
-				values.put(SubjectsTable.COLUMN_NAME_EN, subject.getNameEn());
-				values.put(SubjectsTable.COLUMN_CONTENT, subjectContent);
-				values.put(SubjectsTable.COLUMN_FILES, subjectFiles);
-				getContext().getContentResolver().insert(
-						SigarraProvider.CONTENT_SUBJECTS_URI, values);
+				final ContentValues  value = new ContentValues();
+				value.put(SigarraContract.SubjectsColumns.USER_CODE, userCode);
+				value.put(SigarraContract.SubjectsColumns.CODE, subject.getCode());
+				value.put(SigarraContract.SubjectsColumns.YEAR, year);
+				value.put(SigarraContract.SubjectsColumns.PERIOD, subject.getSemestre());
+				value.put(SigarraContract.SubjectsColumns.NAME_PT, subject.getNamePt());
+				value.put(SigarraContract.SubjectsColumns.NAME_EN, subject.getNameEn());
+				value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
+				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
+				values[i++] = value;
 			}
+			if ( values.length > 0 )
+				getContext().getContentResolver().bulkInsert(
+					SigarraContract.Subjects.CONTENT_URI, values);
+			syncResult.stats.numEntries += subjects.size();
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 		} catch (AuthenticatorException e) {

@@ -1,20 +1,20 @@
-package pt.up.beta.mobile.content.tables;
+package pt.up.beta.mobile.content;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class SubjectsTable {
+class SubjectsTable {
 
 	// Database table
-	public static final String TABLE_SUBJECTS = "subjects";
-	public static final String COLUMN_USER_CODE = "_id";
-	public static final String COLUMN_CODE = "code";
-	public static final String COLUMN_NAME_PT = "name_pt";
-	public static final String COLUMN_NAME_EN = "name_en";
-	public static final String COLUMN_YEAR = "year";
-	public static final String COLUMN_PERIOD = "period";
-	public static final String COLUMN_CONTENT = "content";
-	public static final String COLUMN_FILES = "files";
+	static final String TABLE_SUBJECTS = "subjects";
+	static final String COLUMN_USER_CODE = "_id";
+	static final String COLUMN_CODE = "code";
+	static final String COLUMN_NAME_PT = "name_pt";
+	static final String COLUMN_NAME_EN = "name_en";
+	static final String COLUMN_YEAR = "year";
+	static final String COLUMN_PERIOD = "period";
+	static final String COLUMN_CONTENT = "content";
+	static final String COLUMN_FILES = "files";
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE = "create table "
@@ -26,11 +26,11 @@ public class SubjectsTable {
 			+ " text not null," + "PRIMARY KEY (" + COLUMN_USER_CODE + ","
 			+ COLUMN_CODE + "," + COLUMN_YEAR + "," + COLUMN_PERIOD + "));";
 
-	public static void onCreate(SQLiteDatabase database) {
+	static void onCreate(SQLiteDatabase database) {
 		database.execSQL(DATABASE_CREATE);
 	}
 
-	public static void onUpgrade(SQLiteDatabase database, int oldVersion,
+	static void onUpgrade(SQLiteDatabase database, int oldVersion,
 			int newVersion) {
 		Log.w(SubjectsTable.class.getName(), "Upgrading database from version "
 				+ oldVersion + " to " + newVersion
