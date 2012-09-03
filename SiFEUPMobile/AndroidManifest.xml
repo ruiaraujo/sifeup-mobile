@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pt.up.beta.mobile"
-    android:installLocation="preferExternal"
+    android:installLocation="internalOnly"
     android:versionCode="16"
     android:versionName="0.12.0" >
 
