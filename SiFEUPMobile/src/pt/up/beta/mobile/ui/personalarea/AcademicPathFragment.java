@@ -10,7 +10,7 @@ import pt.up.beta.mobile.datatypes.AcademicUC;
 import pt.up.beta.mobile.datatypes.AcademicYear;
 import pt.up.beta.mobile.sifeup.AcademicPathUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
@@ -34,94 +34,89 @@ import android.widget.Toast;
  * 
  */
 public class AcademicPathFragment extends BaseFragment implements
-        ResponseCommand, OnChildClickListener {
+		ResponseCommand, OnChildClickListener {
 
 	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
-	
-    /** All info about the student Academic Path */
-    private AcademicPath academicPath;
 
-    private TextView average;
-    private TextView year;
+	/** All info about the student Academic Path */
+	private AcademicPath academicPath;
 
-    private ExpandableListView grades;
-    private LayoutInflater mInflater;
+	private TextView average;
+	private TextView year;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        mInflater = inflater;
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path,
-                getParentContainer(), true);
-        grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
-        year = (TextView) root.findViewById(R.id.path_year);
-        average = (TextView) root.findViewById(R.id.path_average);
-        return getParentContainer(); // mandatory
-    }
+	private ExpandableListView grades;
+	private LayoutInflater mInflater;
 
- 	@Override
- 	public void onSaveInstanceState (Bundle outState){
- 	    if ( academicPath != null )
- 	        outState.putParcelable(ACADEMIC_KEY,academicPath);
- 	}
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if ( savedInstanceState != null )
-        {
-            academicPath = savedInstanceState.getParcelable(ACADEMIC_KEY);
-            if ( academicPath == null )
-            	task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
-                        .getLoginCode(), this);
-            else
-            {
-                displayData();
-                showFastMainScreen();
-            }
-        }
-        else
-        {
-        	task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
-                    .getLoginCode(), this);
-        }
-    }
-    
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		mInflater = inflater;
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path,
+				getParentContainer(), true);
+		grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
+		year = (TextView) root.findViewById(R.id.path_year);
+		average = (TextView) root.findViewById(R.id.path_average);
+		return getParentContainer(); // mandatory
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.webclient_menu_items, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (academicPath != null)
+			outState.putParcelable(ACADEMIC_KEY, academicPath);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_browser) {
-            Intent i = new Intent(getActivity(),
-                    WebviewActivity.class);
-            i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI.getAcademicPathSigarraUrl(SessionManager.getInstance(getActivity()).getLoginCode()));
-            startActivity(i);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			academicPath = savedInstanceState.getParcelable(ACADEMIC_KEY);
+			if (academicPath == null)
+				task = AcademicPathUtils.getAcademicPathReply(
+						AccountUtils.getActiveUserCode(getActivity()), this);
+			else {
+				displayData();
+				showFastMainScreen();
+			}
+		} else {
+			task = AcademicPathUtils.getAcademicPathReply(
+					AccountUtils.getActiveUserCode(getActivity()), this);
+		}
+	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.webclient_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 
-    public void onError(ERROR_TYPE error) {
-        if (getActivity() == null)
-            return;
-        switch (error) {
-        case AUTHENTICATION:
-            Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-                    Toast.LENGTH_LONG).show();
-            goLogin();
-            break;
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_browser) {
+			Intent i = new Intent(getActivity(), WebviewActivity.class);
+			i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI
+					.getAcademicPathSigarraUrl(AccountUtils
+							.getActiveUserCode(getActivity())));
+			startActivity(i);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
 		case NETWORK:
 			showRepeatTaskScreen(getString(R.string.toast_server_error));
 			break;
@@ -131,149 +126,154 @@ public class AcademicPathFragment extends BaseFragment implements
 		}
 	}
 
-    public void onResultReceived(Object... results) {
-        if (getActivity() == null)
-            return;
-        academicPath = (AcademicPath) results[0];
-        displayData();
-        showMainScreen();
-    }
-    
-    private void displayData(){
-        average.setText(getString(R.string.path_average,
-                academicPath.getAverage()));
-        year.setText(getString(R.string.path_year,
-                academicPath.getCourseYears()));
-        grades.setAdapter(new AcademicPathAdapter());
-        grades.setOnChildClickListener(this);
-    }
+	public void onResultReceived(Object... results) {
+		if (getActivity() == null)
+			return;
+		academicPath = (AcademicPath) results[0];
+		displayData();
+		showMainScreen();
+	}
 
-    private class AcademicPathAdapter extends BaseExpandableListAdapter {
+	private void displayData() {
+		average.setText(getString(R.string.path_average,
+				academicPath.getAverage()));
+		year.setText(getString(R.string.path_year,
+				academicPath.getCourseYears()));
+		grades.setAdapter(new AcademicPathAdapter());
+		grades.setOnChildClickListener(this);
+	}
 
-        public Object getChild(int groupPosition, int childPosition) {
-            AcademicYear year = academicPath.getUcs().get(groupPosition);
-            if (childPosition == 0) {
-                // first marker
-                return null;
-            } else if (year.getFirstSemester().size() + 1 == childPosition) {
-                // second marker
-                return null;
-            }
-            AcademicUC uc = null;
-            if (childPosition <= year.getFirstSemester().size() + 1)
-                uc = year.getFirstSemester().get(childPosition - 1);
-            else
-                uc = year.getSecondSemester().get(
-                        childPosition - 2 - year.getFirstSemester().size());
-            return uc;
-        }
+	private class AcademicPathAdapter extends BaseExpandableListAdapter {
 
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
+		public Object getChild(int groupPosition, int childPosition) {
+			AcademicYear year = academicPath.getUcs().get(groupPosition);
+			if (childPosition == 0) {
+				// first marker
+				return null;
+			} else if (year.getFirstSemester().size() + 1 == childPosition) {
+				// second marker
+				return null;
+			}
+			AcademicUC uc = null;
+			if (childPosition <= year.getFirstSemester().size() + 1)
+				uc = year.getFirstSemester().get(childPosition - 1);
+			else
+				uc = year.getSecondSemester().get(
+						childPosition - 2 - year.getFirstSemester().size());
+			return uc;
+		}
 
-        public View getChildView(int groupPosition, int childPosition,
-                boolean isLastChild, View convertView, ViewGroup parent) {
-            AcademicUC uc = (AcademicUC) getChild(groupPosition, childPosition);
-            if (uc == null) {
-                TextView marker = (TextView) mInflater.inflate(
-                        R.layout.list_item_grade_marker, null);
-                if (childPosition == 0) {
-                    // first marker
-                    marker.setText(getString(R.string.path_semestre, 1));
-                } else {
-                    // second marker
-                    marker.setText(getString(R.string.path_semestre, 2));
-                }
-                marker.setPadding(marker.getPaddingLeft() + 16,
-                        marker.getPaddingTop(), marker.getPaddingRight(),
-                        marker.getPaddingBottom());
+		public long getChildId(int groupPosition, int childPosition) {
+			return childPosition;
+		}
 
-                marker.setBackgroundColor(getResources().getColor(R.color.feup));
-                marker.setTextColor(getResources().getColor(R.color.body_text_white));
-                return marker;
-            }
-            View root = mInflater.inflate(R.layout.list_item_grade, null);
-            TextView gradeName = (TextView) root
-                    .findViewById(R.id.grade_subject_name);
-            TextView gradeNumber = (TextView) root
-                    .findViewById(R.id.grade_number);
-            gradeName.setText(uc.getNamePt());
-            gradeNumber.setText(getString(R.string.path_grade, uc.getGrade()));
-            return root;
-        }
+		public View getChildView(int groupPosition, int childPosition,
+				boolean isLastChild, View convertView, ViewGroup parent) {
+			AcademicUC uc = (AcademicUC) getChild(groupPosition, childPosition);
+			if (uc == null) {
+				TextView marker = (TextView) mInflater.inflate(
+						R.layout.list_item_grade_marker, null);
+				if (childPosition == 0) {
+					// first marker
+					marker.setText(getString(R.string.path_semestre, 1));
+				} else {
+					// second marker
+					marker.setText(getString(R.string.path_semestre, 2));
+				}
+				marker.setPadding(marker.getPaddingLeft() + 16,
+						marker.getPaddingTop(), marker.getPaddingRight(),
+						marker.getPaddingBottom());
 
-        public int getChildrenCount(int groupPosition) {
+				marker.setBackgroundColor(getResources().getColor(R.color.feup));
+				marker.setTextColor(getResources().getColor(
+						R.color.body_text_white));
+				return marker;
+			}
+			View root = mInflater.inflate(R.layout.list_item_grade, null);
+			TextView gradeName = (TextView) root
+					.findViewById(R.id.grade_subject_name);
+			TextView gradeNumber = (TextView) root
+					.findViewById(R.id.grade_number);
+			gradeName.setText(uc.getNamePt());
+			gradeNumber.setText(getString(R.string.path_grade, uc.getGrade()));
+			return root;
+		}
 
-            AcademicYear year = academicPath.getUcs().get(groupPosition);
-            return year.getFirstSemester().size()
-                    + year.getSecondSemester().size() + 2;
-        }
+		public int getChildrenCount(int groupPosition) {
 
-        public Object getGroup(int groupPosition) {
-            return getString(R.string.path_year,
-                    academicPath.getUcs().get(groupPosition).getYear()
-                            - academicPath.getBaseYear() + 1);
-        }
+			AcademicYear year = academicPath.getUcs().get(groupPosition);
+			return year.getFirstSemester().size()
+					+ year.getSecondSemester().size() + 2;
+		}
 
-        public int getGroupCount() {
-            return academicPath.getUcs().size();
-        }
+		public Object getGroup(int groupPosition) {
+			return getString(R.string.path_year,
+					academicPath.getUcs().get(groupPosition).getYear()
+							- academicPath.getBaseYear() + 1);
+		}
 
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
+		public int getGroupCount() {
+			return academicPath.getUcs().size();
+		}
 
-        public View getGroupView(int groupPosition, boolean isExpanded,
-                View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = mInflater.inflate(
-                        R.layout.list_item_grade_marker, null);
-            ((TextView) convertView)
-                    .setText((CharSequence) getGroup(groupPosition));
-            return convertView;
-        }
+		public long getGroupId(int groupPosition) {
+			return groupPosition;
+		}
 
-        public boolean hasStableIds() {
-            return true;
-        }
+		public View getGroupView(int groupPosition, boolean isExpanded,
+				View convertView, ViewGroup parent) {
+			if (convertView == null)
+				convertView = mInflater.inflate(
+						R.layout.list_item_grade_marker, null);
+			((TextView) convertView)
+					.setText((CharSequence) getGroup(groupPosition));
+			return convertView;
+		}
 
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            if ( getChild(groupPosition, childPosition) == null )
-            	return false;
-            return true;
-        }
+		public boolean hasStableIds() {
+			return true;
+		}
 
-    }
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			if (getChild(groupPosition, childPosition) == null)
+				return false;
+			return true;
+		}
+
+	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		task = AcademicPathUtils.getAcademicPathReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), this);
+		task = AcademicPathUtils.getAcademicPathReply(
+				AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
-        AcademicUC uc = (AcademicUC)parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-		if ( uc == null )
+		AcademicUC uc = (AcademicUC) parent.getExpandableListAdapter()
+				.getChild(groupPosition, childPosition);
+		if (uc == null)
 			return true;
 		if (getActivity() == null)
 			return true;
 		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
 
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, uc.getCourseAcronym());
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, Integer
-				.toString(uc.getYear())
-				+ "/" + Integer.toString(uc.getYear()+1));
-		final String semester = uc.getSemester().equals("A")?uc.getSemester():uc.getSemester()+"S";
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
+				uc.getCourseAcronym());
+		i.putExtra(
+				SubjectDescriptionFragment.SUBJECT_YEAR,
+				Integer.toString(uc.getYear()) + "/"
+						+ Integer.toString(uc.getYear() + 1));
+		final String semester = uc.getSemester().equals("A") ? uc.getSemester()
+				: uc.getSemester() + "S";
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, semester);
 		String title = uc.getNamePt();
 		if (!UIUtils.isLocalePortuguese() && uc.getNameEn().trim().length() > 0)
 			title = uc.getNameEn();
-		i.putExtra(Intent.EXTRA_TITLE,title );
+		i.putExtra(Intent.EXTRA_TITLE, title);
 		startActivity(i);
-        return true;
+		return true;
 	}
 
 }

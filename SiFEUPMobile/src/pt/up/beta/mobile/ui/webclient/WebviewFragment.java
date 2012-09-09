@@ -5,15 +5,17 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +57,8 @@ public class WebviewFragment extends BaseFragment {
         return getParentContainer(); // mandatory
     }
     
-    @TargetApi(11)
+    @SuppressLint("SetJavaScriptEnabled")
+	@TargetApi(11)
 	public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         final WebSettings webSettings = mWebView.getSettings();
@@ -169,14 +172,10 @@ public class WebviewFragment extends BaseFragment {
                 // first we fill the form
                 // then we reload the page
                 // Logging in through javascript
-                final SessionManager session = SessionManager.getInstance(getActivity());
-                if ( session.loadSession() ) 
-                {
-                    if ( getActivity() == null )
-                    	return;
+                final String user = AccountUtils.getActiveUserCode(getActivity());
+                final String pass = AccountUtils.getActiveUserPassword(getActivity());
+        		if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pass)) {
                 	Toast.makeText(getActivity(), R.string.msg_authenticating, Toast.LENGTH_SHORT).show();
-	                final String user = session.getLoginCode();
-	                final String pass = session.getLoginPassword();
 	                if ( user.equals("") || pass.equals("") )
 	                	goLogin();
 	                mWebView.loadUrl("javascript: {"

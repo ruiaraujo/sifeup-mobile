@@ -26,7 +26,7 @@ public class TuitionUtils {
 		public Object parse(String page) {
 			try {
 	    		JSONObject jHistory=new JSONObject(page);
-	    		if(SessionManager.tuitionHistory.load(jHistory))
+	    		if(AccountUtils.tuitionHistory.load(jHistory))
 	    			return "Sucess";
 	    		else
 	    			return null;			

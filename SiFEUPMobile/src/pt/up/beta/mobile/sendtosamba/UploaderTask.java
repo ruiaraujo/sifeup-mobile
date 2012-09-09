@@ -53,7 +53,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
     }
 
-    protected void onPreExecute() {
+	protected void onPreExecute() {
         RemoteViews contentView = new RemoteViews(context.getPackageName(),
                 R.layout.notification_upload);
         if (is.getLength() == 0)
@@ -76,7 +76,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
         notBuilder.setSmallIcon(R.drawable.ic_launcher);
         notBuilder.setContent(contentView);
         notBuilder.setContentIntent(contentIntent);
-        notification = notBuilder.getNotification();
+        notification = notBuilder.build();
         mNotificationManager.notify(UNIQUE_ID, notification);
     }
 
@@ -184,7 +184,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
             }
         }
         notBuilder.setSmallIcon(R.drawable.ic_launcher);
-        mNotificationManager.notify(UNIQUE_ID, notBuilder.getNotification());
+        mNotificationManager.notify(UNIQUE_ID, notBuilder.build());
 
         listener.finishedTask();
 

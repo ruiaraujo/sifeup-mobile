@@ -20,8 +20,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.protocol.BasicHttpContext;
 
-import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.R;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -150,6 +150,7 @@ public class DownloaderFragment extends DialogFragment {
 
 		private File myFile;
 
+		@TargetApi(12)
 		@Override
 		protected void onPostExecute(Integer result) {
 			if (getActivity() == null)
@@ -213,6 +214,7 @@ public class DownloaderFragment extends DialogFragment {
 			pbarDialog.setMax(100);
 		}
 
+		@TargetApi(8)
 		@Override
 		protected Integer doInBackground(String... argsDownload) {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -235,10 +237,6 @@ public class DownloaderFragment extends DialogFragment {
 				BasicHttpContext localContext = new BasicHttpContext();
 
 				CookieStore cookieStore = new BasicCookieStore();
-
-				// adding cookie from the cookie store
-				for (Cookie cookie : SessionManager.getInstance().getCookies())
-					cookieStore.addCookie(cookie);
 
 				// Bind custom cookie store to the local context
 				localContext.setAttribute(ClientContext.COOKIE_STORE,

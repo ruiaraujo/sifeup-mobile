@@ -1,6 +1,5 @@
 package pt.up.beta.mobile.sifeup;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class ScheduleUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentScheduleReply(
-			String code, long mondayMillis, ResponseCommand command, File cache) {
+			String code, long mondayMillis, ResponseCommand command) {
 		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
@@ -31,14 +30,14 @@ public class ScheduleUtils {
         monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
 				.getScheduleUrl(code,firstDay,lastDay));
 	}
 	
 	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeScheduleReply(
-			String code, long mondayMillis, ResponseCommand command, File cache) {
+			String code, long mondayMillis, ResponseCommand command) {
 		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
@@ -47,12 +46,12 @@ public class ScheduleUtils {
         monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
 				.getTeacherScheduleUrl	(code,firstDay,lastDay));
 	}	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomScheduleReply(
-			String code, long mondayMillis, ResponseCommand command, File cache) {
+			String code, long mondayMillis, ResponseCommand command) {
 		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
@@ -61,13 +60,13 @@ public class ScheduleUtils {
         monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
 				.getRoomScheduleUrl(code.substring(0,1),code.substring(1),firstDay,lastDay));
 	}
 	
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getUcScheduleReply(
-			String code, long mondayMillis, ResponseCommand command, File cache) {
+			String code, long mondayMillis, ResponseCommand command) {
 		Time monday = new Time(DateUtils.TIME_REFERENCE);
         monday.set(mondayMillis);
         monday.normalize(false);
@@ -76,7 +75,7 @@ public class ScheduleUtils {
         monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
         monday.normalize(false);
         String lastDay = monday.format("%Y%m%d");
-		return new FetcherTask(command, new ScheduleParser(mondayMillis),cache).execute(SifeupAPI
+		return new FetcherTask(command, new ScheduleParser(mondayMillis)).execute(SifeupAPI
 				.getUcScheduleUrl(code,firstDay,lastDay));
 	}
 

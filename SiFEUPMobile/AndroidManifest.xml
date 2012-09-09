@@ -54,7 +54,7 @@
             android:name=".ui.LauncherActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Invisible" >
+            android:theme="@style/Theme.Sigarra.Home" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

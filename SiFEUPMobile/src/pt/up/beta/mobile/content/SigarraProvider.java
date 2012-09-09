@@ -15,12 +15,15 @@ public class SigarraProvider extends ContentProvider {
 
 	// Used for the UriMacher
 	private static final int SUBJECTS = 10;
+	private static final int FRIENDS = 20;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 	static {
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_SUBJECTS, SUBJECTS);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_FRIENDS, FRIENDS);
 	}
 
 	private DatabaseHelper dbHelper;
@@ -40,6 +43,10 @@ public class SigarraProvider extends ContentProvider {
 			count = dbHelper.getWritableDatabase().delete(
 					SubjectsTable.TABLE_SUBJECTS, selection, selectionArgs);
 			break;
+		case FRIENDS:
+			count = dbHelper.getWritableDatabase().delete(
+					FriendsTable.TABLE_FRIENDS, selection, selectionArgs);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -54,6 +61,8 @@ public class SigarraProvider extends ContentProvider {
 		switch (uriType) {
 		case SUBJECTS:
 			return SigarraContract.Subjects.CONTENT_TYPE;
+		case FRIENDS:
+			return SigarraContract.Friends.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -103,6 +112,19 @@ public class SigarraProvider extends ContentProvider {
 			}
 			throw new SQLException("Failed to insert row into " + uri);
 		}
+		case FRIENDS: {
+			long rowID = dbHelper.getWritableDatabase().replace(
+					FriendsTable.TABLE_FRIENDS, FriendsTable.KEY_COURSE_FRIEND, values);
+			if (rowID > 0) {
+				final Uri url = ContentUris.withAppendedId(
+						SigarraContract.Friends.CONTENT_URI, rowID);
+				getContext().getContentResolver().notifyChange(url, null);
+				getContext().getContentResolver().notifyChange(uri, null);
+				dbHelper.close();
+				return url;
+			}
+			throw new SQLException("Failed to insert row into " + uri);
+		}
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -119,6 +141,13 @@ public class SigarraProvider extends ContentProvider {
 			qb.setTables(SubjectsTable.TABLE_SUBJECTS);
 			if ( TextUtils.isEmpty(sortOrder) )
 				orderBy = SigarraContract.Subjects.DEFAULT_SORT;
+			else
+				orderBy = sortOrder;
+			break;
+		case FRIENDS: 
+			qb.setTables(FriendsTable.TABLE_FRIENDS);
+			if ( TextUtils.isEmpty(sortOrder) )
+				orderBy = SigarraContract.Friends.DEFAULT_SORT;
 			else
 				orderBy = sortOrder;
 			break;
@@ -140,6 +169,11 @@ public class SigarraProvider extends ContentProvider {
 		case SUBJECTS:
 			count = dbHelper.getWritableDatabase().update(
 					SubjectsTable.TABLE_SUBJECTS, values, selection,
+					selectionArgs);
+			break;
+		case FRIENDS:
+			count = dbHelper.getWritableDatabase().update(
+					FriendsTable.TABLE_FRIENDS, values, selection,
 					selectionArgs);
 			break;
 		default:

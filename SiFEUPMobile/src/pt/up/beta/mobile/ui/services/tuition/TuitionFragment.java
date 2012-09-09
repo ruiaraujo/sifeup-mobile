@@ -9,7 +9,7 @@ import java.util.List;
 
 import pt.up.beta.mobile.datatypes.Payment;
 import pt.up.beta.mobile.datatypes.YearsTuition;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.R;
 
 
@@ -40,8 +40,8 @@ public class TuitionFragment extends ListFragment {
         int[] to = new int[] { R.id.tuition_year_payment_name, R.id.tuition_year_payment_date, R.id.tuition_year_payment_amount, R.id.tuition_year_payment_to_pay};
 	    //prepare the list of all records
         List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-        ArrayList<YearsTuition> history=SessionManager.tuitionHistory.getHistory();
-        currentYear=history.get(SessionManager.tuitionHistory.getSelected_year());
+        ArrayList<YearsTuition> history=AccountUtils.tuitionHistory.getHistory();
+        currentYear=history.get(AccountUtils.tuitionHistory.getSelected_year());
          
         for(Payment p: currentYear.getPayments()){
             HashMap<String, String> map = new HashMap<String, String>();

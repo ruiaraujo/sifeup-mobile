@@ -17,7 +17,7 @@ class SubjectsTable {
 	static final String COLUMN_FILES = "files";
 
 	// Database creation SQL statement
-	private static final String DATABASE_CREATE = "create table "
+	private static final String TABLE_CREATE = "create table "
 			+ TABLE_SUBJECTS + "(" + COLUMN_USER_CODE + " text not null, "
 			+ COLUMN_CODE + " text not null, " + COLUMN_YEAR
 			+ " text not null," + COLUMN_PERIOD + " text not null,"
@@ -27,7 +27,7 @@ class SubjectsTable {
 			+ COLUMN_CODE + "," + COLUMN_YEAR + "," + COLUMN_PERIOD + "));";
 
 	static void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE);
+		database.execSQL(TABLE_CREATE);
 	}
 
 	static void onUpgrade(SQLiteDatabase database, int oldVersion,

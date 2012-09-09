@@ -23,7 +23,6 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.dialogs.AboutDialogFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
@@ -66,8 +65,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	/** The Intent extra to store username. */
 	public static final String PARAM_AUTHTOKEN_TYPE = "authtokenType";
 
-	public static final String RESULT_USER = "user";
-
 	
 	/** The tag used to log to adb console. */
 	private static final String TAG = "AuthenticatorActivity";
@@ -105,7 +102,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		Log.i(TAG, "onCreate(" + icicle + ")");
 		super.onCreate(icicle);
 		mAccountManager = AccountManager.get(this);
-		SessionManager.getInstance(this);
 		Log.i(TAG, "loading data from Intent");
 		final Intent intent = getIntent();
 		mUsername = intent.getStringExtra(PARAM_USERNAME);
@@ -212,7 +208,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		mAccountManager.setUserData(account, Constants.USER_TYPE,user.getType());
 		mAccountManager.setUserData(account, Constants.USER_NAME,user.getUser());
 		final Intent intent = new Intent();
-		intent.putExtra(RESULT_USER, new User(mUsername, user.getUser(), mPassword, user.getType()));
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
 		setAccountAuthenticatorResult(intent.getExtras());

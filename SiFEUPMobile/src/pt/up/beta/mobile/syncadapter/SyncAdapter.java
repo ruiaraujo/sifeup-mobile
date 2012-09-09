@@ -48,13 +48,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
-			mAccountManager.blockingGetAuthToken(account,
+			
+			final String authToken = mAccountManager.blockingGetAuthToken(account,
 					Constants.AUTHTOKEN_TYPE, false);
 			final String userCode = mAccountManager.getUserData(account,
 					Constants.USER_NAME);
 			final String page = SifeupAPI.getReply(SifeupAPI.getSubjectsUrl(
 					userCode,
-					Integer.toString(DateUtils.secondYearOfSchoolYear() - 1)));
+					Integer.toString(DateUtils.secondYearOfSchoolYear() - 1)),authToken );
 			final List<Subject> subjects = Subject.parseSubjectList(page);
 			final int secondYear = DateUtils.secondYearOfSchoolYear();
 			final String year = Integer.toString(secondYear - 1) + "/"
@@ -64,10 +65,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			for (Subject subject : subjects) {
 				final String subjectContent = SifeupAPI.getReply(SifeupAPI
 						.getSubjectContentUrl(subject.getCode(), year,
-								subject.getSemestre()));
+								subject.getSemestre()),authToken);
 				final String subjectFiles = SifeupAPI.getReply(SifeupAPI
 						.getSubjectFilestUrl(subject.getCode(), year,
-								subject.getSemestre()));
+								subject.getSemestre()),authToken);
 				final ContentValues  value = new ContentValues();
 				value.put(SigarraContract.SubjectsColumns.USER_CODE, userCode);
 				value.put(SigarraContract.SubjectsColumns.CODE, subject.getCode());
@@ -89,8 +90,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			syncResult.stats.numAuthExceptions++;
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 			syncResult.stats.numIoExceptions++;
+			e.printStackTrace();
 		} catch (JSONException e) {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();

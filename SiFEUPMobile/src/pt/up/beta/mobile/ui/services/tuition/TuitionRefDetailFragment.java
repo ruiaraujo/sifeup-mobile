@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.datatypes.YearsTuition;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.R;
 
 public class TuitionRefDetailFragment extends Fragment {
@@ -53,8 +53,8 @@ public class TuitionRefDetailFragment extends Fragment {
                 .findViewById(R.id.tuition_ref_detail_date_start);
         dataFim = (TextView) root
                 .findViewById(R.id.tuition_ref_detail_date_end);
-        YearsTuition y = SessionManager.tuitionHistory.getHistory().get(
-                SessionManager.tuitionHistory.currentYear);
+        YearsTuition y = AccountUtils.tuitionHistory.getHistory().get(
+                AccountUtils.tuitionHistory.currentYear);
         ref = y.getReferences().get(y.getSelectedReference());
         String refStr = Long.toString(ref.getRef());
         while (refStr.length() < 9)

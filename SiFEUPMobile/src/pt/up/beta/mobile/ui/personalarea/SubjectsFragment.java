@@ -7,7 +7,7 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.content.Intent;
@@ -85,9 +85,8 @@ public class SubjectsFragment extends BaseFragment implements
 						SigarraContract.SubjectsColumns.NAME_EN },
 				SigarraContract.Subjects.USER_SUBJECTS,
 				SigarraContract.Subjects
-						.getUserSubjectsSelectionArgs(SessionManager
-								.getInstance(getActivity()).getLoginCode()),
-				null);
+						.getUserSubjectsSelectionArgs(AccountUtils
+								.getActiveUserCode(getActivity())), null);
 	}
 
 	@Override

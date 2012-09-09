@@ -1,5 +1,9 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.IOException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,11 +62,39 @@ public class AuthenticationUtils {
 			}
 			command.onError(result);
 		}
+		
+
+        /**
+         * Student query Reply from web service
+         * 
+         * @param url
+         * @return page
+         */
+        private String getReply(String url) {
+                String page = null;
+                try {
+                        do {
+                                HttpResponse response = SifeupAPI.get(url);
+                                if (response == null)
+                                        return null;
+                                HttpEntity entity = response.getEntity();
+                                if (entity == null)
+                                        return null;
+                                page = SifeupAPI.getPage(entity.getContent());
+                                if (page == null)
+                                        return null;
+                                entity.consumeContent();
+                        } while (page.equals(""));
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                return page;
+        }
 
 		protected ERROR_TYPE doInBackground(String... code) {
 			String page = "";
 			try {
-				page = SifeupAPI.getReply(SifeupAPI.getAuthenticationUrl(code[0], code[1]));
+				page = getReply(SifeupAPI.getAuthenticationUrl(code[0], code[1]));
 				if (page == null)
 					return ERROR_TYPE.NETWORK;
 				user = JSONUser(page);

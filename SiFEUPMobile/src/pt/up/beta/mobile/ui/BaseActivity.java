@@ -3,14 +3,17 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -37,9 +40,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		final SessionManager manager = SessionManager.getInstance(this);
-		if (!manager.isUserLoaded()) {
-			if (!manager.loadSession())
+		if (!AccountUtils.isAccountValid(this)) {
 				goLogin();
 		}
 		// Example of how to track a pageview event
@@ -81,7 +82,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
 	public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			goHome();
+			goUp();
 			return true;
 		}
 		return super.onKeyLongPress(keyCode, event);
@@ -100,7 +101,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			final Bundle extras = new Bundle();
 			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			ContentResolver.requestSync(new Account(SessionManager.getInstance(this).getLoginName(), Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY, extras);
+			ContentResolver.requestSync(
+					new Account(
+							AccountUtils.getActiveUserName(this),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
 			return true;
 		case R.id.menu_search:
 			startSearch(null, false, Bundle.EMPTY, false);
@@ -109,7 +114,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			// Handle the HOME / UP affordance. Since the app is only two levels
 			// deep
 			// hierarchically, UP always just goes home.
-			goHome();
+			goUp();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -118,15 +123,32 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	/**
 	 * Invoke "home" action, returning to {@link HomeActivity}.
 	 */
-	public void goHome() {
-		if (this instanceof HomeActivity) {
-			return;
-		}
+	public void goUp() {
+		final Intent upIntent;
+		if (this instanceof HomeActivity)
+			upIntent = new Intent(this, LauncherActivity.class).putExtra(
+					LauncherActivity.LOGOUT_FLAG, true);
+		else
+			upIntent = new Intent(this, HomeActivity.class);
 
-		final Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		finish();
-		startActivity(intent);
+		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+			// This activity is not part of the application's task, so create a
+			// new task
+			// with a synthesized back stack.
+			TaskStackBuilder.create(this).addNextIntent(upIntent)
+					.startActivities();
+			finish();
+		} else {
+			// This activity is part of the application's task, so simply
+			// navigate up to the hierarchical parent activity.
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ){
+	            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(upIntent);
+	            finish();
+			}
+			else
+				NavUtils.navigateUpTo(this, upIntent);
+		}
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 	}
 

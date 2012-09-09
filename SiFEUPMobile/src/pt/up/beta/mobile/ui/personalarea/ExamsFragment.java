@@ -1,11 +1,19 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.datatypes.Exam;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ExamsUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
+import pt.up.beta.mobile.utils.calendar.CalendarHelper;
+import pt.up.beta.mobile.utils.calendar.Event;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -24,17 +32,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import pt.up.beta.mobile.datatypes.Exam;
-import pt.up.beta.mobile.sifeup.ExamsUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.utils.DateUtils;
-import pt.up.beta.mobile.utils.FileUtils;
-import pt.up.beta.mobile.utils.calendar.CalendarHelper;
-import pt.up.beta.mobile.utils.calendar.Event;
-import pt.up.beta.mobile.R;
 
 public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
@@ -66,20 +63,17 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		super.onActivityCreated(savedInstanceState);
 		personCode = getArguments().getString(PROFILE_CODE);
 		if (personCode == null)
-			personCode = SessionManager.getInstance(getActivity())
-					.getLoginCode();
-		final File cache = FileUtils.getFile(getActivity(),
-				ExamsFragment.class.getSimpleName() + personCode);
+			personCode = AccountUtils.getActiveUserCode(getActivity());
 		if (savedInstanceState != null) {
 			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
 			if (exams == null) {
-				task = ExamsUtils.getExamsReply(personCode, this, cache);
+				task = ExamsUtils.getExamsReply(personCode, this);
 			} else {
 				if (populateList())
 					showFastMainScreen();
 			}
 		} else {
-			task = ExamsUtils.getExamsReply(personCode, this, cache);
+			task = ExamsUtils.getExamsReply(personCode, this);
 		}
 	}
 
@@ -269,9 +263,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		final File cache = FileUtils.getFile(getActivity(),
-				ExamsFragment.class.getSimpleName() + personCode);
-		task = ExamsUtils.getExamsReply(personCode, this, cache);
+		task = ExamsUtils.getExamsReply(personCode, this);
 	}
 
 }

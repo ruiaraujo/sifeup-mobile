@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import pt.up.beta.mobile.sifeup.PrinterUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
 
@@ -84,7 +84,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         {
             saldo = savedInstanceState.getString(PRINTERS_KEY);
             if ( saldo == null )
-                task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
+                task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
             else
             {
                 displayData();
@@ -93,7 +93,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         }
         else
         {
-            task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
+            task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
         }
     }
 
@@ -138,7 +138,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = PrinterUtils.getPrintReply(SessionManager.getInstance(getActivity()).getLoginCode(), this);
+        task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 import pt.up.beta.mobile.datatypes.YearsTuition;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.TuitionUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
@@ -37,18 +37,18 @@ public class TuitionHistoryFragment extends BaseFragment implements
 
 		return getParentContainer(); // this is mandatory.
 	}
-	
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        if (!SessionManager.tuitionHistory.isLoaded())
-            task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
-                    .getLoginCode(), this);
-        else {
-            loadList();
-            showFastMainScreen();
-        }
-    }
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (!AccountUtils.tuitionHistory.isLoaded())
+			task = TuitionUtils.getTuitionReply(
+					AccountUtils.getActiveUserCode(getActivity()), this);
+		else {
+			loadList();
+			showFastMainScreen();
+		}
+	}
 
 	private void loadList() {
 		String[] from = new String[] { "year", "paid", "to_pay" };
@@ -57,12 +57,13 @@ public class TuitionHistoryFragment extends BaseFragment implements
 		// prepare the list of all records
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 
-		for (YearsTuition y : SessionManager.tuitionHistory.getHistory()) {
+		for (YearsTuition y : AccountUtils.tuitionHistory.getHistory()) {
 			HashMap<String, String> map = new HashMap<String, String>();
 
 			map.put("year", getString(R.string.lbl_year) + " " + y.getYear());
-			map.put("paid", getString(R.string.lbl_paid) + ": "
-					+ y.getTotal_paid() + "€");
+			map.put("paid",
+					getString(R.string.lbl_paid) + ": " + y.getTotal_paid()
+							+ "€");
 			if (y.getTotal_in_debt() > 0.0)
 				map.put("to_pay", getString(R.string.lbl_still_to_pay) + ": "
 						+ y.getTotal_in_debt() + "€");
@@ -79,7 +80,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		SessionManager.tuitionHistory.setSelected_year(position);
+		AccountUtils.tuitionHistory.setSelected_year(position);
 		startActivity(new Intent(getActivity(), TuitionActivity.class));
 	}
 
@@ -102,8 +103,8 @@ public class TuitionHistoryFragment extends BaseFragment implements
 	}
 
 	public void onResultReceived(Object... results) {
-        if (getActivity() == null)
-            return;
+		if (getActivity() == null)
+			return;
 		if (results == null || results[0] == null)
 			return;
 		loadList();
@@ -112,7 +113,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), this);
+		task = TuitionUtils.getTuitionReply(
+				AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 }

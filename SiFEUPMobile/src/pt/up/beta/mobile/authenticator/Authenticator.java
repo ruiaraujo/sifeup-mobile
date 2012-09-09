@@ -16,9 +16,6 @@
 
 package pt.up.beta.mobile.authenticator;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.accounts.AbstractAccountAuthenticator;
@@ -109,25 +106,16 @@ class Authenticator extends AbstractAccountAuthenticator {
 		final AccountManager am = AccountManager.get(mContext);
 		final String password = am.getPassword(account);
 		if (password != null) {
-			final String page = SifeupAPI.getReply(SifeupAPI
-					.getAuthenticationUrl(
+			final String authToken = SifeupAPI.authenticate(
 							am.getUserData(account, Constants.USER_NAME),
-							password));
-			try {
-				if (!TextUtils.isEmpty(page)
-						&& new JSONObject(page).optBoolean("authenticated")) {
-					final Bundle result = new Bundle();
-					result.putString(AccountManager.KEY_ACCOUNT_NAME,
-							account.name);
-					result.putString(AccountManager.KEY_ACCOUNT_TYPE,
-							Constants.ACCOUNT_TYPE);
-					// result.putString(AccountManager.KEY_AUTHTOKEN,
-					// authToken);
-					result.putString(AccountManager.KEY_AUTHTOKEN, page);// TODO
-					return result;
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+							password);
+			if (!TextUtils.isEmpty(authToken)) {
+				final Bundle result = new Bundle();
+				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+				result.putString(AccountManager.KEY_ACCOUNT_TYPE,
+						Constants.ACCOUNT_TYPE);
+				result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+				return result;
 			}
 		}
 

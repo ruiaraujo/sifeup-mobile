@@ -7,7 +7,7 @@ import java.util.List;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.datatypes.YearsTuition;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.TuitionUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.R;
@@ -42,9 +42,8 @@ public class TuitionRefListFragment extends BaseFragment implements
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        if (!SessionManager.tuitionHistory.isLoaded())
-            task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
-                    .getLoginCode(), this);
+        if (!AccountUtils.tuitionHistory.isLoaded())
+            task = TuitionUtils.getTuitionReply(AccountUtils.getActiveUserCode(getActivity()), this);
         else {
             if ( loadList() )
                 showFastMainScreen();
@@ -57,9 +56,9 @@ public class TuitionRefListFragment extends BaseFragment implements
 				R.id.tuition_ref_date };
 		// prepare the list of all records
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		ArrayList<YearsTuition> history = SessionManager.tuitionHistory
+		ArrayList<YearsTuition> history = AccountUtils.tuitionHistory
 				.getHistory();
-		currentYear = history.get(SessionManager.tuitionHistory.currentYear);
+		currentYear = history.get(AccountUtils.tuitionHistory.currentYear);
 		if ( currentYear == null )
 		{
 		    showEmptyScreen(getString(R.string.label_no_tuition_ref));
@@ -118,8 +117,7 @@ public class TuitionRefListFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = TuitionUtils.getTuitionReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), this);
+        task = TuitionUtils.getTuitionReply(AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
 }

@@ -3,7 +3,7 @@ package pt.up.beta.mobile.ui.friends;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.friends.Friend;
+import pt.up.beta.mobile.datatypes.Friend;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.graphics.drawable.BitmapDrawable;

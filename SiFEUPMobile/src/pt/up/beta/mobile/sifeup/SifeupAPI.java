@@ -5,28 +5,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -37,8 +31,8 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.sifeup.sslhack.EasySSLSocketFactory;
-
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.util.Log;
 
 public class SifeupAPI {
@@ -419,7 +413,8 @@ public class SifeupAPI {
 	 * @param per
 	 * @return url
 	 */
-	public static String getSubjectContentUrl(String code, String year, String per) {
+	public static String getSubjectContentUrl(String code, String year,
+			String per) {
 		return WEBSERVICE
 				+ WebServices.MOBILE
 				+ SubjectDescription.NAME
@@ -638,9 +633,10 @@ public class SifeupAPI {
 
 	public static synchronized DefaultHttpClient getHttpClient() {
 		if (httpclient == null) {
-			Scheme httpsScheme = new Scheme("https", new EasySSLSocketFactory(), 443);
-			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(httpsScheme);
+			// Scheme httpsScheme = new Scheme("https", new SSLSocketFactory(),
+			// 443);
+			// SchemeRegistry schemeRegistry = new SchemeRegistry();
+			// schemeRegistry.register(httpsScheme);
 
 			HttpParams params = new BasicHttpParams();
 			params.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30);
@@ -649,15 +645,15 @@ public class SifeupAPI {
 			params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
-			ClientConnectionManager cm = new ThreadSafeClientConnManager(
-					params, schemeRegistry);
-			httpclient = new DefaultHttpClient(cm, params);
+			/*
+			 * ClientConnectionManager cm = new ThreadSafeClientConnManager(
+			 * params, schemeRegistry);
+			 */
+			httpclient = new DefaultHttpClient(params);
 
 			// Create local HTTP context
 			localContext = new BasicHttpContext();
 			// Bind custom cookie store to the local context
-			localContext.setAttribute(ClientContext.COOKIE_STORE,
-					SessionManager.getInstance().getCookieStore());
 		}
 		return httpclient;
 	}
@@ -677,29 +673,78 @@ public class SifeupAPI {
 	 * @param url
 	 * @return page
 	 */
-	public static String getReply(String url) {
+	public static String getReply(String strUrl, String cookie) {
 		String page = null;
 		try {
 			do {
-				HttpResponse response = get(url);
-				if (response == null)
-					return null;
-				HttpEntity entity = response.getEntity();
-				if (entity == null)
-					return null;
-				String charset = getContentCharSet(entity);
+				HttpsURLConnection connection = (HttpsURLConnection) new URL(
+						strUrl).openConnection();
+				connection.setRequestProperty("Cookie", cookie);
+				final InputStream pageContent = connection.getInputStream();
+				String charset = getContentCharSet(connection.getContentType());
 				if (charset == null) {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
-				page = getPage(entity.getContent(), charset);
+				page = getPage(pageContent, charset);
 				if (page == null)
 					return null;
-				entity.consumeContent();
 			} while (page.equals(""));
+			return page;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return page;
+		return null;
+	}
+	
+	public static String getReply(String strUrl) {
+		try {
+			return getReply(strUrl, AccountUtils.getAuthToken(null));
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public static String authenticate(String username, String password) {
+		String page = null;
+		try {
+			HttpsURLConnection connection = null;
+			do {
+				connection = (HttpsURLConnection) new URL(
+						SifeupAPI.getAuthenticationUrl(username, password))
+						.openConnection();
+				final InputStream pageContent = connection.getInputStream();
+				String charset = getContentCharSet(connection.getContentType());
+				if (charset == null) {
+					charset = HTTP.DEFAULT_CONTENT_CHARSET;
+				}
+				page = getPage(pageContent, charset);
+				if (page == null)
+					return null;
+			} while (page.equals(""));
+			// TODO API should return 401
+			if (new JSONObject(page).optBoolean("authenticated")) {
+				// Saving cookie for later using throughout the program
+				String cookie = "";
+				String headerName = null;
+				for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
+					if (headerName.equalsIgnoreCase("Set-Cookie")) {
+						cookie += connection.getHeaderField(i) + "; ";
+					}
+				}
+				return cookie;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -739,19 +784,14 @@ public class SifeupAPI {
 		return null;
 	}
 
-	public static String getContentCharSet(final HttpEntity entity)
-			throws ParseException {
-		if (entity == null) {
-			throw new IllegalArgumentException("HTTP entity may not be null");
-		}
+	public static String getContentCharSet(final String contentType) {
+		String[] values = contentType.split(";"); // The values.length must be
+													// equal to 2...
 		String charset = null;
-		if (entity.getContentType() != null) {
-			HeaderElement values[] = entity.getContentType().getElements();
-			if (values.length > 0) {
-				NameValuePair param = values[0].getParameterByName("charset");
-				if (param != null) {
-					charset = param.getValue();
-				}
+		for (String value : values) {
+			value = value.trim();
+			if (value.toLowerCase().startsWith("charset=")) {
+				charset = value.substring("charset=".length());
 			}
 		}
 		return charset;

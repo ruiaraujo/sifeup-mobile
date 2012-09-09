@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import pt.up.beta.mobile.R;
 import android.animation.Animator;
@@ -166,8 +166,8 @@ public class BaseFragment extends SherlockFragment {
 		super.onActivityCreated(savedInstanceState);
 		// Recovering the Cookie here
 		// as every activity will descend from this one.
-		if (!SessionManager.getInstance(getActivity()).isUserLoaded())
-			SessionManager.getInstance(getActivity()).loadSession();
+		if (!AccountUtils.isAccountValid(getActivity()))
+			goLogin();
 	}
 
 	@Override
@@ -190,10 +190,8 @@ public class BaseFragment extends SherlockFragment {
 	public void goLogin() {
 		if (getActivity() == null)
 			return;
-		Intent i = new Intent(getActivity(), LauncherActivity.class);
-		// i.putExtra(LauncherActivity.EXTRA_DIFFERENT_LOGIN,
-		// LauncherActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+		final Intent i = new Intent(getActivity(), LauncherActivity.class);
+		i.putExtra(LauncherActivity.LOGOUT_FLAG, true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);

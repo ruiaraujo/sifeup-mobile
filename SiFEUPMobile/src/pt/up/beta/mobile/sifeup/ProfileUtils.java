@@ -40,7 +40,7 @@ public class ProfileUtils {
 
 		public Object parse(String page) {
 			try {
-				SessionManager.getInstance().loadFriends();
+				//TODO: SessionManager.getInstance().loadFriends();
 				Student me = new Student();
 				JSONObject jObject = new JSONObject(page);
 				SifeupUtils.removeEmptyKeys(jObject);
@@ -82,7 +82,7 @@ public class ProfileUtils {
 
 		public Object parse(String page) {
 			try {
-				SessionManager.getInstance().loadFriends();
+				//TODO: SessionManager.getInstance().loadFriends();
 				return new Employee().JSONSubject(page);
 			} catch (JSONException e) {
 				e.printStackTrace();

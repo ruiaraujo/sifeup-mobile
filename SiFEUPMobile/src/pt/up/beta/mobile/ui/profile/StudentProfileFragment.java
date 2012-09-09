@@ -4,32 +4,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
-
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Profile;
-import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
-import pt.up.beta.mobile.friends.Friend;
+import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.sifeup.ProfileUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
-import pt.up.beta.mobile.R;
-
+import android.content.AsyncQueryHandler;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -37,7 +40,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * Student Profile Fragment This interface is responsible for fetching the
@@ -47,12 +51,14 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author Ângela Igreja
  */
 public class StudentProfileFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand {
+		OnItemClickListener, ResponseCommand, LoaderCallbacks<Cursor> {
 	private TextView name;
 	private ImageView pic;
 	private ListView details;
 	private CheckBox friend;
 	private String code;
+
+	private AsyncQueryHandler mQueryHandler;
 	/** User Info */
 	private Student me;
 	private List<ProfileDetail> contents;
@@ -79,12 +85,26 @@ public class StudentProfileFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View v) {
-				Friend fr = new Friend(me.getCode(), me.getName(), me
-						.getProgrammeAcronym());
-				if (friend.isChecked())
-					SessionManager.getInstance(getActivity()).addFriend(fr);
-				else
-					SessionManager.getInstance(getActivity()).removeFriend(fr);
+				if (friend.isChecked()) {
+					final ContentValues values = new ContentValues();
+					values.put(SigarraContract.FriendsColumns.CODE_FRIEND,
+							me.getCode());
+					values.put(SigarraContract.FriendsColumns.NAME_FRIEND,
+							me.getName());
+					values.put(SigarraContract.FriendsColumns.COURSE_FRIEND,
+							me.getProgrammeAcronym());
+					values.put(SigarraContract.FriendsColumns.USER_CODE,
+							AccountUtils.getActiveUserCode(getActivity()));
+					mQueryHandler.startInsert(0, null,
+							SigarraContract.Friends.CONTENT_URI, values);
+				} else
+					mQueryHandler.startDelete(0, null,
+							SigarraContract.Friends.CONTENT_URI,
+							SigarraContract.Friends.FRIEND_SELECTION,
+							SigarraContract.Friends.getFriendSelectionArgs(
+									AccountUtils
+											.getActiveUserCode(getActivity()),
+									me.getCode()));
 			}
 		});
 		((Button) root.findViewById(R.id.profile_link_schedule))
@@ -95,25 +115,32 @@ public class StudentProfileFragment extends BaseFragment implements
 						Intent i = new Intent(getActivity(),
 								ScheduleActivity.class);
 						i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
-						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,ScheduleFragment.SCHEDULE_STUDENT);
-			    		i.putExtra(Intent.EXTRA_TITLE , getString(R.string.title_schedule_arg,me.getName()));
+						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+								ScheduleFragment.SCHEDULE_STUDENT);
+						i.putExtra(
+								Intent.EXTRA_TITLE,
+								getString(R.string.title_schedule_arg,
+										me.getName()));
 						startActivity(i);
 					}
 				});
 
 		return getParentContainer();
 	}
-	
-	public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        code = getArguments().getString(ProfileActivity.PROFILE_CODE);
-        if ( code == null )
-            code = SessionManager.getInstance(getActivity()).getLoginCode();
-        // You can't friend yourself
-        if (code.equals(SessionManager.getInstance(getActivity()).getLoginCode()))
-            friend.setVisibility(View.GONE);
-        task = ProfileUtils.getStudentReply(code, this);
-    }
+
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mQueryHandler = new AsyncQueryHandler(getActivity()
+				.getContentResolver()) {
+		};
+		code = getArguments().getString(ProfileActivity.PROFILE_CODE);
+		if (code == null)
+			code = AccountUtils.getActiveUserCode(getActivity());
+		// You can't friend yourself
+		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
+			friend.setVisibility(View.GONE);
+		task = ProfileUtils.getStudentReply(code, this);
+	}
 
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
@@ -137,15 +164,15 @@ public class StudentProfileFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		me = (Student) results[0];
-		pic.setImageDrawable(getResources().getDrawable(R.drawable.speaker_image_empty));
-		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),pic, ((BitmapDrawable) pic.getDrawable()).getBitmap());
+		pic.setImageDrawable(getResources().getDrawable(
+				R.drawable.speaker_image_empty));
+		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),
+				pic, ((BitmapDrawable) pic.getDrawable()).getBitmap());
 		contents = me.getProfileContents(getResources());
-		((SherlockFragmentActivity) getActivity()).getSupportActionBar().setTitle(me.getName());
+		((SherlockFragmentActivity) getActivity()).getSupportActionBar()
+				.setTitle(me.getName());
 		name.setText(me.getName());
-		if (SessionManager.getInstance(getActivity()).isFriend(me.getCode()))
-			friend.setChecked(true);
-		else
-			friend.setChecked(false);
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 		String[] from = new String[] { "title", "content" };
 		int[] to = new int[] { R.id.profile_item_title,
 				R.id.profile_item_content };
@@ -171,8 +198,8 @@ public class StudentProfileFragment extends BaseFragment implements
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 			long id) {
 		if (contents.get(position).type == Profile.Type.WEBPAGE) {
-			final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri
-					.parse(contents.get(position).content));
+			final Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(contents.get(position).content));
 			startActivity(browserIntent);
 		} else if (contents.get(position).type == Profile.Type.ROOM) {
 			final Intent i = new Intent(getActivity(), ScheduleActivity.class);
@@ -180,15 +207,16 @@ public class StudentProfileFragment extends BaseFragment implements
 					ScheduleFragment.SCHEDULE_ROOM);
 			i.putExtra(ScheduleFragment.SCHEDULE_CODE,
 					contents.get(position).content);
-			i.putExtra(Intent.EXTRA_TITLE,
-					getString(R.string.title_schedule_arg, contents
-							.get(position).content));
+			i.putExtra(
+					Intent.EXTRA_TITLE,
+					getString(R.string.title_schedule_arg,
+							contents.get(position).content));
 			startActivity(i);
 		} else if (contents.get(position).type == Profile.Type.EMAIL) {
 			final Intent i = new Intent(Intent.ACTION_SEND);
 			i.setType("message/rfc822");
-			i.putExtra(Intent.EXTRA_EMAIL, new String[] { contents
-					.get(position).content });
+			i.putExtra(Intent.EXTRA_EMAIL,
+					new String[] { contents.get(position).content });
 			startActivity(Intent.createChooser(i,
 					getString(R.string.profile_choose_email_app)));
 		} else if (contents.get(position).type == Profile.Type.MOBILE) {
@@ -201,6 +229,27 @@ public class StudentProfileFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = ProfileUtils.getStudentReply(code, this);
+		task = ProfileUtils.getStudentReply(code, this);
 	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int loaderId, Bundle options) {
+		return new CursorLoader(getActivity(),
+				SigarraContract.Friends.CONTENT_URI,
+				SigarraContract.Friends.FRIENDS_COLUMNS,
+				SigarraContract.Friends.FRIEND_SELECTION,
+				SigarraContract.Friends.getFriendSelectionArgs(
+						AccountUtils.getActiveUserCode(getActivity()), code),
+				null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		friend.setChecked(cursor.getCount() != 0);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+	}
+
 }
