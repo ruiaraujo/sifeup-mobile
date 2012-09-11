@@ -10,6 +10,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,11 +32,24 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 	private boolean logOut;
 
 	/** Called when the activity is first created. */
+	@TargetApi(16)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_account);
 		mAccountManager = AccountManager.get(getApplicationContext());
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+				.detectAll() // or
+																		// .detectAll()
+																		// for
+																		// all
+																		// detectable
+																		// problems
+				.penaltyLog().build());
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+				.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+				.penaltyLog().penaltyDeath().build());
+
 	}
 
 	@TargetApi(14)
