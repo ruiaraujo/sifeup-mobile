@@ -26,6 +26,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -38,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.sslhack.EasySSLSocketFactory;
-
 import android.util.Log;
 
 public class SifeupAPI {
@@ -652,7 +652,7 @@ public class SifeupAPI {
 			ClientConnectionManager cm = new ThreadSafeClientConnManager(
 					params, schemeRegistry);
 			httpclient = new DefaultHttpClient(cm, params);
-
+			httpclient.setRoutePlanner(new DefaultHttpRoutePlanner(schemeRegistry));
 			// Create local HTTP context
 			localContext = new BasicHttpContext();
 			// Bind custom cookie store to the local context
