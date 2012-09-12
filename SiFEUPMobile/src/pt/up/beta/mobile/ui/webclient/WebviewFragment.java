@@ -105,7 +105,7 @@ public class WebviewFragment extends BaseFragment {
         cookies.removeAllCookie();
         CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(url);
-        showFastMainScreen();
+        showMainScreen();
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

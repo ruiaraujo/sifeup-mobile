@@ -6,7 +6,7 @@ public final class SigarraContract {
 
 	//TODO
 	public interface SubjectsColumns {
-		String USER_CODE = SubjectsTable.COLUMN_USER_CODE;
+		String USER_NAME = SubjectsTable.COLUMN_USER_NAME;
 		String CODE = SubjectsTable.COLUMN_CODE;
 		String NAME_PT = SubjectsTable.COLUMN_NAME_PT;
 		String NAME_EN = SubjectsTable.COLUMN_NAME_EN;
@@ -14,6 +14,11 @@ public final class SigarraContract {
 		String PERIOD = SubjectsTable.COLUMN_PERIOD;
 		String CONTENT = SubjectsTable.COLUMN_CONTENT;
 		String FILES = SubjectsTable.COLUMN_FILES;
+	}
+	
+	public interface ProfileColumns {
+		String ID = ProfilesTable.KEY_ID_PROFILE;
+		String CONTENT = ProfilesTable.KEY_CONTENT_PROFILE;
 	}
 
 	public interface FriendsColumns {
@@ -31,6 +36,7 @@ public final class SigarraContract {
 
 	static final String PATH_SUBJECTS = "subjects";
 	static final String PATH_FRIENDS = "friends";
+	static final String PATH_PROFILES = "profiles";
 
 	/**
 	 * The public contract for the subjects.
@@ -47,12 +53,12 @@ public final class SigarraContract {
 				+ " ASC, " + NAME_PT + " ASC, "
 				+ NAME_EN + " ASC ";
 
-		public static final String USER_SUBJECTS = USER_CODE
+		public static final String USER_SUBJECTS = USER_NAME
 				+ "=?";
 		public static final String [] getUserSubjectsSelectionArgs(String code ){
 			return new String[]{code};
 		}
-		public static final String SUBJECT_SELECTION = USER_CODE
+		public static final String SUBJECT_SELECTION = USER_NAME
 				+ "=? AND "
 				+ CODE
 				+ "=? AND "
@@ -98,6 +104,31 @@ public final class SigarraContract {
 		}
 	}
 
+
+	public static class Profiles implements ProfileColumns{
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_PROFILES).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.profile";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.profile";
+
+		/** Default "ORDER BY" clause. */
+		public static final String DEFAULT_SORT = ID
+				+ " ASC ";
+
+		public static final String PROFILE = ID
+				+ "=?";
+		public static final String [] getProfileSelectionArgs(String code, String type){
+			return new String[]{code, type};
+		}
+		
+		public static final String [] PROFILE_COLUMNS = {
+			CONTENT
+		};
+
+	}
+
+	
 	private SigarraContract() {
 	}
 }

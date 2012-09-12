@@ -88,7 +88,7 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
             else
             {
                 displayData();
-                showFastMainScreen();
+                showMainScreen();
             }
         }
         else

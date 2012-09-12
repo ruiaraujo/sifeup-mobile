@@ -62,7 +62,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 				ParkAdapter adapter = new ParkAdapter(getActivity(),
 						R.layout.list_item_park);
 				list.setAdapter(adapter);
-				showFastMainScreen();
+				showMainScreen();
 			}
 		} else {
 			parks = new ArrayList<Park>();

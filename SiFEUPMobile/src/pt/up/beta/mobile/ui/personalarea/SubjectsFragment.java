@@ -86,7 +86,7 @@ public class SubjectsFragment extends BaseFragment implements
 				SigarraContract.Subjects.USER_SUBJECTS,
 				SigarraContract.Subjects
 						.getUserSubjectsSelectionArgs(AccountUtils
-								.getActiveUserCode(getActivity())), null);
+								.getActiveUserName(getActivity())), null);
 	}
 
 	@Override

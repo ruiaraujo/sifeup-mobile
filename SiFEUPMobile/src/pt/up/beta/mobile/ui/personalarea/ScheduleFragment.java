@@ -178,7 +178,7 @@ public class ScheduleFragment extends BaseFragment implements
 			else {
 				setToNow = true;
 				displaySchedule();
-				showFastMainScreen();
+				showMainScreen();
 			}
 		} else {
 			updateSchedule();

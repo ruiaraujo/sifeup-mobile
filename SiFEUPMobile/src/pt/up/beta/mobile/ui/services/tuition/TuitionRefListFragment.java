@@ -46,7 +46,7 @@ public class TuitionRefListFragment extends BaseFragment implements
             task = TuitionUtils.getTuitionReply(AccountUtils.getActiveUserCode(getActivity()), this);
         else {
             if ( loadList() )
-                showFastMainScreen();
+                showMainScreen();
         }
     }
 

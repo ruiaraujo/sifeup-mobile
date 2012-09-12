@@ -55,14 +55,13 @@ public class Friend implements Comparable<Friend> {
 			if (mCursor.moveToFirst()) {
 
 				do {
-					String course = mCursor.getString(mCursor
-							.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND));
-					if (course.trim().equals(""))
-						course = null;
-					friends.add(new Friend(mCursor.getString(mCursor
-							.getColumnIndex(SigarraContract.FriendsColumns.CODE_FRIEND)),
+					friends.add(new Friend(
 							mCursor.getString(mCursor
-									.getColumnIndex(SigarraContract.FriendsColumns.NAME_FRIEND)), course));
+									.getColumnIndex(SigarraContract.FriendsColumns.CODE_FRIEND)),
+							mCursor.getString(mCursor
+									.getColumnIndex(SigarraContract.FriendsColumns.NAME_FRIEND)),
+							mCursor.getString(mCursor
+									.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND))));
 				} while (mCursor.moveToNext());
 				mCursor.close();
 			}

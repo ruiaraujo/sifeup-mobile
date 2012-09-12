@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sifeup.SifeupUtils;
 import android.content.res.Resources;
 
 /**
@@ -175,5 +178,42 @@ public class Student extends Profile implements Serializable
 		return result;
 		
 	}
-
+	/**
+	 * Parses a JSON String containing Employee info.
+	 * 
+	 * @param page
+	 * @return boolean
+	 * @throws JSONException
+	 */
+	public static Student parseJSON(String page) throws JSONException {
+		final Student me = new Student();
+		final JSONObject jObject = new JSONObject(page);
+		SifeupUtils.removeEmptyKeys(jObject);
+		if (jObject.has("codigo"))
+			me.setCode(jObject.getString("codigo"));
+		if (jObject.has("nome"))
+			me.setName(jObject.getString("nome"));
+		if (jObject.has("curso_sigla"))
+			me.setProgrammeAcronym(jObject.getString("curso_sigla"));
+		if (jObject.has("curso_nome"))
+			me.setProgrammeName(jObject.getString("curso_nome"));
+		if (jObject.has("ano_lect_matricula"))
+			me.setRegistrationYear(jObject
+					.getString("ano_lect_matricula"));
+		if (jObject.has("estado"))
+			me.setState(jObject.getString("estado"));
+		if (jObject.has("ano_curricular"))
+			me.setAcademicYear(jObject.getString("ano_curricular"));
+		if (jObject.has("email"))
+			me.setEmail(jObject.getString("email"));
+		if (jObject.has("email_alternativo"))
+			me.setEmailAlt(jObject.getString("email_alternativo"));
+		if (jObject.has("telemovel"))
+			me.setMobile(jObject.getString("telemovel"));
+		if (jObject.has("telefone"))
+			me.setTelephone(jObject.getString("telefone"));
+		if (jObject.has("ramo"))
+			me.setBranch(jObject.getString("ramo"));
+		return me;
+	}
 }

@@ -70,7 +70,7 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				task = ExamsUtils.getExamsReply(personCode, this);
 			} else {
 				if (populateList())
-					showFastMainScreen();
+					showMainScreen();
 			}
 		} else {
 			task = ExamsUtils.getExamsReply(personCode, this);

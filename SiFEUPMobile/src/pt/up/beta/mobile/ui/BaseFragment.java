@@ -37,7 +37,6 @@ public class BaseFragment extends SherlockFragment {
 
 	protected AsyncTask<?, ?, ?> task;
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,23 +64,19 @@ public class BaseFragment extends SherlockFragment {
 	}
 
 	protected void showEmptyScreen(final String message) {
-		if (switcher.getCurrentView() == switcher.getChildAt(1))
-			return;
-		placeHolder = switcher.getChildAt(1);
-		if (placeHolder != null) {
-			if (switcher.getChildAt(1) != emptyScreen) {
-				placeHolder = switcher.getChildAt(1);
-				if (placeHolder != null) {
-					switcher.removeViewAt(1);
-					switcher.addView(emptyScreen, 1);
-
-				}
+		if (switcher.getChildAt(1) != emptyScreen) {
+			placeHolder = switcher.getChildAt(1);
+			if (placeHolder != null) {
+				switcher.removeViewAt(1);
+				switcher.addView(emptyScreen, 1);
 			}
 		}
+
 		TextView text = (TextView) emptyScreen.findViewById(R.id.message);
 		emptyScreen.findViewById(R.id.action).setVisibility(View.GONE);
 		text.setText(message);
-		switcher.showNext();
+		if (switcher.getCurrentView() == switcher.getChildAt(0))
+			switcher.showNext();
 	}
 
 	protected View getEmptyScreen(final String message) {
@@ -132,9 +127,9 @@ public class BaseFragment extends SherlockFragment {
 		if (getActivity() == null)
 			return;
 		final Intent i = new Intent(getActivity(), LauncherActivity.class);
-		i.putExtra(LauncherActivity.LOGOUT_FLAG, true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		i.putExtra(LauncherActivity.LOGOUT_FLAG, true).addFlags(
+				Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		getActivity().finish();
 		getActivity().overridePendingTransition(R.anim.home_enter,

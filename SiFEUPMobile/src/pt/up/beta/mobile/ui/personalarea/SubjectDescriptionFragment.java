@@ -116,7 +116,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// task = SubjectUtils.getSubjectReply(code, year, period, this);
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 
@@ -660,7 +659,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 						SigarraContract.SubjectsColumns.FILES },
 				SigarraContract.Subjects.SUBJECT_SELECTION,
 				SigarraContract.Subjects.getSubjectsSelectionArgs(
-						AccountUtils.getActiveUserCode(getActivity()), code,
+						AccountUtils.getActiveUserName(getActivity()), code,
 						year, period), null);
 	}
 
@@ -684,8 +683,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				indicator.setCurrentItem(0);
 				indicator.notifyDataSetChanged();
 				showMainScreen();
-			} else
-				showEmptyScreen(getString(R.string.general_error));
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 			showEmptyScreen(getString(R.string.general_error));

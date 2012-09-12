@@ -73,7 +73,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
             else
             {
                 displayData();
-                showFastMainScreen();
+                showMainScreen();
             }
         }
         else

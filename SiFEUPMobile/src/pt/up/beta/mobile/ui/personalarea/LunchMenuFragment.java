@@ -67,7 +67,7 @@ public class LunchMenuFragment extends BaseFragment implements ResponseCommand
             else
             {
                 buildPages();
-                showFastMainScreen();
+                showMainScreen();
             }
         }
         else

@@ -81,7 +81,7 @@ public class AcademicPathFragment extends BaseFragment implements
 						AccountUtils.getActiveUserCode(getActivity()), this);
 			else {
 				displayData();
-				showFastMainScreen();
+				showMainScreen();
 			}
 		} else {
 			task = AcademicPathUtils.getAcademicPathReply(

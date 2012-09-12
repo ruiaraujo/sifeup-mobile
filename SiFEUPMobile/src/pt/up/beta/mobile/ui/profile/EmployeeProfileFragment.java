@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
-import pt.up.beta.mobile.sifeup.ProfileUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
@@ -39,7 +39,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -51,7 +50,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * @author Ângela Igreja
  */
 public class EmployeeProfileFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand, LoaderCallbacks<Cursor> {
+		OnItemClickListener, LoaderCallbacks<Cursor> {
 	private TextView name;
 	private ImageView pic;
 	private ListView details;
@@ -62,6 +61,9 @@ public class EmployeeProfileFragment extends BaseFragment implements
 	/** User Info */
 	private Employee me;
 	private List<ProfileDetail> contents;
+
+	private final static int PROFILE_LOADER = 0;
+	private final static int FRIEND_LOADER = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -136,60 +138,12 @@ public class EmployeeProfileFragment extends BaseFragment implements
 
 		// You can't friend yourself
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
-			friend.setVisibility(View.INVISIBLE);
-		task = ProfileUtils.getEmployeeReply(code, this);
-	}
-
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
-
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		me = (Employee) results[0];
-		pic.setImageDrawable(getResources().getDrawable(
-				R.drawable.speaker_image_empty));
-		getImagedownloader().download(SifeupAPI.getPersonPicUrl(me.getCode()),
-				pic, ((BitmapDrawable) pic.getDrawable()).getBitmap());
-		contents = me.getProfileContents(getResources());
-		name.setText(me.getName());
-		((SherlockFragmentActivity) getActivity()).getSupportActionBar()
-				.setTitle(me.getName());
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
-		String[] from = new String[] { "title", "content" };
-		int[] to = new int[] { R.id.profile_item_title,
-				R.id.profile_item_content };
-		// prepare the list of all records
-		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		for (ProfileDetail s : contents) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(from[0], s.title);
-			map.put(from[1], s.content);
-			fillMaps.add(map);
-		}
-
-		// fill in the grid_item layout
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-				R.layout.list_item_profile, from, to);
-		details.setAdapter(adapter);
-		details.setOnItemClickListener(EmployeeProfileFragment.this);
-		details.setSelection(0);
-		showMainScreen();
+			friend.setVisibility(View.GONE);
+		else
+			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER,
+					null, this);
+		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER,
+				null, this);
 	}
 
 	@Override
@@ -225,25 +179,72 @@ public class EmployeeProfileFragment extends BaseFragment implements
 		}
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		task = ProfileUtils.getEmployeeReply(code, this);
-	}
-
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle options) {
-		return new CursorLoader(getActivity(),
-				SigarraContract.Friends.CONTENT_URI,
-				SigarraContract.Friends.FRIENDS_COLUMNS,
-				SigarraContract.Friends.FRIEND_SELECTION,
-				SigarraContract.Friends.getFriendSelectionArgs(
-						AccountUtils.getActiveUserCode(getActivity()), code),
-				null);
+		if (loaderId == FRIEND_LOADER)
+			return new CursorLoader(
+					getActivity(),
+					SigarraContract.Friends.CONTENT_URI,
+					SigarraContract.Friends.FRIENDS_COLUMNS,
+					SigarraContract.Friends.FRIEND_SELECTION,
+					SigarraContract.Friends.getFriendSelectionArgs(
+							AccountUtils.getActiveUserCode(getActivity()), code),
+					null);
+		if (loaderId == PROFILE_LOADER)
+			return new CursorLoader(getActivity(),
+					SigarraContract.Profiles.CONTENT_URI,
+					SigarraContract.Profiles.PROFILE_COLUMNS,
+					SigarraContract.Profiles.PROFILE,
+					SigarraContract.Profiles.getProfileSelectionArgs(code, SifeupAPI.EMPLOYEE_TYPE),
+					null);
+		return null;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		friend.setChecked(cursor.getCount() != 0);
+		if (loader.getId() == FRIEND_LOADER)
+			friend.setChecked(cursor.getCount() != 0);
+		if (loader.getId() == PROFILE_LOADER) {
+			if (cursor.moveToFirst()) {
+				if (getActivity() == null)
+					return;
+				try {
+					me = Employee.parseJSON(cursor.getString(0));
+				} catch (JSONException e) {
+					e.printStackTrace();
+					showEmptyScreen(getString(R.string.general_error));
+					return;
+				}
+				pic.setImageDrawable(getResources().getDrawable(
+						R.drawable.speaker_image_empty));
+				getImagedownloader().download(
+						SifeupAPI.getPersonPicUrl(me.getCode()), pic,
+						((BitmapDrawable) pic.getDrawable()).getBitmap());
+				contents = me.getProfileContents(getResources());
+				((SherlockFragmentActivity) getActivity())
+						.getSupportActionBar().setTitle(me.getName());
+				name.setText(me.getName());
+				String[] from = new String[] { "title", "content" };
+				int[] to = new int[] { R.id.profile_item_title,
+						R.id.profile_item_content };
+				// prepare the list of all records
+				List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+				for (ProfileDetail s : contents) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put(from[0], s.title);
+					map.put(from[1], s.content);
+					fillMaps.add(map);
+				}
+
+				// fill in the grid_item layout
+				SimpleAdapter adapter = new SimpleAdapter(getActivity(),
+						fillMaps, R.layout.list_item_profile, from, to);
+				details.setAdapter(adapter);
+				details.setOnItemClickListener(this);
+				details.setSelection(0);
+				showMainScreen();
+			}
+		}
 	}
 
 	@Override

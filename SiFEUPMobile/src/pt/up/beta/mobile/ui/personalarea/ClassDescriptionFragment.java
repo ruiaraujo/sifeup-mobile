@@ -175,7 +175,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
 		endT.setText(getString(R.string.class_end_time, end.toString()));
 
-		showFastMainScreen();
+		showMainScreen();
 
 		return getParentContainer();// mandatory
 	}

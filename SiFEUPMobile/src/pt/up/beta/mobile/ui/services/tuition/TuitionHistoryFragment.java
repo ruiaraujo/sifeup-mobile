@@ -46,7 +46,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
 					AccountUtils.getActiveUserCode(getActivity()), this);
 		else {
 			loadList();
-			showFastMainScreen();
+			showMainScreen();
 		}
 	}
 
