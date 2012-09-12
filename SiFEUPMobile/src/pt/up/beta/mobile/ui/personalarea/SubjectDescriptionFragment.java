@@ -661,7 +661,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				SigarraContract.Subjects.SUBJECT_SELECTION,
 				SigarraContract.Subjects.getSubjectsSelectionArgs(
 						AccountUtils.getActiveUserCode(getActivity()), code,
-						period, year), null);
+						year, period), null);
 	}
 
 	@Override

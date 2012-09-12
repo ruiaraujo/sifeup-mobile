@@ -37,6 +37,9 @@ import android.content.SyncResult;
 import android.os.Bundle;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
+	
+	
+	
 	private final AccountManager mAccountManager;
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
@@ -53,37 +56,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					Constants.AUTHTOKEN_TYPE, false);
 			final String userCode = mAccountManager.getUserData(account,
 					Constants.USER_NAME);
-			final String page = SifeupAPI.getReply(SifeupAPI.getSubjectsUrl(
-					userCode,
-					Integer.toString(DateUtils.secondYearOfSchoolYear() - 1)),authToken );
-			final List<Subject> subjects = Subject.parseSubjectList(page);
-			final int secondYear = DateUtils.secondYearOfSchoolYear();
-			final String year = Integer.toString(secondYear - 1) + "/"
-					+ Integer.toString(secondYear);
-			final ContentValues  [] values = new ContentValues[subjects.size()];
-			int i = 0;
-			for (Subject subject : subjects) {
-				final String subjectContent = SifeupAPI.getReply(SifeupAPI
-						.getSubjectContentUrl(subject.getCode(), year,
-								subject.getSemestre()),authToken);
-				final String subjectFiles = SifeupAPI.getReply(SifeupAPI
-						.getSubjectFilestUrl(subject.getCode(), year,
-								subject.getSemestre()),authToken);
-				final ContentValues  value = new ContentValues();
-				value.put(SigarraContract.SubjectsColumns.USER_CODE, userCode);
-				value.put(SigarraContract.SubjectsColumns.CODE, subject.getCode());
-				value.put(SigarraContract.SubjectsColumns.YEAR, year);
-				value.put(SigarraContract.SubjectsColumns.PERIOD, subject.getSemestre());
-				value.put(SigarraContract.SubjectsColumns.NAME_PT, subject.getNamePt());
-				value.put(SigarraContract.SubjectsColumns.NAME_EN, subject.getNameEn());
-				value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
-				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
-				values[i++] = value;
-			}
-			if ( values.length > 0 )
-				getContext().getContentResolver().bulkInsert(
-					SigarraContract.Subjects.CONTENT_URI, values);
-			syncResult.stats.numEntries += subjects.size();
+			syncSubjects(userCode, authToken, syncResult);
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 		} catch (AuthenticatorException e) {
@@ -96,5 +69,39 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();
 		}
+	}
+
+	private void syncSubjects(String userCode, String authToken, SyncResult syncResult) throws JSONException {
+		final String page = SifeupAPI.getReply(SifeupAPI.getSubjectsUrl(
+				userCode,
+				Integer.toString(DateUtils.secondYearOfSchoolYear() - 1)),authToken );
+		final List<Subject> subjects = Subject.parseSubjectList(page);
+		final int secondYear = DateUtils.secondYearOfSchoolYear();
+		final String year = Integer.toString(secondYear - 1) + "/"
+				+ Integer.toString(secondYear);
+		final ContentValues  [] values = new ContentValues[subjects.size()];
+		int i = 0;
+		for (Subject subject : subjects) {
+			final String subjectContent = SifeupAPI.getReply(SifeupAPI
+					.getSubjectContentUrl(subject.getCode(), year,
+							subject.getSemestre()),authToken);
+			final String subjectFiles = SifeupAPI.getReply(SifeupAPI
+					.getSubjectFilestUrl(subject.getCode(), year,
+							subject.getSemestre()),authToken);
+			final ContentValues  value = new ContentValues();
+			value.put(SigarraContract.SubjectsColumns.USER_CODE, userCode);
+			value.put(SigarraContract.SubjectsColumns.CODE, subject.getCode());
+			value.put(SigarraContract.SubjectsColumns.YEAR, year);
+			value.put(SigarraContract.SubjectsColumns.PERIOD, subject.getSemestre());
+			value.put(SigarraContract.SubjectsColumns.NAME_PT, subject.getNamePt());
+			value.put(SigarraContract.SubjectsColumns.NAME_EN, subject.getNameEn());
+			value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
+			value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
+			values[i++] = value;
+		}
+		if ( values.length > 0 )
+			getContext().getContentResolver().bulkInsert(
+				SigarraContract.Subjects.CONTENT_URI, values);
+		syncResult.stats.numEntries += subjects.size();		
 	}
 }

@@ -90,7 +90,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			}
 			if (!TextUtils.isEmpty(activeUser) && !logOut) {
 				Log.e("FEUPMobile", "account " + activeUser + " was deleted.");
-				// TODO: remove all data from db
+				// TODO: remove all data from db from this user
 			}
 
 			ListView accountList = (ListView) findViewById(R.id.account_list);
