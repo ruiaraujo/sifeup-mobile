@@ -678,7 +678,7 @@ public class SifeupAPI {
 		String page = null;
 		try {
 			do {
-				HttpsURLConnection connection = (HttpsURLConnection) new URL(
+				final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 						strUrl).openConnection();
 				connection.setRequestProperty("Cookie", cookie);
 				final InputStream pageContent = connection.getInputStream();
@@ -687,6 +687,7 @@ public class SifeupAPI {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
 				page = getPage(pageContent, charset);
+				connection.disconnect();
 				if (page == null)
 					return null;
 			} while (page.equals(""));
@@ -728,6 +729,7 @@ public class SifeupAPI {
 				if (page == null)
 					return null;
 			} while (page.equals(""));
+			connection.disconnect();
 			// TODO API should return 401
 			if (new JSONObject(page).optBoolean("authenticated")) {
 				// Saving cookie for later using throughout the program
