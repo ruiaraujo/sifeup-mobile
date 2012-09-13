@@ -456,14 +456,23 @@ public class ScheduleFragment extends BaseFragment implements
 							// iterate over schedule and add them to schedule
 							for (ScheduleBlock b : schedule) {
 								// new event
-								ScheduleTeacher teacher = b.getTeachers()
-										.get(0);
-								String title = b.getLectureAcronym() + " ("
+								//TODO: redo all this
+								final ScheduleTeacher teacher;
+								if ( b.getTeachers() != null && b.getTeachers().size() > 0 )
+									teacher = b.getTeachers().get(0);
+								else
+									teacher = null;
+								final String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
-								String eventLocation = b.getRoomCod();
-								String description = "Professor: "
+								final String eventLocation = b.getRoomCod();
+								
+								final String description;
+								if (teacher != null )
+									description = "Professor: "
 										+ teacher.getName();
-								long date = pt.up.beta.mobile.utils.DateUtils
+								else
+									description = "";
+								final long date = pt.up.beta.mobile.utils.DateUtils
 										.moveDayofWeek(mondayMillis,
 												b.getWeekDay())
 										+ b.getStartTime() * 1000;
