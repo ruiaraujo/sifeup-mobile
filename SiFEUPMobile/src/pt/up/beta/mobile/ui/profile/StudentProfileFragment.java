@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.datatypes.Student;
+import pt.up.beta.mobile.loaders.StudentLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
@@ -50,7 +49,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * @author Ângela Igreja
  */
 public class StudentProfileFragment extends BaseFragment implements
-		OnItemClickListener, LoaderCallbacks<Cursor> {
+		OnItemClickListener, LoaderCallbacks<Student> {
 	private TextView name;
 	private ImageView pic;
 	private ListView details;
@@ -61,9 +60,6 @@ public class StudentProfileFragment extends BaseFragment implements
 	/** User Info */
 	private Student me;
 	private List<ProfileDetail> contents;
-
-	private final static int PROFILE_LOADER = 0;
-	private final static int FRIEND_LOADER = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -142,10 +138,9 @@ public class StudentProfileFragment extends BaseFragment implements
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
 			friend.setVisibility(View.GONE);
 		else
-			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER,
-					null, this);
-		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER,
-				null, this);
+			getActivity().getSupportLoaderManager().initLoader(0, null,
+					new FriendChecker());
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -182,8 +177,61 @@ public class StudentProfileFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle options) {
-		if (loaderId == FRIEND_LOADER)
+	public Loader<Student> onCreateLoader(int loaderId, Bundle options) {
+		return new StudentLoader(getActivity(),
+				SigarraContract.Profiles.CONTENT_URI,
+				SigarraContract.Profiles.PROFILE_COLUMNS,
+				SigarraContract.Profiles.PROFILE,
+				SigarraContract.Profiles.getProfileSelectionArgs(code,
+						SifeupAPI.STUDENT_TYPE), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Student> loader, Student cursor) {
+		if (cursor != null) {
+			if (getActivity() == null)
+				return;
+			me = cursor;
+			pic.setImageDrawable(getResources().getDrawable(
+					R.drawable.speaker_image_empty));
+			getImagedownloader().download(
+					SifeupAPI.getPersonPicUrl(me.getCode()), pic,
+					((BitmapDrawable) pic.getDrawable()).getBitmap());
+			contents = me.getProfileContents(getResources());
+			((SherlockFragmentActivity) getActivity()).getSupportActionBar()
+					.setTitle(me.getName());
+			name.setText(me.getName());
+			String[] from = new String[] { "title", "content" };
+			int[] to = new int[] { R.id.profile_item_title,
+					R.id.profile_item_content };
+			// prepare the list of all records
+			List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+			for (ProfileDetail s : contents) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put(from[0], s.title);
+				map.put(from[1], s.content);
+				fillMaps.add(map);
+			}
+
+			// fill in the grid_item layout
+			SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
+					R.layout.list_item_profile, from, to);
+			details.setAdapter(adapter);
+			details.setOnItemClickListener(this);
+			details.setSelection(0);
+			showMainScreen();
+
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Student> loader) {
+	}
+
+	private class FriendChecker implements LoaderCallbacks<Cursor> {
+
+		@Override
+		public Loader<Cursor> onCreateLoader(int loaderId, Bundle options) {
 			return new CursorLoader(
 					getActivity(),
 					SigarraContract.Friends.CONTENT_URI,
@@ -192,65 +240,17 @@ public class StudentProfileFragment extends BaseFragment implements
 					SigarraContract.Friends.getFriendSelectionArgs(
 							AccountUtils.getActiveUserCode(getActivity()), code),
 					null);
-		if (loaderId == PROFILE_LOADER)
-			return new CursorLoader(getActivity(),
-					SigarraContract.Profiles.CONTENT_URI,
-					SigarraContract.Profiles.PROFILE_COLUMNS,
-					SigarraContract.Profiles.PROFILE,
-					SigarraContract.Profiles.getProfileSelectionArgs(code, SifeupAPI.STUDENT_TYPE),
-					null);
-		return null;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (loader.getId() == FRIEND_LOADER)
-			friend.setChecked(cursor.getCount() != 0);
-		if (loader.getId() == PROFILE_LOADER) {
-			if (cursor.moveToFirst()) {
-				if (getActivity() == null)
-					return;
-				try {
-					me = Student.parseJSON(cursor.getString(0));
-				} catch (JSONException e) {
-					e.printStackTrace();
-					showEmptyScreen(getString(R.string.general_error));
-					return;
-				}
-				pic.setImageDrawable(getResources().getDrawable(
-						R.drawable.speaker_image_empty));
-				getImagedownloader().download(
-						SifeupAPI.getPersonPicUrl(me.getCode()), pic,
-						((BitmapDrawable) pic.getDrawable()).getBitmap());
-				contents = me.getProfileContents(getResources());
-				((SherlockFragmentActivity) getActivity())
-						.getSupportActionBar().setTitle(me.getName());
-				name.setText(me.getName());
-				String[] from = new String[] { "title", "content" };
-				int[] to = new int[] { R.id.profile_item_title,
-						R.id.profile_item_content };
-				// prepare the list of all records
-				List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-				for (ProfileDetail s : contents) {
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put(from[0], s.title);
-					map.put(from[1], s.content);
-					fillMaps.add(map);
-				}
-
-				// fill in the grid_item layout
-				SimpleAdapter adapter = new SimpleAdapter(getActivity(),
-						fillMaps, R.layout.list_item_profile, from, to);
-				details.setAdapter(adapter);
-				details.setOnItemClickListener(this);
-				details.setSelection(0);
-				showMainScreen();
-			}
 		}
-	}
 
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			friend.setChecked(cursor.getCount() != 0);
+		}
+
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+		}
+
 	}
 
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
@@ -16,8 +14,9 @@ import pt.up.beta.mobile.datatypes.Subject.Teacher;
 import pt.up.beta.mobile.datatypes.SubjectFiles;
 import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
@@ -26,12 +25,10 @@ import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -57,7 +54,7 @@ import com.viewpagerindicator.TitleProvider;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectDescriptionFragment extends BaseFragment implements
-		OnPageChangeListener, ResponseCommand, LoaderCallbacks<Cursor> {
+		OnPageChangeListener, ResponseCommand, LoaderCallbacks<Subject> {
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE";
 	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR";
@@ -638,22 +635,9 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		currentPage = page;
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		if (subject == null) {
-			task = SubjectUtils.getSubjectReply(code, year, period, this);
-			return;
-		}
-		if (subjectFiles == null) {
-			SubjectUtils.getSubjectContentReply(code, year, period, this);
-			return;
-		}
-
-	}
-
 	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
-		return new CursorLoader(getActivity(),
+	public Loader<Subject> onCreateLoader(int loaderId, Bundle args) {
+		return new SubjectLoader(getActivity(),
 				SigarraContract.Subjects.CONTENT_URI, new String[] {
 						SigarraContract.SubjectsColumns.CONTENT,
 						SigarraContract.SubjectsColumns.FILES },
@@ -664,33 +648,23 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		try {
-			if (cursor.moveToFirst()) {
-				subject = new Subject()
-						.JSONSubject(cursor.getString(cursor
-								.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)));
-				String title = subject.getNamePt();
-				if (!UIUtils.isLocalePortuguese()
-						&& !TextUtils.isEmpty(subject.getNameEn().trim()))
-					title = subject.getNameEn();
-				getSherlockActivity().getSupportActionBar().setTitle(title);
-				subjectFiles = new SubjectFiles()
-						.JSONSubjectContent(cursor.getString(cursor
-								.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)));
-				pagerAdapter.notifyDataSetChanged();
-				// Start at a custom position
-				indicator.setCurrentItem(0);
-				indicator.notifyDataSetChanged();
-				showMainScreen();
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			showEmptyScreen(getString(R.string.general_error));
+	public void onLoadFinished(Loader<Subject> loader, Subject cursor) {
+		if (cursor != null) {
+			subject = cursor;
+			String title = subject.getNamePt();
+			if (!UIUtils.isLocalePortuguese()
+					&& !TextUtils.isEmpty(subject.getNameEn().trim()))
+				title = subject.getNameEn();
+			getSherlockActivity().getSupportActionBar().setTitle(title);
+			subjectFiles = subject.getFiles();
+			// Start at a custom position
+			indicator.setCurrentItem(0);
+			indicator.notifyDataSetChanged();
+			showMainScreen();
 		}
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(Loader<Subject> loader) {
 	}
 }

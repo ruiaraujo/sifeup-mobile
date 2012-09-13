@@ -5,6 +5,7 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Friend;
+import pt.up.beta.mobile.loaders.FriendsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
@@ -13,10 +14,8 @@ import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -38,7 +37,7 @@ import android.widget.ListView;
  * 
  */
 public class FriendsListFragment extends BaseFragment implements
-		OnItemClickListener, LoaderCallbacks<Cursor> {
+		OnItemClickListener, LoaderCallbacks<List<Friend>> {
 
 	private static final String TAG = "FriendsListFragment";
 	private List<Friend> friends;
@@ -134,8 +133,8 @@ public class FriendsListFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
-		return new CursorLoader(getActivity(),
+	public Loader<List<Friend>> onCreateLoader(int loaderId, Bundle args) {
+		return new FriendsLoader(getActivity(),
 				SigarraContract.Friends.CONTENT_URI,
 				SigarraContract.Friends.FRIENDS_COLUMNS,
 				SigarraContract.Friends.USER_FRIENDS,
@@ -145,8 +144,8 @@ public class FriendsListFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor mCursor) {
-		friends = Friend.parseCursor(mCursor);
+	public void onLoadFinished(Loader<List<Friend>> loader, List<Friend> mCursor) {
+		friends = mCursor;
 		if (friends.isEmpty()) {
 			showEmptyScreen(getString(R.string.label_no_friends));
 			return;
@@ -162,7 +161,7 @@ public class FriendsListFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(Loader<List<Friend>> loader) {
 	}
 
 	private class FriendQueryHandler extends AsyncQueryHandler {

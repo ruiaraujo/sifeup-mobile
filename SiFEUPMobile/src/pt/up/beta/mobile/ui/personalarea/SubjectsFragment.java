@@ -7,14 +7,13 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
+import pt.up.beta.mobile.loaders.SubjectsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import android.widget.SimpleAdapter;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectsFragment extends BaseFragment implements
-		OnItemClickListener, LoaderCallbacks<Cursor> {
+		OnItemClickListener, LoaderCallbacks<List<Subject>> {
 
 	/** Contains all subscribed subjects */
 	private List<Subject> subjects;
@@ -75,8 +74,8 @@ public class SubjectsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
-		return new CursorLoader(getActivity(),
+	public Loader<List<Subject>> onCreateLoader(int loaderId, Bundle args) {
+		return new SubjectsLoader(getActivity(),
 				SigarraContract.Subjects.CONTENT_URI, new String[] {
 						SigarraContract.SubjectsColumns.CODE,
 						SigarraContract.SubjectsColumns.YEAR,
@@ -90,10 +89,15 @@ public class SubjectsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+	public void onLoadFinished(Loader<List<Subject>> loader,
+			List<Subject> cursor) {
 		if (getActivity() == null)
 			return;
-		subjects = Subject.parseCursor(cursor);
+		if (cursor == null) {
+			//waiting
+			return;
+		}
+		subjects = cursor;
 		if (subjects.isEmpty()) {
 			showEmptyScreen(getString(R.string.lb_no_subjects));
 			return;
@@ -128,6 +132,6 @@ public class SubjectsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(Loader<List<Subject>> loader) {
 	}
 }

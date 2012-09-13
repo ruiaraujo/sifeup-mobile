@@ -86,6 +86,8 @@ public class Subject implements Serializable {
 
 	/** */
 	private List<Software> software;
+	
+	private SubjectFiles files;
 
 	public Subject() {
 		responsibles = new ArrayList<Responsible>();
@@ -278,6 +280,14 @@ public class Subject implements Serializable {
 
 	public void setSoftware(List<Software> software) {
 		this.software = software;
+	}
+
+	public SubjectFiles getFiles() {
+		return files;
+	}
+
+	public void setFiles(SubjectFiles files) {
+		this.files = files;
 	}
 
 	/** */
