@@ -22,27 +22,27 @@ public class SearchUtils {
 				.execute(SifeupAPI.getStudentsSearchUrl(encode(query), page));
 	}
 
-
 	public static AsyncTask<String, Void, ERROR_TYPE> getSingleStudentSearchReply(
 			String code, ResponseCommand command) {
-		return new FetcherTask(new SingleStudentCom(command), new StudentsSearchParser())
-				.execute(SifeupAPI.getStudentUrl(code));
+		return new FetcherTask(new SingleStudentCom(command),
+				new SingleStudentSearchParser()).execute(SifeupAPI
+				.getStudentUrl(code));
 	}
-	
-	
-	public static ResultsPage getStudentsSearchReply(String query, int page)  {
-		final String res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(encode(query), page));
+
+	public static ResultsPage getStudentsSearchReply(String query, int page) {
+		final String res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(
+				encode(query), page));
 		StudentsSearchParser parser = new StudentsSearchParser();
 		return (ResultsPage) parser.parse(res);
 	}
-	
-	private static String encode(String s){
-	    try {
+
+	private static String encode(String s) {
+		try {
 			return URLEncoder.encode(s.trim(), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-	    return "";
+		return "";
 	}
 
 	/**
@@ -102,16 +102,58 @@ public class SearchUtils {
 			return null;
 		}
 	}
-	
-	private static class SingleStudentCom implements  ResponseCommand {
+
+	private static class SingleStudentSearchParser implements ParserCommand {
+
+		@Override
+		public Object parse(String page) {
+			try {
+				Student me = new Student();
+				JSONObject jObject = new JSONObject(page);
+				SifeupUtils.removeEmptyKeys(jObject);
+				if (jObject.has("codigo"))
+					me.setCode(jObject.getString("codigo"));
+				if (jObject.has("nome"))
+					me.setName(jObject.getString("nome"));
+				if (jObject.has("curso_sigla"))
+					me.setProgrammeAcronym(jObject.getString("curso_sigla"));
+				if (jObject.has("curso_nome"))
+					me.setProgrammeName(jObject.getString("curso_nome"));
+				if (jObject.has("ano_lect_matricula"))
+					me.setRegistrationYear(jObject
+							.getString("ano_lect_matricula"));
+				if (jObject.has("estado"))
+					me.setState(jObject.getString("estado"));
+				if (jObject.has("ano_curricular"))
+					me.setAcademicYear(jObject.getString("ano_curricular"));
+				if (jObject.has("email"))
+					me.setEmail(jObject.getString("email"));
+				if (jObject.has("email_alternativo"))
+					me.setEmailAlt(jObject.getString("email_alternativo"));
+				if (jObject.has("telemovel"))
+					me.setMobile(jObject.getString("telemovel"));
+				if (jObject.has("telefone"))
+					me.setTelephone(jObject.getString("telefone"));
+				if (jObject.has("ramo"))
+					me.setBranch(jObject.getString("ramo"));
+				return me;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	private static class SingleStudentCom implements ResponseCommand {
 		private final ResponseCommand com;
-		
+
 		public SingleStudentCom(final ResponseCommand com) {
 			this.com = com;
 		}
+
 		public void onError(ERROR_TYPE error) {
-			if ( error == ERROR_TYPE.NETWORK )
-				com.onResultReceived((Object [])null);
+			if (error == ERROR_TYPE.NETWORK)
+				com.onResultReceived((Object[]) null);
 			else
 				com.onError(error);
 		}
@@ -119,6 +161,6 @@ public class SearchUtils {
 		public void onResultReceived(Object... results) {
 			com.onResultReceived(results);
 		}
-		
+
 	}
 }
