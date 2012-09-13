@@ -3,7 +3,6 @@ package pt.up.beta.mobile.sifeup;
 import java.io.IOException;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.datatypes.TuitionHistory;
 import pt.up.beta.mobile.ui.LauncherActivity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -21,8 +20,6 @@ import android.text.TextUtils;
  * 
  */
 public class AccountUtils {
-
-	public static TuitionHistory tuitionHistory = new TuitionHistory();
 
 	private static Account mAccount;
 	private static AccountManager mAccountManager;

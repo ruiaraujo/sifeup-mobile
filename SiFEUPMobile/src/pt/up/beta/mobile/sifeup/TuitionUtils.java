@@ -3,6 +3,7 @@ package pt.up.beta.mobile.sifeup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.up.beta.mobile.datatypes.YearsTuition;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.os.AsyncTask;
 
@@ -25,11 +26,7 @@ public class TuitionUtils {
 
 		public Object parse(String page) {
 			try {
-	    		JSONObject jHistory=new JSONObject(page);
-	    		if(AccountUtils.tuitionHistory.load(jHistory))
-	    			return "Sucess";
-	    		else
-	    			return null;			
+	    			return YearsTuition.parseListJSON(new JSONObject(page));		
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

@@ -1,178 +1,230 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
-public class YearsTuition 
-{
-	String year;
-	String courseCode;
-	String courseName;
-	String state;
-	String type;
-	Vector<Payment> payments;
-	double total_paid=0;
-	double total_in_debt=0;
-	Vector<RefMB> references;
-	int selectedReference=-1;
-	
-	public YearsTuition() 
-	{
-		payments=new Vector<Payment>();
-	}
-	
-	public boolean load(JSONObject yearInfo)
-	{
-		try 
-		{
-			this.year=yearInfo.getString("ano_lectivo");
-			this.courseCode=yearInfo.getString("curso_sigla");
-			this.courseName=yearInfo.getString("curso_nome");
-			this.state=yearInfo.getString("estado");
-			//may not be present if student has applied for a 
-			// scholarship
-			this.type=yearInfo.optString("tipo");
-			// If it is empty there is no more data to load
-			if ( this.type.length() == 0 )
-				return true;
-				
-			JSONArray jChild=yearInfo.getJSONArray("planos_pag");
-			
-			JSONObject jPayment = jChild.getJSONObject(0);	
-			JSONArray jPayments=jPayment.getJSONArray("prestacoes");
-		
-			payments=new Vector<Payment>();
-			for(int i=0; i<jPayments.length(); i++)
-			{
-				Payment p=new Payment();
-				if(p.load(jPayments.getJSONObject(i)))
-					payments.add(p);
-				else
-					return false;
-			}
-			calculateAmounts();
-			
-			
-			this.references=new Vector<RefMB>();			
-			JSONArray jRefs=yearInfo.optJSONArray("referencias");
-			if(jRefs!=null)
-			{
-				for(int i=0; i<jRefs.length(); i++)
-				{
-					RefMB r=new RefMB();
-					if(r.load(jRefs.getJSONObject(i)))
-						this.references.add(r);
-					else 
-						return false;				
-				}	
-			}
-			return true;
-		} 
-		catch (JSONException e) 
-		{
-			Log.e("Propinas","JSON error in year");
-			e.printStackTrace();
-			Log.e("Propina", e.getMessage());
-			Log.e("Propina",yearInfo.toString());
-			return false;
+public class YearsTuition implements Parcelable {
+	public static final int currentYear = 0;
 
-		}
-	}
-	
-	public void calculateAmounts()
-	{
-		for(Payment p: this.payments)
-		{
-			this.total_paid+=p.getAmountPaid();
-			this.total_in_debt+=p.getAmountDebt();
-		}
+	final private String year;
+	final private String courseCode;
+	final private String courseName;
+	final private String state;
+	final private String type;
+	final private double totalPaid;
+	final private double totalDebt;
+	final private ArrayList<Payment> payments;
+	final private ArrayList<RefMB> references;
+
+	public YearsTuition(String year, String courseCode, String courseName,
+			String state, String type, ArrayList<Payment> payments,
+			double total_paid, double total_in_debt, ArrayList<RefMB> references) {
+		this.year = year;
+		this.courseCode = courseCode;
+		this.courseName = courseName;
+		this.state = state;
+		this.type = type;
+		this.payments = payments;
+		this.totalPaid = total_paid;
+		this.totalDebt = total_in_debt;
+		this.references = references;
 	}
 
 	public String getYear() {
 		return year;
 	}
 
-	public void setYear(String year) {
-		this.year = year;
-	}
-
 	public String getCourseCode() {
 		return courseCode;
-	}
-
-	public void setCourseCode(String courseCode) {
-		this.courseCode = courseCode;
 	}
 
 	public String getCourseName() {
 		return courseName;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
-
 	public String getState() {
 		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Vector<Payment> getPayments() {
+	public ArrayList<Payment> getPayments() {
 		return payments;
 	}
 
-	public void setPayments(Vector<Payment> payments) {
-		this.payments = payments;
-	}
-
 	public double getTotal_paid() {
-		return total_paid;
-	}
-
-	public void setTotal_paid(double totalPaid) {
-		total_paid = totalPaid;
+		return totalPaid;
 	}
 
 	public double getTotal_in_debt() {
-		return total_in_debt;
+		return totalDebt;
 	}
 
-	public void setTotal_in_debt(double totalInDebt) {
-		total_in_debt = totalInDebt;
-	}
-
-	public Vector<RefMB> getReferences() {
+	public ArrayList<RefMB> getReferences() {
 		return references;
 	}
 
-	public void setReferences(Vector<RefMB> references) {
-		this.references = references;
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 
-	public int getSelectedReference() {
-		return selectedReference;
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeDouble(totalDebt);
+		dest.writeDouble(totalPaid);
+		dest.writeInt(year != null ? 1 : 0);
+		if (year != null)
+			dest.writeString(year);
+		dest.writeInt(courseCode != null ? 1 : 0);
+		if (courseCode != null)
+			dest.writeString(courseCode);
+		dest.writeInt(courseName != null ? 1 : 0);
+		if (courseName != null)
+			dest.writeString(courseName);
+		dest.writeInt(state != null ? 1 : 0);
+		if (state != null)
+			dest.writeString(state);
+		dest.writeInt(type != null ? 1 : 0);
+		if (type != null)
+			dest.writeString(type);
+		dest.writeTypedList(payments);
+		dest.writeTypedList(references);
 	}
 
-	public void setSelectedReference(int selectedReference) {
-		this.selectedReference = selectedReference;
+	private YearsTuition(Parcel in) {
+		totalDebt = in.readDouble();
+		totalPaid = in.readDouble();
+		if (in.readInt() == 1)
+			year = in.readString();
+		else
+			year = null;
+		if (in.readInt() == 1)
+			courseCode = in.readString();
+		else
+			courseCode = null;
+		if (in.readInt() == 1)
+			courseName = in.readString();
+		else
+			courseName = null;
+		if (in.readInt() == 1)
+			state = in.readString();
+		else
+			state = null;
+		if (in.readInt() == 1)
+			type = in.readString();
+		else
+			type = null;
+		payments = in.createTypedArrayList(Payment.CREATOR);
+		references = in.createTypedArrayList(RefMB.CREATOR);
+
 	}
-	
-	
-	
+
+	public static final Parcelable.Creator<YearsTuition> CREATOR = new Parcelable.Creator<YearsTuition>() {
+		public YearsTuition createFromParcel(Parcel in) {
+			return new YearsTuition(in);
+		}
+
+		public YearsTuition[] newArray(int size) {
+			return new YearsTuition[size];
+		}
+	};
+
+	public static YearsTuition parseJSON(JSONObject yearInfo) {
+		try {
+			final String year = yearInfo.getString("ano_lectivo");
+			final String courseCode = yearInfo.getString("curso_sigla");
+			final String courseName = yearInfo.getString("curso_nome");
+			final String state = yearInfo.getString("estado");
+			// may not be present if student has applied for a
+			// scholarship
+			final String type = yearInfo.optString("tipo");
+			// If it is empty there is no more data to load
+			if (TextUtils.isEmpty(type))
+				return new YearsTuition(year, courseCode, courseName, state,
+						type, new ArrayList<Payment>(), 0, 0, null);
+
+			JSONArray jChild = yearInfo.getJSONArray("planos_pag");
+
+			JSONObject jPayment = jChild.getJSONObject(0);
+			JSONArray jPayments = jPayment.getJSONArray("prestacoes");
+
+			ArrayList<Payment> payments = new ArrayList<Payment>();
+			for (int i = 0; i < jPayments.length(); i++) {
+				final Payment p = Payment.parseJSON(jPayments.getJSONObject(i));
+				if (p != null)
+					payments.add(p);
+				else
+					return null;
+			}
+			double total_paid = 0;
+			double total_in_debt = 0;
+			for (Payment p : payments) {
+				total_paid += p.getAmountPaid();
+				total_in_debt += p.getAmountDebt();
+			}
+
+			final ArrayList<RefMB> references = new ArrayList<RefMB>();
+			JSONArray jRefs = yearInfo.optJSONArray("referencias");
+			if (jRefs != null) {
+				for (int i = 0; i < jRefs.length(); i++) {
+					RefMB r = new RefMB();
+					if (r.load(jRefs.getJSONObject(i)))
+						references.add(r);
+					else
+						return null;
+				}
+			}
+			return new YearsTuition(year, courseCode, courseName, state, type,
+					payments, total_paid, total_in_debt, references);
+		} catch (JSONException e) {
+			Log.e("Propinas", "JSON error in year");
+			e.printStackTrace();
+			Log.e("Propina", e.getMessage());
+			Log.e("Propina", yearInfo.toString());
+			// TODO: report bug
+			return null;
+
+		}
+	}
+
+	public static List<YearsTuition> parseListJSON(JSONObject historyInfo) {
+		List<YearsTuition> history = new ArrayList<YearsTuition>();
+		try {
+			final JSONArray jHistory = historyInfo.getJSONArray("pagamentos");
+			for (int i = 0; i < jHistory.length(); i++) {
+				try {
+					YearsTuition yT = YearsTuition.parseJSON(jHistory
+							.getJSONObject(i));
+					if (yT != null)
+						history.add(yT);
+					else
+						return null;
+				} catch (JSONException e) {
+					Log.e("Propinas",
+							"Error getting the year from the JSON list in tuitions");
+					e.printStackTrace();
+					return null; // TODO: report this bug
+				}
+			}
+		} catch (JSONException e1) {
+			Log.e("Propinas", "error getting the array pagamentos");
+			e1.printStackTrace();
+			return null;
+		}
+		Log.i("Propinas", "Loaded history");
+		return history;
+	}
+
 }

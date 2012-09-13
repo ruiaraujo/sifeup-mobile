@@ -26,7 +26,7 @@ public class TuitionHistoryFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand {
 
 	private ListView list;
-	private SimpleAdapter adapter;
+	private ArrayList<YearsTuition> history;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,47 +41,14 @@ public class TuitionHistoryFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (!AccountUtils.tuitionHistory.isLoaded())
-			task = TuitionUtils.getTuitionReply(
-					AccountUtils.getActiveUserCode(getActivity()), this);
-		else {
-			loadList();
-			showMainScreen();
-		}
+		task = TuitionUtils.getTuitionReply(
+				AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
-	private void loadList() {
-		String[] from = new String[] { "year", "paid", "to_pay" };
-		int[] to = new int[] { R.id.tuition_history_year,
-				R.id.tuition_history_paid, R.id.tuition_history_to_pay };
-		// prepare the list of all records
-		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-
-		for (YearsTuition y : AccountUtils.tuitionHistory.getHistory()) {
-			HashMap<String, String> map = new HashMap<String, String>();
-
-			map.put("year", getString(R.string.lbl_year) + " " + y.getYear());
-			map.put("paid",
-					getString(R.string.lbl_paid) + ": " + y.getTotal_paid()
-							+ "€");
-			if (y.getTotal_in_debt() > 0.0)
-				map.put("to_pay", getString(R.string.lbl_still_to_pay) + ": "
-						+ y.getTotal_in_debt() + "€");
-			fillMaps.add(map);
-		}
-
-		// fill in the grid_item layout
-		adapter = new SimpleAdapter(getActivity(), fillMaps,
-				R.layout.list_item_tuition_history, from, to);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(this);
-		Log.i("Propinas", "List view loaded successfully");
-	}
-
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
-		AccountUtils.tuitionHistory.setSelected_year(position);
-		startActivity(new Intent(getActivity(), TuitionActivity.class));
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		startActivity(new Intent(getActivity(), TuitionActivity.class)
+				.putExtra(TuitionFragment.CURRENT_YEAR, history.get(position)));
 	}
 
 	public void onError(ERROR_TYPE error) {
@@ -102,12 +69,36 @@ public class TuitionHistoryFragment extends BaseFragment implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void onResultReceived(Object... results) {
 		if (getActivity() == null)
 			return;
 		if (results == null || results[0] == null)
 			return;
-		loadList();
+		history = (ArrayList<YearsTuition>) results[0];
+		String[] from = new String[] { "year", "paid", "to_pay" };
+		int[] to = new int[] { R.id.tuition_history_year,
+				R.id.tuition_history_paid, R.id.tuition_history_to_pay };
+		// prepare the list of all records
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		for (YearsTuition y : history) {
+			HashMap<String, String> map = new HashMap<String, String>();
+
+			map.put(from[0], getString(R.string.lbl_year) + " " + y.getYear());
+			map.put(from[1],
+					getString(R.string.lbl_paid) + ": " + y.getTotal_paid()
+							+ "€");
+			if (y.getTotal_in_debt() > 0.0)
+				map.put(from[2], getString(R.string.lbl_still_to_pay) + ": "
+						+ y.getTotal_in_debt() + "€");
+			fillMaps.add(map);
+		}
+
+		// fill in the grid_item layout
+		list.setAdapter(new SimpleAdapter(getActivity(), fillMaps,
+				R.layout.list_item_tuition_history, from, to));
+		list.setOnItemClickListener(this);
+		Log.i("Propinas", "List view loaded successfully");
 		showMainScreen();
 	}
 

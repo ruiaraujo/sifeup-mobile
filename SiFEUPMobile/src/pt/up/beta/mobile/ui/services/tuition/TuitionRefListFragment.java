@@ -35,57 +35,21 @@ public class TuitionRefListFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.generic_list,
 				getParentContainer(), true);
 		list = (ListView) root.findViewById(R.id.generic_list);
-
 		return getParentContainer(); // this is mandatory.
 	}
-	
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        if (!AccountUtils.tuitionHistory.isLoaded())
-            task = TuitionUtils.getTuitionReply(AccountUtils.getActiveUserCode(getActivity()), this);
-        else {
-            if ( loadList() )
-                showMainScreen();
-        }
-    }
 
-	private boolean loadList() {
-		String[] from = new String[] { "name", "amount", "date" };
-		int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount,
-				R.id.tuition_ref_date };
-		// prepare the list of all records
-		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		ArrayList<YearsTuition> history = AccountUtils.tuitionHistory
-				.getHistory();
-		currentYear = history.get(AccountUtils.tuitionHistory.currentYear);
-		if ( currentYear == null )
-		{
-		    showEmptyScreen(getString(R.string.label_no_tuition_ref));
-		    return false;
-		}
-		for (RefMB r : currentYear.getReferences()) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("name", r.getName());
-			map.put("amount", Double.toString(r.getAmount()) + "€");
-			map.put("date", r.getStartDate().format3339(true) + " "
-					+ getString(R.string.interval_separator) + " "
-					+ r.getEndDate().format3339(true));
-			fillMaps.add(map);
-		}
-
-		// fill in the grid_item layout
-		adapter = new SimpleAdapter(getActivity(), fillMaps,
-				R.layout.list_item_tuition_ref, from, to);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(this);
-		return true;
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		task = TuitionUtils.getTuitionReply(
+				AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
-		currentYear.setSelectedReference(position);
-		startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class));
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		startActivity(new Intent(getActivity(), TuitionRefDetailActivity.class)
+				.putExtra(TuitionRefDetailFragment.REFERENCE, currentYear
+						.getReferences().get(position)));
 	}
 
 	public void onError(ERROR_TYPE error) {
@@ -107,17 +71,45 @@ public class TuitionRefListFragment extends BaseFragment implements
 	}
 
 	public void onResultReceived(Object... results) {
-        if (getActivity() == null)
-            return;
+		if (getActivity() == null)
+			return;
 		if (results == null || results[0] == null)
 			return;
-		if ( loadList() )
-		    showMainScreen();
+		@SuppressWarnings("unchecked")
+		ArrayList<YearsTuition> history = (ArrayList<YearsTuition>) results[0];
+		currentYear = history.get(YearsTuition.currentYear);
+		if (currentYear == null || currentYear.getReferences() == null) {
+			showEmptyScreen(getString(R.string.label_no_tuition_ref));
+			return;
+		}
+		String[] from = new String[] { "name", "amount", "date" };
+		int[] to = new int[] { R.id.tuition_ref_name, R.id.tuition_ref_amount,
+				R.id.tuition_ref_date };
+		// prepare the list of all records
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+
+		for (RefMB r : currentYear.getReferences()) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("name", r.getName());
+			map.put("amount", Double.toString(r.getAmount()) + "€");
+			map.put("date", r.getStartDate().format3339(true) + " "
+					+ getString(R.string.interval_separator) + " "
+					+ r.getEndDate().format3339(true));
+			fillMaps.add(map);
+		}
+
+		// fill in the grid_item layout
+		adapter = new SimpleAdapter(getActivity(), fillMaps,
+				R.layout.list_item_tuition_ref, from, to);
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(this);
+		showMainScreen();
 	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = TuitionUtils.getTuitionReply(AccountUtils.getActiveUserCode(getActivity()), this);
+		task = TuitionUtils.getTuitionReply(
+				AccountUtils.getActiveUserCode(getActivity()), this);
 	}
 
 }

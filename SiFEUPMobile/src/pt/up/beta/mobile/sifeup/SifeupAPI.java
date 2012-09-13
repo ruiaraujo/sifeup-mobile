@@ -687,6 +687,7 @@ public class SifeupAPI {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
 				page = getPage(pageContent, charset);
+				pageContent.close();
 				connection.disconnect();
 				if (page == null)
 					return null;
@@ -726,10 +727,11 @@ public class SifeupAPI {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
 				page = getPage(pageContent, charset);
+				pageContent.close();
+				connection.disconnect();
 				if (page == null)
 					return null;
 			} while (page.equals(""));
-			connection.disconnect();
 			// TODO API should return 401
 			if (new JSONObject(page).optBoolean("authenticated")) {
 				// Saving cookie for later using throughout the program
