@@ -94,6 +94,7 @@
             android:label="@string/title_settings" />
         <activity
             android:name=".ui.personalarea.ScheduleActivity"
+            android:hardwareAccelerated="false"
             android:label="@string/title_schedule" />
         <activity
             android:name=".ui.personalarea.LunchMenuActivity"
@@ -228,7 +229,6 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-                
         </activity>
         <activity
             android:name=".ui.webclient.WebviewActivity"
