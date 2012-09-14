@@ -239,7 +239,7 @@
     <string name="description_add">Add Friend</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
-    <string name="label_no_friends">You have no friends.\n\nWhile seeing a profile, check the start to mark as friend.</string>
+    <string name="label_no_friends">You have no friends.\n\nWhile seeing a profile, check the star to mark as friend.</string>
 
     <!-- *************************************************************************************** -->
     <!-- NEWS -->
