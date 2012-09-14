@@ -141,8 +141,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
 	/**
 	 * Pager Subject Adapter
 	 * 
@@ -202,7 +200,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			View root = null;
 			switch (position) {
 			case 0: {
-				if (TextUtils.isEmpty(subject.getObjectives())) {
+				if (!TextUtils.isEmpty(subject.getObjectives())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					final TextView text = (TextView) root
@@ -213,7 +211,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 1: {
-				if ( TextUtils.isEmpty(subject.getContent())) {
+				if (!TextUtils.isEmpty(subject.getContent())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					final TextView text = (TextView) root
@@ -343,8 +341,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 5: {
-				if (subject.getMetodology() != null
-						&& !subject.getMetodology().equals("")) {
+				if (!TextUtils.isEmpty(subject.getMetodology())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView metodologyText = (TextView) root
@@ -387,8 +384,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 7: {
-				if (subject.getFrequenceCond() != null
-						&& !subject.getFrequenceCond().equals("")) {
+				if (!TextUtils.isEmpty(subject.getFrequenceCond())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView admissionExamsText = (TextView) root
@@ -399,8 +395,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 8: {
-				if (subject.getEvaluationFormula() != null
-						&& !subject.getEvaluationFormula().equals("")) {
+				if (!TextUtils.isEmpty(subject.getEvaluationFormula())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView finalGradeText = (TextView) root
@@ -411,8 +406,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 9: {
-				if (subject.getEvaluationProc() != null
-						&& !subject.getEvaluationProc().equals("")) {
+				if (!TextUtils.isEmpty(subject.getEvaluationProc())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView specialEvaluationText = (TextView) root
@@ -423,8 +417,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 10: {
-				if (subject.getImprovementProc() != null
-						&& !subject.getImprovementProc().equals("")) {
+				if (!TextUtils.isEmpty(subject.getImprovementProc())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView improvementClassificationText = (TextView) root
@@ -436,8 +429,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 11: {
-				if (subject.getObservations() != null
-						&& !subject.getObservations().equals("")) {
+				if (!TextUtils.isEmpty(subject.getObservations())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					TextView commentsText = (TextView) root
