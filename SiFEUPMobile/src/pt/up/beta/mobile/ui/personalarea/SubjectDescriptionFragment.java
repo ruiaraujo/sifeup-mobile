@@ -16,9 +16,7 @@ import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
 import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
@@ -43,7 +41,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -54,7 +51,7 @@ import com.viewpagerindicator.TitleProvider;
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectDescriptionFragment extends BaseFragment implements
-		OnPageChangeListener, ResponseCommand, LoaderCallbacks<Subject> {
+		OnPageChangeListener, LoaderCallbacks<Subject> {
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE";
 	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR";
@@ -144,46 +141,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			return;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
 
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		if (subject == null) {
-			subject = (Subject) results[0];
-			String title = subject.getNamePt();
-			if (!UIUtils.isLocalePortuguese()
-					&& subject.getNameEn().trim().length() > 0)
-				title = subject.getNameEn();
-			getSherlockActivity().getSupportActionBar().setTitle(title);
-			SubjectUtils.getSubjectContentReply(code, year, period, this);
-			return;
-		}
-		if (subjectFiles == null) {
-			subjectFiles = (SubjectFiles) results[0];
-			pagerAdapter.notifyDataSetChanged();
-			// Start at a custom position
-			indicator.setCurrentItem(0);
-			indicator.notifyDataSetChanged();
-			showMainScreen();
-		}
-	}
 
 	/**
 	 * Pager Subject Adapter
@@ -244,25 +202,23 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			View root = null;
 			switch (position) {
 			case 0: {
-				if (subject.getContent() != null
-						&& !subject.getContent().equals("")) {
-					root = layoutInflater.inflate(R.layout.subject_content,
-							viewPager, false);
-					final TextView text = (TextView) root
-							.findViewById(R.id.content);
-					text.setText(subject.getContent());
-				} else
-					root = getEmptyScreen(getString(R.string.no_data));
-				break;
-			}
-			case 1: {
-				if (subject.getObjectives() != null
-						&& !subject.getObjectives().equals("")) {
+				if (TextUtils.isEmpty(subject.getObjectives())) {
 					root = layoutInflater.inflate(R.layout.subject_content,
 							viewPager, false);
 					final TextView text = (TextView) root
 							.findViewById(R.id.content);
 					text.setText(subject.getObjectives());
+				} else
+					root = getEmptyScreen(getString(R.string.no_data));
+				break;
+			}
+			case 1: {
+				if ( TextUtils.isEmpty(subject.getContent())) {
+					root = layoutInflater.inflate(R.layout.subject_content,
+							viewPager, false);
+					final TextView text = (TextView) root
+							.findViewById(R.id.content);
+					text.setText(subject.getContent());
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
