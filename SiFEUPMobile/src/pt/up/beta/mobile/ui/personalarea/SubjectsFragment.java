@@ -65,7 +65,7 @@ public class SubjectsFragment extends BaseFragment implements
 		String title = subjects.get(position).getNamePt();
 		if (!UIUtils.isLocalePortuguese()
 				&& !TextUtils
-						.isEmpty(subjects.get(position).getNameEn().trim()))
+						.isEmpty(subjects.get(position).getNameEn()))
 			title = subjects.get(position).getNameEn();
 		i.putExtra(Intent.EXTRA_TITLE, title);
 
@@ -94,7 +94,7 @@ public class SubjectsFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		if (cursor == null) {
-			//waiting
+			// waiting
 			return;
 		}
 		subjects = cursor;
@@ -111,12 +111,12 @@ public class SubjectsFragment extends BaseFragment implements
 			HashMap<String, String> map = new HashMap<String, String>();
 			if (UIUtils.isLocalePortuguese())
 				map.put(from[0],
-						(s.getNamePt().trim().length() != 0) ? s.getNamePt()
-								: s.getNameEn());
+						TextUtils.isEmpty(s.getNamePt()) ? s.getNameEn(): s
+								.getNamePt());
 			else
 				map.put(from[0],
-						(s.getNameEn().trim().length() != 0) ? s.getNameEn()
-								: s.getNamePt());
+						TextUtils.isEmpty(s.getNameEn()) ? s.getNamePt() : s
+								.getNameEn());
 			map.put(from[1], s.getAcronym());
 			map.put(from[2],
 					getString(R.string.subjects_year, s.getYear(),

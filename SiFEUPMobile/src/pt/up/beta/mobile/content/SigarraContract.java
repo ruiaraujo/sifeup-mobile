@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public final class SigarraContract {
 
-	//TODO
+	// TODO
 	public interface SubjectsColumns {
 		String USER_NAME = SubjectsTable.COLUMN_USER_NAME;
 		String CODE = SubjectsTable.COLUMN_CODE;
@@ -15,7 +15,7 @@ public final class SigarraContract {
 		String CONTENT = SubjectsTable.COLUMN_CONTENT;
 		String FILES = SubjectsTable.COLUMN_FILES;
 	}
-	
+
 	public interface ProfileColumns {
 		String ID = ProfilesTable.KEY_ID_PROFILE;
 		String CONTENT = ProfilesTable.KEY_CONTENT_PROFILE;
@@ -49,63 +49,53 @@ public final class SigarraContract {
 		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.subject";
 
 		/** Default "ORDER BY" clause. */
-		public static final String DEFAULT_SORT = PERIOD
-				+ " ASC, " + NAME_PT + " ASC, "
-				+ NAME_EN + " ASC ";
+		public static final String DEFAULT_SORT = PERIOD + " ASC, " + NAME_PT
+				+ " ASC, " + NAME_EN + " ASC ";
 
-		public static final String USER_SUBJECTS = USER_NAME
-				+ "=?";
-		public static final String [] getUserSubjectsSelectionArgs(String code ){
-			return new String[]{code};
+		public static final String USER_SUBJECTS = USER_NAME + "=?";
+
+		public static final String[] getUserSubjectsSelectionArgs(String code) {
+			return new String[] { code };
 		}
-		public static final String SUBJECT_SELECTION = USER_NAME
-				+ "=? AND "
-				+ CODE
-				+ "=? AND "
-				+ PERIOD
-				+ "=? AND "
-				+ YEAR
-				+ "=?";
 
-		public static final String [] getSubjectsSelectionArgs(String userCode, String code, String year, String period ){
-			return new String[] {userCode, code, period, year };
+		public static final String SUBJECT_SELECTION = CODE + "=? AND "
+				+ PERIOD + "=? AND " + YEAR + "=?";
+
+		public static final String[] getSubjectsSelectionArgs(String code,
+				String year, String period) {
+			return new String[] { code, period, year };
 		}
 	}
-	
-	public static class Friends implements FriendsColumns{
+
+	public static class Friends implements FriendsColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_FRIENDS).build();
-		
 
 		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.subject";
 		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.subject";
 
 		/** Default "ORDER BY" clause. */
-		public static final String DEFAULT_SORT = NAME_FRIEND
-				+ " ASC ";
+		public static final String DEFAULT_SORT = NAME_FRIEND + " ASC ";
 
-		public static final String USER_FRIENDS = USER_CODE
-				+ "=?";
-		public static final String [] getUserFriendsSelectionArgs(String code ){
-			return new String[]{code};
+		public static final String USER_FRIENDS = USER_CODE + "=?";
+
+		public static final String[] getUserFriendsSelectionArgs(String code) {
+			return new String[] { code };
 		}
-		
-		public static final String [] FRIENDS_COLUMNS = {
-			CODE_FRIEND, NAME_FRIEND , COURSE_FRIEND
-		};
-		
-		public static final String FRIEND_SELECTION = USER_CODE
-				+ "=? AND "
-				+ CODE_FRIEND
-				+ "=?";
 
-		public static final String [] getFriendSelectionArgs(String userCode, String code ){
-			return new String[] {userCode, code };
+		public static final String[] FRIENDS_COLUMNS = { CODE_FRIEND,
+				NAME_FRIEND, COURSE_FRIEND };
+
+		public static final String FRIEND_SELECTION = USER_CODE + "=? AND "
+				+ CODE_FRIEND + "=?";
+
+		public static final String[] getFriendSelectionArgs(String userCode,
+				String code) {
+			return new String[] { userCode, code };
 		}
 	}
 
-
-	public static class Profiles implements ProfileColumns{
+	public static class Profiles implements ProfileColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_PROFILES).build();
 
@@ -113,22 +103,19 @@ public final class SigarraContract {
 		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.profile";
 
 		/** Default "ORDER BY" clause. */
-		public static final String DEFAULT_SORT = ID
-				+ " ASC ";
+		public static final String DEFAULT_SORT = ID + " ASC ";
 
-		public static final String PROFILE = ID
-				+ "=?";
-		public static final String [] getProfileSelectionArgs(String code, String type){
-			return new String[]{code, type};
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getProfileSelectionArgs(String code,
+				String type) {
+			return new String[] { code, type };
 		}
-		
-		public static final String [] PROFILE_COLUMNS = {
-			CONTENT
-		};
+
+		public static final String[] PROFILE_COLUMNS = { CONTENT };
 
 	}
 
-	
 	private SigarraContract() {
 	}
 }

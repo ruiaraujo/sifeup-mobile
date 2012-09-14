@@ -68,14 +68,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					account, Constants.AUTHTOKEN_TYPE, false);
 			if (extras.getBoolean(SINGLE_REQUEST)) {
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
-					getSubject(account.name, extras.getString(SUBJECT_CODE),
+					getSubject(extras.getString(SUBJECT_CODE),
 							extras.getString(SUBJECT_YEAR),
 							extras.getString(SUBJECT_PERIOD), authToken,
 							syncResult);
 					return;
 				}
 				if (PROFILE.equals(extras.getSerializable(REQUEST_TYPE))) {
-					getProfile(extras.getString(PROFILE_CODE),extras.getString(PROFILE_TYPE), authToken,
+					getProfile(extras.getString(PROFILE_CODE),
+							extras.getString(PROFILE_TYPE), authToken,
 							syncResult);
 					return;
 				}
@@ -96,7 +97,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 
-	private void getProfile(String userCode, String type,  String authToken,
+	private void getProfile(String userCode, String type, String authToken,
 			SyncResult syncResult) {
 		final String profile;
 		if (type.equals(SifeupAPI.STUDENT_TYPE))
@@ -157,15 +158,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		c.close();
 	}
 
-	private void getSubject(String userCode, String code, String year,
-			String period, String authToken, SyncResult syncResult)
-			throws JSONException {
+	private void getSubject(String code, String year, String period,
+			String authToken, SyncResult syncResult) throws JSONException {
 		final String subjectContent = SifeupAPI.getReply(
 				SifeupAPI.getSubjectContentUrl(code, year, period), authToken);
 		final String subjectFiles = SifeupAPI.getReply(
 				SifeupAPI.getSubjectFilestUrl(code, year, period), authToken);
 		final ContentValues values = new ContentValues();
-		values.put(SigarraContract.SubjectsColumns.USER_NAME, userCode);
+		values.put(SigarraContract.SubjectsColumns.USER_NAME, "");
 		values.put(SigarraContract.SubjectsColumns.CODE, code);
 		values.put(SigarraContract.SubjectsColumns.YEAR, year);
 		values.put(SigarraContract.SubjectsColumns.PERIOD, period);

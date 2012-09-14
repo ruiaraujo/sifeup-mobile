@@ -187,17 +187,17 @@ public class SigarraProvider extends ContentProvider {
 				final Bundle extras = new Bundle();
 				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-				if (selectionArgs.length == 4) {
+				if (selectionArgs.length == 3) {
 					/*
 					 * This means we re getting single subject
 					 */
 					extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
 					extras.putString(SyncAdapter.REQUEST_TYPE,
 							SyncAdapter.SUBJECT);
-					extras.putString(SyncAdapter.SUBJECT_CODE, selectionArgs[1]);
+					extras.putString(SyncAdapter.SUBJECT_CODE, selectionArgs[0]);
 					extras.putString(SyncAdapter.SUBJECT_PERIOD,
-							selectionArgs[2]);
-					extras.putString(SyncAdapter.SUBJECT_YEAR, selectionArgs[3]);
+							selectionArgs[1]);
+					extras.putString(SyncAdapter.SUBJECT_YEAR, selectionArgs[2]);
 
 				}
 				ContentResolver.requestSync(

@@ -15,7 +15,6 @@ import pt.up.beta.mobile.datatypes.SubjectFiles;
 import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
 import pt.up.beta.mobile.loaders.SubjectLoader;
-import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
@@ -590,8 +589,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 						SigarraContract.SubjectsColumns.CONTENT,
 						SigarraContract.SubjectsColumns.FILES },
 				SigarraContract.Subjects.SUBJECT_SELECTION,
-				SigarraContract.Subjects.getSubjectsSelectionArgs(
-						AccountUtils.getActiveUserName(getActivity()), code,
+				SigarraContract.Subjects.getSubjectsSelectionArgs( code,
 						year, period), null);
 	}
 

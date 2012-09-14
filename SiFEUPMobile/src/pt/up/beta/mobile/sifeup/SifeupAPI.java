@@ -681,6 +681,7 @@ public class SifeupAPI {
 				final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 						strUrl).openConnection();
 				connection.setRequestProperty("Cookie", cookie);
+				connection.setRequestProperty("connection", "close");
 				final InputStream pageContent = connection.getInputStream();
 				String charset = getContentCharSet(connection.getContentType());
 				if (charset == null) {
@@ -688,6 +689,9 @@ public class SifeupAPI {
 				}
 				page = getPage(pageContent, charset);
 				pageContent.close();
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
 				connection.disconnect();
 				if (page == null)
 					return null;
@@ -698,7 +702,7 @@ public class SifeupAPI {
 		}
 		return null;
 	}
-	
+
 	public static String getReply(String strUrl) {
 		try {
 			return getReply(strUrl, AccountUtils.getAuthToken(null));
@@ -712,7 +716,6 @@ public class SifeupAPI {
 		return null;
 	}
 
-
 	public static String authenticate(String username, String password) {
 		String page = null;
 		try {
@@ -721,6 +724,7 @@ public class SifeupAPI {
 				connection = (HttpsURLConnection) new URL(
 						SifeupAPI.getAuthenticationUrl(username, password))
 						.openConnection();
+				connection.setRequestProperty("connection", "close");
 				final InputStream pageContent = connection.getInputStream();
 				String charset = getContentCharSet(connection.getContentType());
 				if (charset == null) {
@@ -728,6 +732,9 @@ public class SifeupAPI {
 				}
 				page = getPage(pageContent, charset);
 				pageContent.close();
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
 				connection.disconnect();
 				if (page == null)
 					return null;
