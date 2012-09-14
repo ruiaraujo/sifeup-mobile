@@ -5,21 +5,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
+import pt.up.beta.mobile.loaders.ExamsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.sifeup.ExamsUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
+import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,12 +39,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ExamsFragment extends BaseFragment implements ResponseCommand {
+public class ExamsFragment extends BaseFragment implements
+		LoaderCallbacks<List<Exam>> {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
 
 	/** Stores all exams from Student */
-	private ArrayList<Exam> exams;
+	private List<Exam> exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 	private ListView list;
 	private String personCode;
@@ -67,25 +74,28 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		if (savedInstanceState != null) {
 			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
 			if (exams == null) {
-				task = ExamsUtils.getExamsReply(personCode, this);
+				getActivity().getSupportLoaderManager().initLoader(0, null,
+						this);
 			} else {
 				if (populateList())
 					showMainScreen();
 			}
-		} else {
-			task = ExamsUtils.getExamsReply(personCode, this);
-		}
+		} else
+			getActivity().getSupportLoaderManager().initLoader(0, null, this);
+
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (exams != null)
-			outState.putParcelableArrayList(EXAM_KEY, exams);
+			outState.putParcelableArrayList(EXAM_KEY,
+					(ArrayList<? extends Parcelable>) exams);
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.exams_menu_items, menu);
+		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -96,6 +106,19 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				return true;
 			// export to Calendar (create event)
 			calendarExport();
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.EXAMS);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -200,36 +223,6 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		return date;
 	}
 
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		if (results[0] instanceof ArrayList<?>)
-			exams = (ArrayList<Exam>) results[0];
-		else
-			throw new RuntimeException("Error receiving the result");
-		if (populateList())
-			showMainScreen();
-	}
-
 	private boolean populateList() {
 		if (getActivity() == null)
 			return false;
@@ -261,9 +254,30 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		return true;
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		task = ExamsUtils.getExamsReply(personCode, this);
+	@Override
+	public Loader<List<Exam>> onCreateLoader(int loaderId, Bundle options) {
+		return new ExamsLoader(getActivity(),
+				SigarraContract.Exams.CONTENT_URI,
+				SigarraContract.Exams.COLUMNS, SigarraContract.Exams.PROFILE,
+				SigarraContract.Exams.getExamsSelectionArgs(AccountUtils
+						.getActiveUserName(getActivity())), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Exam>> laoder, List<Exam> exams) {
+		if (getActivity() == null)
+			return;
+		if (exams == null)
+			return;
+		this.exams = exams;
+		setRefreshActionItemState(false);
+		if (populateList()) {
+			showMainScreen();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Exam>> loader) {
 	}
 
 }

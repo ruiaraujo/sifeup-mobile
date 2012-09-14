@@ -1,5 +1,12 @@
 package pt.up.beta.mobile.datatypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,6 +20,7 @@ public class Exam implements Parcelable {
 	private final String startTime; // hora de in�cio
 	private final String endTime; // hora de fim
 	private final String rooms; // salas
+
 	public Exam(String type, String courseAcronym, String courseName,
 			String weekDay, String date, String startTime, String endTime,
 			String rooms) {
@@ -25,105 +33,141 @@ public class Exam implements Parcelable {
 		this.endTime = endTime;
 		this.rooms = rooms;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public String getCourseAcronym() {
 		return courseAcronym;
 	}
+
 	public String getCourseName() {
 		return courseName;
 	}
+
 	public String getWeekDay() {
 		return weekDay;
 	}
+
 	public String getDate() {
 		return date;
 	}
+
 	public String getStartTime() {
 		return startTime;
 	}
+
 	public String getEndTime() {
 		return endTime;
 	}
+
 	public String getRooms() {
 		return rooms;
 	}
+
 	public int describeContents() {
 		return 0;
 	}
+
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(type!=null?1:0);
-		if ( type != null )
+		dest.writeInt(type != null ? 1 : 0);
+		if (type != null)
 			dest.writeString(type);
-		dest.writeInt(courseAcronym!=null?1:0);
-		if ( courseAcronym != null )
+		dest.writeInt(courseAcronym != null ? 1 : 0);
+		if (courseAcronym != null)
 			dest.writeString(courseAcronym);
-		dest.writeInt(courseName!=null?1:0);
-		if ( courseName != null )
+		dest.writeInt(courseName != null ? 1 : 0);
+		if (courseName != null)
 			dest.writeString(courseName);
-		dest.writeInt(weekDay!=null?1:0);
-		if ( weekDay != null )
+		dest.writeInt(weekDay != null ? 1 : 0);
+		if (weekDay != null)
 			dest.writeString(weekDay);
-		dest.writeInt(date!=null?1:0);
-		if ( date != null )
+		dest.writeInt(date != null ? 1 : 0);
+		if (date != null)
 			dest.writeString(date);
-		dest.writeInt(startTime!=null?1:0);
-		if ( startTime != null )
+		dest.writeInt(startTime != null ? 1 : 0);
+		if (startTime != null)
 			dest.writeString(startTime);
-		dest.writeInt(endTime!=null?1:0);
-		if ( endTime != null )
+		dest.writeInt(endTime != null ? 1 : 0);
+		if (endTime != null)
 			dest.writeString(endTime);
-		dest.writeInt(rooms!=null?1:0);
-		if ( rooms != null )
+		dest.writeInt(rooms != null ? 1 : 0);
+		if (rooms != null)
 			dest.writeString(rooms);
 	}
-	
 
-    public static final Parcelable.Creator<Exam> CREATOR = new Parcelable.Creator<Exam>() {
-        public Exam createFromParcel(Parcel in) {
-            return new Exam(in);
-        }
+	public static final Parcelable.Creator<Exam> CREATOR = new Parcelable.Creator<Exam>() {
+		public Exam createFromParcel(Parcel in) {
+			return new Exam(in);
+		}
 
-        public Exam[] newArray(int size) {
-            return new Exam[size];
-        }
-    };
-	
-	private Exam(Parcel in){
-    	if ( in.readInt() == 1 )
-    		this.type = in.readString();
-    	else
-    		this.type = null;
-    	if ( in.readInt() == 1 )
-    		this.courseAcronym = in.readString();
-    	else
-    		this.courseAcronym = null;
-    	if ( in.readInt() == 1 )
-    		this.courseName = in.readString();
-    	else
-    		this.courseName = null;
-    	if  ( in.readInt() == 1 )
-    		this.weekDay = in.readString();
-    	else
-    		this.weekDay = null;
-    	if ( in.readInt() == 1 )
-    		this.date = in.readString();
-    	else
-    		this.date = null;
-    	if ( in.readInt() == 1 )
-    		this.startTime = in.readString();
-    	else
-    		this.startTime = null;
-    	if ( in.readInt() == 1 )
-    		this.endTime = in.readString();
-    	else
-    		this.endTime = null;
-    	if ( in.readInt() == 1 )
-    		this.rooms = in.readString();
-    	else
-    		this.rooms = null;
-		
+		public Exam[] newArray(int size) {
+			return new Exam[size];
+		}
+	};
+
+	private Exam(Parcel in) {
+		if (in.readInt() == 1)
+			this.type = in.readString();
+		else
+			this.type = null;
+		if (in.readInt() == 1)
+			this.courseAcronym = in.readString();
+		else
+			this.courseAcronym = null;
+		if (in.readInt() == 1)
+			this.courseName = in.readString();
+		else
+			this.courseName = null;
+		if (in.readInt() == 1)
+			this.weekDay = in.readString();
+		else
+			this.weekDay = null;
+		if (in.readInt() == 1)
+			this.date = in.readString();
+		else
+			this.date = null;
+		if (in.readInt() == 1)
+			this.startTime = in.readString();
+		else
+			this.startTime = null;
+		if (in.readInt() == 1)
+			this.endTime = in.readString();
+		else
+			this.endTime = null;
+		if (in.readInt() == 1)
+			this.rooms = in.readString();
+		else
+			this.rooms = null;
+
 	}
-	
+
+	public static List<Exam> parseJSON(String page) throws JSONException {
+		JSONObject jObject = new JSONObject(page);
+		final List<Exam> exams = new ArrayList<Exam>();
+
+		if (jObject.has("exames")) {
+			// iterate over exams
+			JSONArray jArray = jObject.getJSONArray("exames");
+			for (int i = 0; i < jArray.length(); i++) {
+				// new JSONObject
+				JSONObject jExam = jArray.getJSONObject(i);
+				// new Exam
+				final String type = jExam.optString("tipo");
+				final String courseAcronym = jExam.optString("uc");
+				final String courseName = jExam.optString("uc_nome");
+				final String weekDay = jExam.optString("dia");
+				final String date = jExam.optString("data");
+				final String startTime = jExam.optString("hora_inicio");
+				final String endTime = jExam.optString("hora_fim");
+				final String rooms = jExam.optString("salas");
+				// add exam
+				exams.add(new Exam(type, courseAcronym, courseName, weekDay,
+						date, startTime, endTime, rooms));
+			}
+		}
+		return exams;
+	}
+
 }

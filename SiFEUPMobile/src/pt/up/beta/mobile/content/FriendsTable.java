@@ -13,10 +13,10 @@ public class FriendsTable  implements BaseColumns{
     static final String KEY_USER_CODE = "user_code";
 
     // database info
-    static final String TABLE_FRIENDS = "friends";
+    static final String TABLE = "friends";
 
     private static final String TABLE_CREATE = "CREATE TABLE "
-            + TABLE_FRIENDS + " (" + KEY_ID_FRIEND
+            + TABLE + " (" + KEY_ID_FRIEND
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_CODE_FRIEND
             + " TEXT NOT NULL, " + KEY_NAME_FRIEND + " TEXT NOT NULL, "
             + KEY_COURSE_FRIEND + " TEXT, " + KEY_USER_CODE
@@ -31,7 +31,7 @@ public class FriendsTable  implements BaseColumns{
 		Log.w(FriendsTable.class.getName(), "Upgrading database from version "
 				+ oldVersion + " to " + newVersion
 				+ ", which will destroy all old data");
-		database.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE);
 		onCreate(database);
 	}
 }

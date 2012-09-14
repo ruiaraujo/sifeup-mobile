@@ -6,7 +6,8 @@ import android.util.Log;
 class SubjectsTable implements BaseColumns{
 
 	// Database table
-	static final String TABLE_SUBJECTS = "subjects";
+	static final String TABLE = "subjects";
+	
 	static final String COLUMN_USER_NAME = "_id";
 	static final String COLUMN_CODE = "code";
 	static final String COLUMN_NAME_PT = "name_pt";
@@ -18,7 +19,7 @@ class SubjectsTable implements BaseColumns{
 
 	// Database creation SQL statement
 	private static final String TABLE_CREATE = "create table "
-			+ TABLE_SUBJECTS + "(" + COLUMN_USER_NAME + " text not null, "
+			+ TABLE + "(" + COLUMN_USER_NAME + " text not null, "
 			+ COLUMN_CODE + " text not null, " + COLUMN_YEAR
 			+ " text not null," + COLUMN_PERIOD + " text not null,"
 			+ COLUMN_NAME_PT + " text ," + COLUMN_NAME_EN + " text ,"
@@ -35,7 +36,7 @@ class SubjectsTable implements BaseColumns{
 		Log.w(SubjectsTable.class.getName(), "Upgrading database from version "
 				+ oldVersion + " to " + newVersion
 				+ ", which will destroy all old data");
-		database.execSQL("DROP TABLE IF EXISTS " + TABLE_SUBJECTS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE);
 		onCreate(database);
 	}
 }

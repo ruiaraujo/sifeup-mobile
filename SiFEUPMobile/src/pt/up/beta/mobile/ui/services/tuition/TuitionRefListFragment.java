@@ -4,30 +4,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.datatypes.YearsTuition;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.loaders.TuitionLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.sifeup.TuitionUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class TuitionRefListFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand {
+		OnItemClickListener, LoaderCallbacks<List<YearsTuition>> {
 
 	private SimpleAdapter adapter;
 	private YearsTuition currentYear;
 	private ListView list;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,8 +56,29 @@ public class TuitionRefListFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		task = TuitionUtils.getTuitionReply(
-				AccountUtils.getActiveUserCode(getActivity()), this);
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+	}
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.TUITION);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -52,32 +88,25 @@ public class TuitionRefListFragment extends BaseFragment implements
 						.getReferences().get(position)));
 	}
 
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
+	@Override
+	public Loader<List<YearsTuition>> onCreateLoader(int loaderId,
+			Bundle options) {
+		return new TuitionLoader(getActivity(),
+				SigarraContract.Tuition.CONTENT_URI,
+				SigarraContract.Tuition.COLUMNS,
+				SigarraContract.Tuition.PROFILE,
+				SigarraContract.Tuition.getTuitionSelectionArgs(AccountUtils
+						.getActiveUserName(getActivity())), null);
 	}
 
-	public void onResultReceived(Object... results) {
+	@Override
+	public void onLoadFinished(Loader<List<YearsTuition>> loader,
+			List<YearsTuition> yearsTuition) {
 		if (getActivity() == null)
 			return;
-		if (results == null || results[0] == null)
+		if (yearsTuition == null)
 			return;
-		@SuppressWarnings("unchecked")
-		ArrayList<YearsTuition> history = (ArrayList<YearsTuition>) results[0];
-		currentYear = history.get(YearsTuition.currentYear);
+		currentYear = yearsTuition.get(YearsTuition.currentYear);
 		if (currentYear == null || currentYear.getReferences() == null) {
 			showEmptyScreen(getString(R.string.label_no_tuition_ref));
 			return;
@@ -103,13 +132,12 @@ public class TuitionRefListFragment extends BaseFragment implements
 				R.layout.list_item_tuition_ref, from, to);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		setRefreshActionItemState(false);
 		showMainScreen();
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		task = TuitionUtils.getTuitionReply(
-				AccountUtils.getActiveUserCode(getActivity()), this);
+	@Override
+	public void onLoaderReset(Loader<List<YearsTuition>> loader) {
 	}
 
 }

@@ -16,9 +16,14 @@
 
 package pt.up.beta.mobile.loaders;
 
-import org.json.JSONException;
+import java.util.List;
 
-import pt.up.beta.mobile.datatypes.Employee;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.YearsTuition;
+
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -32,7 +37,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class EmployeeLoader extends AsyncTaskLoader<Employee> {
+public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -41,12 +46,12 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	Employee employee;
+	List<YearsTuition> yearsTuitions;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public Employee loadInBackground() {
+	public List<YearsTuition> loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -58,13 +63,14 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 				mCursor.close();
 			}
 			mCursor = cursor;
-
 			if (cursor.moveToFirst()) {
 				try {
-					return Employee.parseJSON(cursor.getString(0));
+					return YearsTuition
+							.parseListJSON(new JSONObject(
+									cursor.getString(cursor
+											.getColumnIndex(SigarraContract.TuitionColumns.CONTENT))));
 				} catch (JSONException e) {
 					e.printStackTrace();
-					// TODO report bug
 				}
 			}
 		}
@@ -81,17 +87,23 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(Employee employee) {
+	public void deliverResult(List<YearsTuition> yearsTuitions) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (employee != null) {
-				employee = null;
+			if (yearsTuitions != null) {
+				yearsTuitions.clear();
 			}
 			return;
 		}
-		this.employee = employee;
+		final List<YearsTuition> oldYearsTuitions = this.yearsTuitions;
+		this.yearsTuitions = yearsTuitions;
 		if (isStarted()) {
-			super.deliverResult(employee);
+			super.deliverResult(yearsTuitions);
+		}
+
+		if (oldYearsTuitions != null && oldYearsTuitions != yearsTuitions
+				&& oldYearsTuitions.size() != 0) {
+			oldYearsTuitions.clear();
 		}
 	}
 
@@ -100,7 +112,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc to
 	 * specify the query to perform.
 	 */
-	public EmployeeLoader(Context context) {
+	public TuitionLoader(Context context) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
 	}
@@ -111,7 +123,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 * ContentResolver.query()} for documentation on the meaning of the
 	 * parameters. These will be passed as-is to that call.
 	 */
-	public EmployeeLoader(Context context, Uri uri, String[] projection,
+	public TuitionLoader(Context context, Uri uri, String[] projection,
 			String selection, String[] selectionArgs, String sortOrder) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
@@ -132,10 +144,10 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (employee != null) {
-			deliverResult(employee);
+		if (yearsTuitions != null) {
+			deliverResult(yearsTuitions);
 		}
-		if (takeContentChanged() || employee == null) {
+		if (takeContentChanged() || yearsTuitions == null) {
 			forceLoad();
 		}
 	}
@@ -150,7 +162,10 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	}
 
 	@Override
-	public void onCanceled(Employee employee) {
+	public void onCanceled(List<YearsTuition> yearsTuitions) {
+		if (yearsTuitions != null) {
+			yearsTuitions.clear();
+		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
 		}
@@ -167,6 +182,8 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 			mCursor.close();
 		}
 		mCursor = null;
-		employee = null;
+		if (yearsTuitions != null)
+			yearsTuitions.clear();
+		yearsTuitions = null;
 	}
 }

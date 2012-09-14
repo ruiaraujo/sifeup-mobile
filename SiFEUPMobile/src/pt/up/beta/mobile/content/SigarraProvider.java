@@ -23,6 +23,10 @@ public class SigarraProvider extends ContentProvider {
 	private static final int SUBJECTS = 10;
 	private static final int FRIENDS = 20;
 	private static final int PROFILES = 30;
+	private static final int EXAMS = 40;
+	private static final int ACADEMIC_PATH = 50;
+	private static final int TUITION = 60;
+	private static final int PRINTING_QUOTA = 70;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -33,18 +37,25 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_FRIENDS, FRIENDS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_PROFILES, PROFILES);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_EXAMS, EXAMS);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_ACADEMIC_PATH, ACADEMIC_PATH);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_TUITION, TUITION);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_PRINTING, PRINTING_QUOTA);
 	}
 
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase database;
-	
-	private synchronized SQLiteDatabase getWritableDatabase(){
-		if ( database == null )
+
+	private synchronized SQLiteDatabase getWritableDatabase() {
+		if (database == null)
 			database = dbHelper.getWritableDatabase();
 		return database;
 	}
-	
-	
+
 	@Override
 	public boolean onCreate() {
 		dbHelper = new DatabaseHelper(getContext().getApplicationContext());
@@ -53,24 +64,35 @@ public class SigarraProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		final int count;
 		int uriType = sURIMatcher.match(uri);
+		final String table;
 		switch (uriType) {
 		case SUBJECTS:
-			count = getWritableDatabase().delete(
-					SubjectsTable.TABLE_SUBJECTS, selection, selectionArgs);
+			table = SubjectsTable.TABLE;
 			break;
 		case FRIENDS:
-			count = getWritableDatabase().delete(
-					FriendsTable.TABLE_FRIENDS, selection, selectionArgs);
+			table = FriendsTable.TABLE;
 			break;
 		case PROFILES:
-			count = getWritableDatabase().delete(
-					ProfilesTable.TABLE_PROFILES, selection, selectionArgs);
+			table = ProfilesTable.TABLE;
+			break;
+		case EXAMS:
+			table = ExamsTable.TABLE;
+			break;
+		case ACADEMIC_PATH:
+			table = AcademicPathTable.TABLE;
+			break;
+		case TUITION:
+			table = TuitionTable.TABLE;
+			break;
+		case PRINTING_QUOTA:
+			table = PrintingQuotaTable.TABLE;
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
+		final int count = getWritableDatabase().delete(table, selection,
+				selectionArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
@@ -85,6 +107,14 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.Friends.CONTENT_TYPE;
 		case PROFILES:
 			return SigarraContract.Profiles.CONTENT_TYPE;
+		case EXAMS:
+			return SigarraContract.Exams.CONTENT_TYPE;
+		case ACADEMIC_PATH:
+			return SigarraContract.AcademicPath.CONTENT_TYPE;
+		case TUITION:
+			return SigarraContract.Tuition.CONTENT_TYPE;
+		case PRINTING_QUOTA:
+			return SigarraContract.PrintingQuota.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -93,13 +123,36 @@ public class SigarraProvider extends ContentProvider {
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		int uriType = sURIMatcher.match(uri);
+		final String nullHack;
 		final String table;
 		switch (uriType) {
 		case SUBJECTS:
-			table = SubjectsTable.TABLE_SUBJECTS;
+			table = SubjectsTable.TABLE;
+			nullHack = null;
+			break;
+		case FRIENDS:
+			table = FriendsTable.TABLE;
+			nullHack = FriendsTable.KEY_COURSE_FRIEND;
 			break;
 		case PROFILES:
-			table = ProfilesTable.TABLE_PROFILES;
+			table = ProfilesTable.TABLE;
+			nullHack = null;
+			break;
+		case EXAMS:
+			table = ExamsTable.TABLE;
+			nullHack = null;
+			break;
+		case ACADEMIC_PATH:
+			table = AcademicPathTable.TABLE;
+			nullHack = null;
+			break;
+		case TUITION:
+			table = TuitionTable.TABLE;
+			nullHack = null;
+			break;
+		case PRINTING_QUOTA:
+			table = PrintingQuotaTable.TABLE;
+			nullHack = null;
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -108,7 +161,7 @@ public class SigarraProvider extends ContentProvider {
 		try {
 			db.beginTransaction();
 			for (ContentValues v : values) {
-				if (db.replace(table, null, v) == -1)
+				if (db.replace(table, nullHack, v) == -1)
 					throw new SQLException("Failed to insert row into " + uri);
 			}
 			db.setTransactionSuccessful();
@@ -124,47 +177,50 @@ public class SigarraProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
+		final String nullHack;
+		final String table;
 		switch (uriType) {
-		case SUBJECTS: {
-			long rowID = getWritableDatabase().replace(
-					SubjectsTable.TABLE_SUBJECTS, null, values);
-			if (rowID > 0) {
-				final Uri url = ContentUris.withAppendedId(
-						SigarraContract.Subjects.CONTENT_URI, rowID);
-				getContext().getContentResolver().notifyChange(url, null);
-				getContext().getContentResolver().notifyChange(uri, null);
-				return url;
-			}
-			throw new SQLException("Failed to insert row into " + uri);
-		}
-		case FRIENDS: {
-			long rowID = getWritableDatabase().replace(
-					FriendsTable.TABLE_FRIENDS, FriendsTable.KEY_COURSE_FRIEND,
-					values);
-			if (rowID > 0) {
-				final Uri url = ContentUris.withAppendedId(
-						SigarraContract.Friends.CONTENT_URI, rowID);
-				getContext().getContentResolver().notifyChange(url, null);
-				getContext().getContentResolver().notifyChange(uri, null);
-				return url;
-			}
-			throw new SQLException("Failed to insert row into " + uri);
-		}
-		case PROFILES: {
-			long rowID = getWritableDatabase().replace(
-					ProfilesTable.TABLE_PROFILES, null, values);
-			if (rowID > 0) {
-				final Uri url = ContentUris.withAppendedId(
-						SigarraContract.Profiles.CONTENT_URI, rowID);
-				getContext().getContentResolver().notifyChange(url, null);
-				getContext().getContentResolver().notifyChange(uri, null);
-				return url;
-			}
-			throw new SQLException("Failed to insert row into " + uri);
-		}
+		case SUBJECTS:
+			table = SubjectsTable.TABLE;
+			nullHack = null;
+			break;
+		case FRIENDS:
+			table = FriendsTable.TABLE;
+			nullHack = FriendsTable.KEY_COURSE_FRIEND;
+			break;
+		case PROFILES:
+			table = ProfilesTable.TABLE;
+			nullHack = null;
+			break;
+		case EXAMS:
+			table = ExamsTable.TABLE;
+			nullHack = null;
+			break;
+		case ACADEMIC_PATH:
+			table = AcademicPathTable.TABLE;
+			nullHack = null;
+			break;
+		case TUITION:
+			table = TuitionTable.TABLE;
+			nullHack = null;
+			break;
+		case PRINTING_QUOTA:
+			table = PrintingQuotaTable.TABLE;
+			nullHack = null;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
+
+		long rowID = getWritableDatabase().replace(table, nullHack, values);
+		if (rowID > 0) {
+			final Uri url = ContentUris.withAppendedId(
+					uri, rowID);
+			getContext().getContentResolver().notifyChange(url, null);
+			getContext().getContentResolver().notifyChange(uri, null);
+			return url;
+		}
+		throw new SQLException("Failed to insert row into " + uri);
 	}
 
 	@Override
@@ -176,7 +232,7 @@ public class SigarraProvider extends ContentProvider {
 		final Cursor c;
 		switch (uriType) {
 		case SUBJECTS:
-			qb.setTables(SubjectsTable.TABLE_SUBJECTS);
+			qb.setTables(SubjectsTable.TABLE);
 			if (TextUtils.isEmpty(sortOrder))
 				orderBy = SigarraContract.Subjects.DEFAULT_SORT;
 			else
@@ -208,7 +264,7 @@ public class SigarraProvider extends ContentProvider {
 			}
 			break;
 		case FRIENDS:
-			qb.setTables(FriendsTable.TABLE_FRIENDS);
+			qb.setTables(FriendsTable.TABLE);
 			if (TextUtils.isEmpty(sortOrder))
 				orderBy = SigarraContract.Friends.DEFAULT_SORT;
 			else
@@ -217,13 +273,9 @@ public class SigarraProvider extends ContentProvider {
 					selectionArgs, null, null, orderBy);
 			break;
 		case PROFILES:
-			qb.setTables(ProfilesTable.TABLE_PROFILES);
-			if (TextUtils.isEmpty(sortOrder))
-				orderBy = SigarraContract.Profiles.DEFAULT_SORT;
-			else
-				orderBy = sortOrder;
+			qb.setTables(ProfilesTable.TABLE);
 			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
-					new String[]{ selectionArgs[0]}, null, null, orderBy);
+					new String[] { selectionArgs[0] }, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
 				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -232,6 +284,77 @@ public class SigarraProvider extends ContentProvider {
 				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PROFILE);
 				extras.putString(SyncAdapter.PROFILE_CODE, selectionArgs[0]);
 				extras.putString(SyncAdapter.PROFILE_TYPE, selectionArgs[1]);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
+		case EXAMS:
+			qb.setTables(ExamsTable.TABLE);
+			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+					new String[] { selectionArgs[0] }, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.EXAMS);
+				extras.putString(SyncAdapter.USER_CODE, selectionArgs[0]);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
+
+		case ACADEMIC_PATH:
+			qb.setTables(AcademicPathTable.TABLE);
+			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+					new String[] { selectionArgs[0] }, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.ACADEMIC_PATH);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
+		case TUITION:
+			qb.setTables(TuitionTable.TABLE);
+			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+					new String[] { selectionArgs[0] }, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.TUITION);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
+
+		case PRINTING_QUOTA:
+			qb.setTables(PrintingQuotaTable.TABLE);
+			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+					new String[] { selectionArgs[0] }, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PRINTING_QUOTA);
 				ContentResolver.requestSync(
 						new Account(AccountUtils
 								.getActiveUserName(getContext()),
@@ -255,19 +378,30 @@ public class SigarraProvider extends ContentProvider {
 		final String table;
 		switch (uriType) {
 		case SUBJECTS:
-			table = SubjectsTable.TABLE_SUBJECTS;
+			table = SubjectsTable.TABLE;
 			break;
 		case FRIENDS:
-			table = FriendsTable.TABLE_FRIENDS;
+			table = FriendsTable.TABLE;
 			break;
 		case PROFILES:
-			table = ProfilesTable.TABLE_PROFILES;
+			table = ProfilesTable.TABLE;
+			break;
+		case EXAMS:
+			table = ExamsTable.TABLE;
+			break;
+		case ACADEMIC_PATH:
+			table = AcademicPathTable.TABLE;
+			break;
+		case TUITION:
+			table = TuitionTable.TABLE;
+			break;
+		case PRINTING_QUOTA:
+			table = PrintingQuotaTable.TABLE;
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
-		count = getWritableDatabase().update(
-				table, values, selection,
+		count = getWritableDatabase().update(table, values, selection,
 				selectionArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;

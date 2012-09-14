@@ -85,7 +85,6 @@ public class SubjectsFragment extends BaseFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {

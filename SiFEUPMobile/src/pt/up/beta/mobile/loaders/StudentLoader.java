@@ -41,7 +41,7 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	Student subject;
+	Student student;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
@@ -81,17 +81,17 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(Student subject) {
+	public void deliverResult(Student student) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (subject != null) {
-				subject = null;
+			if (student != null) {
+				student = null;
 			}
 			return;
 		}
-		this.subject = subject;
+		this.student = student;
 		if (isStarted()) {
-			super.deliverResult(subject);
+			super.deliverResult(student);
 		}
 	}
 
@@ -132,10 +132,10 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (subject != null) {
-			deliverResult(subject);
+		if (student != null) {
+			deliverResult(student);
 		}
-		if (takeContentChanged() || subject == null) {
+		if (takeContentChanged() || student == null) {
 			forceLoad();
 		}
 	}
@@ -150,7 +150,7 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 	}
 
 	@Override
-	public void onCanceled(Student subject) {
+	public void onCanceled(Student student) {
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
 		}
@@ -167,6 +167,6 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 			mCursor.close();
 		}
 		mCursor = null;
-		subject = null;
+		student = null;
 	}
 }

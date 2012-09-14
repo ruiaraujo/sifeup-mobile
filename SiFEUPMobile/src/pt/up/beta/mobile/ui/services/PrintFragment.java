@@ -2,21 +2,31 @@
 
 package pt.up.beta.mobile.ui.services;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.ui.BaseFragment;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import pt.up.beta.mobile.sifeup.PrinterUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
 
 /**
  * Esta interface está responsável por ir buscar a informação
@@ -32,12 +42,12 @@ import pt.up.beta.mobile.R;
  * @author Ângela Igreja
  *
  */
-public class PrintFragment extends BaseFragment implements ResponseCommand{
+public class PrintFragment extends BaseFragment implements LoaderCallbacks<Cursor>{
 
 	private final static String PRINTERS_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_QUOTA";
 
 	
-    private String saldo;
+    private Double saldo;
     private TextView display;
     private TextView desc;
 
@@ -82,9 +92,9 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         super.onActivityCreated(savedInstanceState);
         if ( savedInstanceState != null )
         {
-            saldo = savedInstanceState.getString(PRINTERS_KEY);
+            saldo = savedInstanceState.getDouble(PRINTERS_KEY);
             if ( saldo == null )
-                task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
+        		getActivity().getSupportLoaderManager().initLoader(0, null, this);
             else
             {
                 displayData();
@@ -93,52 +103,73 @@ public class PrintFragment extends BaseFragment implements ResponseCommand{
         }
         else
         {
-            task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
+    		getActivity().getSupportLoaderManager().initLoader(0, null, this);
         }
     }
+    
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PRINTING_QUOTA);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 
  	@Override
  	public void onSaveInstanceState (Bundle outState){
  		if ( saldo != null )
- 			outState.putString(PRINTERS_KEY,saldo);
+ 			outState.putDouble(PRINTERS_KEY,saldo);
  	}
     
-	public void onError(ERROR_TYPE error) {
-		if ( getActivity() == null )
-	 		return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
 
-	public void onResultReceived(Object... results) {
-		if ( getActivity() == null )
-			return;
-		saldo = results[0].toString();
-		displayData();
-		showMainScreen();
-	}
-	
 	private void displayData(){
 		display.setText(getString(R.string.print_balance, saldo));
-		PrintFragment.this.saldo = saldo;
-		long pagesA4Black =  Math.round(Double.parseDouble(saldo) / 0.03f);
+		long pagesA4Black =  Math.round(saldo / 0.03f);
 		if ( pagesA4Black > 0 )
 			desc.setText(getString(R.string.print_can_print_a4_black, Long.toString(pagesA4Black)));
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-        task = PrinterUtils.getPrintReply(AccountUtils.getActiveUserCode(getActivity()), this);
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int loaderId, Bundle options) {
+		return new CursorLoader(
+				getActivity(),
+				SigarraContract.PrintingQuota.CONTENT_URI,
+				SigarraContract.PrintingQuota.COLUMNS,
+				SigarraContract.PrintingQuota.PROFILE,
+				SigarraContract.PrintingQuota.getPrintingQuotaSelectionArgs(
+						AccountUtils.getActiveUserName(getActivity())),
+				null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if ( cursor.moveToFirst() ){
+			saldo = cursor.getDouble(0);
+			displayData();
+			setRefreshActionItemState(false);
+			showMainScreen();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
 	}
 
 }

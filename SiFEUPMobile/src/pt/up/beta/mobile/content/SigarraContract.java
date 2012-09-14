@@ -29,6 +29,26 @@ public final class SigarraContract {
 		String COURSE_FRIEND = FriendsTable.KEY_COURSE_FRIEND;
 	}
 
+	public interface ExamsColumns {
+		String ID = ExamsTable.KEY_ID_USER;
+		String CONTENT = ExamsTable.KEY_CONTENT_EXAM;
+	}
+
+	public interface AcademicPathColumns {
+		String ID = AcademicPathTable.KEY_ID_USER;
+		String CONTENT = AcademicPathTable.KEY_CONTENT;
+	}
+
+	public interface TuitionColumns {
+		String ID = TuitionTable.KEY_ID_USER;
+		String CONTENT = TuitionTable.KEY_CONTENT;
+	}
+
+	public interface PrintingQuotaColumns {
+		String ID = PrintingQuotaTable.KEY_ID_USER;
+		String QUOTA = PrintingQuotaTable.KEY_QUOTA;
+	}
+	
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
 
 	public static final Uri BASE_CONTENT_URI = Uri.parse("content://"
@@ -37,6 +57,11 @@ public final class SigarraContract {
 	static final String PATH_SUBJECTS = "subjects";
 	static final String PATH_FRIENDS = "friends";
 	static final String PATH_PROFILES = "profiles";
+	static final String PATH_EXAMS = "exams";
+	static final String PATH_ACADEMIC_PATH = "academic_path";
+	static final String PATH_TUITION = "tuition";
+	static final String PATH_PRINTING = "printing_quota";
+
 
 	/**
 	 * The public contract for the subjects.
@@ -102,9 +127,6 @@ public final class SigarraContract {
 		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.profile";
 		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.profile";
 
-		/** Default "ORDER BY" clause. */
-		public static final String DEFAULT_SORT = ID + " ASC ";
-
 		public static final String PROFILE = ID + "=?";
 
 		public static final String[] getProfileSelectionArgs(String code,
@@ -115,7 +137,76 @@ public final class SigarraContract {
 		public static final String[] PROFILE_COLUMNS = { CONTENT };
 
 	}
+	
 
+	public static class Exams implements ExamsColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_EXAMS).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.exams";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.exam";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getExamsSelectionArgs(String code) {
+			return new String[] { code };
+		}
+
+		public static final String[] COLUMNS = { CONTENT };
+
+	}
+	
+
+	public static class AcademicPath implements AcademicPathColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_ACADEMIC_PATH).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.academic_path";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.academic_path";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getAcademicPathSelectionArgs(String code) {
+			return new String[] { code };
+		}
+
+		public static final String[] COLUMNS = { CONTENT };
+
+	}
+	
+	public static class Tuition implements TuitionColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_TUITION).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.tuition";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.tuition";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getTuitionSelectionArgs(String code) {
+			return new String[] { code };
+		}
+
+		public static final String[] COLUMNS = { CONTENT };
+
+	}
+
+	public static class PrintingQuota implements PrintingQuotaColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_PRINTING).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.printing_quota";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.printing_quota";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getPrintingQuotaSelectionArgs(String code) {
+			return new String[] { code };
+		}
+
+		public static final String[] COLUMNS = { QUOTA };
+
+	}
 	private SigarraContract() {
 	}
 }

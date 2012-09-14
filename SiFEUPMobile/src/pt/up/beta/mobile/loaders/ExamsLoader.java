@@ -16,9 +16,13 @@
 
 package pt.up.beta.mobile.loaders;
 
+import java.util.List;
+
 import org.json.JSONException;
 
-import pt.up.beta.mobile.datatypes.Employee;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.Exam;
+
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -32,7 +36,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class EmployeeLoader extends AsyncTaskLoader<Employee> {
+public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -41,12 +45,12 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	Employee employee;
+	List<Exam> exams;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public Employee loadInBackground() {
+	public List<Exam> loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -58,13 +62,11 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 				mCursor.close();
 			}
 			mCursor = cursor;
-
 			if (cursor.moveToFirst()) {
 				try {
-					return Employee.parseJSON(cursor.getString(0));
+					return Exam.parseJSON(cursor.getString(cursor.getColumnIndex(SigarraContract.ExamsColumns.CONTENT)));
 				} catch (JSONException e) {
 					e.printStackTrace();
-					// TODO report bug
 				}
 			}
 		}
@@ -81,18 +83,23 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(Employee employee) {
+	public void deliverResult(List<Exam> exams) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (employee != null) {
-				employee = null;
+			if (exams != null) {
+				exams.clear();
 			}
 			return;
 		}
-		this.employee = employee;
+		final List<Exam> oldExams = this.exams;
+		this.exams = exams;
 		if (isStarted()) {
-			super.deliverResult(employee);
+			super.deliverResult(exams);
 		}
+
+        if (oldExams != null && oldExams != exams && oldExams.size() != 0) {
+        	oldExams.clear();
+        }
 	}
 
 	/**
@@ -100,7 +107,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc to
 	 * specify the query to perform.
 	 */
-	public EmployeeLoader(Context context) {
+	public ExamsLoader(Context context) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
 	}
@@ -111,7 +118,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 * ContentResolver.query()} for documentation on the meaning of the
 	 * parameters. These will be passed as-is to that call.
 	 */
-	public EmployeeLoader(Context context, Uri uri, String[] projection,
+	public ExamsLoader(Context context, Uri uri, String[] projection,
 			String selection, String[] selectionArgs, String sortOrder) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
@@ -132,10 +139,10 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (employee != null) {
-			deliverResult(employee);
+		if (exams != null) {
+			deliverResult(exams);
 		}
-		if (takeContentChanged() || employee == null) {
+		if (takeContentChanged() || exams == null) {
 			forceLoad();
 		}
 	}
@@ -150,7 +157,10 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 	}
 
 	@Override
-	public void onCanceled(Employee employee) {
+	public void onCanceled(List<Exam> exams) {
+		if (exams != null) {
+			exams.clear();
+		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
 		}
@@ -167,6 +177,8 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 			mCursor.close();
 		}
 		mCursor = null;
-		employee = null;
+	if (exams != null)
+			exams.clear();
+		exams = null;
 	}
 }
