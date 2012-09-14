@@ -16,7 +16,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * A base activity that defers common functionality across app activities. This
@@ -49,7 +48,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 		super.onDestroy();
 
 		// Purge analytics so they don't hold references to this activity
-		GoogleAnalyticsTracker.getInstance().dispatch();
+		GoogleAnalyticsSessionManager.getInstance().dispatch();
 
 		// Need to do this for every activity that uses google analytics
 		GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();
