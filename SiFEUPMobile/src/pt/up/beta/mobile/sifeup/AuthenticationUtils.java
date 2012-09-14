@@ -1,9 +1,5 @@
 package pt.up.beta.mobile.sifeup;
 
-import java.io.IOException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +19,8 @@ public class AuthenticationUtils {
 	public static ERROR_TYPE authenticate(String code, String password) {
 		String page = "";
 		try {
-			page = SifeupAPI.getReply(SifeupAPI.getAuthenticationUrl(code, password));
+			page = SifeupAPI.getReply(SifeupAPI.getAuthenticationUrl(code,
+					password));
 			if (page == null)
 				return ERROR_TYPE.NETWORK;
 			User user = JSONUser(page);
@@ -41,7 +38,7 @@ public class AuthenticationUtils {
 		if (jObject.optBoolean("authenticated")) {
 			final String user = jObject.getString("codigo");
 			final String type = jObject.getString("tipo");
-			return new User("" , user, "", type);
+			return new User("", user, "", type);
 		}
 		return null;
 	}
@@ -62,42 +59,14 @@ public class AuthenticationUtils {
 			}
 			command.onError(result);
 		}
-		
-
-        /**
-         * Student query Reply from web service
-         * 
-         * @param url
-         * @return page
-         */
-        private String getReply(String url) {
-                String page = null;
-                try {
-                        do {
-                                HttpResponse response = SifeupAPI.get(url);
-                                if (response == null)
-                                        return null;
-                                HttpEntity entity = response.getEntity();
-                                if (entity == null)
-                                        return null;
-                                page = SifeupAPI.getPage(entity.getContent());
-                                if (page == null)
-                                        return null;
-                                entity.consumeContent();
-                        } while (page.equals(""));
-                } catch (IOException e) {
-                        e.printStackTrace();
-                }
-                return page;
-        }
 
 		protected ERROR_TYPE doInBackground(String... code) {
-			String page = "";
+			String[] page;
 			try {
-				page = getReply(SifeupAPI.getAuthenticationUrl(code[0], code[1]));
+				page = SifeupAPI.authenticate(code[0], code[1]);
 				if (page == null)
 					return ERROR_TYPE.NETWORK;
-				user = JSONUser(page);
+				user = JSONUser(page[0]);
 				if (user == null)
 					return ERROR_TYPE.AUTHENTICATION;
 			} catch (JSONException e) {
@@ -107,30 +76,32 @@ public class AuthenticationUtils {
 			return null;
 		}
 
-        @Override
-        protected void onCancelled() {
-        	command.onError(ERROR_TYPE.CANCELLED);
-        }
+		@Override
+		protected void onCancelled() {
+			command.onError(ERROR_TYPE.CANCELLED);
+		}
 	}
 
-	public static AsyncTask<String, Void, String> setPasswordReply(
-			String code, String oldPassword, String newPassword,
-			String confirmNewPassword, String system, ResponseCommand command) {
-		return new PasswordTask(command).execute(code, oldPassword, newPassword,
-						confirmNewPassword, system);
+	public static AsyncTask<String, Void, String> setPasswordReply(String code,
+			String oldPassword, String newPassword, String confirmNewPassword,
+			String system, ResponseCommand command) {
+		return new PasswordTask(command).execute(code, oldPassword,
+				newPassword, confirmNewPassword, system);
 	}
 
 	/** Classe privada para a busca de dados ao servidor */
 	private static class PasswordTask extends AsyncTask<String, Void, String> {
 		private final ResponseCommand com;
-		private PasswordTask(ResponseCommand com){
+
+		private PasswordTask(ResponseCommand com) {
 			this.com = com;
 		}
+
 		protected void onPostExecute(String result) {
 			if (result.equals("Success")) {
 				com.onResultReceived();
 			} else if (result.equals("Error")) {
-				com.onResultReceived(errorTitle,errorContent);
+				com.onResultReceived(errorTitle, errorContent);
 			} else if (result.equals("Net"))
 				com.onError(ERROR_TYPE.NETWORK);
 			else
@@ -140,8 +111,9 @@ public class AuthenticationUtils {
 		protected String doInBackground(String... strings) {
 			String page = "";
 			try {
-				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(strings[0], strings[1],
-						strings[2], strings[3], strings[4]));
+				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(
+						strings[0], strings[1], strings[2], strings[3],
+						strings[4]));
 				int error = SifeupAPI.JSONError(page);
 				switch (error) {
 				case SifeupAPI.Errors.NO_AUTH:

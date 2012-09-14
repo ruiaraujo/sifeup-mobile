@@ -1,19 +1,12 @@
 package pt.up.beta.mobile.ui.utils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.ByteArrayBuffer;
-
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.FileUtils;
-
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -125,7 +118,7 @@ public class ImageDownloader {
 		protected Bitmap doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
 			url = (String) params[0];
-			return downloadBitmap(params[0]);
+			return SifeupAPI.downloadBitmap(params[0]);
 		}
 
 		@Override
@@ -182,38 +175,5 @@ public class ImageDownloader {
 		}
 	}
 
-	// the actual download code
-	public static Bitmap downloadBitmap(String url) {
-		HttpResponse response = SifeupAPI.get(url);
-		if (response == null)
-			return null;
-		Bitmap bitmap;
-		try {
-			HttpEntity entity = response.getEntity();
-			if (entity == null)
-				return null;
-			BufferedInputStream bis = new BufferedInputStream(
-					entity.getContent());
-			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int read = 0;
-			int bufSize = 512;
-			byte[] buffer = new byte[bufSize];
-			while (true) {
-				read = bis.read(buffer);
-				if (read == -1) {
-					break;
-				}
-				baf.append(buffer, 0, read);
-			}
-			bis.close();
-			bitmap = BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
-					baf.length());
-			entity.consumeContent();
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
+	
 }

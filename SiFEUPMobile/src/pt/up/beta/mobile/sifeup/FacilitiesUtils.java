@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
-import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -200,7 +199,7 @@ public class FacilitiesUtils {
 		// Actual download method, run in the task thread
 		protected ERROR_TYPE doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
-			bitmap = ImageDownloader.downloadBitmap(params[0]);
+			bitmap = SifeupAPI.downloadBitmap(params[0]);
 			if (bitmap == null)
 				return ERROR_TYPE.NETWORK;
 			return null;

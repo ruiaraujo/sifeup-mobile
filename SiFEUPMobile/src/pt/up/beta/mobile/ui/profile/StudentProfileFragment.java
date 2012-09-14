@@ -223,11 +223,11 @@ public class StudentProfileFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Student> loader, Student cursor) {
-		if (cursor != null) {
+	public void onLoadFinished(Loader<Student> loader, Student student) {
+		if (student != null) {
 			if (getActivity() == null)
 				return;
-			me = cursor;
+			me = student;
 			pic.setImageDrawable(getResources().getDrawable(
 					R.drawable.speaker_image_empty));
 			getImagedownloader().download(

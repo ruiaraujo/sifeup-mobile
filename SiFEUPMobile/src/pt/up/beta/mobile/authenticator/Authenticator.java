@@ -106,9 +106,10 @@ class Authenticator extends AbstractAccountAuthenticator {
 		final AccountManager am = AccountManager.get(mContext);
 		final String password = am.getPassword(account);
 		if (password != null) {
-			final String authToken = SifeupAPI.authenticate(
+			 final String [] reply = SifeupAPI.authenticate(
 							am.getUserData(account, Constants.USER_NAME),
 							password);
+			 final String authToken = reply[1];
 			if (!TextUtils.isEmpty(authToken)) {
 				final Bundle result = new Bundle();
 				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);

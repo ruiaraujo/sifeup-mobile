@@ -3,6 +3,7 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -38,6 +39,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_account);
 		mAccountManager = AccountManager.get(getApplicationContext());
+		SifeupAPI.initSSLContext(getApplicationContext());
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectAll() // or
 																		// .detectAll()
