@@ -4,6 +4,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * @author Rui Araújo
@@ -178,6 +182,38 @@ public class BaseFragment extends SherlockFragment {
 		Fragment prev = getFragmentManager().findFragmentByTag(dialog);
 		if (prev != null) {
 			ft.remove(prev).commitAllowingStateLoss();
+		}
+	}
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		mOptionsMenu = menu;
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	private Menu mOptionsMenu;
+	private View mRefreshIndeterminateProgressView = null;
+
+	public void setRefreshActionItemState(boolean refreshing) {
+		// On Honeycomb, we can set the state of the refresh button by giving it
+		// a custom
+		// action view.
+		if (mOptionsMenu == null) {
+			return;
+		}
+
+		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.menu_refresh);
+		if (refreshItem != null) {
+			if (refreshing) {
+				if (mRefreshIndeterminateProgressView == null) {
+					LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					mRefreshIndeterminateProgressView = inflater.inflate(
+							R.layout.actionbar_indeterminate_progress, null);
+				}
+
+				refreshItem.setActionView(mRefreshIndeterminateProgressView);
+			} else {
+				refreshItem.setActionView(null);
+			}
 		}
 	}
 

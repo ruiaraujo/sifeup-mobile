@@ -38,6 +38,7 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -64,11 +65,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
+			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, mAccountManager.blockingGetAuthToken(
+					account, Constants.AUTHTOKEN_TYPE, false));
+			//brand new cookie
 			final String authToken = mAccountManager.blockingGetAuthToken(
 					account, Constants.AUTHTOKEN_TYPE, false);
 			if (extras.getBoolean(SINGLE_REQUEST)) {
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
-					getSubject(extras.getString(SUBJECT_CODE),
+					getSubject(account, extras.getString(SUBJECT_CODE),
 							extras.getString(SUBJECT_YEAR),
 							extras.getString(SUBJECT_PERIOD), authToken,
 							syncResult);
@@ -158,8 +162,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		c.close();
 	}
 
-	private void getSubject(String code, String year, String period,
+	private void getSubject(Account account, String code, String year, String period,
 			String authToken, SyncResult syncResult) throws JSONException {
+		if ( TextUtils.isEmpty(code) ){
+			syncSubjects(account, authToken, syncResult);
+			return;
+		}
 		final String subjectContent = SifeupAPI.getReply(
 				SifeupAPI.getSubjectContentUrl(code, year, period), authToken);
 		final String subjectFiles = SifeupAPI.getReply(

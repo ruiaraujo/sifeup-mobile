@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
@@ -15,12 +16,16 @@ import pt.up.beta.mobile.datatypes.SubjectFiles;
 import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
 import pt.up.beta.mobile.loaders.SubjectLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -114,6 +119,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.subject_menu_items, menu);
+		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -135,6 +141,23 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			i.putExtra(WebviewFragment.URL_INTENT,
 					SifeupAPI.getSubjectSigarraUrl(code, year, period));
 			startActivity(i);
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.SUBJECT);
+			extras.putString(SyncAdapter.SUBJECT_CODE, code);
+			extras.putString(SyncAdapter.SUBJECT_PERIOD, period);
+			extras.putString(SyncAdapter.SUBJECT_YEAR, year);
+
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -589,8 +612,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 						SigarraContract.SubjectsColumns.CONTENT,
 						SigarraContract.SubjectsColumns.FILES },
 				SigarraContract.Subjects.SUBJECT_SELECTION,
-				SigarraContract.Subjects.getSubjectsSelectionArgs( code,
-						year, period), null);
+				SigarraContract.Subjects.getSubjectsSelectionArgs(code, year,
+						period), null);
 	}
 
 	@Override
@@ -606,6 +629,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			// Start at a custom position
 			indicator.setCurrentItem(0);
 			indicator.notifyDataSetChanged();
+			setRefreshActionItemState(false);
 			showMainScreen();
 		}
 	}

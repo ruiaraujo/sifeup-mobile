@@ -1,13 +1,9 @@
 package pt.up.beta.mobile.ui;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
-import android.accounts.Account;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -97,16 +93,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_refresh:
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			ContentResolver.requestSync(
-					new Account(
-							AccountUtils.getActiveUserName(this),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
-			return true;
 		case R.id.menu_search:
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;
