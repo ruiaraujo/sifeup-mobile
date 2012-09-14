@@ -60,6 +60,10 @@ public class StudentProfileFragment extends BaseFragment implements
 	/** User Info */
 	private Student me;
 	private List<ProfileDetail> contents;
+	
+	private final static int PROFILE_LOADER = 0;
+	private final static int FRIEND_LOADER = 1;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -138,9 +142,9 @@ public class StudentProfileFragment extends BaseFragment implements
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
 			friend.setVisibility(View.GONE);
 		else
-			getActivity().getSupportLoaderManager().initLoader(0, null,
+			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER, null,
 					new FriendChecker());
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER, null, this);
 	}
 
 	@Override

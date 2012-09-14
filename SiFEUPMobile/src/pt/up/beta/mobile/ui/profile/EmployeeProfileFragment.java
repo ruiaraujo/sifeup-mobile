@@ -61,6 +61,9 @@ public class EmployeeProfileFragment extends BaseFragment implements
 	private Employee me;
 	private List<ProfileDetail> contents;
 
+	private final static int PROFILE_LOADER = 0;
+	private final static int FRIEND_LOADER = 1;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -136,9 +139,9 @@ public class EmployeeProfileFragment extends BaseFragment implements
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
 			friend.setVisibility(View.GONE);
 		else
-			getActivity().getSupportLoaderManager().initLoader(0, null,
+			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER, null,
 					new FriendChecker());
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER, null, this);
 	}
 
 	@Override
@@ -181,7 +184,7 @@ public class EmployeeProfileFragment extends BaseFragment implements
 				SigarraContract.Profiles.PROFILE_COLUMNS,
 				SigarraContract.Profiles.PROFILE,
 				SigarraContract.Profiles.getProfileSelectionArgs(code,
-						SifeupAPI.STUDENT_TYPE), null);
+						SifeupAPI.EMPLOYEE_TYPE), null);
 	}
 
 	@Override
