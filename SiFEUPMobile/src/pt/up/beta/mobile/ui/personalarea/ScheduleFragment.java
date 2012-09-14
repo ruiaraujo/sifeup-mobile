@@ -416,8 +416,7 @@ public class ScheduleFragment extends BaseFragment implements
 	 */
 
 	/**
-	 * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
-	 * can be imported by most calendars.
+	 * Exports the schedule to Google Calendar 
 	 */
 	private boolean calendarExport() {
 

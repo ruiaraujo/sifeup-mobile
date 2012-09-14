@@ -18,10 +18,12 @@ package pt.up.beta.mobile.loaders;
 
 import java.util.List;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -67,6 +69,10 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 					return Exam.parseJSON(cursor.getString(cursor.getColumnIndex(SigarraContract.ExamsColumns.CONTENT)));
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ACRA.getErrorReporter().handleSilentException(e);
+					ACRA.getErrorReporter().handleSilentException(
+							new RuntimeException("Id:"
+									+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 				}
 			}
 		}

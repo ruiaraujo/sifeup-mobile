@@ -18,6 +18,7 @@ package pt.up.beta.mobile.syncadapter;
 import java.io.IOException;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +27,7 @@ import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SyncStates;
 import pt.up.beta.mobile.datatypes.Subject;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.accounts.Account;
@@ -132,7 +134,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			syncResult.stats.numParseExceptions++;
-			e.printStackTrace();//TODO: report these bugs
+			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils
+									.getActiveUserCode(null)));
 		}
 	}
 

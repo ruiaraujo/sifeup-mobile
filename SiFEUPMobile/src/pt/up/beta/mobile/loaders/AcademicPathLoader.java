@@ -16,9 +16,11 @@
 
 package pt.up.beta.mobile.loaders;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.datatypes.AcademicPath;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -64,7 +66,12 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath> {
 					return AcademicPath.parseJSON(cursor.getString(0));
 				} catch (JSONException e) {
 					e.printStackTrace();
-					// TODO report bug
+					ACRA.getErrorReporter().handleSilentException(e);
+					ACRA.getErrorReporter().handleSilentException(
+							new RuntimeException("Id:"
+									+ AccountUtils
+											.getActiveUserCode(getContext())
+									+ "\n\n" + cursor.getString(0)));
 				}
 			}
 		}

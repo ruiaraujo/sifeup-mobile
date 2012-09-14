@@ -1,7 +1,10 @@
 package pt.up.beta.mobile.datatypes;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import pt.up.beta.mobile.sifeup.AccountUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -161,7 +164,13 @@ public class Payment implements Parcelable {
 					amountDebt);
 		} catch (JSONException e) {
 			Log.e("Propinas", "JSON error in payment");
-			e.printStackTrace(); // TODO: report error
+			e.printStackTrace();
+
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"
+							+ payment.toString()));
 		}
 		return null;
 	}
