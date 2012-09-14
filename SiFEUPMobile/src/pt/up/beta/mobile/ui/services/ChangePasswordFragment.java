@@ -205,10 +205,8 @@ public class ChangePasswordFragment extends BaseFragment implements
 			}
 		}.execute();
 			String user = AccountUtils.getActiveUserCode(getActivity());
-			String pass = AccountUtils.getActiveUserPassword(getActivity());
-			if (!user.equals("") && !pass.equals("")) {
+			if (!user.equals("") ) {
 				usernameText.setText(user);
-				actualPasswordText.setText(pass);
 
 			}
 		
