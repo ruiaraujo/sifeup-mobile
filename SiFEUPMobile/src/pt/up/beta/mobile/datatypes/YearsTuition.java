@@ -3,9 +3,12 @@ package pt.up.beta.mobile.datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import pt.up.beta.mobile.sifeup.AccountUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -193,7 +196,12 @@ public class YearsTuition implements Parcelable {
 			e.printStackTrace();
 			Log.e("Propina", e.getMessage());
 			Log.e("Propina", yearInfo.toString());
-			// TODO: report bug
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils
+									.getActiveUserCode(null)
+							+ "\n\n" + yearInfo.toString()));
 			return null;
 
 		}
@@ -215,12 +223,22 @@ public class YearsTuition implements Parcelable {
 					Log.e("Propinas",
 							"Error getting the year from the JSON list in tuitions");
 					e.printStackTrace();
-					return null; // TODO: report this bug
+					ACRA.getErrorReporter().handleSilentException(e);
+					ACRA.getErrorReporter().handleSilentException(
+							new RuntimeException("Id:"
+									+ AccountUtils
+											.getActiveUserCode(null)
+									+ "\n\n" + historyInfo.toString()));
+					return null;
 				}
 			}
 		} catch (JSONException e1) {
 			Log.e("Propinas", "error getting the array pagamentos");
 			e1.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e1);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 			return null;
 		}
 		Log.i("Propinas", "Loaded history");

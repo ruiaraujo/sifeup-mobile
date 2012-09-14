@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,10 @@ public class AuthenticationUtils {
 				return ERROR_TYPE.AUTHENTICATION;
 		} catch (JSONException e) {
 			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 			return ERROR_TYPE.GENERAL;
 		}
 		return null;
@@ -71,6 +76,10 @@ public class AuthenticationUtils {
 					return ERROR_TYPE.AUTHENTICATION;
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 				return ERROR_TYPE.GENERAL;
 			}
 			return null;
@@ -126,6 +135,10 @@ public class AuthenticationUtils {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 			}
 
 			return "";

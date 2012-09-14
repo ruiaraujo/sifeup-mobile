@@ -3,6 +3,7 @@ package pt.up.beta.mobile.sifeup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,10 @@ public class NotificationUtils {
 				return notifications;
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n" + page));
 			}
 			return null;
 		}

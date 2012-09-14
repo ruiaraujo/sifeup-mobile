@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -127,7 +128,6 @@ public class FacilitiesUtils {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected ERROR_TYPE doInBackground(InputStream... params) {
-			// TODO Auto-generated method stub
 			String page = SifeupAPI.getPage(params[0], "UTF-8");
 			if (page == null)
 				return ERROR_TYPE.GENERAL;
@@ -180,6 +180,10 @@ public class FacilitiesUtils {
 				return hotspots;
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n" + page));
 			}
 			return null;
 		}

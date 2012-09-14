@@ -2,6 +2,7 @@ package pt.up.beta.mobile.sifeup;
 
 import java.io.IOException;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
@@ -59,6 +60,10 @@ public class FetcherTask extends
 			} while (secondTry);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 			return ERROR_TYPE.GENERAL;
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();

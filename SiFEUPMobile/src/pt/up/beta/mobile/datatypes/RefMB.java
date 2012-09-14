@@ -1,7 +1,10 @@
 package pt.up.beta.mobile.datatypes;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import pt.up.beta.mobile.sifeup.AccountUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -46,6 +49,10 @@ public class RefMB implements Parcelable
 		{
 			Log.e("Propinas", "JSON error in RefMB");
 			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n" + jRef.toString()));
 			return false;
 		}
 	}
