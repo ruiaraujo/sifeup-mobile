@@ -36,7 +36,15 @@ public class SigarraProvider extends ContentProvider {
 	}
 
 	private DatabaseHelper dbHelper;
-
+	private SQLiteDatabase database;
+	
+	private synchronized SQLiteDatabase getWritableDatabase(){
+		if ( database == null )
+			database = dbHelper.getWritableDatabase();
+		return database;
+	}
+	
+	
 	@Override
 	public boolean onCreate() {
 		dbHelper = new DatabaseHelper(getContext().getApplicationContext());
@@ -49,22 +57,21 @@ public class SigarraProvider extends ContentProvider {
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
 		case SUBJECTS:
-			count = dbHelper.getWritableDatabase().delete(
+			count = getWritableDatabase().delete(
 					SubjectsTable.TABLE_SUBJECTS, selection, selectionArgs);
 			break;
 		case FRIENDS:
-			count = dbHelper.getWritableDatabase().delete(
+			count = getWritableDatabase().delete(
 					FriendsTable.TABLE_FRIENDS, selection, selectionArgs);
 			break;
 		case PROFILES:
-			count = dbHelper.getWritableDatabase().delete(
+			count = getWritableDatabase().delete(
 					ProfilesTable.TABLE_PROFILES, selection, selectionArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
-		dbHelper.close();
 		return count;
 	}
 
@@ -97,7 +104,7 @@ public class SigarraProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
-		final SQLiteDatabase db = dbHelper.getWritableDatabase();
+		final SQLiteDatabase db = getWritableDatabase();
 		try {
 			db.beginTransaction();
 			for (ContentValues v : values) {
@@ -119,20 +126,19 @@ public class SigarraProvider extends ContentProvider {
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
 		case SUBJECTS: {
-			long rowID = dbHelper.getWritableDatabase().replace(
+			long rowID = getWritableDatabase().replace(
 					SubjectsTable.TABLE_SUBJECTS, null, values);
 			if (rowID > 0) {
 				final Uri url = ContentUris.withAppendedId(
 						SigarraContract.Subjects.CONTENT_URI, rowID);
 				getContext().getContentResolver().notifyChange(url, null);
 				getContext().getContentResolver().notifyChange(uri, null);
-				dbHelper.close();
 				return url;
 			}
 			throw new SQLException("Failed to insert row into " + uri);
 		}
 		case FRIENDS: {
-			long rowID = dbHelper.getWritableDatabase().replace(
+			long rowID = getWritableDatabase().replace(
 					FriendsTable.TABLE_FRIENDS, FriendsTable.KEY_COURSE_FRIEND,
 					values);
 			if (rowID > 0) {
@@ -140,20 +146,18 @@ public class SigarraProvider extends ContentProvider {
 						SigarraContract.Friends.CONTENT_URI, rowID);
 				getContext().getContentResolver().notifyChange(url, null);
 				getContext().getContentResolver().notifyChange(uri, null);
-				dbHelper.close();
 				return url;
 			}
 			throw new SQLException("Failed to insert row into " + uri);
 		}
 		case PROFILES: {
-			long rowID = dbHelper.getWritableDatabase().replace(
+			long rowID = getWritableDatabase().replace(
 					ProfilesTable.TABLE_PROFILES, null, values);
 			if (rowID > 0) {
 				final Uri url = ContentUris.withAppendedId(
 						SigarraContract.Profiles.CONTENT_URI, rowID);
 				getContext().getContentResolver().notifyChange(url, null);
 				getContext().getContentResolver().notifyChange(uri, null);
-				dbHelper.close();
 				return url;
 			}
 			throw new SQLException("Failed to insert row into " + uri);
@@ -262,10 +266,9 @@ public class SigarraProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
-		count = dbHelper.getWritableDatabase().update(
+		count = getWritableDatabase().update(
 				table, values, selection,
 				selectionArgs);
-		dbHelper.close();
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
