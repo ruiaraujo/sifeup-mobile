@@ -48,7 +48,16 @@ public final class SigarraContract {
 		String ID = PrintingQuotaTable.KEY_ID_USER;
 		String QUOTA = PrintingQuotaTable.KEY_QUOTA;
 	}
-	
+
+	public interface ScheduleColumns {
+		String CODE = ScheduleTable.KEY_ID;
+		String CONTENT = ScheduleTable.KEY_CONTENT;
+		String INITIAL_DAY = ScheduleTable.KEY_INITIAL_DAY;
+		String FINAL_DAY = ScheduleTable.KEY_FINAL_DAY;
+		String BASE_TIME = ScheduleTable.KEY_BASE_TIME;
+		String TYPE = ScheduleTable.KEY_TYPE;
+	}
+
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
 
 	public static final Uri BASE_CONTENT_URI = Uri.parse("content://"
@@ -61,7 +70,7 @@ public final class SigarraContract {
 	static final String PATH_ACADEMIC_PATH = "academic_path";
 	static final String PATH_TUITION = "tuition";
 	static final String PATH_PRINTING = "printing_quota";
-
+	static final String PATH_SCHEDULE = "schedules";
 
 	/**
 	 * The public contract for the subjects.
@@ -137,7 +146,6 @@ public final class SigarraContract {
 		public static final String[] PROFILE_COLUMNS = { CONTENT };
 
 	}
-	
 
 	public static class Exams implements ExamsColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -155,7 +163,6 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { CONTENT };
 
 	}
-	
 
 	public static class AcademicPath implements AcademicPathColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -173,7 +180,7 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { CONTENT };
 
 	}
-	
+
 	public static class Tuition implements TuitionColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_TUITION).build();
@@ -207,6 +214,50 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { QUOTA };
 
 	}
+
+	public static class Schedule implements ScheduleColumns, ScheduleTable.TYPE {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_SCHEDULE).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.schedule";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.schedule";
+
+		public static final String SCHEDULE_SELECTION = CODE + "=? AND "
+				+ INITIAL_DAY + "=? AND " + FINAL_DAY + "=? AND "
+				+ ScheduleTable.KEY_TYPE + "=? ";
+
+
+		public static final String[] getRoomScheduleSelectionArgs( String code, String initialDay,
+				String finalDay, long mondayMillis) {
+			return new String[] { code, initialDay,
+					finalDay, ScheduleTable.TYPE.ROOM,
+					Long.toString(mondayMillis) };
+		}
+
+		public static final String[] getStudentScheduleSelectionArgs(
+				String code, String initialDay, String finalDay,
+				long mondayMillis) {
+			return new String[] { code, initialDay, finalDay,
+					ScheduleTable.TYPE.STUDENT, Long.toString(mondayMillis) };
+		}
+
+		public static final String[] getEmployeeScheduleSelectionArgs(
+				String code, String initialDay, String finalDay,
+				long mondayMillis) {
+			return new String[] { code, initialDay, finalDay,
+					ScheduleTable.TYPE.EMPLOYEE, Long.toString(mondayMillis) };
+		}
+
+		public static final String[] getUCScheduleSelectionArgs(String code,
+				String initialDay, String finalDay, long mondayMillis) {
+			return new String[] { code, initialDay, finalDay,
+					ScheduleTable.TYPE.UC, Long.toString(mondayMillis) };
+		}
+
+		public static final String[] COLUMNS = { CONTENT, BASE_TIME };
+
+	}
+
 	private SigarraContract() {
 	}
 }

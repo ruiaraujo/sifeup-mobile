@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
+import pt.up.beta.mobile.loaders.ScheduleLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.ScheduleUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
@@ -24,6 +25,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -57,7 +60,7 @@ import external.com.google.android.apps.iosched.util.MotionEventUtils;
  */
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
-		OnClickListener, ResponseCommand {
+		OnClickListener, ResponseCommand, LoaderCallbacks<List<ScheduleBlock>> {
 
 	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
 	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
@@ -67,7 +70,7 @@ public class ScheduleFragment extends BaseFragment implements
 	private int mTitleCurrentDayIndex = -1;
 	private View mLeftIndicator;
 	private View mRightIndicator;
-	private ArrayList<ScheduleBlock> schedule = new ArrayList<ScheduleBlock>();
+	private List<ScheduleBlock> schedule;
 	private List<Day> mDays = new ArrayList<Day>();
 	private long mondayMillis;
 	private LayoutInflater mInflater;
@@ -162,7 +165,8 @@ public class ScheduleFragment extends BaseFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (schedule != null)
-			outState.putParcelableArrayList(SCHEDULE_KEY, schedule);
+			outState.putParcelableArrayList(SCHEDULE_KEY,
+					(ArrayList<? extends Parcelable>) schedule);
 		outState.putLong(MILLISECONDS_KEY, mondayMillis);
 	}
 
@@ -416,7 +420,7 @@ public class ScheduleFragment extends BaseFragment implements
 	 */
 
 	/**
-	 * Exports the schedule to Google Calendar 
+	 * Exports the schedule to Google Calendar
 	 */
 	private boolean calendarExport() {
 
@@ -645,24 +649,8 @@ public class ScheduleFragment extends BaseFragment implements
 			ProgressDialogFragment.newInstance(false).show(
 					getFragmentManager(), DIALOG);
 		}
-		switch (scheduleType) {
-		case SCHEDULE_STUDENT:
-			task = ScheduleUtils.getStudentScheduleReply(scheduleCode,
-					mondayMillis, this);
-			break;
-		case SCHEDULE_EMPLOYEE:
-			task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode,
-					mondayMillis, this);
-			break;
-		case SCHEDULE_ROOM:
-			task = ScheduleUtils.getRoomScheduleReply(scheduleCode,
-					mondayMillis, this);
-			break;
-		case SCHEDULE_UC:
-			task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis,
-					this);
-			break;
-		}
+		getActivity().getSupportLoaderManager().initLoader(scheduleType, null,
+				this);
 	}
 
 	protected void onRepeat() {
@@ -672,6 +660,65 @@ public class ScheduleFragment extends BaseFragment implements
 		} else
 			showLoadingScreen();
 		updateSchedule();
+	}
+
+	@Override
+	public Loader<List<ScheduleBlock>> onCreateLoader(int loaderId,
+			Bundle options) {
+		final Time monday = new Time(DateUtils.TIME_REFERENCE);
+		monday.set(mondayMillis);
+		monday.normalize(false);
+		final String initialDay = monday.format("%Y%m%d");
+		// Friday
+		monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
+		monday.normalize(false);
+		final String finalDay = monday.format("%Y%m%d");
+		final String[] selectionArgs;
+		switch (loaderId) {
+		case SCHEDULE_STUDENT:
+			selectionArgs = SigarraContract.Schedule
+					.getStudentScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_EMPLOYEE:
+			selectionArgs = SigarraContract.Schedule
+					.getEmployeeScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_ROOM:
+			selectionArgs = SigarraContract.Schedule
+					.getRoomScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_UC:
+			selectionArgs = SigarraContract.Schedule
+					.getUCScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		default:
+			throw new RuntimeException("Invalid schedule type");
+		}
+		return new ScheduleLoader(getActivity(),
+				SigarraContract.Schedule.CONTENT_URI,
+				SigarraContract.Schedule.COLUMNS,
+				SigarraContract.Schedule.SCHEDULE_SELECTION, selectionArgs,
+				null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<ScheduleBlock>> loader,
+			List<ScheduleBlock> schedule) {
+		if (getActivity() == null || schedule == null)
+			return;
+		removeDialog(DIALOG);
+		this.schedule = schedule;
+		displaySchedule();
+		setRefreshActionItemState(false);
+		showMainScreen();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<ScheduleBlock>> arg0) {
 	}
 
 }

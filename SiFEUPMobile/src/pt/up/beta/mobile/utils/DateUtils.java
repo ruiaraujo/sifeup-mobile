@@ -65,7 +65,7 @@ public class DateUtils {
     }
     
     public static int secondYearOfSchoolYear(long millis){
-    	Time nowT = new Time();
+    	Time nowT = new Time(TIME_REFERENCE);
     	nowT.set(millis);
     	nowT.normalize(false);
     	if ( nowT.month >= 8 )

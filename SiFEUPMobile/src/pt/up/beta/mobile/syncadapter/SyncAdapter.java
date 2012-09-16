@@ -42,6 +42,7 @@ import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Time;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -62,6 +63,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public final static String ACADEMIC_PATH = "academic_path";
 	public final static String PRINTING_QUOTA = "printing_quota";
 	public final static String USER_CODE = "code";
+
+	public final static String SCHEDULE = "schedule";
+	public final static String SCHEDULE_CODE = "schedule_code";
+	public final static String SCHEDULE_TYPE = "schedule_type";
+	public final static String SCHEDULE_INITIAL = "initial";
+	public final static String SCHEDULE_FINAL = "final";
+	public final static String SCHEDULE_BASE_TIME = "schedule_time";
 
 	private final AccountManager mAccountManager;
 
@@ -97,23 +105,28 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 
 				if (EXAMS.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncExams(account, authToken,
-							syncResult);
+					syncExams(account, authToken, syncResult);
 					return;
 				}
 				if (ACADEMIC_PATH.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncAcademicPath(account, authToken,
-							syncResult);
+					syncAcademicPath(account, authToken, syncResult);
 					return;
 				}
 				if (TUITION.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncTuition(account, authToken,
-							syncResult);
+					syncTuition(account, authToken, syncResult);
 					return;
 				}
 				if (PRINTING_QUOTA.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncPrintingQuota(account, authToken,
-							syncResult);
+					syncPrintingQuota(account, authToken, syncResult);
+					return;
+				}
+				if (SCHEDULE.equals(extras.getSerializable(REQUEST_TYPE))) {
+					getSchedule(extras.getString(SCHEDULE_CODE),
+							extras.getString(SCHEDULE_TYPE),
+							extras.getString(SCHEDULE_INITIAL),
+							extras.getString(SCHEDULE_FINAL),
+							extras.getString(SCHEDULE_BASE_TIME),
+							SyncStates.PRUNE, authToken, syncResult);
 					return;
 				}
 			} else {
@@ -123,10 +136,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncAcademicPath(account, authToken, syncResult);
 				syncTuition(account, authToken, syncResult);
 				syncPrintingQuota(account, authToken, syncResult);
-
+				syncSchedule(account, authToken, syncResult);
 			}
 		} catch (OperationCanceledException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		} catch (AuthenticatorException e) {
 			syncResult.stats.numAuthExceptions++;
 			e.printStackTrace();
@@ -139,19 +152,75 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"
-							+ AccountUtils
-									.getActiveUserCode(null)));
+							+ AccountUtils.getActiveUserCode(null)));
 		}
+	}
+
+	private void syncSchedule(Account account, String authToken,
+			SyncResult syncResult) throws JSONException {
+		final String type;
+		if (mAccountManager.getUserData(account, Constants.USER_TYPE).equals(
+				SifeupAPI.STUDENT_TYPE))
+			type = SigarraContract.Schedule.STUDENT;
+		else
+			type = SigarraContract.Schedule.EMPLOYEE;
+		final Long mondayMillis = DateUtils.firstDayofWeek();
+		Time monday = new Time(DateUtils.TIME_REFERENCE);
+		monday.set(mondayMillis);
+		monday.normalize(false);
+		String initialDay = monday.format("%Y%m%d");
+		// Friday
+		monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
+		monday.normalize(false);
+		String finalDay = monday.format("%Y%m%d");
+		getSchedule(mAccountManager.getUserData(account, Constants.USER_NAME),
+				type, initialDay, finalDay, Long.toString(mondayMillis),
+				SyncStates.KEEP, authToken, syncResult);
+	}
+
+	private void getSchedule(String code, String type, String initialDay,
+			String finalDay, String baseTime, String state, String authToken, 
+			SyncResult syncResult) throws JSONException {
+		final String page;
+		if (SigarraContract.Schedule.STUDENT.equals(type))
+			page = SifeupAPI.getReply(
+					SifeupAPI.getScheduleUrl(code, initialDay, finalDay),
+					authToken);
+		else if (SigarraContract.Schedule.EMPLOYEE.equals(type)) {
+			page = SifeupAPI
+					.getReply(SifeupAPI.getTeacherScheduleUrl(code, initialDay,
+							finalDay), authToken);
+		} else if (SigarraContract.Schedule.ROOM.equals(type)) {
+			page = SifeupAPI
+					.getReply(SifeupAPI.getRoomScheduleUrl(
+							code.substring(0, 1), code.substring(1),
+							initialDay, finalDay), authToken);
+		} else
+			page = SifeupAPI.getReply(
+					SifeupAPI.getUcScheduleUrl(code, initialDay, finalDay),
+					authToken);
+		final ContentValues values = new ContentValues();
+		values.put(SigarraContract.ScheduleColumns.CODE, code);
+		values.put(SigarraContract.ScheduleColumns.TYPE, type);
+		values.put(SigarraContract.ScheduleColumns.CONTENT, page);
+		values.put(SigarraContract.ScheduleColumns.INITIAL_DAY, initialDay);
+		values.put(SigarraContract.ScheduleColumns.FINAL_DAY, finalDay);
+		values.put(SigarraContract.ScheduleColumns.BASE_TIME, baseTime);
+		values.put(BaseColumns.COLUMN_STATE, state);
+		getContext().getContentResolver().insert(
+				SigarraContract.Schedule.CONTENT_URI, values);
+		syncResult.stats.numEntries += 1;
 	}
 
 	private void syncPrintingQuota(Account account, String authToken,
 			SyncResult syncResult) throws JSONException {
-		final String printing = SifeupAPI.getReply(
-				SifeupAPI.getPrintingUrl(mAccountManager.getUserData(account,
+		final String printing = SifeupAPI.getReply(SifeupAPI
+				.getPrintingUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.PrintingQuotaColumns.ID, account.name);
-		values.put(SigarraContract.PrintingQuotaColumns.QUOTA, new JSONObject(printing).getDouble("saldo"));
+		values.put(SigarraContract.PrintingQuotaColumns.QUOTA, new JSONObject(
+				printing).getDouble("saldo"));
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
 		getContext().getContentResolver().insert(
 				SigarraContract.PrintingQuota.CONTENT_URI, values);
@@ -160,8 +229,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncTuition(Account account, String authToken,
 			SyncResult syncResult) {
-		final String tuition = SifeupAPI.getReply(
-				SifeupAPI.getTuitionUrl(mAccountManager.getUserData(account,
+		final String tuition = SifeupAPI.getReply(SifeupAPI
+				.getTuitionUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.TuitionColumns.ID, account.name);
@@ -174,8 +243,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncAcademicPath(Account account, String authToken,
 			SyncResult syncResult) {
-		final String academicPath = SifeupAPI.getReply(
-				SifeupAPI.getAcademicPathUrl(mAccountManager.getUserData(account,
+		final String academicPath = SifeupAPI.getReply(SifeupAPI
+				.getAcademicPathUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.AcademicPathColumns.ID, account.name);
@@ -188,8 +257,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncExams(Account account, String authToken,
 			SyncResult syncResult) {
-		final String exams = SifeupAPI.getReply(
-				SifeupAPI.getExamsUrl(mAccountManager.getUserData(account,
+		final String exams = SifeupAPI.getReply(SifeupAPI
+				.getExamsUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ExamsColumns.ID, account.name);
