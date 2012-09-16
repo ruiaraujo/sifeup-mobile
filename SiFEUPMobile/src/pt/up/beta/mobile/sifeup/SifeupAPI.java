@@ -647,6 +647,8 @@ public class SifeupAPI {
 
 	public static void initSSLContext(Context context) {
 		try {
+			if ( sslCtx != null )
+				return;
 			KeyStore localTrustStore = KeyStore.getInstance("BKS");
 
 			InputStream in = context.getResources().openRawResource(

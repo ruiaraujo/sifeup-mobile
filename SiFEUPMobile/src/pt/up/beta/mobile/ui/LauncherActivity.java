@@ -3,7 +3,6 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
-import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -39,7 +38,6 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_account);
 		mAccountManager = AccountManager.get(getApplicationContext());
-		SifeupAPI.initSSLContext(getApplicationContext());
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectAll() // or
 																		// .detectAll()
@@ -105,6 +103,22 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
+			Account[] accounts = mAccountManager
+					.getAccountsByType(Constants.ACCOUNT_TYPE);
+			if ( accounts.length == 0 ){
+				finish();
+				return;
+			}
+			SharedPreferences loginSettings = PreferenceManager
+					.getDefaultSharedPreferences(getApplicationContext());
+			final SharedPreferences.Editor editor = loginSettings.edit();
+			
+			editor.putString(PREF_ACTIVE_USER, accounts[0].name);
+			new Thread(new Runnable() {
+				public void run() {
+					editor.commit();
+				}
+			}).start();
 			startActivity(new Intent(this, HomeActivity.class));
 			finish();
 			overridePendingTransition(R.anim.slide_right_in,

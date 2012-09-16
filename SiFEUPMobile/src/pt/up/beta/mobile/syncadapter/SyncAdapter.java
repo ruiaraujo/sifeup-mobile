@@ -74,6 +74,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
+			SifeupAPI.initSSLContext(getContext().getApplicationContext());
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
 					mAccountManager.blockingGetAuthToken(account,
 							Constants.AUTHTOKEN_TYPE, false));
