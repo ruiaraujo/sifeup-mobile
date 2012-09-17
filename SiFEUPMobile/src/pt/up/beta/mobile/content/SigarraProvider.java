@@ -29,6 +29,7 @@ public class SigarraProvider extends ContentProvider {
 	private static final int PRINTING_QUOTA = 70;
 	private static final int SCHEDULE = 80;
 	private static final int NOTIFICATIONS = 90;
+	private static final int CANTEENS = 100;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -51,6 +52,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_SCHEDULE, SCHEDULE);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_NOTIFICATIONS, NOTIFICATIONS);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_CANTEENS, CANTEENS);
 	}
 
 	private DatabaseHelper dbHelper;
@@ -100,6 +103,9 @@ public class SigarraProvider extends ContentProvider {
 		case NOTIFICATIONS:
 			table = NotificationsTable.TABLE;
 			break;
+		case CANTEENS:
+			table = CanteensTable.TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -131,6 +137,8 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.Schedule.CONTENT_TYPE;
 		case NOTIFICATIONS:
 			return SigarraContract.Notifcations.CONTENT_TYPE;
+		case CANTEENS:
+			return SigarraContract.Canteens.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -176,6 +184,10 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case NOTIFICATIONS:
 			table = NotificationsTable.TABLE;
+			nullHack = null;
+			break;
+		case CANTEENS:
+			table = CanteensTable.TABLE;
 			nullHack = null;
 			break;
 		default:
@@ -238,6 +250,10 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case NOTIFICATIONS:
 			table = NotificationsTable.TABLE;
+			nullHack = null;
+			break;
+		case CANTEENS:
+			table = CanteensTable.TABLE;
 			nullHack = null;
 			break;
 		default:
@@ -436,6 +452,25 @@ public class SigarraProvider extends ContentProvider {
 						SigarraContract.CONTENT_AUTHORITY, extras);
 			}
 			break;
+
+		case CANTEENS:
+			qb.setTables(CanteensTable.TABLE);
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE,
+						SyncAdapter.CANTEENS);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -477,6 +512,9 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case NOTIFICATIONS:
 			table = NotificationsTable.TABLE;
+			break;
+		case CANTEENS:
+			table = CanteensTable.TABLE;
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);

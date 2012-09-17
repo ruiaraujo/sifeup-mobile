@@ -64,6 +64,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public final static String PROFILE_TYPE = "profile_type";
 
 	public final static String EXAMS = "exams";
+	public final static String CANTEENS = "canteens";
 	public final static String TUITION = "tuition";
 	public final static String ACADEMIC_PATH = "academic_path";
 	public final static String PRINTING_QUOTA = "printing_quota";
@@ -89,7 +90,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
-			Log.d(getClass().getSimpleName(), "Sync Sigarra");
 			SifeupAPI.initSSLContext(getContext().getApplicationContext());
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
 					mAccountManager.blockingGetAuthToken(account,
@@ -101,6 +101,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				throw new AuthenticatorException();
 			}
 			if (extras.getBoolean(SINGLE_REQUEST)) {
+				Log.d(getClass().getSimpleName(), "Fetching Sigarra");
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
 					getSubject(account, extras.getString(SUBJECT_CODE),
 							extras.getString(SUBJECT_YEAR),
@@ -135,6 +136,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					syncNotifications(account, authToken, syncResult);
 					return;
 				}
+				if (CANTEENS.equals(extras.getSerializable(REQUEST_TYPE))) {
+					syncCanteens(account, authToken, syncResult);
+					return;
+				}
 				if (SCHEDULE.equals(extras.getSerializable(REQUEST_TYPE))) {
 					getSchedule(extras.getString(SCHEDULE_CODE),
 							extras.getString(SCHEDULE_TYPE),
@@ -145,6 +150,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					return;
 				}
 			} else {
+				Log.d(getClass().getSimpleName(), "Sync Sigarra");
 				syncProfiles(account, authToken, syncResult);
 				syncSubjects(account, authToken, syncResult);
 				syncExams(account, authToken, syncResult);
@@ -153,6 +159,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncPrintingQuota(account, authToken, syncResult);
 				syncSchedule(account, authToken, syncResult);
 				syncNotifications(account, authToken, syncResult);
+				syncCanteens(account, authToken, syncResult);
 				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO )//TODO, add settings
 					syncResult.delayUntil = 3*3600; //delay the next sync for a day
 			}
@@ -172,6 +179,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					new RuntimeException("Id:"
 							+ AccountUtils.getActiveUserCode(null)));
 		}
+	}
+
+	private void syncCanteens(Account account, String authToken,
+			SyncResult syncResult) {
+		final String canteens = SifeupAPI.getReply(
+				SifeupAPI.getCanteensUrl(), authToken);		
+		final ContentValues values = new ContentValues();
+		values.put(SigarraContract.Canteens.ID, SigarraContract.Canteens.DEFAULT_ID);
+		values.put(SigarraContract.Canteens.CONTENT,canteens);
+		getContext().getContentResolver().insert(
+				SigarraContract.Canteens.CONTENT_URI, values);
+		syncResult.stats.numEntries += 1;
 	}
 
 	private void syncNotifications(Account account, String authToken,
@@ -201,6 +220,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						SigarraContract.Notifcations.CONTENT_URI, values);
 			}
 		}
+		syncResult.stats.numEntries += jArray.length();
 	}
 
 	private void syncSchedule(Account account, String authToken,

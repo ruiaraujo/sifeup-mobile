@@ -65,6 +65,13 @@ public final class SigarraContract {
 		String CONTENT = NotificationsTable.KEY_NOTIFICATION;
 		String STATE = NotificationsTable.KEY_STATE;
 	}
+	
+
+
+	public interface CanteensColumns {
+		String ID = CanteensTable.KEY_ID;
+		String CONTENT = CanteensTable.KEY_CONTENT;
+	}
 
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
 
@@ -80,6 +87,7 @@ public final class SigarraContract {
 	static final String PATH_PRINTING = "printing_quota";
 	static final String PATH_SCHEDULE = "schedules";
 	static final String PATH_NOTIFICATIONS = "notifications";
+	static final String PATH_CANTEENS = "canteens";
 
 	/**
 	 * The public contract for the subjects.
@@ -293,6 +301,21 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { CONTENT, STATE };
 
 	}
+	
+
+	public static class Canteens implements CanteensColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_CANTEENS).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.canteens";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.canteens";
+
+		public static final String DEFAULT_ID = CanteensTable.DEFAULT_ID;
+		
+		public static final String[] COLUMNS = { CONTENT };
+
+	}
+
 
 
 	private SigarraContract() {

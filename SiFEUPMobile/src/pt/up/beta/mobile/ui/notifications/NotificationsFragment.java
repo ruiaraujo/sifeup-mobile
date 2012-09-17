@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.loaders.NotificationsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -37,6 +45,12 @@ public class NotificationsFragment extends BaseFragment implements
 
 	private List<Notification> notifications;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -49,6 +63,28 @@ public class NotificationsFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+	}
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.NOTIFICATIONS);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

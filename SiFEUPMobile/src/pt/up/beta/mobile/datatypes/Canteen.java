@@ -1,6 +1,9 @@
 package pt.up.beta.mobile.datatypes;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,6 +11,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Class this. Save the name and menus of the this.
@@ -34,6 +38,29 @@ public class Canteen implements Parcelable {
 
     public Menu[] getMenus() {
         return menus;
+    }
+    
+    public static List<Canteen> parseListJSON(String page) throws JSONException{
+    	List<Canteen> canteens = new ArrayList<Canteen>();
+		JSONObject jObject = new JSONObject(page);
+
+		if (jObject.has("cantinas")) {
+			Log.e("JSON", "founded cantinas");
+			JSONArray jArray = jObject.getJSONArray("cantinas");
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject jBlock = jArray.getJSONObject(i);
+
+				Canteen canteen = new Canteen();
+
+				canteen.parseJson(jBlock);
+				if (canteen.getMenus().length > 0)
+					// add canteen to canteens
+					canteens.add(canteen);
+			}
+		}
+		return canteens;
     }
 
     public void parseJson(JSONObject jBlock) throws JSONException {
