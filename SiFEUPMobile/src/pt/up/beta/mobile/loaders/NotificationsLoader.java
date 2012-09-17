@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -74,13 +75,31 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 										cursor.getString(cursor
 												.getColumnIndex(SigarraContract.Notifcations.CONTENT))));
 						not.setRead(SigarraContract.Notifcations.SEEN.equals(cursor.getString(cursor
-												.getColumnIndex(SigarraContract.Notifcations.STATE))));
+								.getColumnIndex(SigarraContract.Notifcations.STATE))));
 						notifications.add(not);
 					} while (cursor.moveToNext());
 					return notifications;
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+			} else {
+				final Cursor syncState = getContext().getContentResolver().query(
+						SigarraContract.LastSync.CONTENT_URI,
+						SigarraContract.LastSync.COLUMNS,
+						SigarraContract.LastSync.PROFILE,
+						SigarraContract.LastSync
+								.getLastSyncSelectionArgs(AccountUtils
+										.getActiveUserName(getContext())),
+						null);
+				if ( syncState.moveToFirst() ){
+					if ( syncState.getLong(syncState.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) != 0 ){
+						syncState.close();
+						return new ArrayList<Notification>();
+					}
+				}
+				else
+					throw new RuntimeException("It should always have a result");
+				syncState.close();
 			}
 
 		}

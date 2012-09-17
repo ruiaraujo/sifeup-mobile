@@ -16,6 +16,7 @@
 package pt.up.beta.mobile.syncadapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
@@ -97,7 +98,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// brand new cookie
 			final String authToken = mAccountManager.blockingGetAuthToken(
 					account, Constants.AUTHTOKEN_TYPE, false);
-			if ( authToken == null ){
+			if (authToken == null) {
 				throw new AuthenticatorException();
 			}
 			if (extras.getBoolean(SINGLE_REQUEST)) {
@@ -160,8 +161,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncSchedule(account, authToken, syncResult);
 				syncNotifications(account, authToken, syncResult);
 				syncCanteens(account, authToken, syncResult);
-				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO )//TODO, add settings
-					syncResult.delayUntil = 3*3600; //delay the next sync for a day
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)// TODO,
+																		// add
+																		// settings
+					syncResult.delayUntil = 3 * 3600; // delay the next sync for
+														// 3 hours
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
@@ -183,11 +187,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncCanteens(Account account, String authToken,
 			SyncResult syncResult) {
-		final String canteens = SifeupAPI.getReply(
-				SifeupAPI.getCanteensUrl(), authToken);		
+		final String canteens = SifeupAPI.getReply(SifeupAPI.getCanteensUrl(),
+				authToken);
 		final ContentValues values = new ContentValues();
-		values.put(SigarraContract.Canteens.ID, SigarraContract.Canteens.DEFAULT_ID);
-		values.put(SigarraContract.Canteens.CONTENT,canteens);
+		values.put(SigarraContract.Canteens.ID,
+				SigarraContract.Canteens.DEFAULT_ID);
+		values.put(SigarraContract.Canteens.CONTENT, canteens);
 		getContext().getContentResolver().insert(
 				SigarraContract.Canteens.CONTENT_URI, values);
 		syncResult.stats.numEntries += 1;
@@ -199,11 +204,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				SifeupAPI.getNotificationsUrl(), authToken);
 		JSONObject jObject = new JSONObject(notificationReply);
 		JSONArray jArray = jObject.getJSONArray("notificacoes");
+		ArrayList<String> fetchedNotCodes = new ArrayList<String>();
 		for (int i = 0; i < jArray.length(); i++) {
 			Notification not = Notification.parseJSON(jArray.getJSONObject(i));
 			final ContentValues values = new ContentValues();
 			values.put(SigarraContract.Notifcations.CONTENT, jArray
 					.getJSONObject(i).toString());
+			fetchedNotCodes.add(Integer.toString(not.getCode()));
 			if (getContext().getContentResolver().update(
 					SigarraContract.Notifcations.CONTENT_URI,
 					values,
@@ -220,6 +227,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						SigarraContract.Notifcations.CONTENT_URI, values);
 			}
 		}
+		final Cursor cursor = getContext().getContentResolver().query(
+				SigarraContract.Notifcations.CONTENT_URI,
+				new String[] { SigarraContract.Notifcations.ID_NOTIFICATION },
+				SigarraContract.Notifcations.PROFILE,
+				SigarraContract.Notifcations
+						.getNotificationsSelectionArgs(account.name), null);
+		if (cursor.moveToFirst()) {
+			if (!fetchedNotCodes.contains(cursor.getString(0))) {
+				getContext().getContentResolver().delete(
+						SigarraContract.Notifcations.CONTENT_URI,
+						SigarraContract.Notifcations.UPDATE_NOTIFICATION,
+						SigarraContract.Notifcations
+								.getNotificationsSelectionArgs(account.name,
+										cursor.getString(0)));
+			}
+		} else {
+			// No notifications		
+			final ContentValues values = new ContentValues();
+			values.put(SigarraContract.LastSync.NOTIFICATIONS, System.currentTimeMillis());
+			getContext().getContentResolver().update(SigarraContract.LastSync.CONTENT_URI, values, SigarraContract.LastSync.PROFILE, SigarraContract.LastSync.getLastSyncSelectionArgs(account.name));
+			getContext().getContentResolver().notifyChange(SigarraContract.Notifcations.CONTENT_URI, null);
+		}
+		cursor.close();
 		syncResult.stats.numEntries += jArray.length();
 	}
 
@@ -427,6 +457,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncSubjects(Account account, String authToken,
 			SyncResult syncResult) throws JSONException {
+		// Cleaning old values
+		getContext().getContentResolver().delete(
+				SigarraContract.Subjects.CONTENT_URI,
+				SigarraContract.Subjects.USER_SUBJECTS,
+				SigarraContract.Subjects
+						.getUserSubjectsSelectionArgs(account.name));
 		final String page = SifeupAPI.getReply(SifeupAPI.getSubjectsUrl(
 				mAccountManager.getUserData(account, Constants.USER_NAME),
 				Integer.toString(DateUtils.secondYearOfSchoolYear() - 1)),
@@ -462,6 +498,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		if (values.length > 0)
 			getContext().getContentResolver().bulkInsert(
 					SigarraContract.Subjects.CONTENT_URI, values);
+		else
+			getContext().getContentResolver().notifyChange(SigarraContract.Subjects.CONTENT_URI, null);
 		syncResult.stats.numEntries += subjects.size();
 	}
 }

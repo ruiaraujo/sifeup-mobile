@@ -4,7 +4,6 @@ import android.net.Uri;
 
 public final class SigarraContract {
 
-	// TODO
 	public interface SubjectsColumns {
 		String USER_NAME = SubjectsTable.COLUMN_USER_NAME;
 		String CODE = SubjectsTable.COLUMN_CODE;
@@ -72,6 +71,20 @@ public final class SigarraContract {
 		String ID = CanteensTable.KEY_ID;
 		String CONTENT = CanteensTable.KEY_CONTENT;
 	}
+	
+
+	public interface LastSyncColumns {
+		String ID = LastSyncTable.KEY_USER;
+		String ACADEMIC_PATH = LastSyncTable.KEY_ACADEMIC_PATH;
+		String CANTEENS = LastSyncTable.KEY_CANTEENS;
+		String EXAMS = LastSyncTable.KEY_EXAMS;
+		String NOTIFICATIONS = LastSyncTable.KEY_NOTIFICATIONS;
+		String PRINTING = LastSyncTable.KEY_PRINTING;
+		String PROFILES = LastSyncTable.KEY_PROFILES;
+		String SCHEDULE = LastSyncTable.KEY_SCHEDULE;
+		String SUBJECTS = LastSyncTable.KEY_SUBJECTS;
+		String TUIION = LastSyncTable.KEY_TUITION;
+	}
 
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
 
@@ -88,6 +101,7 @@ public final class SigarraContract {
 	static final String PATH_SCHEDULE = "schedules";
 	static final String PATH_NOTIFICATIONS = "notifications";
 	static final String PATH_CANTEENS = "canteens";
+	static final String PATH_LAST_SYNC = "last_sync";
 
 	/**
 	 * The public contract for the subjects.
@@ -313,6 +327,23 @@ public final class SigarraContract {
 		public static final String DEFAULT_ID = CanteensTable.DEFAULT_ID;
 		
 		public static final String[] COLUMNS = { CONTENT };
+
+	}
+	
+	public static class LastSync implements LastSyncColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_LAST_SYNC).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.last_sync";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.last_sync";
+
+		public static final String PROFILE = ID + "=?";
+		
+		public static final String[] COLUMNS = null;
+		
+		public static final String[] getLastSyncSelectionArgs(String code) {
+			return new String[] { code };
+		}
 
 	}
 

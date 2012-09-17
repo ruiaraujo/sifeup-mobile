@@ -16,10 +16,12 @@
 
 package pt.up.beta.mobile.loaders;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
-
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -61,6 +63,23 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 				return Subject.parseCursor(cursor);
+			} else {
+				final Cursor syncState = getContext()
+						.getContentResolver()
+						.query(SigarraContract.LastSync.CONTENT_URI,
+								SigarraContract.LastSync.COLUMNS,
+								SigarraContract.LastSync.PROFILE,
+								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
+										.getActiveUserName(getContext())), null);
+				if (syncState.moveToFirst()) {
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) != 0) {
+						syncState.close();
+						return new ArrayList<Subject>();
+					}
+				} else
+					throw new RuntimeException("It should always have a result");
+				syncState.close();
 			}
 		}
 		return null;
@@ -90,9 +109,10 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 			super.deliverResult(subjects);
 		}
 
-        if (oldSubjects != null && oldSubjects != subjects && oldSubjects.size() != 0) {
-        	oldSubjects.clear();
-        }
+		if (oldSubjects != null && oldSubjects != subjects
+				&& oldSubjects.size() != 0) {
+			oldSubjects.clear();
+		}
 	}
 
 	/**
@@ -170,7 +190,7 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 			mCursor.close();
 		}
 		mCursor = null;
-	if (subjects != null)
+		if (subjects != null)
 			subjects.clear();
 		subjects = null;
 	}
