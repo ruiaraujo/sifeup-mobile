@@ -36,15 +36,18 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.annotation.TargetApi;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.util.Log;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -81,10 +84,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		mAccountManager = AccountManager.get(context);
 	}
 
+	@TargetApi(8)
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
+			Log.d(getClass().getSimpleName(), "Sync Sigarra");
 			SifeupAPI.initSSLContext(getContext().getApplicationContext());
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
 					mAccountManager.blockingGetAuthToken(account,
@@ -92,6 +97,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// brand new cookie
 			final String authToken = mAccountManager.blockingGetAuthToken(
 					account, Constants.AUTHTOKEN_TYPE, false);
+			if ( authToken == null ){
+				throw new AuthenticatorException();
+			}
 			if (extras.getBoolean(SINGLE_REQUEST)) {
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
 					getSubject(account, extras.getString(SUBJECT_CODE),
@@ -145,6 +153,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncPrintingQuota(account, authToken, syncResult);
 				syncSchedule(account, authToken, syncResult);
 				syncNotifications(account, authToken, syncResult);
+				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO )//TODO, add settings
+					syncResult.delayUntil = 3*3600; //delay the next sync for a day
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
