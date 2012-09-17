@@ -28,6 +28,7 @@ public class SigarraProvider extends ContentProvider {
 	private static final int TUITION = 60;
 	private static final int PRINTING_QUOTA = 70;
 	private static final int SCHEDULE = 80;
+	private static final int NOTIFICATIONS = 90;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -48,6 +49,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_PRINTING, PRINTING_QUOTA);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_SCHEDULE, SCHEDULE);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_NOTIFICATIONS, NOTIFICATIONS);
 	}
 
 	private DatabaseHelper dbHelper;
@@ -94,6 +97,9 @@ public class SigarraProvider extends ContentProvider {
 		case SCHEDULE:
 			table = ScheduleTable.TABLE;
 			break;
+		case NOTIFICATIONS:
+			table = NotificationsTable.TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -123,6 +129,8 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.PrintingQuota.CONTENT_TYPE;
 		case SCHEDULE:
 			return SigarraContract.Schedule.CONTENT_TYPE;
+		case NOTIFICATIONS:
+			return SigarraContract.Notifcations.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -164,6 +172,10 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case SCHEDULE:
 			table = ScheduleTable.TABLE;
+			nullHack = null;
+			break;
+		case NOTIFICATIONS:
+			table = NotificationsTable.TABLE;
 			nullHack = null;
 			break;
 		default:
@@ -224,6 +236,10 @@ public class SigarraProvider extends ContentProvider {
 			table = ScheduleTable.TABLE;
 			nullHack = null;
 			break;
+		case NOTIFICATIONS:
+			table = NotificationsTable.TABLE;
+			nullHack = null;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -252,7 +268,7 @@ public class SigarraProvider extends ContentProvider {
 				orderBy = SigarraContract.Subjects.DEFAULT_SORT;
 			else
 				orderBy = sortOrder;
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, orderBy);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -284,12 +300,12 @@ public class SigarraProvider extends ContentProvider {
 				orderBy = SigarraContract.Friends.DEFAULT_SORT;
 			else
 				orderBy = sortOrder;
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, orderBy);
 			break;
 		case PROFILES:
 			qb.setTables(ProfilesTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					new String[] { selectionArgs[0] }, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -308,7 +324,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case EXAMS:
 			qb.setTables(ExamsTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -327,7 +343,7 @@ public class SigarraProvider extends ContentProvider {
 
 		case ACADEMIC_PATH:
 			qb.setTables(AcademicPathTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -345,7 +361,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case TUITION:
 			qb.setTables(TuitionTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -362,7 +378,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case PRINTING_QUOTA:
 			qb.setTables(PrintingQuotaTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Bundle extras = new Bundle();
@@ -380,7 +396,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case SCHEDULE:
 			qb.setTables(ScheduleTable.TABLE);
-			c = qb.query(dbHelper.getReadableDatabase(), projection, selection,
+			c = qb.query(getWritableDatabase(), projection, selection,
 					new String[] { selectionArgs[0], selectionArgs[1],
 							selectionArgs[2], selectionArgs[3] }, null, null,
 					sortOrder);
@@ -395,6 +411,24 @@ public class SigarraProvider extends ContentProvider {
 				extras.putString(SyncAdapter.SCHEDULE_FINAL, selectionArgs[2]);
 				extras.putString(SyncAdapter.SCHEDULE_TYPE, selectionArgs[3]);
 				extras.putString(SyncAdapter.SCHEDULE_BASE_TIME, selectionArgs[4]);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
+			}
+			break;
+		case NOTIFICATIONS:
+			qb.setTables(NotificationsTable.TABLE);
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null,
+					sortOrder);
+			if (c.getCount() == 0) {
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.NOTIFICATIONS);
 				ContentResolver.requestSync(
 						new Account(AccountUtils
 								.getActiveUserName(getContext()),
@@ -440,6 +474,9 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case SCHEDULE:
 			table = ScheduleTable.TABLE;
+			break;
+		case NOTIFICATIONS:
+			table = NotificationsTable.TABLE;
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);

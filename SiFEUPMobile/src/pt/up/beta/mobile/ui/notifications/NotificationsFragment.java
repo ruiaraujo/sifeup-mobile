@@ -4,23 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.Notification;
+import pt.up.beta.mobile.loaders.NotificationsLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
-import pt.up.beta.mobile.datatypes.Notification;
-import pt.up.beta.mobile.sifeup.NotificationUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
 
 /**
  * Notifications Fragment
@@ -29,95 +30,91 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class NotificationsFragment extends BaseFragment implements
-        OnItemClickListener, ResponseCommand {
+		OnItemClickListener,
+		LoaderCallbacks<List<Notification>> {
 
-    private ListView list;
+	private ListView list;
 
-    private ArrayList<Notification> notifications;
+	private List<Notification> notifications;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.generic_list,
-                getParentContainer(), true);
-        list = (ListView) root.findViewById(R.id.generic_list);
-        return getParentContainer(); // this is mandatory.
-    }
-    
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		View root = inflater.inflate(R.layout.generic_list,
+				getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+		return getParentContainer(); // this is mandatory.
+	}
 
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        task = NotificationUtils.getNotificationsReply(this);
-    }
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+	}
 
-    @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-            long id) {
-    	Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
-        i.putExtra(NotificationsDescActivity.NOTIFICATION,
-                notifications.get(position));
-        startActivity(i);
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long id) {
+		Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
+		i.putExtra(NotificationsDescActivity.NOTIFICATION,
+				notifications.get(position));
+		startActivity(i);
 
-    }
+	}
 
-	public void onError(ERROR_TYPE error) {
-		if ( getActivity() == null )
-	 		return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error), Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
+	@Override
+	public Loader<List<Notification>> onCreateLoader(int arg0, Bundle arg1) {
+		return new NotificationsLoader(getActivity(),
+				SigarraContract.Notifcations.CONTENT_URI,
+				SigarraContract.Notifcations.COLUMNS,
+				SigarraContract.Notifcations.PROFILE,
+				SigarraContract.Notifcations
+						.getNotificationsSelectionArgs(AccountUtils
+								.getActiveUserName(getActivity())),
+				SigarraContract.Notifcations.DEFAULT_SORT);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Notification>> loader,
+			List<Notification> notifications) {
+		if (getActivity() == null || notifications == null)
+			return;
+
+		this.notifications = notifications;
+		if (notifications.isEmpty()) {
+			showEmptyScreen(getString(R.string.lb_no_notification));
+			setRefreshActionItemState(false);
+			return;
 		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
-        if (getActivity() == null)
-            return;
-        
-        notifications = (ArrayList<Notification>) results[0];
-        if (notifications.isEmpty()) {
-            showEmptyScreen(getString(R.string.lb_no_notification));
-            return;
-        }
-        Log.e("JSON", "Notifications visual list loaded");
+		Log.e("JSON", "Notifications visual list loaded");
 
-        String[] from = new String[] { "subject", "date",
-                "designation", "priority" };
-        int[] to = new int[] { R.id.notification_subject,
-                R.id.notification_date, R.id.notification_designation,
-                R.id.notification_priority };
+		String[] from = new String[] { "subject", "date", "designation",
+				"priority" };
+		int[] to = new int[] { R.id.notification_subject,
+				R.id.notification_date, R.id.notification_designation,
+				R.id.notification_priority };
 
-        // prepare the list of all records
-        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		// prepare the list of all records
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 
-        for (Notification n : notifications) {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("subject", " " + n.getSubject());
-            map.put("date", " " + n.getDate());
-            map.put("designation", " " + n.getDesignation());
-            map.put("priority", " " + n.getPriorityString());
-            fillMaps.add(map);
-        }
+		for (Notification n : notifications) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("subject", " " + n.getSubject());
+			map.put("date", " " + n.getDate());
+			map.put("designation", " " + n.getDesignation());
+			map.put("priority", " " + n.getPriorityString());
+			fillMaps.add(map);
+		}
 
-
-        SimpleAdapter adapter = new SimpleAdapter(getActivity(),
-                fillMaps, R.layout.list_item_notification, from, to);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(NotificationsFragment.this);
-        showMainScreen();
+		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
+				R.layout.list_item_notification, from, to);
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(NotificationsFragment.this);
+		setRefreshActionItemState(false);
+		showMainScreen();
 	}
 
+	@Override
+	public void onLoaderReset(Loader<List<Notification>> arg0) {
 
-	protected void onRepeat() {
-		showLoadingScreen();
-        task = NotificationUtils.getNotificationsReply(this);
 	}
 }

@@ -1,12 +1,7 @@
 package pt.up.beta.mobile.sifeup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.acra.ACRA;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
@@ -31,16 +26,7 @@ public class NotificationUtils {
 
 		public Object parse(String page) {
 			try {
-				List<Notification> notifications = new ArrayList<Notification>();
-				JSONObject jObject = new JSONObject(page);
-				if (jObject.has("notificacoes")) {
-					JSONArray jArray = jObject.getJSONArray("notificacoes");
-					for (int i = 0; i < jArray.length(); i++) {
-						notifications.add(new Notification()
-								.JSONNotification(jArray.getJSONObject(i)));
-					}
-				}
-				return notifications;
+				return Notification.parseListJSON(page);
 			} catch (JSONException e) {
 				e.printStackTrace();
 				ACRA.getErrorReporter().handleSilentException(e);

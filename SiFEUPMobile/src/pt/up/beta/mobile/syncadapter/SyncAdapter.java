@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +27,7 @@ import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SyncStates;
+import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
@@ -62,6 +64,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public final static String TUITION = "tuition";
 	public final static String ACADEMIC_PATH = "academic_path";
 	public final static String PRINTING_QUOTA = "printing_quota";
+	public final static String NOTIFICATIONS = "notifications";
 	public final static String USER_CODE = "code";
 
 	public final static String SCHEDULE = "schedule";
@@ -120,6 +123,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					syncPrintingQuota(account, authToken, syncResult);
 					return;
 				}
+				if (NOTIFICATIONS.equals(extras.getSerializable(REQUEST_TYPE))) {
+					syncNotifications(account, authToken, syncResult);
+					return;
+				}
 				if (SCHEDULE.equals(extras.getSerializable(REQUEST_TYPE))) {
 					getSchedule(extras.getString(SCHEDULE_CODE),
 							extras.getString(SCHEDULE_TYPE),
@@ -137,6 +144,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncTuition(account, authToken, syncResult);
 				syncPrintingQuota(account, authToken, syncResult);
 				syncSchedule(account, authToken, syncResult);
+				syncNotifications(account, authToken, syncResult);
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
@@ -153,6 +161,35 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"
 							+ AccountUtils.getActiveUserCode(null)));
+		}
+	}
+
+	private void syncNotifications(Account account, String authToken,
+			SyncResult syncResult) throws JSONException {
+		final String notificationReply = SifeupAPI.getReply(
+				SifeupAPI.getNotificationsUrl(), authToken);
+		JSONObject jObject = new JSONObject(notificationReply);
+		JSONArray jArray = jObject.getJSONArray("notificacoes");
+		for (int i = 0; i < jArray.length(); i++) {
+			Notification not = Notification.parseJSON(jArray.getJSONObject(i));
+			final ContentValues values = new ContentValues();
+			values.put(SigarraContract.Notifcations.CONTENT, jArray
+					.getJSONObject(i).toString());
+			if (getContext().getContentResolver().update(
+					SigarraContract.Notifcations.CONTENT_URI,
+					values,
+					SigarraContract.Notifcations.UPDATE_NOTIFICATION,
+					SigarraContract.Notifcations.getNotificationsSelectionArgs(
+							account.name, Integer.toString(not.getCode()))) == 0) {
+				values.put(SigarraContract.Notifcations.CODE, account.name);
+				values.put(SigarraContract.Notifcations.ID_NOTIFICATION,
+						Integer.toString(not.getCode()));
+				values.put(SigarraContract.Notifcations.STATE,
+						SigarraContract.Notifcations.NEW);
+				values.put(SigarraContract.Notifcations.CODE, account.name);
+				getContext().getContentResolver().insert(
+						SigarraContract.Notifcations.CONTENT_URI, values);
+			}
 		}
 	}
 
@@ -179,7 +216,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void getSchedule(String code, String type, String initialDay,
-			String finalDay, String baseTime, String state, String authToken, 
+			String finalDay, String baseTime, String state, String authToken,
 			SyncResult syncResult) throws JSONException {
 		final String page;
 		if (SigarraContract.Schedule.STUDENT.equals(type))

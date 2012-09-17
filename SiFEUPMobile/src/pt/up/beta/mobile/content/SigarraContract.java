@@ -57,6 +57,14 @@ public final class SigarraContract {
 		String BASE_TIME = ScheduleTable.KEY_BASE_TIME;
 		String TYPE = ScheduleTable.KEY_TYPE;
 	}
+	
+
+	public interface NotificationsColumns {
+		String CODE = NotificationsTable.KEY_ID_USER;
+		String ID_NOTIFICATION = NotificationsTable.KEY_ID_NOTIFCATION;
+		String CONTENT = NotificationsTable.KEY_NOTIFICATION;
+		String STATE = NotificationsTable.KEY_STATE;
+	}
 
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
 
@@ -71,6 +79,7 @@ public final class SigarraContract {
 	static final String PATH_TUITION = "tuition";
 	static final String PATH_PRINTING = "printing_quota";
 	static final String PATH_SCHEDULE = "schedules";
+	static final String PATH_NOTIFICATIONS = "notifications";
 
 	/**
 	 * The public contract for the subjects.
@@ -257,6 +266,34 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { CONTENT, BASE_TIME };
 
 	}
+	
+
+	public static class Notifcations implements NotificationsColumns, NotificationsTable.STATE {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_NOTIFICATIONS).build();
+
+		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.notifications";
+		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.notifications";
+
+		public static final String PROFILE = CODE + "=?";
+
+		public static final String[] getNotificationsSelectionArgs(String code) {
+			return new String[] { code };
+		}
+		
+		public static final String DEFAULT_SORT = STATE + " ASC ";
+
+		
+		public static final String UPDATE_NOTIFICATION = CODE + "=? AND " + ID_NOTIFICATION + "=?";
+
+		public static final String[] getNotificationsSelectionArgs(String code, String id) {
+			return new String[] { code, id };
+		}
+
+		public static final String[] COLUMNS = { CONTENT, STATE };
+
+	}
+
 
 	private SigarraContract() {
 	}
