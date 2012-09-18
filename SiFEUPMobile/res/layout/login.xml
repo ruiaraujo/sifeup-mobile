@@ -12,19 +12,17 @@
         android:paddingRight="25.0dp" >
 
         <TextView
+            android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4.0dp"
-            android:text="@string/lb_login_username"
-            android:textSize="16.0sp"
-            android:textStyle="normal" >
-        </TextView>
+            android:layout_marginBottom="16.0dp"
+            android:text="@string/login_activity_newaccount_text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
             android:id="@+id/login_username"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:editable="true"
             android:hint="@string/lb_login_username"
             android:singleLine="true" >
         </EditText>
@@ -37,21 +35,11 @@
         android:paddingLeft="25.0dp"
         android:paddingRight="25.0dp" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4.0dp"
-            android:text="@string/lb_login_password"
-            android:textSize="16.0sp"
-            android:textStyle="normal" >
-        </TextView>
-
         <EditText
             android:id="@+id/login_pass"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3.0dp"
-            android:editable="true"
             android:hint="@string/lb_login_password"
             android:inputType="textPassword"
             android:singleLine="true" >
@@ -87,6 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8.0dp"
+            android:onClick="handleLogin"
             android:text="@string/bt_login" />
 
         <Button
@@ -94,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8.0dp"
+            android:onClick="showAbout"
             android:text="@string/bt_about" />
     </LinearLayout>
 

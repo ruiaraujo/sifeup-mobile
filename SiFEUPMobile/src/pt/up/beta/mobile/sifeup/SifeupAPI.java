@@ -5,40 +5,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.RedirectHandler;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerPNames;
-import org.apache.http.conn.params.ConnPerRouteBean;
+import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.sifeup.sslhack.EasySSLSocketFactory;
+import pt.up.beta.mobile.R;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 
 public class SifeupAPI {
@@ -237,6 +244,7 @@ public class SifeupAPI {
 	 * The student type returned by the authenticator
 	 */
 	public final static String STUDENT_TYPE = "A";
+	public final static String EMPLOYEE_TYPE = "E";
 
 	/**
 	 * Authentication Url for Web Service
@@ -419,7 +427,8 @@ public class SifeupAPI {
 	 * @param per
 	 * @return url
 	 */
-	public static String getSubjectDescUrl(String code, String year, String per) {
+	public static String getSubjectContentUrl(String code, String year,
+			String per) {
 		return WEBSERVICE
 				+ WebServices.MOBILE
 				+ SubjectDescription.NAME
@@ -462,7 +471,7 @@ public class SifeupAPI {
 	 * @param code
 	 * @return
 	 */
-	public static String getSubjectContentUrl(String code, String year,
+	public static String getSubjectFilestUrl(String code, String year,
 			String per) {
 		return WEBSERVICE + WebServices.MOBILE + SubjectContent.NAME
 				+ WEBSERVICE_SEP + SubjectContent.YEAR + EQUALS + year
@@ -634,37 +643,62 @@ public class SifeupAPI {
 	}
 
 	private static DefaultHttpClient httpclient;
-	private static HttpContext localContext;
 
-	public static synchronized DefaultHttpClient getHttpClient() {
-		if (httpclient == null) {
-			Scheme httpsScheme = new Scheme("https", new EasySSLSocketFactory(), 443);
+	private static SSLContext sslCtx;
+
+	public static void initSSLContext(Context context) {
+		try {
+			if (sslCtx != null)
+				return;
+
+			// HTTP connection reuse which was buggy pre-froyo
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+				System.setProperty("http.keepAlive", "false");
+			}
+
+			KeyStore localTrustStore = KeyStore.getInstance("BKS");
+
+			InputStream in = context.getResources().openRawResource(
+					R.raw.sigarratruststore);
+			localTrustStore.load(in, "secret".toCharArray());
+			TrustManagerFactory tmf = TrustManagerFactory
+					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			tmf.init(localTrustStore);
+			sslCtx = SSLContext.getInstance("TLS");
+			sslCtx.init(null, tmf.getTrustManagers(), null);
+
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(httpsScheme);
-
+			schemeRegistry.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			SSLSocketFactory sslSocketFactory = new SSLSocketFactory(
+					localTrustStore);
+			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
 			HttpParams params = new BasicHttpParams();
-			params.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30);
-			params.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
-					new ConnPerRouteBean(30));
-			params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
-			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-
 			ClientConnectionManager cm = new ThreadSafeClientConnManager(
 					params, schemeRegistry);
 			httpclient = new DefaultHttpClient(cm, params);
-			httpclient.setRoutePlanner(new DefaultHttpRoutePlanner(schemeRegistry));
-			// Create local HTTP context
-			localContext = new BasicHttpContext();
-			// Bind custom cookie store to the local context
-			localContext.setAttribute(ClientContext.COOKIE_STORE,
-					SessionManager.getInstance().getCookieStore());
+		} catch (KeyStoreException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return httpclient;
 	}
 
-	public static HttpResponse get(String url) {
+	public static HttpsURLConnection get(String url) {
 		try {
-			return getHttpClient().execute(new HttpGet(url), localContext);
+
+			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
+					url).openConnection();
+			connection.setSSLSocketFactory(sslCtx.getSocketFactory());
+			return connection;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -677,29 +711,122 @@ public class SifeupAPI {
 	 * @param url
 	 * @return page
 	 */
-	public static String getReply(String url) {
+	public static String getReply(String strUrl, String cookie) {
 		String page = null;
 		try {
 			do {
-				HttpResponse response = get(url);
-				if (response == null)
-					return null;
-				HttpEntity entity = response.getEntity();
-				if (entity == null)
-					return null;
-				String charset = getContentCharSet(entity);
+				final HttpsURLConnection connection = get(strUrl);
+				connection.setRequestProperty("Cookie", cookie);
+				connection.setRequestProperty("connection", "close");
+				final InputStream pageContent = connection.getInputStream();
+				String charset = getContentCharSet(connection.getContentType());
 				if (charset == null) {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
-				page = getPage(entity.getContent(), charset);
+				page = getPage(pageContent, charset);
+				pageContent.close();
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
 				if (page == null)
 					return null;
-				entity.consumeContent();
 			} while (page.equals(""));
+			return page;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return page;
+		return null;
+	}
+
+	public static String getReply(String strUrl) {
+		try {
+			return getReply(strUrl, AccountUtils.getAuthToken(null));
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String[] authenticate(String username, String password) {
+		String page = null;
+		try {
+			HttpsURLConnection connection = null;
+			do {
+				connection = get(SifeupAPI.getAuthenticationUrl(username,
+						password));
+				connection.setRequestProperty("connection", "close");
+				final InputStream pageContent = connection.getInputStream();
+				String charset = getContentCharSet(connection.getContentType());
+				if (charset == null) {
+					charset = HTTP.DEFAULT_CONTENT_CHARSET;
+				}
+				page = getPage(pageContent, charset);
+				pageContent.close();
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
+				if (page == null)
+					return null;
+			} while (page.equals(""));
+			// TODO API should return 401
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+				// Saving cookie for later using throughout the program
+				String cookie = "";
+				String headerName = null;
+				for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
+					if (headerName.equalsIgnoreCase("Set-Cookie")) {
+						cookie += connection.getHeaderField(i) + "; ";
+					}
+				}
+				return new String[] { page, cookie };
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// the actual download code
+	public static Bitmap downloadBitmap(String url) {
+		final HttpsURLConnection connection = get(url);
+		try {
+			connection.setRequestProperty("Cookie",
+					AccountUtils.getAuthToken(null));
+			connection.setRequestProperty("connection", "close");
+			final InputStream is = connection.getInputStream();
+			final BufferedInputStream bis = new BufferedInputStream(is);
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int read = 0;
+			int bufSize = 512;
+			byte[] buffer = new byte[bufSize];
+			while (true) {
+				read = bis.read(buffer);
+				if (read == -1) {
+					break;
+				}
+				baf.append(buffer, 0, read);
+			}
+			bis.close();
+			is.close();
+			return BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
+					baf.length());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		} finally {
+			connection.disconnect();
+		}
+		return null;
+
 	}
 
 	/**
@@ -709,22 +836,21 @@ public class SifeupAPI {
 	 * @return page
 	 */
 	public static HttpResponse post(String url, String urlParameters) {
-		DefaultHttpClient httpclient = getHttpClient();
-		HttpPost httppost = new HttpPost(url);
-		httpclient.setRedirectHandler(new RedirectHandler() {
-			@Override
-			public boolean isRedirectRequested(HttpResponse response,
-					HttpContext context) {
-				return false;
-			}
-
-			@Override
-			public URI getLocationURI(HttpResponse response, HttpContext context)
-					throws ProtocolException {
-				return null;
-			}
-		});
 		try {
+			HttpPost httppost = new HttpPost(url);
+			httpclient.setRedirectHandler(new RedirectHandler() {
+				@Override
+				public boolean isRedirectRequested(HttpResponse response,
+						HttpContext context) {
+					return false;
+				}
+
+				@Override
+				public URI getLocationURI(HttpResponse response,
+						HttpContext context) throws ProtocolException {
+					return null;
+				}
+			});
 			StringEntity tmp = new StringEntity(urlParameters, "UTF-8");
 			httppost.setEntity(tmp);
 			// Execute HTTP Post Request
@@ -739,19 +865,14 @@ public class SifeupAPI {
 		return null;
 	}
 
-	public static String getContentCharSet(final HttpEntity entity)
-			throws ParseException {
-		if (entity == null) {
-			throw new IllegalArgumentException("HTTP entity may not be null");
-		}
+	public static String getContentCharSet(final String contentType) {
+		String[] values = contentType.split(";"); // The values.length must be
+													// equal to 2...
 		String charset = null;
-		if (entity.getContentType() != null) {
-			HeaderElement values[] = entity.getContentType().getElements();
-			if (values.length > 0) {
-				NameValuePair param = values[0].getParameterByName("charset");
-				if (param != null) {
-					charset = param.getValue();
-				}
+		for (String value : values) {
+			value = value.trim();
+			if (value.toLowerCase().startsWith("charset=")) {
+				charset = value.substring("charset=".length());
 			}
 		}
 		return charset;

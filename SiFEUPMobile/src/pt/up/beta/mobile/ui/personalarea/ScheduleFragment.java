@@ -1,33 +1,24 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.ScheduleUtils;
-import pt.up.beta.mobile.sifeup.SessionManager;
+import pt.up.beta.mobile.loaders.ScheduleLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
-import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
-import pt.up.beta.mobile.R;
-
-import external.com.google.android.apps.iosched.ui.widget.BlockView;
-import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
-import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
-import external.com.google.android.apps.iosched.util.MotionEventUtils;
-
+import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -36,6 +27,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -44,11 +37,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import external.com.google.android.apps.iosched.ui.widget.BlockView;
+import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
+import external.com.google.android.apps.iosched.ui.widget.ObservableScrollView;
+import external.com.google.android.apps.iosched.util.MotionEventUtils;
 
 /**
  * This fragment is responsible of fetching a schedule of the student, which
@@ -60,7 +62,7 @@ import android.widget.Toast;
  */
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
-		OnClickListener, ResponseCommand {
+		OnClickListener, LoaderCallbacks<List<ScheduleBlock>> {
 
 	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
 	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
@@ -70,7 +72,7 @@ public class ScheduleFragment extends BaseFragment implements
 	private int mTitleCurrentDayIndex = -1;
 	private View mLeftIndicator;
 	private View mRightIndicator;
-	private ArrayList<ScheduleBlock> schedule = new ArrayList<ScheduleBlock>();
+	private List<ScheduleBlock> schedule;
 	private List<Day> mDays = new ArrayList<Day>();
 	private long mondayMillis;
 	private LayoutInflater mInflater;
@@ -97,12 +99,10 @@ public class ScheduleFragment extends BaseFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Bundle args = getArguments();
 		setHasOptionsMenu(true);
 		scheduleCode = getArguments().getString(SCHEDULE_CODE);
 		if (scheduleCode == null)
-			scheduleCode = SessionManager.getInstance(getActivity())
-					.getLoginCode();
+			scheduleCode = AccountUtils.getActiveUserCode(getActivity());
 		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);
 	}
 
@@ -166,7 +166,8 @@ public class ScheduleFragment extends BaseFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (schedule != null)
-			outState.putParcelableArrayList(SCHEDULE_KEY, schedule);
+			outState.putParcelableArrayList(SCHEDULE_KEY,
+					(ArrayList<? extends Parcelable>) schedule);
 		outState.putLong(MILLISECONDS_KEY, mondayMillis);
 	}
 
@@ -182,12 +183,53 @@ public class ScheduleFragment extends BaseFragment implements
 			else {
 				setToNow = true;
 				displaySchedule();
-				showFastMainScreen();
+				showMainScreen();
 			}
 		} else {
 			updateSchedule();
 		}
 	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.schedule_menu_items, menu);
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_now) {
+			if (!updateNowView()) {
+				AnalyticsUtils.getInstance(getActivity()).trackEvent(
+						AnalyticsUtils.MENU_CAT, "Click", "Go to Now", 1);
+				Toast.makeText(getActivity(), R.string.toast_now_not_visible,
+						Toast.LENGTH_SHORT).show();
+			}
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_export_calendar) {
+			// export to Calendar (create event)
+			AnalyticsUtils.getInstance(getActivity()).trackEvent(
+					AnalyticsUtils.MENU_CAT, "Click", "Export Calendar", 1);
+			calendarExport();
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.SCHEDULE);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 
 	private void increaseDay() {
 		mTitleCurrentDayIndex++;
@@ -213,33 +255,7 @@ public class ScheduleFragment extends BaseFragment implements
 		}
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.schedule_menu_items, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_now) {
-			if (!updateNowView()) {
-				AnalyticsUtils.getInstance(getActivity()).trackEvent(
-						AnalyticsUtils.MENU_CAT, "Click", "Go to Now", 1);
-				Toast.makeText(getActivity(), R.string.toast_now_not_visible,
-						Toast.LENGTH_SHORT).show();
-			}
-			return true;
-		}
-		if (item.getItemId() == R.id.menu_export_calendar) {
-			// export to Calendar (create event)
-			AnalyticsUtils.getInstance(getActivity()).trackEvent(
-					AnalyticsUtils.MENU_CAT, "Click", "Export Calendar", 1);
-			calendarExport();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
+	
 	private void movetoNextWeek() {
 		fetchingNextWeek = true;
 		mondayMillis = mDays.get(mDays.size() - 1).timeStart;
@@ -257,7 +273,6 @@ public class ScheduleFragment extends BaseFragment implements
 	 * Update position and visibility of "now" view.
 	 */
 	private boolean updateNowView() {
-
 		final Time nowTime = new Time(DateUtils.TIME_REFERENCE);
 		nowTime.setToNow();
 		if (nowTime.weekDay == 0 || nowTime.weekDay == 6)
@@ -292,6 +307,7 @@ public class ScheduleFragment extends BaseFragment implements
 				nowDay.scrollView.getViewTreeObserver()
 						.addOnGlobalLayoutListener(
 								new OnGlobalLayoutListener() {
+									@SuppressWarnings("deprecation")
 									@Override
 									public void onGlobalLayout() {
 										selectedDay.scrollView
@@ -419,8 +435,7 @@ public class ScheduleFragment extends BaseFragment implements
 	 */
 
 	/**
-	 * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
-	 * can be imported by most calendars.
+	 * Exports the schedule to Google Calendar
 	 */
 	private boolean calendarExport() {
 
@@ -456,23 +471,14 @@ public class ScheduleFragment extends BaseFragment implements
 							// iterate over schedule and add them to schedule
 							for (ScheduleBlock b : schedule) {
 								// new event
-								//TODO: redo all this
-								final ScheduleTeacher teacher;
-								if ( b.getTeachers() != null && b.getTeachers().size() > 0 )
-									teacher = b.getTeachers().get(0);
-								else
-									teacher = null;
-								final String title = b.getLectureAcronym() + " ("
+								ScheduleTeacher teacher = b.getTeachers()
+										.get(0);
+								String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
-								final String eventLocation = b.getRoomCod();
-								
-								final String description;
-								if (teacher != null )
-									description = "Professor: "
+								String eventLocation = b.getRoomCod();
+								String description = "Professor: "
 										+ teacher.getName();
-								else
-									description = "";
-								final long date = pt.up.beta.mobile.utils.DateUtils
+								long date = pt.up.beta.mobile.utils.DateUtils
 										.moveDayofWeek(mondayMillis,
 												b.getWeekDay())
 										+ b.getStartTime() * 1000;
@@ -505,13 +511,6 @@ public class ScheduleFragment extends BaseFragment implements
 					});
 
 			builder.create().show();
-		} else {
-
-			if (getActivity() != null)
-				Toast.makeText(getActivity(),
-						R.string.toast_export_calendar_error, Toast.LENGTH_LONG)
-						.show();
-			return false;
 		}
 		cursor.close();
 
@@ -598,35 +597,6 @@ public class ScheduleFragment extends BaseFragment implements
 		return null;
 	}
 
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		removeDialog(DIALOG);
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			return;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		removeDialog(DIALOG);
-		schedule = (ArrayList<ScheduleBlock>) results[0];
-		displaySchedule();
-		showMainScreen();
-	}
-
 	private void displaySchedule() {
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
 			updateDay(0, DateUtils.moveDayofWeek(mondayMillis, -3)); // previous
@@ -665,27 +635,8 @@ public class ScheduleFragment extends BaseFragment implements
 			ProgressDialogFragment.newInstance(false).show(
 					getFragmentManager(), DIALOG);
 		}
-		final File cache = FileUtils.getFile(getActivity(),
-				ScheduleFragment.class.getSimpleName() + scheduleCode
-						+ mondayMillis);
-		switch (scheduleType) {
-		case SCHEDULE_STUDENT:
-			task = ScheduleUtils.getStudentScheduleReply(scheduleCode,
-					mondayMillis, this, cache);
-			break;
-		case SCHEDULE_EMPLOYEE:
-			task = ScheduleUtils.getEmployeeScheduleReply(scheduleCode,
-					mondayMillis, this, cache);
-			break;
-		case SCHEDULE_ROOM:
-			task = ScheduleUtils.getRoomScheduleReply(scheduleCode,
-					mondayMillis, this, cache);
-			break;
-		case SCHEDULE_UC:
-			task = ScheduleUtils.getUcScheduleReply(scheduleCode, mondayMillis,
-					this, cache);
-			break;
-		}
+		getActivity().getSupportLoaderManager().initLoader(scheduleType, null,
+				this);
 	}
 
 	protected void onRepeat() {
@@ -695,6 +646,65 @@ public class ScheduleFragment extends BaseFragment implements
 		} else
 			showLoadingScreen();
 		updateSchedule();
+	}
+
+	@Override
+	public Loader<List<ScheduleBlock>> onCreateLoader(int loaderId,
+			Bundle options) {
+		final Time monday = new Time(DateUtils.TIME_REFERENCE);
+		monday.set(mondayMillis);
+		monday.normalize(false);
+		final String initialDay = monday.format("%Y%m%d");
+		// Friday
+		monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
+		monday.normalize(false);
+		final String finalDay = monday.format("%Y%m%d");
+		final String[] selectionArgs;
+		switch (loaderId) {
+		case SCHEDULE_STUDENT:
+			selectionArgs = SigarraContract.Schedule
+					.getStudentScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_EMPLOYEE:
+			selectionArgs = SigarraContract.Schedule
+					.getEmployeeScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_ROOM:
+			selectionArgs = SigarraContract.Schedule
+					.getRoomScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_UC:
+			selectionArgs = SigarraContract.Schedule
+					.getUCScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		default:
+			throw new RuntimeException("Invalid schedule type");
+		}
+		return new ScheduleLoader(getActivity(),
+				SigarraContract.Schedule.CONTENT_URI,
+				SigarraContract.Schedule.COLUMNS,
+				SigarraContract.Schedule.SCHEDULE_SELECTION, selectionArgs,
+				null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<ScheduleBlock>> loader,
+			List<ScheduleBlock> schedule) {
+		if (getActivity() == null || schedule == null)
+			return;
+		removeDialog(DIALOG);
+		this.schedule = schedule;
+		displaySchedule();
+		setRefreshActionItemState(false);
+		showMainScreen();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<ScheduleBlock>> arg0) {
 	}
 
 }

@@ -105,9 +105,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			editor.putBoolean(welcomeScreenShownPref, true);
 			editor.commit();
 		}
-		
-		
-		showFastMainScreen();
+		showMainScreen();
 	}
 
 	protected void onRepeat() {

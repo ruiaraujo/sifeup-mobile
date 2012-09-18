@@ -1,16 +1,22 @@
 package pt.up.beta.mobile.datatypes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.acra.ACRA;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import pt.up.beta.mobile.sifeup.AccountUtils;
        
 import android.util.Log;
 
 /**
  * Class Notification 
  * 
- * @author Ã‚ngela Igreja
+ * @author ångela Igreja
  *
  */
 @SuppressWarnings("serial")
@@ -46,34 +52,55 @@ public class Notification  implements Serializable {
 	/** */
 	private String obs;
 	
+	private boolean read;
+	
 	/** 
 	 * Notifications Parser
 	 * Returns true in case of correct parsing.
 	 * @param jObject 
 	 * @return itself
 	 */
-    public Notification JSONNotification(JSONObject jObject){
+    public static Notification parseJSON(JSONObject jObject){
 	
     	try {
-    		if(jObject.has("codigo")) this.code = jObject.getInt("codigo");
-			if(jObject.has("link")) this.link = jObject.getString("link");
-			if(jObject.has("designacao")) this.setDesignation(jObject.getString("designacao"));
-			if(jObject.has("descricao")) this.setDescription(jObject.getString("descricao"));
-			if(jObject.has("beneficiario")) this.setBeneficiary(jObject.getString("beneficiario"));
-			if(jObject.has("prioridade")) this.setPriority(jObject.getInt("prioridade"));
-			if(jObject.has("data")) this.setDate(jObject.getString("data"));
-			if(jObject.has("assunto")) this.setSubject(jObject.getString("assunto"));
-			if(jObject.has("mensagem")) this.setMessage(jObject.getString("mensagem"));
-			if(jObject.has("obs")) this.setObs(jObject.getString("obs"));
-		
-			return this;
+    		Notification not = new Notification();
+    		if(jObject.has("codigo")) not.code = jObject.getInt("codigo");
+			if(jObject.has("link")) not.link = jObject.getString("link");
+			if(jObject.has("designacao")) not.setDesignation(jObject.getString("designacao"));
+			if(jObject.has("descricao")) not.setDescription(jObject.getString("descricao"));
+			if(jObject.has("beneficiario")) not.setBeneficiary(jObject.getString("beneficiario"));
+			if(jObject.has("prioridade")) not.setPriority(jObject.getInt("prioridade"));
+			if(jObject.has("data")) not.setDate(jObject.getString("data"));
+			if(jObject.has("assunto")) not.setSubject(jObject.getString("assunto"));
+			if(jObject.has("mensagem")) not.setMessage(jObject.getString("mensagem"));
+			if(jObject.has("obs")) not.setObs(jObject.getString("obs"));
+			not.setRead(false);
+			return not;
 		} catch (JSONException e) {
 			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 		}
 		
     	Log.e("JSON", "Notification not found");
     	return null;
     }
+    public static List<Notification> parseListJSON(String page) throws JSONException{
+    	List<Notification> notifications = new ArrayList<Notification>();
+		JSONObject jObject = new JSONObject(page);
+		if (jObject.has("notificacoes")) {
+			JSONArray jArray = jObject.getJSONArray("notificacoes");
+			for (int i = 0; i < jArray.length(); i++) {
+				notifications.add(Notification
+						.parseJSON(jArray.getJSONObject(i)));
+			}
+		}
+		return notifications;
+    }
+
+    	
 
 	public void setLink(String link) {
 		this.link = link;
@@ -161,6 +188,36 @@ public class Notification  implements Serializable {
 
 	public String getObs() {
 		return obs;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + code;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Notification other = (Notification) obj;
+		if (code != other.code)
+			return false;
+		return true;
 	}
 
 }

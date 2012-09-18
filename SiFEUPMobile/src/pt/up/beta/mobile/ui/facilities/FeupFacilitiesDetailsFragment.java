@@ -142,7 +142,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
             else {
                 Toast.makeText(getActivity(), R.string.toast_server_error,
                         Toast.LENGTH_SHORT).show();
-                showFastMainScreen();
+                showMainScreen();
             }
         } else
             showEmptyScreen(getString(R.string.general_error));
@@ -162,7 +162,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
             Toast.makeText(getActivity(), results[0].toString(),
                     Toast.LENGTH_SHORT).show();
             startActivity(i);
-            showFastMainScreen();
+            showMainScreen();
             return;
         }
         if (building == null) {
@@ -175,7 +175,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         pic.setImageBitmap((Bitmap) results[0]);
         pic.setMaxZoom(6);
         pic.setOnTapListener(this);
-        showFastMainScreen();
+        showMainScreen();
     }
 
     protected void onRepeat() {

@@ -7,10 +7,9 @@
     <string name="description_home">Home</string>
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
-	<string name="button_repeat">Repeat</string>
-	<string name="general_error">Oops!\n Something went wrong... :(</string>
-    
-    
+    <string name="button_repeat">Repeat</string>
+    <string name="general_error">Oops!\n Something went wrong&#8230; :(</string>
+
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
     <string name="msg_downloading">Downloading <xliff:g id="file">%1$s</xliff:g></string>
@@ -21,12 +20,17 @@
     <string name="toast_download_error">Error while downloading file</string>
 
     <!-- *************************************************************************************** -->
+    <!-- ACCOUNT CHOOSER -->
+    <string name="lb_choose_account">Select an account</string>
+    <string name="bt_add_account">Add an account</string>
+
+    <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
-    <string name="lb_login_username">Username:</string>
-    <string name="lb_login_password">Password:</string>
+    <string name="lb_login_username">Username</string>
+    <string name="lb_login_password">Password</string>
     <string name="bt_cancel">Cancel</string>
-    <string name="lb_login_cancel">Connecting...</string>
+    <string name="lb_login_authenticating">Authenticating\u2026</string>
     <string name="bt_login">Login</string>
     <string name="lb_show_password">Show Password</string>
     <string name="toast_login_error_empty_username">Username cannot be empty.</string>
@@ -35,6 +39,7 @@
     <string name="toast_login_error_password_too_short">Password must be at least 8 characters in length.</string>
     <string name="toast_server_error">The Web Service seems to be down. Try again.</string>
     <string name="toast_auth_error">Your session timed out. Please login again.</string>
+    <string name="login_activity_newaccount_text">Sign in to your SiGARRA account. </string>
 
     <!-- *************************************************************************************** -->
     <!-- LOGOUT -->
@@ -55,28 +60,10 @@
     <string name="bt_about_title">About FEUP Mobile</string>
     <string name="bt_about_message">This application gives FEUP students a mobile platform
                                  where they can track their academic life with ease.
-                                 \n\n
-                                 <a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>
-                                 \n\n
-                                 <b>Version: </b>0.12.0
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>                                 \n\n<b>Version: </b>0.12.0
                                  \n
                                  07/04/2012
-                                 \n\n
-                                 <b>Credits:</b>\n
-                                 <ul>
-            <li>Faculty of Engineering of University of Porto</li>
-
- \n
-	                                                         <li>CICA</li>
-
- \n
-	                                                         <li>Master in Informatics and Computing Engineering</li>
-
- \n
-	                                                         <li>Distributed Systems course</li>
-
- \n
-                                 </ul></string>
+                                 \n\n<b>Credits:</b>\n<ul><li>Faculty of Engineering of University of Porto</li> \n<li>CICA</li> \n<li>Master in Informatics and Computing Engineering</li> \n<li>Distributed Systems course</li> \n</ul></string>
 
     <!-- MAIN  MENU -->
 
@@ -98,16 +85,12 @@
     <string name="description_schedule">See the Schedule</string>
 
     <!-- Class Description -->
-    <string name="class_subject"><b>Subject:</b>
-<xliff:g id="subject"> %1$s</xliff:g></string>
+    <string name="class_subject"><b>Subject:</b><xliff:g id="subject"> %1$s</xliff:g></string>
     <string name="class_teacher"><b>Teachers</b></string>
     <string name="class_room"><b>Room:</b></string>
-    <string name="class_team"><b>Class:</b>
-<xliff:g id="team">%1$s</xliff:g></string>
-    <string name="class_start_time"><b>Start time:</b>
-<xliff:g id="start_time">%1$s</xliff:g></string>
-    <string name="class_end_time"><b>End time:</b>
-<xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="class_team"><b>Class:</b><xliff:g id="team">%1$s</xliff:g></string>
+    <string name="class_start_time"><b>Start time:</b><xliff:g id="start_time">%1$s</xliff:g></string>
+    <string name="class_end_time"><b>End time:</b><xliff:g id="end time">%1$s</xliff:g></string>
     <string name="toast_too_many_rooms">There is more than one room to map.</string>
 
     <!-- Exams -->
@@ -131,7 +114,7 @@
     <string name="evaluation">Evaluation</string>
     <string name="admission_exams">Admission to Exams</string>
     <string name="final_grade">Final grade</string>
-    <string name="special_evaluation">Special evaluation (TE, DA, ...)</string>
+    <string name="special_evaluation">Special evaluation (TE, DA, &#8230;)</string>
     <string name="improvement_classification">Improvement of Final/Distributed Classification</string>
     <string name="comments">Comments</string>
     <string name="subject_content">Subject Content</string>
@@ -140,18 +123,12 @@
     <!-- Academic Path -->
     <string name="title_academic_path">Academic Path</string>
     <string name="btn_academic_path">Academic Path</string>
-    <string name="path_year"><b>Year:</b>
-<xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_state"><b>Status:</b>
-<xliff:g id="state">%1$s</xliff:g></string>
-    <string name="path_course"><b>Programme:</b>
-<xliff:g id="course">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semester:</b>
-<xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_average"><b>Average:</b>
-<xliff:g id="average">%1$s</xliff:g></string>
-    <string name="path_entries"><b>Number of Entries:</b>
-<xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_year"><b>Year:</b><xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_state"><b>Status:</b><xliff:g id="state">%1$s</xliff:g></string>
+    <string name="path_course"><b>Programme:</b><xliff:g id="course">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semester:</b><xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Average:</b><xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Number of Entries:</b><xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Grade: <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>Sigarra WebPage</u></string>
 
@@ -211,7 +188,7 @@
     <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
     <string name="label_no_tuition_ref">There are no available references.</string>
-    
+
     <!-- Change Password -->
     <string name="title_change_password">Change Password</string>
     <string name="btn_change_password">Change Password</string>
@@ -223,15 +200,8 @@
     <string name="hint_confirm_new_password">Confirm new password</string>
     <string name="lb_current_password">Current password:</string>
     <string name="hint_current_password">Current password</string>
-    <string name="set_password_message"> 
-    Para alterar a sua palavra-passe siga as seguintes normas e 
-    preencha os campos a seguir:
-    <ul>
-            <il>Conter obrigatoriamente entre 8 e 32 caracteres.</il>
-            <il>Não ser igual às 5 palavras-passe anteriores.</il>
-            <il>Conter um misto de letras e números.</il>
-            <il>Por questões de compatibilidade de sistemas não pode conter símbolos tais como: &amp;, %, $, (, ), /... .</il>
-        </ul></string>
+    <string name="set_password_message">    Para alterar a sua palavra-passe siga as seguintes normas e 
+    preencha os campos a seguir:<ul><il>Conter obrigatoriamente entre 8 e 32 caracteres.</il><il>Não ser igual às 5 palavras-passe anteriores.</il><il>Conter um misto de letras e números.</il><il>Por questões de compatibilidade de sistemas não pode conter símbolos tais como: &amp;, %, $, (, ), /... .</il></ul></string>
     <string name="lb_username">Username:</string>
     <string name="hint_username">Username</string>
     <string name="new_password_security">Password Strength: \n<xliff:g id="quota">%1$s</xliff:g></string>
@@ -253,7 +223,7 @@
     <!-- Printing -->
     <string name="title_printing">Printing Quota</string>
     <string name="btn_printing">Printing Quota</string>
-    <string name="lb_data_fetching">Fetching data...</string>
+    <string name="lb_data_fetching">Fetching data&#8230;</string>
     <string name="print_balance">Printing Quota: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">You can print up to <xliff:g id="pages">%1$s</xliff:g> black A4 pages.</string>
     <string name="print_reference_title">Increase Quota</string>
@@ -274,7 +244,7 @@
     <string name="description_add">Add Friend</string>
     <string name="friends_context_delete">Remove Friend</string>
     <string name="friends_context_timetable">See Timetable</string>
-    <string name="label_no_friends">You have no friends.\n\nWhile seeing a profile, check the start to mark as friend.</string>
+    <string name="label_no_friends">You have no friends.\n\nWhile seeing a profile, check the star to mark as friend.</string>
 
     <!-- *************************************************************************************** -->
     <!-- NEWS -->
@@ -292,7 +262,7 @@
     <string name="floor_spinner">Floor <xliff:g id="floor">%1$s</xliff:g></string>
     <string name="toast_first_map_view">Tap to see the building name.\n\nDouble tap to see the detailed view.</string>
     <string name="toast_no_detailed_view">This building has no detailed view available</string>
-    
+
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
     <string name="title_settings">Settings</string>
@@ -328,7 +298,7 @@
     <string name="notification_uploader_error_credential">Please login at FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Error connecting</string>
     <string name="notification_uploader_error_host">Please be inside FEUP\'s network or connected through VPN.</string>
-    <string name="notification_uploader_error_title">Error</string>
+    <string name="notification_error_title">Error</string>
     <string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Unsupported Operation</string>
 

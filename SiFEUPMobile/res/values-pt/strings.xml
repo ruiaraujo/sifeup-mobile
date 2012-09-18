@@ -8,7 +8,7 @@
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
     <string name="button_repeat">Repetir</string>
-    <string name="general_error">Oops!\n Alguma coisa correu mal... :(</string>
+    <string name="general_error">Oops!\n Alguma coisa correu mal&#8230; :(</string>
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
@@ -20,12 +20,16 @@
     <string name="toast_download_error">Erro ao transferir o ficheiro</string>
 
     <!-- *************************************************************************************** -->
+    <!-- ACCOUNT CHOOSER -->
+    <string name="lb_choose_account">Selecione uma conta</string>
+    <string name="bt_add_account">Adicione uma conta</string>
+
+    <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
-    <string name="lb_login_username">Utilizador:</string>
-    <string name="lb_login_password">Senha:</string>
+    <string name="lb_login_username">Utilizador</string>
+    <string name="lb_login_password">Senha</string>
     <string name="bt_cancel">Cancelar</string>
-    <string name="lb_login_cancel">Conectando...</string>
     <string name="bt_login">Login</string>
     <string name="lb_show_password">Mostrar Senha</string>
     <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
@@ -54,17 +58,10 @@
     <string name="bt_about_title">Sobre FEUP Mobile</string>
     <string name="bt_about_message">Esta aplicação dá aos estudantes da FEUP uma plataforma móvel para obterem 
     								facilmente informações da sua vida académica.
-                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>                                 
-                                 \n\n<b>Versão: </b>0.12.0
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Website do Projeto</a>                                 \n\n<b>Versão: </b>0.12.0
                                  \n
                                  07/04/2012
-                                 \n\n<b>Créditos:</b>
-<ul>
-            <li>Faculdade de Engenharia da Universidade do Porto</li>
-\n                                                            <li>CICA</li>
-\n                                                            <li>Mestrado Integrado em Engenharia Informática e Computação</li>
-\n                                                            <li>Disciplina Sistemas Distríbuidos</li>
-\n</ul></string>
+                                 \n\n<b>Créditos:</b><ul><li>Faculdade de Engenharia da Universidade do Porto</li>\n                                                            <li>CICA</li>\n                                                            <li>Mestrado Integrado em Engenharia Informática e Computação</li>\n                                                            <li>Disciplina Sistemas Distríbuidos</li>\n</ul></string>
 
     <!-- MAIN  MENU -->
 
@@ -86,16 +83,12 @@
     <string name="description_schedule">Ver o Horário</string>
 
     <!-- Class Description -->
-    <string name="class_subject"><b>Subject:</b>
-<xliff:g id="subject"> %1$s</xliff:g></string>
+    <string name="class_subject"><b>Subject:</b><xliff:g id="subject"> %1$s</xliff:g></string>
     <string name="class_teacher"><b>Professores</b></string>
     <string name="class_room"><b>Salas</b></string>
-    <string name="class_team"><b>Turma:</b>
-<xliff:g id="team">%1$s</xliff:g></string>
-    <string name="class_start_time"><b>Hora de início:</b>
-<xliff:g id="start_time">%1$s</xliff:g></string>
-    <string name="class_end_time"><b>Hora de fim:</b>
-<xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="class_team"><b>Turma:</b><xliff:g id="team">%1$s</xliff:g></string>
+    <string name="class_start_time"><b>Hora de início:</b><xliff:g id="start_time">%1$s</xliff:g></string>
+    <string name="class_end_time"><b>Hora de fim:</b><xliff:g id="end time">%1$s</xliff:g></string>
     <string name="toast_too_many_rooms">Há mais que uma sala para mapear.</string>
 
     <!-- Exams -->
@@ -119,7 +112,7 @@
     <string name="evaluation">Avaliação</string>
     <string name="admission_exams">Obtenção de Frequência</string>
     <string name="final_grade">Cálculo da Classificação Final</string>
-    <string name="special_evaluation">Avaliação Especial (TE, DA, ...)</string>
+    <string name="special_evaluation">Avaliação Especial (TE, DA, &#8230;)</string>
     <string name="improvement_classification">Melhoria de Classificação Final/Distribuída</string>
     <string name="comments">Observações</string>
     <string name="subject_content">Conteúdos</string>
@@ -128,14 +121,10 @@
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>
     <string name="btn_academic_path">Percurso Académico</string>
-    <string name="path_year"><b>Ano:</b>
-<xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semestre:</b>
-<xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_average"><b>Média:</b>
-<xliff:g id="average">%1$s</xliff:g></string>
-    <string name="path_entries"><b>Número de Inscrições:</b>
-<xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_year"><b>Ano:</b><xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_semestre"><b>Semestre:</b><xliff:g id="year">%1$s</xliff:g></string>
+    <string name="path_average"><b>Média:</b><xliff:g id="average">%1$s</xliff:g></string>
+    <string name="path_entries"><b>Número de Inscrições:</b><xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_grade">Nota: <xliff:g id="entries">%1$s</xliff:g></string>
     <string name="path_link_sifeup"><u>Página Web Sigarra</u></string>
 
@@ -204,11 +193,7 @@
     <string name="lb_new_password">Nova password</string>
     <string name="lb_confirm_new_password">Confirmar nova password:</string>
     <string name="lb_current_password">Password actual:</string>
-    <string name="set_password_message">Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:<ul>
-            <li>Conter obrigatoriamente entre 8 e 32 caracteres.</li>
-            <li>Não ser igual às 5 palavras-passe anteriores.</li>
-            <li>Conter um misto de letras e números;</li>
-        </ul></string>
+    <string name="set_password_message">Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:<ul><li>Conter obrigatoriamente entre 8 e 32 caracteres.</li><li>Não ser igual às 5 palavras-passe anteriores.</li><li>Conter um misto de letras e números;</li></ul></string>
     <string name="lb_username">Utilizador:</string>
     <string name="hint_username">Utilizador</string>
     <string name="new_password_security">Força da senha: \n<xliff:g id="quota">%1$s</xliff:g></string>
@@ -230,7 +215,7 @@
     <!-- Printing -->
     <string name="title_printing">Saldo de Impressão</string>
     <string name="btn_printing">Saldo de Impressão</string>
-    <string name="lb_data_fetching">Extraindo dados...</string>
+    <string name="lb_data_fetching">Extraindo dados&#8230;</string>
     <string name="print_balance">Saldo: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
     <string name="print_reference_title">Aumentar Saldo</string>
@@ -306,7 +291,7 @@
     <string name="notification_uploader_error_credential">Por favor, autentique-se no FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Erro ao conectar</string>
     <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
-    <string name="notification_uploader_error_title">Erro</string>
+    <string name="notification_error_title">Erro</string>
     <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Operação não suportada</string>
 

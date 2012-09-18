@@ -1,35 +1,27 @@
-
 package pt.up.beta.mobile.sifeup;
 
+import java.io.IOException;
 
-import java.io.File;
-
+import org.acra.ACRA;
 import org.json.JSONException;
 
-import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
-import pt.up.beta.mobile.utils.FileUtils;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.os.AsyncTask;
 
 public class FetcherTask extends
-AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
-	
+		AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
+
 	private final ResponseCommand command;
 	private final ParserCommand parser;
 	private Object result;
-	private File cacheResponse = null;
 
-	public FetcherTask(ResponseCommand com , ParserCommand parser) {
+	public FetcherTask(ResponseCommand com, ParserCommand parser) {
 		this.command = com;
 		this.parser = parser;
 	}
 
-    public FetcherTask(ResponseCommand com , ParserCommand parser, File cache ) {
-        this.command = com;
-        this.parser = parser;
-        this.cacheResponse = cache;
-    }
-    
 	protected void onPostExecute(ERROR_TYPE error) {
 		if (error == null) {
 			command.onResultReceived(this.result);
@@ -37,75 +29,51 @@ AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
 		}
 		command.onError(error);
 	}
-	
+
 	protected ERROR_TYPE doInBackground(String... pages) {
 		String page = "";
 		try {
 			if (pages.length < 1)
 				return ERROR_TYPE.GENERAL;
-			if ( isCancelled() )
-			    return null;
-			page = SifeupAPI.getReply(pages[0]);
-			int error = SifeupAPI.JSONError(page);
-			switch (error) {
-			case SifeupAPI.Errors.NO_AUTH:
-				return retrieveWithAuth(pages[0]);
-			case SifeupAPI.Errors.NO_ERROR:
-			    if ( cacheResponse != null )
-			    {
-			        FileUtils.writeFile(page, cacheResponse);
-			    }
-				result = parser.parse(page);
-				return null;
-			case SifeupAPI.Errors.NULL_PAGE:
-			    if ( cacheResponse != null )
-			    {
-			        page = FileUtils.getStringFromFile(cacheResponse);
-			        if ( page != null && !page.trim().equals(""))
-			        {
-			            result = parser.parse(page);
-		                return null;
-			        }
-			    }
-				return ERROR_TYPE.NETWORK;
-			}
+			boolean secondTry = false;
+			do {
+				if (isCancelled())
+					return null;
+				String cookie = AccountUtils.getAuthToken(null);
+				page = SifeupAPI.getReply(pages[0], cookie);
+				int error = SifeupAPI.JSONError(page);
+				switch (error) {
+				case SifeupAPI.Errors.NO_AUTH: {
+					if (secondTry) {
+						return ERROR_TYPE.AUTHENTICATION;
+					}
+					cookie = AccountUtils.renewAuthToken(null, cookie);
+					secondTry = true;
+					break;
+				}
+				case SifeupAPI.Errors.NO_ERROR:
+					result = parser.parse(page);
+					return null;
+				case SifeupAPI.Errors.NULL_PAGE:
+					return ERROR_TYPE.NETWORK;
+				}
+			} while (secondTry);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			ACRA.getErrorReporter().handleSilentException(e);
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 			return ERROR_TYPE.GENERAL;
-		}
-
-		return null;
-	}
-	
-	private ERROR_TYPE retrieveWithAuth(final String url) {
-		String page = "";
-		try {
-			final User user = SessionManager.getInstance().getUser();
-            if ( isCancelled() )
-                return null;
-			ERROR_TYPE error = AuthenticationUtils.authenticate(user
-					.getUser(), user.getPassword());
-            if ( isCancelled() )
-                return null;
-			if (error != null)
-				return error;
-			page = SifeupAPI.getReply(url);
-			switch (SifeupAPI.JSONError(page)) {
-			case SifeupAPI.Errors.NO_AUTH:
-				return ERROR_TYPE.AUTHENTICATION;
-			case SifeupAPI.Errors.NO_ERROR:
-                if ( cacheResponse != null )
-                {
-                    FileUtils.writeFile(page, cacheResponse);
-                }
-				result = parser.parse(page);
-				return null;
-			case SifeupAPI.Errors.NULL_PAGE:
-				return ERROR_TYPE.NETWORK;
-			}
-		} catch (JSONException e) {
+		} catch (OperationCanceledException e) {
 			e.printStackTrace();
-			return ERROR_TYPE.GENERAL;
+			return ERROR_TYPE.CANCELLED;
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+			return ERROR_TYPE.AUTHENTICATION;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ERROR_TYPE.NETWORK;
 		}
 
 		return null;

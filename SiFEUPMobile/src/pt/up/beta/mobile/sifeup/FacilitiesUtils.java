@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +12,6 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
-import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -128,7 +128,6 @@ public class FacilitiesUtils {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected ERROR_TYPE doInBackground(InputStream... params) {
-			// TODO Auto-generated method stub
 			String page = SifeupAPI.getPage(params[0], "UTF-8");
 			if (page == null)
 				return ERROR_TYPE.GENERAL;
@@ -181,6 +180,10 @@ public class FacilitiesUtils {
 				return hotspots;
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n" + page));
 			}
 			return null;
 		}
@@ -200,7 +203,7 @@ public class FacilitiesUtils {
 		// Actual download method, run in the task thread
 		protected ERROR_TYPE doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
-			bitmap = ImageDownloader.downloadBitmap(params[0]);
+			bitmap = SifeupAPI.downloadBitmap(params[0]);
 			if (bitmap == null)
 				return ERROR_TYPE.NETWORK;
 			return null;

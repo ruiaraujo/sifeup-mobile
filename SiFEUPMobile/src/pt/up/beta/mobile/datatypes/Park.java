@@ -57,7 +57,6 @@ public class Park implements Parcelable
     public Park JSONParkOccupation(String page) throws JSONException
     {
     	JSONObject jObject = new JSONObject(page);
-			
 		if(jObject.has("lugares"))
 			this.places = jObject.getInt("lugares");
 		return this;

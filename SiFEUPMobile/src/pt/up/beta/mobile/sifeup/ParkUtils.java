@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.datatypes.Park;
@@ -28,6 +29,12 @@ public class ParkUtils {
 				return new Park().JSONParkOccupation(page);
 			} catch (JSONException e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils
+										.getActiveUserCode(null)
+								+ "\n\n" + page));
 			}
 			return null;
 		}

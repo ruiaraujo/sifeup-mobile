@@ -53,14 +53,14 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
     }
 
-    protected void onPreExecute() {
+	protected void onPreExecute() {
         RemoteViews contentView = new RemoteViews(context.getPackageName(),
                 R.layout.notification_upload);
         if (is.getLength() == 0)
-            contentView.setProgressBar(R.id.progressBar, 0, 0, true);
+            contentView.setProgressBar(android.R.id.progress, 0, 0, true);
         else
-            contentView.setProgressBar(R.id.progressBar, 100, 0, false);
-        contentView.setTextViewText(R.id.text, context.getString(
+            contentView.setProgressBar(android.R.id.progress, 100, 0, false);
+        contentView.setTextViewText(android.R.id.text1, context.getString(
                 R.string.notification_uploader_content, filename));
         final PendingIntent contentIntent = PendingIntent.getActivity(
                 context.getApplicationContext(), 0, new Intent(), // add this
@@ -76,7 +76,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
         notBuilder.setSmallIcon(R.drawable.ic_launcher);
         notBuilder.setContent(contentView);
         notBuilder.setContentIntent(contentIntent);
-        notification = notBuilder.getNotification();
+        notification = notBuilder.build();
         mNotificationManager.notify(UNIQUE_ID, notification);
     }
 
@@ -132,7 +132,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
     protected void onProgressUpdate(Integer... values) {
         // update the notification object
         if (is.getLength() != 0)
-            notification.contentView.setProgressBar(R.id.progressBar, 100,
+            notification.contentView.setProgressBar(android.R.id.progress, 100,
                     values[0], false);
         // notify the notification manager on the update.
         mNotificationManager.notify(UNIQUE_ID, notification);
@@ -177,14 +177,14 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
                 break;
             default:
                 notBuilder.setContentTitle(context
-                        .getString(R.string.notification_uploader_error_title));
+                        .getString(R.string.notification_error_title));
                 notBuilder.setContentText(context.getString(
                         R.string.notification_uploader_error, filename));
                 break;
             }
         }
         notBuilder.setSmallIcon(R.drawable.ic_launcher);
-        mNotificationManager.notify(UNIQUE_ID, notBuilder.getNotification());
+        mNotificationManager.notify(UNIQUE_ID, notBuilder.build());
 
         listener.finishedTask();
 

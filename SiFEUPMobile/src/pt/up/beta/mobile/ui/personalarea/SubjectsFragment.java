@@ -4,35 +4,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
-
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.sifeup.SubjectUtils;
+import pt.up.beta.mobile.loaders.SubjectsLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
-import pt.up.beta.mobile.R;
-
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectsFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand {
+		OnItemClickListener, LoaderCallbacks<List<Subject>> {
 
 	/** Contains all subscribed subjects */
-	private ArrayList<Subject> subjects;
+	private List<Subject> subjects;
 	private ListView list;
 
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -41,38 +57,86 @@ public class SubjectsFragment extends BaseFragment implements
 		list = (ListView) root.findViewById(R.id.generic_list);
 		return getParentContainer(); // this is mandatory.
 	}
-	
 
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(DateUtils
-                .secondYearOfSchoolYear() - 1), this);
-    }
-
-    public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			return;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.SUBJECT);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long id) {
 		if (getActivity() == null)
 			return;
-		subjects = (ArrayList<Subject>) results[0];
+		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
+
+		int secondYear = DateUtils.secondYearOfSchoolYear();
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
+				subjects.get(position).getCode());
+		i.putExtra(
+				SubjectDescriptionFragment.SUBJECT_YEAR,
+				Integer.toString(secondYear - 1) + "/"
+						+ Integer.toString(secondYear));
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD,
+				subjects.get(position).getSemestre());
+		String title = subjects.get(position).getNamePt();
+		if (!UIUtils.isLocalePortuguese()
+				&& !TextUtils
+						.isEmpty(subjects.get(position).getNameEn()))
+			title = subjects.get(position).getNameEn();
+		i.putExtra(Intent.EXTRA_TITLE, title);
+
+		startActivity(i);
+
+	}
+
+	@Override
+	public Loader<List<Subject>> onCreateLoader(int loaderId, Bundle args) {
+		return new SubjectsLoader(getActivity(),
+				SigarraContract.Subjects.CONTENT_URI, new String[] {
+						SigarraContract.SubjectsColumns.CODE,
+						SigarraContract.SubjectsColumns.YEAR,
+						SigarraContract.SubjectsColumns.PERIOD,
+						SigarraContract.SubjectsColumns.NAME_PT,
+						SigarraContract.SubjectsColumns.NAME_EN },
+				SigarraContract.Subjects.USER_SUBJECTS,
+				SigarraContract.Subjects
+						.getUserSubjectsSelectionArgs(AccountUtils
+								.getActiveUserName(getActivity())), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Subject>> loader,
+			List<Subject> cursor) {
+		if (getActivity() == null)
+			return;
+		if (cursor == null) {
+			// waiting
+			return;
+		}
+		subjects = cursor;
 		if (subjects.isEmpty()) {
 			showEmptyScreen(getString(R.string.lb_no_subjects));
 			return;
@@ -85,14 +149,17 @@ public class SubjectsFragment extends BaseFragment implements
 		for (Subject s : subjects) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			if (UIUtils.isLocalePortuguese())
-				map.put(from[0], (s.getNamePt().trim().length() != 0) ? s
-						.getNamePt() : s.getNameEn());
+				map.put(from[0],
+						TextUtils.isEmpty(s.getNamePt()) ? s.getNameEn(): s
+								.getNamePt());
 			else
-				map.put(from[0], (s.getNameEn().trim().length() != 0) ? s
-						.getNameEn() : s.getNamePt());
+				map.put(from[0],
+						TextUtils.isEmpty(s.getNameEn()) ? s.getNamePt() : s
+								.getNameEn());
 			map.put(from[1], s.getAcronym());
-			map.put(from[2], getString(R.string.subjects_year, s.getYear(), s
-					.getSemestre()));
+			map.put(from[2],
+					getString(R.string.subjects_year, s.getYear(),
+							s.getSemestre()));
 			fillMaps.add(map);
 		}
 		// fill in the grid_item layout
@@ -100,39 +167,11 @@ public class SubjectsFragment extends BaseFragment implements
 				fillMaps, R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(SubjectsFragment.this);
+		setRefreshActionItemState(false);
 		showMainScreen();
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long id) {
-		if (getActivity() == null)
-			return;
-		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
-
-		int secondYear = DateUtils.secondYearOfSchoolYear();
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subjects.get(
-				position).getAcronym());
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR, Integer
-				.toString(secondYear - 1)
-				+ "/" + Integer.toString(secondYear));
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, subjects.get(
-				position).getSemestre());
-		String title = subjects.get(position).getNamePt();
-		if (!UIUtils.isLocalePortuguese() &&  subjects.get(position).getNameEn().trim().length() > 0)
-			title = subjects.get(position).getNameEn();
-		i.putExtra(Intent.EXTRA_TITLE,title );
-
-		startActivity(i);
-
-	}
-
-
-	protected void onRepeat() {
-		showLoadingScreen();
-        task = SubjectUtils.getSubjectsReply(SessionManager.getInstance(getActivity())
-                .getLoginCode(), Integer.toString(DateUtils
-                .secondYearOfSchoolYear() - 1), this);
-		
+	public void onLoaderReset(Loader<List<Subject>> loader) {
 	}
 }

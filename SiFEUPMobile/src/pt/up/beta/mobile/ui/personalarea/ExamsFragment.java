@@ -1,17 +1,31 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.Exam;
+import pt.up.beta.mobile.loaders.ExamsLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.utils.DateUtils;
+import pt.up.beta.mobile.utils.calendar.CalendarHelper;
+import pt.up.beta.mobile.utils.calendar.Event;
+import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,23 +39,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import pt.up.beta.mobile.datatypes.Exam;
-import pt.up.beta.mobile.sifeup.ExamsUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.utils.DateUtils;
-import pt.up.beta.mobile.utils.FileUtils;
-import pt.up.beta.mobile.utils.calendar.CalendarHelper;
-import pt.up.beta.mobile.utils.calendar.Event;
-import pt.up.beta.mobile.R;
-
-public class ExamsFragment extends BaseFragment implements ResponseCommand {
+public class ExamsFragment extends BaseFragment implements
+		LoaderCallbacks<List<Exam>> {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
-	
+
 	/** Stores all exams from Student */
-	private ArrayList<Exam> exams;
+	private List<Exam> exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 	private ListView list;
 	private String personCode;
@@ -60,44 +64,38 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		list = (ListView) root.findViewById(R.id.generic_list);
 		return getParentContainer(); // this is mandatory.
 	}
-	
 
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        personCode = getArguments().getString(PROFILE_CODE);
-        if (personCode == null)
-            personCode = SessionManager.getInstance(getActivity()).getLoginCode();
-        final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
-        if ( savedInstanceState != null )
-        {
-            exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
-            if ( exams == null )
-            {   
-                task = ExamsUtils.getExamsReply(personCode, this ,cache);
-            }
-            else
-            {
-                populateList();
-                showFastMainScreen();
-            }
-        }
-        else
-        {
-            task = ExamsUtils.getExamsReply(personCode, this,cache);
-        }
-    }
-    
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		personCode = getArguments().getString(PROFILE_CODE);
+		if (personCode == null)
+			personCode = AccountUtils.getActiveUserCode(getActivity());
+		if (savedInstanceState != null) {
+			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
+			if (exams == null) {
+				getActivity().getSupportLoaderManager().initLoader(0, null,
+						this);
+			} else {
+				if (populateList())
+					showMainScreen();
+			}
+		} else
+			getActivity().getSupportLoaderManager().initLoader(0, null, this);
 
- 	@Override
- 	public void onSaveInstanceState (Bundle outState){
- 		if ( exams != null )
- 			outState.putParcelableArrayList(EXAM_KEY,exams);
- 	}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (exams != null)
+			outState.putParcelableArrayList(EXAM_KEY,
+					(ArrayList<? extends Parcelable>) exams);
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.exams_menu_items, menu);
+		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -110,12 +108,24 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			calendarExport();
 			return true;
 		}
+		if (item.getItemId() == R.id.menu_refresh) {
+			final Bundle extras = new Bundle();
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.EXAMS);
+			setRefreshActionItemState(true);
+			ContentResolver.requestSync(
+					new Account(AccountUtils.getActiveUserName(getActivity()),
+							Constants.ACCOUNT_TYPE),
+					SigarraContract.CONTENT_AUTHORITY, extras);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * Exports the schedule to Google Calendar TODO: Produce an ICAL file which
-	 * can be imported by most calendars.
+	 * Exports the schedule to Google Calendar 
 	 * 
 	 * @return true if correct export
 	 */
@@ -128,10 +138,9 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 
 		if (cursor == null) {
 			if (getActivity() != null)
-				Toast
-						.makeText(getActivity(),
-								R.string.toast_export_calendar_error,
-								Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(),
+						R.string.toast_export_calendar_error, Toast.LENGTH_LONG)
+						.show();
 			return false;
 		}
 		// Iterate over calendars to store names and ids
@@ -159,8 +168,8 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 										b.getStartTime()).toMillis(false);
 								Event event = new Event(b.getCourseName(), b
 										.getRooms(), b.getType(), time, time
-										+ timeDifference(b.getStartTime(), b
-												.getEndTime()) * 60000);
+										+ timeDifference(b.getStartTime(),
+												b.getEndTime()) * 60000);
 								final Uri newEvent = calendarHelper
 										.insertEvent(calIds[which], event);
 								// check event error
@@ -170,11 +179,10 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 							}
 							dialog.dismiss();
 							if (getActivity() != null)
-								Toast
-										.makeText(
-												getActivity(),
-												R.string.toast_export_calendar_finished,
-												Toast.LENGTH_LONG).show();
+								Toast.makeText(
+										getActivity(),
+										R.string.toast_export_calendar_finished,
+										Toast.LENGTH_LONG).show();
 
 						}
 
@@ -208,48 +216,18 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 		s = new StringTokenizer(time, ":");
 		String hour = s.nextToken();
 		String minute = s.nextToken();
-		date.set(0, Integer.valueOf(minute), Integer.valueOf(hour), Integer
-				.valueOf(day), Integer.valueOf(month) - 1, Integer
-				.valueOf(year));
+		date.set(0, Integer.valueOf(minute), Integer.valueOf(hour),
+				Integer.valueOf(day), Integer.valueOf(month) - 1,
+				Integer.valueOf(year));
 		return date;
 	}
 
-	public void onError(ERROR_TYPE error) {
+	private boolean populateList() {
 		if (getActivity() == null)
-			return;
-		switch (error) {
-		case AUTHENTICATION:
-			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
-					Toast.LENGTH_LONG).show();
-			goLogin();
-			break;
-		case NETWORK:
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-			break;
-		default:
-			showEmptyScreen(getString(R.string.general_error));
-			break;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void onResultReceived(Object... results) {
-		if (getActivity() == null)
-			return;
-		if (results[0] instanceof ArrayList<?>)
-			exams = (ArrayList<Exam>) results[0];
-		else
-			throw new RuntimeException("Error receiving the result");
-		populateList();
-		showMainScreen();
-	}
-	
-	private void populateList(){
-        if (getActivity() == null)
-            return;
+			return false;
 		if (exams.isEmpty()) {
 			showEmptyScreen(getString(R.string.label_no_exams));
-			return;
+			return false;
 		}
 
 		String[] from = new String[] { "chair", "time", "room" };
@@ -261,8 +239,9 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 			String tipo = "( "
 					+ (e.getType().contains("Mini teste") ? "M" : "E") + " ) ";
 			map.put("chair", tipo + e.getCourseName());
-			map.put("time", e.getWeekDay() + ", " + e.getDate() + ": "
-					+ e.getStartTime() + "-" + e.getEndTime());
+			map.put("time",
+					e.getWeekDay() + ", " + e.getDate() + ": "
+							+ e.getStartTime() + "-" + e.getEndTime());
 			map.put("room", e.getRooms());
 			fillMaps.add(map);
 		}
@@ -271,12 +250,33 @@ public class ExamsFragment extends BaseFragment implements ResponseCommand {
 				R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setClickable(false);
+		return true;
 	}
 
-	protected void onRepeat() {
-		showLoadingScreen();
-		final File cache = FileUtils.getFile(getActivity(), ExamsFragment.class.getSimpleName()  + personCode);
-        task = ExamsUtils.getExamsReply(personCode, this,cache);
+	@Override
+	public Loader<List<Exam>> onCreateLoader(int loaderId, Bundle options) {
+		return new ExamsLoader(getActivity(),
+				SigarraContract.Exams.CONTENT_URI,
+				SigarraContract.Exams.COLUMNS, SigarraContract.Exams.PROFILE,
+				SigarraContract.Exams.getExamsSelectionArgs(AccountUtils
+						.getActiveUserName(getActivity())), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Exam>> laoder, List<Exam> exams) {
+		if (getActivity() == null)
+			return;
+		if (exams == null)
+			return;
+		this.exams = exams;
+		setRefreshActionItemState(false);
+		if (populateList()) {
+			showMainScreen();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Exam>> loader) {
 	}
 
 }

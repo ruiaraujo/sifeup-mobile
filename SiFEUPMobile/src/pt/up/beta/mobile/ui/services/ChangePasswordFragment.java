@@ -1,13 +1,15 @@
 package pt.up.beta.mobile.ui.services;
 
+import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.PasswordCheck;
-import pt.up.beta.mobile.datatypes.User;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SessionManager;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
-import pt.up.beta.mobile.R;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.AsyncTask;
@@ -17,8 +19,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 
 	private String errorTitle;
 	private String errorContent;
-	
+
 	private EditText actualPasswordText;
 	private EditText usernameText;
 	private EditText newPasswordText;
@@ -111,19 +113,20 @@ public class ChangePasswordFragment extends BaseFragment implements
 					return;
 				}
 				if (!confirmNewPassword.equals(newPassword)) {
-					Toast
-							.makeText(
-									getActivity(),
-									getString(R.string.confirmation_password_different),
-									Toast.LENGTH_SHORT).show();
+					Toast.makeText(
+							getActivity(),
+							getString(R.string.confirmation_password_different),
+							Toast.LENGTH_SHORT).show();
 					confirmNewPasswordText.requestFocus();
 					return;
 				}
-	            ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
+				ProgressDialogFragment.newInstance(false).show(
+						getFragmentManager(), DIALOG);
 				AuthenticationUtils.setPasswordReply(usernameText.getText()
 						.toString(), actualPasswordText.getText().toString(),
 						newPasswordText.getText().toString(),
-						confirmNewPasswordText.getText().toString(), "S", ChangePasswordFragment.this);
+						confirmNewPasswordText.getText().toString(), "S",
+						ChangePasswordFragment.this);
 			}
 		});
 
@@ -201,17 +204,12 @@ public class ChangePasswordFragment extends BaseFragment implements
 				return null;
 			}
 		}.execute();
-		final SessionManager session = SessionManager.getInstance(getActivity());
-		if ( session.isUserLoaded() )
-		{
-			String user = session.getLoginCode();
-			String pass = session.getLoginPassword();
-			if (!user.equals("") && !pass.equals("")) {
+			String user = AccountUtils.getActiveUserCode(getActivity());
+			if (!user.equals("") ) {
 				usernameText.setText(user);
-				actualPasswordText.setText(pass);
-	
+
 			}
-		}
+		
 		return getParentContainer();
 	}
 
@@ -233,30 +231,30 @@ public class ChangePasswordFragment extends BaseFragment implements
 		if (getActivity() == null)
 			return;
 		removeDialog(DIALOG);
-		if (results.length > 0) { //error while setting it
+		if (results.length > 0) { // error while setting it
 			errorTitle = results[0].toString();
 			errorContent = results[1].toString();
 			DialogFragment df = new DialogFragment() {
 				public Dialog onCreateDialog(Bundle savedInstanceState) {
-					return new AlertDialog.Builder(getActivity()).setTitle(
-							errorTitle).setMessage(errorContent).create();
+					return new AlertDialog.Builder(getActivity())
+							.setTitle(errorTitle).setMessage(errorContent)
+							.create();
 				}
 
 			};
 			df.show(getFragmentManager(), "Error Dialog");
 			return;
 		}
-		//changed successfully
-		final SessionManager session = SessionManager.getInstance(getActivity());
-		if ( session.isUserLoaded() )
-		{
-			User user = session.getUser();
-			if ( user.getUser().equals(usernameText.getText().toString()) ||
-					user.getDisplayName().equals(usernameText.getText().toString()) ) {
-				session.setUser(new User(user.getDisplayName(),user.getUser(), newPasswordText.getText().toString(), user.getType()));
-			 }
+		// changed successfully
+		final AccountManager accountManager = AccountManager.get(getActivity());
+		final String userCode = AccountUtils.getActiveUserCode(getActivity());
+		final String userName = AccountUtils.getActiveUserCode(getActivity());
+		final String usernameTextEdit = usernameText.getText().toString();
+		if (usernameTextEdit.equals(userCode)
+				|| usernameTextEdit.equals(userName)) {
+			accountManager.setPassword(new Account(userName, Constants.ACCOUNT_TYPE), newPasswordText.getText().toString());
 		}
-		
+
 		actualPasswordText.setText(newPasswordText.getText().toString());
 		newPasswordText.setText("");
 		confirmNewPasswordText.setText("");
@@ -267,13 +265,12 @@ public class ChangePasswordFragment extends BaseFragment implements
 	}
 
 	protected void onRepeat() {
-        ProgressDialogFragment.newInstance(false).show(getFragmentManager(), DIALOG);
-		AuthenticationUtils.setPasswordReply(usernameText.getText()
-				.toString(), actualPasswordText.getText().toString(),
-				newPasswordText.getText().toString(),
-				confirmNewPasswordText.getText().toString(), "S", ChangePasswordFragment.this);
+		ProgressDialogFragment.newInstance(false).show(getFragmentManager(),
+				DIALOG);
+		AuthenticationUtils.setPasswordReply(usernameText.getText().toString(),
+				actualPasswordText.getText().toString(), newPasswordText
+						.getText().toString(), confirmNewPasswordText.getText()
+						.toString(), "S", ChangePasswordFragment.this);
 	}
-
-	
 
 }

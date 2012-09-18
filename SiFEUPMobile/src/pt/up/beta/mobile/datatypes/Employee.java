@@ -64,7 +64,7 @@ public class Employee extends Profile implements Serializable {
 	 * @author Ângela Igreja
 	 * 
 	 */
-	private class Room implements Serializable {
+	private static class Room implements Serializable {
 		/** Edi Code - "D" */
 		private String codEdi;
 
@@ -78,39 +78,52 @@ public class Employee extends Profile implements Serializable {
 	 * 
 	 * @param page
 	 * @return boolean
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
-	public Employee JSONSubject(String page) throws JSONException {
+	public static Employee parseJSON(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
 		SifeupUtils.removeEmptyKeys(jObject);
-		if(jObject.has("codigo")) this.code = jObject.getString("codigo");
-		if(jObject.has("nome")) this.name = jObject.getString("nome");
-		if(jObject.has("pagina_web")) this.webPage = jObject.getString("pagina_web");
-		if(jObject.has("sigla")) this.acronym = jObject.getString("sigla");
-		if(jObject.has("estado")) this.state = jObject.getString("estado");
-		if(jObject.has("email")) this.email = jObject.getString("email");
-		if(jObject.has("email_alt")) this.emailAlt = jObject.getString("email_alt");
-		if(jObject.has("telefone")) this.phone = jObject.getString("telefone");
-		if(jObject.has("ext_tel")) this.extPhone = jObject.getString("ext_tel");
-		if(jObject.has("voip_ext")) this.voipExt = jObject.getInt("voip_ext");
-		if(jObject.has("telemovel")) this.mobilePhone = jObject.getString("telemovel");
-		
-		if(jObject.has("salas")){
-    		JSONArray jArray = jObject.getJSONArray("salas");
-    		
-    		for(int i = 0; i < jArray.length(); i++)
-    		{
-    			Room room = new Room();
-    			
-    			JSONObject jRoom = jArray.getJSONObject(i);
-    			
-    			if(jRoom.has("cod_edi")) room.codEdi = jRoom.getString("cod_edi");
-    			if(jRoom.has("cod_sala")) room.codRoom = jRoom.getInt("cod_sala");
+		final Employee employee = new Employee();
+		if (jObject.has("codigo"))
+			employee.code = jObject.getString("codigo");
+		if (jObject.has("nome"))
+			employee.name = jObject.getString("nome");
+		if (jObject.has("pagina_web"))
+			employee.webPage = jObject.getString("pagina_web");
+		if (jObject.has("sigla"))
+			employee.acronym = jObject.getString("sigla");
+		if (jObject.has("estado"))
+			employee.state = jObject.getString("estado");
+		if (jObject.has("email"))
+			employee.email = jObject.getString("email");
+		if (jObject.has("email_alt"))
+			employee.emailAlt = jObject.getString("email_alt");
+		if (jObject.has("telefone"))
+			employee.phone = jObject.getString("telefone");
+		if (jObject.has("ext_tel"))
+			employee.extPhone = jObject.getString("ext_tel");
+		if (jObject.has("voip_ext"))
+			employee.voipExt = jObject.getInt("voip_ext");
+		if (jObject.has("telemovel"))
+			employee.mobilePhone = jObject.getString("telemovel");
 
-    			this.rooms.add(room);
-    		}
+		if (jObject.has("salas")) {
+			JSONArray jArray = jObject.getJSONArray("salas");
+
+			for (int i = 0; i < jArray.length(); i++) {
+				Room room = new Room();
+
+				JSONObject jRoom = jArray.getJSONObject(i);
+
+				if (jRoom.has("cod_edi"))
+					room.codEdi = jRoom.getString("cod_edi");
+				if (jRoom.has("cod_sala"))
+					room.codRoom = jRoom.getInt("cod_sala");
+
+				employee.rooms.add(room);
+			}
 		}
-		return this;
+		return employee;
 	}
 
 	public void setAcronym(String acronym) {
@@ -132,16 +145,12 @@ public class Employee extends Profile implements Serializable {
 	public List<ProfileDetail> getProfileContents(Resources res) {
 		List<ProfileDetail> result = new ArrayList<ProfileDetail>();
 		if (code != null && !code.equals("")) {
-			result
-					.add(new ProfileDetail(res
-							.getString(R.string.profile_title_code), code,
-							null));
+			result.add(new ProfileDetail(res
+					.getString(R.string.profile_title_code), code, null));
 		}
 		if (email != null && !email.equals("")) {
-			result
-					.add(new ProfileDetail(res
-							.getString(R.string.profile_title_email), email,
-							Type.EMAIL));
+			result.add(new ProfileDetail(res
+					.getString(R.string.profile_title_email), email, Type.EMAIL));
 		}
 		if (emailAlt != null && !emailAlt.equals("")) {
 			result.add(new ProfileDetail(res
@@ -182,8 +191,8 @@ public class Employee extends Profile implements Serializable {
 		StringBuilder roomCode = new StringBuilder();
 		for (Room r : rooms) {
 			// 3 is the regular ammount. This is loop only runs in the case
-			//of positive number under 100
-			for ( int i = 0; i <  3 -Integer.toString(r.codRoom).length() ; ++i)
+			// of positive number under 100
+			for (int i = 0; i < 3 - Integer.toString(r.codRoom).length(); ++i)
 				roomCode.append('0');
 			roomCode.append(r.codRoom);
 			result.add(new ProfileDetail(res
