@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_home"
+    <item android:id="@+id/menu_logout"
         android:icon="@drawable/ic_title_logout"
         android:title="@string/description_logout"
         android:orderInCategory="1"

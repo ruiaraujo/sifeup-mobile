@@ -1,7 +1,11 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -27,8 +31,7 @@ public class HomeActivity extends BaseActivity {
 			actionbar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME
 					| ActionBar.DISPLAY_SHOW_TITLE);
 		else
-			actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-					| ActionBar.DISPLAY_SHOW_TITLE
+			actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE
 					| ActionBar.DISPLAY_SHOW_HOME);
 
 	}
@@ -42,8 +45,29 @@ public class HomeActivity extends BaseActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_home:
-			goUp();
+		case R.id.menu_logout:
+
+			final Intent upIntent = new Intent(this, LauncherActivity.class).putExtra(LauncherActivity.LOGOUT_FLAG, true);
+
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				// This activity is not part of the application's task, so create a
+				// new task
+				// with a synthesized back stack.
+				TaskStackBuilder.create(this).addNextIntent(upIntent)
+						.startActivities();
+				finish();
+			} else {
+				// This activity is part of the application's task, so simply
+				// navigate up to the hierarchical parent activity.
+				if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ){
+		            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            startActivity(upIntent);
+		            finish();
+				}
+				else
+					NavUtils.navigateUpTo(this, upIntent);
+			}
+			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

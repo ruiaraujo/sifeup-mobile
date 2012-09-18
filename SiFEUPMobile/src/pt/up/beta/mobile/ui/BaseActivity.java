@@ -108,13 +108,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	/**
 	 * Invoke "home" action, returning to {@link HomeActivity}.
 	 */
-	public void goUp() {
-		final Intent upIntent;
+	protected void goUp() {
 		if (this instanceof HomeActivity)
-			upIntent = new Intent(this, LauncherActivity.class).putExtra(
-					LauncherActivity.LOGOUT_FLAG, true);
-		else
-			upIntent = new Intent(this, HomeActivity.class);
+			return;
+
+		final Intent upIntent = new Intent(this, HomeActivity.class);
 
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is not part of the application's task, so create a
@@ -136,6 +134,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 		}
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 	}
+	
+	
+	
+	
 
 	/**
 	 * Takes a given intent and either starts a new activity to handle it (the
