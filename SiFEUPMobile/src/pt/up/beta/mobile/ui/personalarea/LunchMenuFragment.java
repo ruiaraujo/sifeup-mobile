@@ -3,17 +3,14 @@ package pt.up.beta.mobile.ui.personalarea;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;
 import pt.up.beta.mobile.loaders.CanteenLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
-import android.accounts.Account;
-import android.content.ContentResolver;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -76,7 +73,8 @@ public class LunchMenuFragment extends BaseFragment implements
 		if (savedInstanceState != null) {
 			canteens = savedInstanceState.getParcelableArrayList(CANTEEN_KEY);
 			if (canteens == null)
-				getActivity().getSupportLoaderManager().initLoader(0, null, this);
+				getActivity().getSupportLoaderManager().initLoader(0, null,
+						this);
 			else {
 				buildPages();
 				showMainScreen();
@@ -85,7 +83,6 @@ public class LunchMenuFragment extends BaseFragment implements
 			getActivity().getSupportLoaderManager().initLoader(0, null, this);
 		}
 	}
-	
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.refresh_menu_items, menu);
@@ -94,21 +91,13 @@ public class LunchMenuFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.CANTEENS);
 			setRefreshActionItemState(true);
-			ContentResolver.requestSync(
-					new Account(AccountUtils.getActiveUserName(getActivity()),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
+			SyncAdapterUtils.syncCanteens(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 	/**
 	 * Build Pages

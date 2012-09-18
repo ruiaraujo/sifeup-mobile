@@ -1,11 +1,8 @@
 package pt.up.beta.mobile.content;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
-import android.accounts.Account;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -14,7 +11,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 public class SigarraProvider extends ContentProvider {
@@ -341,35 +337,22 @@ public class SigarraProvider extends ContentProvider {
 								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) == 0
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) == 0
 							|| selectionArgs.length == 3) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						if (selectionArgs.length == 3) {
-							/*
-							 * This means we re getting single subject
-							 */
-							extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-							extras.putString(SyncAdapter.REQUEST_TYPE,
-									SyncAdapter.SUBJECT);
-							extras.putString(SyncAdapter.SUBJECT_CODE,
-									selectionArgs[0]);
-							extras.putString(SyncAdapter.SUBJECT_PERIOD,
-									selectionArgs[1]);
-							extras.putString(SyncAdapter.SUBJECT_YEAR,
-									selectionArgs[2]);
 
-						}
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+						/*
+						 * This means we re getting single subject
+						 */
+						if (selectionArgs.length == 3)
+							SyncAdapterUtils.syncSubject(AccountUtils
+									.getActiveUserName(getContext()),
+									selectionArgs[0], selectionArgs[2],
+									selectionArgs[1]);
+						else
+							SyncAdapterUtils.syncSubjects(AccountUtils
+									.getActiveUserName(getContext()));
+
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -390,18 +373,9 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					new String[] { selectionArgs[0] }, null, null, sortOrder);
 			if (c.getCount() == 0) {
-				final Bundle extras = new Bundle();
-				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PROFILE);
-				extras.putString(SyncAdapter.PROFILE_CODE, selectionArgs[0]);
-				extras.putString(SyncAdapter.PROFILE_TYPE, selectionArgs[1]);
-				ContentResolver.requestSync(
-						new Account(AccountUtils
-								.getActiveUserName(getContext()),
-								Constants.ACCOUNT_TYPE),
-						SigarraContract.CONTENT_AUTHORITY, extras);
+				SyncAdapterUtils.syncProfile(
+						AccountUtils.getActiveUserName(getContext()),
+						selectionArgs[0], selectionArgs[1]);
 			}
 			break;
 		case EXAMS:
@@ -417,24 +391,10 @@ public class SigarraProvider extends ContentProvider {
 								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.EXAMS)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.EXAMS);
-						extras.putString(SyncAdapter.USER_CODE,
-								selectionArgs[0]);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.EXAMS)) == 0) {
+						SyncAdapterUtils.syncExams(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -458,19 +418,8 @@ public class SigarraProvider extends ContentProvider {
 					if (syncState
 							.getLong(syncState
 									.getColumnIndex(SigarraContract.LastSync.ACADEMIC_PATH)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.ACADEMIC_PATH);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+						SyncAdapterUtils.syncAcademicPath(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -490,22 +439,10 @@ public class SigarraProvider extends ContentProvider {
 								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.TUIION)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.TUITION);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.TUIION)) == 0) {
+						SyncAdapterUtils.syncTuitions(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -525,22 +462,10 @@ public class SigarraProvider extends ContentProvider {
 								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.PRINTING)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.PRINTING_QUOTA);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.PRINTING)) == 0) {
+						SyncAdapterUtils.syncPrintingQuota(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -562,32 +487,14 @@ public class SigarraProvider extends ContentProvider {
 								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.SCHEDULE)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.SCHEDULE);
-						extras.putString(SyncAdapter.SCHEDULE_CODE,
-								selectionArgs[0]);
-						extras.putString(SyncAdapter.SCHEDULE_INITIAL,
-								selectionArgs[1]);
-						extras.putString(SyncAdapter.SCHEDULE_FINAL,
-								selectionArgs[2]);
-						extras.putString(SyncAdapter.SCHEDULE_TYPE,
-								selectionArgs[3]);
-						extras.putString(SyncAdapter.SCHEDULE_BASE_TIME,
+					if (syncState.getLong(syncState
+							.getColumnIndex(SigarraContract.LastSync.SCHEDULE)) == 0) {
+						SyncAdapterUtils.syncSchedule(
+								AccountUtils.getActiveUserName(getContext()),
+								selectionArgs[0], selectionArgs[1],
+								selectionArgs[2], selectionArgs[3],
 								selectionArgs[4]);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -610,19 +517,8 @@ public class SigarraProvider extends ContentProvider {
 					if (syncState
 							.getLong(syncState
 									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.NOTIFICATIONS);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+						SyncAdapterUtils.syncNotifications(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -646,19 +542,8 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState.getLong(syncState
 							.getColumnIndex(SigarraContract.LastSync.CANTEENS)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.CANTEENS);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
+						SyncAdapterUtils.syncCanteens(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");

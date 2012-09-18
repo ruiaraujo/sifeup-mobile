@@ -1,6 +1,5 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.AcademicPath;
@@ -9,12 +8,10 @@ import pt.up.beta.mobile.datatypes.AcademicYear;
 import pt.up.beta.mobile.loaders.AcademicPathLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
-import android.accounts.Account;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -113,16 +110,8 @@ public class AcademicPathFragment extends BaseFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.SUBJECT);
 			setRefreshActionItemState(true);
-			ContentResolver.requestSync(
-					new Account(AccountUtils.getActiveUserName(getActivity()),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
+			SyncAdapterUtils.syncAcademicPath(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

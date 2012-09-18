@@ -140,7 +140,7 @@ public class BaseFragment extends SherlockFragment {
 				R.anim.home_exit);
 	}
 
-	public static ImageDownloader getImagedownloader() {
+	public synchronized static ImageDownloader getImagedownloader() {
 		if (imageDownloader == null)
 			imageDownloader = new ImageDownloader();
 		return imageDownloader;

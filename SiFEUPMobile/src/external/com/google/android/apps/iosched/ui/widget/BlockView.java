@@ -17,15 +17,13 @@
 package external.com.google.android.apps.iosched.ui.widget;
 
 
+import pt.up.beta.mobile.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.text.format.DateUtils;
 import android.widget.Button;
-
-
-import pt.up.beta.mobile.R;
 /**
  * Custom view that represents a {@link Blocks#BLOCK_ID} instance, including its
  * title and time span that it occupies. Usually organized automatically by
@@ -43,7 +41,8 @@ public class BlockView extends Button {
     private final boolean mContainsStarred;
     private final int mColumn;
 
-    public BlockView(Context context, String blockId, String title, long startTime,
+    @SuppressWarnings("deprecation")
+	public BlockView(Context context, String blockId, String title, long startTime,
             long endTime, boolean containsStarred, int column) {
         super(context);
 

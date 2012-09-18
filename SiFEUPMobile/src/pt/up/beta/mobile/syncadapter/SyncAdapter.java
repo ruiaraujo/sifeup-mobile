@@ -52,32 +52,32 @@ import android.util.Log;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-	public final static String SINGLE_REQUEST = "single_request";
-	public final static String REQUEST_TYPE = "request_type";
+	final static String SINGLE_REQUEST = "single_request";
+	final static String REQUEST_TYPE = "request_type";
 
-	public final static String SUBJECT = "subject";
-	public final static String SUBJECT_CODE = "subject_code";
-	public final static String SUBJECT_YEAR = "subject_year";
-	public final static String SUBJECT_PERIOD = "subject_period";
+	final static String SUBJECT = "subject";
+	final static String SUBJECT_CODE = "subject_code";
+	final static String SUBJECT_YEAR = "subject_year";
+	final static String SUBJECT_PERIOD = "subject_period";
 
-	public final static String PROFILE = "profile";
-	public final static String PROFILE_CODE = "profile_code";
-	public final static String PROFILE_TYPE = "profile_type";
+	final static String PROFILE = "profile";
+	final static String PROFILE_CODE = "profile_code";
+	final static String PROFILE_TYPE = "profile_type";
 
-	public final static String EXAMS = "exams";
-	public final static String CANTEENS = "canteens";
-	public final static String TUITION = "tuition";
-	public final static String ACADEMIC_PATH = "academic_path";
-	public final static String PRINTING_QUOTA = "printing_quota";
-	public final static String NOTIFICATIONS = "notifications";
-	public final static String USER_CODE = "code";
+	final static String EXAMS = "exams";
+	final static String CANTEENS = "canteens";
+	final static String TUITION = "tuition";
+	final static String ACADEMIC_PATH = "academic_path";
+	final static String PRINTING_QUOTA = "printing_quota";
+	final static String NOTIFICATIONS = "notifications";
+	final static String USER_CODE = "code";
 
-	public final static String SCHEDULE = "schedule";
-	public final static String SCHEDULE_CODE = "schedule_code";
-	public final static String SCHEDULE_TYPE = "schedule_type";
-	public final static String SCHEDULE_INITIAL = "initial";
-	public final static String SCHEDULE_FINAL = "final";
-	public final static String SCHEDULE_BASE_TIME = "schedule_time";
+	final static String SCHEDULE = "schedule";
+	final static String SCHEDULE_CODE = "schedule_code";
+	final static String SCHEDULE_TYPE = "schedule_type";
+	final static String SCHEDULE_INITIAL = "initial";
+	final static String SCHEDULE_FINAL = "final";
+	final static String SCHEDULE_BASE_TIME = "schedule_time";
 
 	private final AccountManager mAccountManager;
 

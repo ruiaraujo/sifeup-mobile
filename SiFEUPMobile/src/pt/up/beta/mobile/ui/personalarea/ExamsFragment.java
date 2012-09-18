@@ -5,18 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.loaders.ExamsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
-import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -109,16 +107,8 @@ public class ExamsFragment extends BaseFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.EXAMS);
 			setRefreshActionItemState(true);
-			ContentResolver.requestSync(
-					new Account(AccountUtils.getActiveUserName(getActivity()),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
+			SyncAdapterUtils.syncExams(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

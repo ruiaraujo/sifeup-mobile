@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Profile;
@@ -13,14 +12,12 @@ import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.loaders.StudentLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
-import android.accounts.Account;
 import android.content.AsyncQueryHandler;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -162,18 +159,10 @@ public class StudentProfileFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PROFILE);
-			extras.putString(SyncAdapter.PROFILE_CODE, code);
-			extras.putString(SyncAdapter.PROFILE_TYPE, SifeupAPI.STUDENT_TYPE);
 			setRefreshActionItemState(true);
-			ContentResolver.requestSync(
-					new Account(AccountUtils.getActiveUserName(getActivity()),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
+			SyncAdapterUtils.syncProfile(
+					AccountUtils.getActiveUserName(getActivity()), code,
+					SifeupAPI.STUDENT_TYPE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

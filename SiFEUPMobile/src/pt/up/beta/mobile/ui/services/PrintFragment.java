@@ -2,18 +2,11 @@
 
 package pt.up.beta.mobile.ui.services;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapter;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
-import android.accounts.Account;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +20,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Esta interface está responsável por ir buscar a informação
@@ -115,16 +112,8 @@ public class PrintFragment extends BaseFragment implements LoaderCallbacks<Curso
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			final Bundle extras = new Bundle();
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-			extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PRINTING_QUOTA);
 			setRefreshActionItemState(true);
-			ContentResolver.requestSync(
-					new Account(AccountUtils.getActiveUserName(getActivity()),
-							Constants.ACCOUNT_TYPE),
-					SigarraContract.CONTENT_AUTHORITY, extras);
+			SyncAdapterUtils.syncPrintingQuota(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
