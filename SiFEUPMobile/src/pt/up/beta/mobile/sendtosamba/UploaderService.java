@@ -120,10 +120,12 @@ public class UploaderService extends Service implements FinishedTaskListener {
         }
     }
 
+	@Override
     public IBinder onBind(Intent arg0) {
         return new LoggerServiceBinder();
     }
-
+    
+	@Override
     public void finishedTask() {
         taskRunning--;
         if (taskRunning == 0)

@@ -343,7 +343,8 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) == 0
+							|| selectionArgs.length == 3) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -389,38 +390,18 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					new String[] { selectionArgs[0] }, null, null, sortOrder);
 			if (c.getCount() == 0) {
-				final Cursor syncState = getContext()
-						.getContentResolver()
-						.query(SigarraContract.LastSync.CONTENT_URI,
-								SigarraContract.LastSync.COLUMNS,
-								SigarraContract.LastSync.PROFILE,
-								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
-										.getActiveUserName(getContext())), null);
-				if (syncState.moveToFirst()) {
-					if (syncState
-							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
-						final Bundle extras = new Bundle();
-						extras.putBoolean(
-								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-						extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-								true);
-						extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
-						extras.putString(SyncAdapter.REQUEST_TYPE,
-								SyncAdapter.PROFILE);
-						extras.putString(SyncAdapter.PROFILE_CODE,
-								selectionArgs[0]);
-						extras.putString(SyncAdapter.PROFILE_TYPE,
-								selectionArgs[1]);
-						ContentResolver.requestSync(
-								new Account(AccountUtils
-										.getActiveUserName(getContext()),
-										Constants.ACCOUNT_TYPE),
-								SigarraContract.CONTENT_AUTHORITY, extras);
-					}
-				} else
-					throw new RuntimeException("It should always have a result");
-				syncState.close();
+				final Bundle extras = new Bundle();
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+				extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PROFILE);
+				extras.putString(SyncAdapter.PROFILE_CODE, selectionArgs[0]);
+				extras.putString(SyncAdapter.PROFILE_TYPE, selectionArgs[1]);
+				ContentResolver.requestSync(
+						new Account(AccountUtils
+								.getActiveUserName(getContext()),
+								Constants.ACCOUNT_TYPE),
+						SigarraContract.CONTENT_AUTHORITY, extras);
 			}
 			break;
 		case EXAMS:
@@ -438,7 +419,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.EXAMS)) == 0) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -476,7 +457,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.ACADEMIC_PATH)) == 0) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -511,7 +492,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.TUIION)) == 0) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -546,7 +527,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.PRINTING)) == 0) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -583,7 +564,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState
 							.getLong(syncState
-									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+									.getColumnIndex(SigarraContract.LastSync.SCHEDULE)) == 0) {
 						final Bundle extras = new Bundle();
 						extras.putBoolean(
 								ContentResolver.SYNC_EXTRAS_EXPEDITED, true);

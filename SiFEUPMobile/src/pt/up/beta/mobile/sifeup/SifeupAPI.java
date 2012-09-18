@@ -45,6 +45,7 @@ import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 
 public class SifeupAPI {
@@ -647,8 +648,14 @@ public class SifeupAPI {
 
 	public static void initSSLContext(Context context) {
 		try {
-			if ( sslCtx != null )
+			if (sslCtx != null)
 				return;
+
+			// HTTP connection reuse which was buggy pre-froyo
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+				System.setProperty("http.keepAlive", "false");
+			}
+
 			KeyStore localTrustStore = KeyStore.getInstance("BKS");
 
 			InputStream in = context.getResources().openRawResource(
@@ -688,6 +695,7 @@ public class SifeupAPI {
 
 	public static HttpsURLConnection get(String url) {
 		try {
+
 			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 					url).openConnection();
 			connection.setSSLSocketFactory(sslCtx.getSocketFactory());
@@ -777,7 +785,7 @@ public class SifeupAPI {
 						cookie += connection.getHeaderField(i) + "; ";
 					}
 				}
-				return new String[] {  page, cookie };
+				return new String[] { page, cookie };
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -789,7 +797,8 @@ public class SifeupAPI {
 	public static Bitmap downloadBitmap(String url) {
 		final HttpsURLConnection connection = get(url);
 		try {
-			connection.setRequestProperty("Cookie", AccountUtils.getAuthToken(null));
+			connection.setRequestProperty("Cookie",
+					AccountUtils.getAuthToken(null));
 			connection.setRequestProperty("connection", "close");
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);

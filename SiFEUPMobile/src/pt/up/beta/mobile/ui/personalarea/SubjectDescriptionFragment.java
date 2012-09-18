@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.ui.personalarea;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,16 +16,18 @@ import pt.up.beta.mobile.datatypes.Subject.Teacher;
 import pt.up.beta.mobile.datatypes.SubjectFiles;
 import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
+import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SyncAdapter;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.dialogs.DownloaderFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
 import android.accounts.Account;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -488,17 +491,30 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 														.getFolders().size());
 								if (toDownload.getUrl() == null
 										|| toDownload.getUrl().trim().length() == 0) {
-									DownloaderFragment
-											.newInstance(
-													toDownload.getName(),
-													SifeupAPI
-															.getSubjectFileContents(Integer
-																	.toString(toDownload
-																			.getCode())),
-													toDownload.getFilename(),
-													null, toDownload.getSize())
-											.show(getFragmentManager(),
-													"Downloader");
+									try {
+										getActivity()
+												.startService(
+														DownloaderService
+																.newDownload(
+																		getActivity(),
+																		SifeupAPI
+																				.getSubjectFileContents(Integer
+																						.toString(toDownload
+																								.getCode())),
+																		toDownload
+																				.getFilename(),
+																		null,
+																		toDownload
+																				.getSize(),
+																		AccountUtils
+																				.getAuthToken(getActivity())));
+									} catch (OperationCanceledException e) {
+										e.printStackTrace();
+									} catch (AuthenticatorException e) {
+										e.printStackTrace();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
 								} else {
 									Intent i = new Intent(Intent.ACTION_VIEW);
 									i.setData(Uri.parse(toDownload.getUrl()));

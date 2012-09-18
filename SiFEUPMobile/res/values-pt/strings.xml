@@ -291,7 +291,7 @@
     <string name="notification_uploader_error_credential">Por favor, autentique-se no FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Erro ao conectar</string>
     <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
-    <string name="notification_uploader_error_title">Erro</string>
+    <string name="notification_error_title">Erro</string>
     <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Operação não suportada</string>
 
