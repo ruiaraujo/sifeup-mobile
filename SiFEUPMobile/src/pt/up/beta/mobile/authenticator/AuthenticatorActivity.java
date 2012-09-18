@@ -120,12 +120,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				final int selection = mPasswordEdit.getSelectionStart();
 				if (isChecked) {
 					mPasswordEdit.setTransformationMethod(null);
 				} else {
 					mPasswordEdit
 							.setTransformationMethod(new PasswordTransformationMethod());
 				}
+				mPasswordEdit.setSelection(selection);
 			}
 		});
 		if (!TextUtils.isEmpty(mUsername))

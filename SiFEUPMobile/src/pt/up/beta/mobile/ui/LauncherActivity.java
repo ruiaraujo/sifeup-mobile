@@ -15,9 +15,11 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -25,6 +27,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 @SuppressLint("CommitPrefEdits")
 public class LauncherActivity extends SherlockFragmentActivity implements
 		OnItemClickListener {
+	private static final int FIRST_ACCOUNT = 0;
+	private static final int ADDING_OTHER_ACCOUNT = 1;
+	
+	
 	private AccountManager mAccountManager;
 	public static final String LOGOUT_FLAG = "pt.up.fe.mobile.ui.logout";
 	public static final String PREF_ACTIVE_USER = "pt.up.fe.mobile.ui.USERNAME";
@@ -37,6 +43,15 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_account);
+		final Button addAccount = (Button) findViewById(R.id.add_account);
+		addAccount.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				startActivityForResult(
+						new Intent(getBaseContext(), AuthenticatorActivity.class), ADDING_OTHER_ACCOUNT);
+			}
+		});
 		mAccountManager = AccountManager.get(getApplicationContext());
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectAll() // or
@@ -74,7 +89,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		final String activeUser = loginSettings.getString(PREF_ACTIVE_USER, "");
 		if (accounts.length == 0) {
 			startActivityForResult(
-					new Intent(this, AuthenticatorActivity.class), 0);
+					new Intent(this, AuthenticatorActivity.class), FIRST_ACCOUNT);
 		} else {
 			final String[] accountNames = new String[accounts.length];
 			int i = 0;
@@ -96,7 +111,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			ListView accountList = (ListView) findViewById(R.id.account_list);
 			accountList.setAdapter(new ArrayAdapter<String>(
 					getApplicationContext(),
-					android.R.layout.simple_list_item_1, accountNames));
+					R.layout.list_item_simple, accountNames));
 			accountList.setOnItemClickListener(this);
 		}
 	}
@@ -126,7 +141,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		}
 
 		if (resultCode == RESULT_CANCELED) {
-			finish();
+			if ( requestCode == FIRST_ACCOUNT )
+				finish();		
 		}
 	}
 

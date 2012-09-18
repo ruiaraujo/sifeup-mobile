@@ -16,16 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16.0dp"
-            android:text="@string/lb_login_username"
+            android:text="@string/login_activity_newaccount_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4.0dp"
-            android:text="@string/lb_login_username"
-            android:textAppearance="?android:attr/textAppearanceMedium" >
-        </TextView>
 
         <EditText
             android:id="@+id/login_username"
@@ -42,14 +34,6 @@
         android:orientation="vertical"
         android:paddingLeft="25.0dp"
         android:paddingRight="25.0dp" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4.0dp"
-            android:text="@string/lb_login_password"
-            android:textAppearance="?android:attr/textAppearanceMedium" >
-        </TextView>
 
         <EditText
             android:id="@+id/login_pass"

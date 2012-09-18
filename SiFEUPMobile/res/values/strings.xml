@@ -8,7 +8,7 @@
     <string name="description_refresh">Refresh</string>
     <string name="description_share">Share</string>
     <string name="button_repeat">Repeat</string>
-    <string name="general_error">Oops!\n Something went wrong... :(</string>
+    <string name="general_error">Oops!\n Something went wrong&#8230; :(</string>
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
@@ -20,10 +20,15 @@
     <string name="toast_download_error">Error while downloading file</string>
 
     <!-- *************************************************************************************** -->
+    <!-- ACCOUNT CHOOSER -->
+    <string name="lb_choose_account">Select an account</string>
+    <string name="bt_add_account">Add an account</string>
+
+    <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
-    <string name="lb_login_username">Username:</string>
-    <string name="lb_login_password">Password:</string>
+    <string name="lb_login_username">Username</string>
+    <string name="lb_login_password">Password</string>
     <string name="bt_cancel">Cancel</string>
     <string name="lb_login_authenticating">Authenticating\u2026</string>
     <string name="bt_login">Login</string>
@@ -109,7 +114,7 @@
     <string name="evaluation">Evaluation</string>
     <string name="admission_exams">Admission to Exams</string>
     <string name="final_grade">Final grade</string>
-    <string name="special_evaluation">Special evaluation (TE, DA, ...)</string>
+    <string name="special_evaluation">Special evaluation (TE, DA, &#8230;)</string>
     <string name="improvement_classification">Improvement of Final/Distributed Classification</string>
     <string name="comments">Comments</string>
     <string name="subject_content">Subject Content</string>
@@ -218,7 +223,7 @@
     <!-- Printing -->
     <string name="title_printing">Printing Quota</string>
     <string name="btn_printing">Printing Quota</string>
-    <string name="lb_data_fetching">Fetching data...</string>
+    <string name="lb_data_fetching">Fetching data&#8230;</string>
     <string name="print_balance">Printing Quota: <xliff:g id="quota">%1$s</xliff:g> €</string>
     <string name="print_can_print_a4_black">You can print up to <xliff:g id="pages">%1$s</xliff:g> black A4 pages.</string>
     <string name="print_reference_title">Increase Quota</string>
