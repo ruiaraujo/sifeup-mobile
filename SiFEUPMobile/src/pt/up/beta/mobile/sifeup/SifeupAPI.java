@@ -920,7 +920,7 @@ public class SifeupAPI {
 	 */
 	public static int JSONError(String page) throws JSONException {
 		if (page == null) {
-			Log.e("JSON", "null page");
+			Log.d("JSON", "null page");
 			return Errors.NULL_PAGE;
 		}
 		JSONObject jObject = new JSONObject(page);
@@ -929,10 +929,10 @@ public class SifeupAPI {
 
 		if (jObject.has("erro")) {
 			erro = (String) jObject.get("erro");
-			Log.e("JSON", erro);
+			Log.d("JSON", erro);
 			if (erro.substring(0, 8).equals("Autoriza")) {
 				erro_msg = (String) jObject.get("erro_msg");
-				Log.e("JSON", erro_msg);
+				Log.d("JSON", erro_msg);
 			}
 			return Errors.NO_AUTH;
 		}

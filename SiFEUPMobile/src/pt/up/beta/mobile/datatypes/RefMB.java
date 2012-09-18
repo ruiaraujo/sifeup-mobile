@@ -47,7 +47,7 @@ public class RefMB implements Parcelable
 		} 
 		catch (JSONException e) 
 		{
-			Log.e("Propinas", "JSON error in RefMB");
+			Log.d("Propinas", "JSON error in RefMB");
 			e.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(

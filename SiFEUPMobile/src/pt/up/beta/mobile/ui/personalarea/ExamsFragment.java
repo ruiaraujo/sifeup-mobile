@@ -174,7 +174,7 @@ public class ExamsFragment extends BaseFragment implements
 										.insertEvent(calIds[which], event);
 								// check event error
 								if (newEvent == null)
-									Log.e("ScheduleExport", "error on event");
+									Log.d("ScheduleExport", "error on event");
 
 							}
 							dialog.dismiss();

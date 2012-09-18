@@ -69,7 +69,7 @@ public class NewsFragment extends BaseFragment implements
             if (getActivity() == null)
                 return;
             if (result != null) {
-                Log.e("News", "success");
+                Log.d("News", "success");
                 String[] from = new String[] { "title", "time" };
                 int[] to = new int[] { R.id.news_title, R.id.news_time };
                 // prepare the list of all records
@@ -89,10 +89,10 @@ public class NewsFragment extends BaseFragment implements
                 list.setOnItemClickListener(NewsFragment.this);
                 list.setSelection(0);
                 showMainScreen();
-                Log.e("JSON", "news visual list loaded");
+                Log.d("JSON", "news visual list loaded");
 
             } else {
-                Log.e("News", "error");
+                Log.d("News", "error");
                 if (getActivity() != null) {
         			showRepeatTaskScreen(getString(R.string.news_error));
         			return;

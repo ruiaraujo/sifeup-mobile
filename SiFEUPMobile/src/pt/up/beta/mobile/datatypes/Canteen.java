@@ -45,7 +45,7 @@ public class Canteen implements Parcelable {
 		JSONObject jObject = new JSONObject(page);
 
 		if (jObject.has("cantinas")) {
-			Log.e("JSON", "founded cantinas");
+			Log.d("JSON", "founded cantinas");
 			JSONArray jArray = jObject.getJSONArray("cantinas");
 
 			for (int i = 0; i < jArray.length(); i++) {

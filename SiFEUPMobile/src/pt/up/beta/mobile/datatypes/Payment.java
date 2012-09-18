@@ -142,7 +142,7 @@ public class Payment implements Parcelable {
 					.equals("Valor não pago mas o prazo ainda não foi excedido"))
 				state = State.TO_BE_PAID;
 			else {
-				Log.e("Propinas", "estado nao contemplado");
+				Log.d("Propinas", "estado nao contemplado");
 				state = null;
 			}
 
@@ -163,7 +163,7 @@ public class Payment implements Parcelable {
 			return new Payment(state, name, dueDate, amount, amountPaid,
 					amountDebt);
 		} catch (JSONException e) {
-			Log.e("Propinas", "JSON error in payment");
+			Log.d("Propinas", "JSON error in payment");
 			e.printStackTrace();
 
 			ACRA.getErrorReporter().handleSilentException(e);

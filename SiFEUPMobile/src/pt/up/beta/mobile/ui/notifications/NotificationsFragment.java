@@ -121,7 +121,7 @@ public class NotificationsFragment extends BaseFragment implements
 			setRefreshActionItemState(false);
 			return;
 		}
-		Log.e("JSON", "Notifications visual list loaded");
+		Log.d("JSON", "Notifications visual list loaded");
 
 		String[] from = new String[] { "subject", "date", "designation",
 				"priority" };

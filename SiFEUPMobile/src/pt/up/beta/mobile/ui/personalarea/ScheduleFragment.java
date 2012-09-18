@@ -495,7 +495,7 @@ public class ScheduleFragment extends BaseFragment implements
 								// done.
 								// check event error
 								if (newEvent == null)
-									Log.e("ScheduleExport", "error on event");
+									Log.d("ScheduleExport", "error on event");
 
 							}
 
@@ -609,7 +609,7 @@ public class ScheduleFragment extends BaseFragment implements
 			cleanBlocks();
 		}
 
-		Log.e("Schedule", "success");
+		Log.d("Schedule", "success");
 		for (ScheduleBlock block : schedule)
 			addBlock(block.getWeekDay(), block);
 		mPager.setAdapter(new DayAdapter());

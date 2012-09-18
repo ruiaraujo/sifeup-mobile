@@ -16,7 +16,7 @@ import android.util.Log;
 /**
  * Class Notification 
  * 
- * @author ångela Igreja
+ * @author ï¿½ngela Igreja
  *
  */
 @SuppressWarnings("serial")
@@ -84,7 +84,7 @@ public class Notification  implements Serializable {
 							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 		}
 		
-    	Log.e("JSON", "Notification not found");
+    	Log.d("JSON", "Notification not found");
     	return null;
     }
     public static List<Notification> parseListJSON(String page) throws JSONException{

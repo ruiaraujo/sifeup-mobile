@@ -201,7 +201,7 @@ public class ScheduleBlock implements Parcelable{
         List<ScheduleBlock> schedule = new ArrayList<ScheduleBlock>();
 
         if (jObject.has("horario")) {
-            Log.e("JSON", "founded schedule");
+            Log.d("JSON", "founded schedule");
             JSONArray jArray = jObject.getJSONArray("horario");
 
             // iterate over jArray

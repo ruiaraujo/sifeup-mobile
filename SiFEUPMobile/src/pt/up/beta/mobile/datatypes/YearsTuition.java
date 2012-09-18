@@ -192,10 +192,10 @@ public class YearsTuition implements Parcelable {
 			return new YearsTuition(year, courseCode, courseName, state, type,
 					payments, total_paid, total_in_debt, references);
 		} catch (JSONException e) {
-			Log.e("Propinas", "JSON error in year");
+			Log.d("Propinas", "JSON error in year");
 			e.printStackTrace();
-			Log.e("Propina", e.getMessage());
-			Log.e("Propina", yearInfo.toString());
+			Log.d("Propina", e.getMessage());
+			Log.d("Propina", yearInfo.toString());
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"
@@ -220,7 +220,7 @@ public class YearsTuition implements Parcelable {
 					else
 						return null;
 				} catch (JSONException e) {
-					Log.e("Propinas",
+					Log.d("Propinas",
 							"Error getting the year from the JSON list in tuitions");
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
@@ -233,7 +233,7 @@ public class YearsTuition implements Parcelable {
 				}
 			}
 		} catch (JSONException e1) {
-			Log.e("Propinas", "error getting the array pagamentos");
+			Log.d("Propinas", "error getting the array pagamentos");
 			e1.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e1);
 			ACRA.getErrorReporter().handleSilentException(
