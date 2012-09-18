@@ -1,7 +1,6 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
 import android.content.Intent;
@@ -35,9 +34,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!AccountUtils.isAccountValid(this)) {
-				goLogin();
-		}
+		//TODO: we need to improve this
+		//if (!AccountUtils.isAccountValid(this)) {
+			//	goLogin();
+		//}
 		// Example of how to track a pageview event
 		AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
 				getClass().getSimpleName());

@@ -1,7 +1,6 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -109,8 +108,9 @@ public class BaseFragment extends SherlockFragment {
 		super.onActivityCreated(savedInstanceState);
 		// Recovering the Cookie here
 		// as every activity will descend from this one.
-		if (!AccountUtils.isAccountValid(getActivity()))
-			goLogin();
+		//TODO: we need to improve this
+		//if (!AccountUtils.isAccountValid(getActivity()))
+			//goLogin();
 	}
 
 	@Override
