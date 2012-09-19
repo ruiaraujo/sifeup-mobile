@@ -20,6 +20,7 @@ public class SigarraProvider extends ContentProvider {
 	private static final int SUBJECTS = 10;
 	private static final int FRIENDS = 20;
 	private static final int PROFILES = 30;
+	private static final int PROFILES_PIC = 31;
 	private static final int EXAMS = 40;
 	private static final int ACADEMIC_PATH = 50;
 	private static final int TUITION = 60;
@@ -39,6 +40,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_FRIENDS, FRIENDS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_PROFILES, PROFILES);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_PROFILES_PIC, PROFILES_PIC);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_EXAMS, EXAMS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
@@ -85,6 +88,7 @@ public class SigarraProvider extends ContentProvider {
 			table = FriendsTable.TABLE;
 			break;
 		case PROFILES:
+		case PROFILES_PIC:
 			table = ProfilesTable.TABLE;
 			break;
 		case EXAMS:
@@ -129,6 +133,8 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.Friends.CONTENT_TYPE;
 		case PROFILES:
 			return SigarraContract.Profiles.CONTENT_TYPE;
+		case PROFILES_PIC:
+			return SigarraContract.Profiles.CONTENT_PIC;
 		case EXAMS:
 			return SigarraContract.Exams.CONTENT_TYPE;
 		case ACADEMIC_PATH:
@@ -167,8 +173,9 @@ public class SigarraProvider extends ContentProvider {
 			nullHack = FriendsTable.KEY_COURSE_FRIEND;
 			break;
 		case PROFILES:
+		case PROFILES_PIC:
 			table = ProfilesTable.TABLE;
-			nullHack = null;
+			nullHack = ProfilesTable.KEY_PROFILE_PIC;
 			break;
 		case EXAMS:
 			table = ExamsTable.TABLE;
@@ -242,8 +249,9 @@ public class SigarraProvider extends ContentProvider {
 			nullHack = FriendsTable.KEY_COURSE_FRIEND;
 			break;
 		case PROFILES:
+		case PROFILES_PIC:
 			table = ProfilesTable.TABLE;
-			nullHack = null;
+			nullHack = ProfilesTable.KEY_PROFILE_PIC;
 			break;
 		case EXAMS:
 			table = ExamsTable.TABLE;
@@ -377,6 +385,11 @@ public class SigarraProvider extends ContentProvider {
 						AccountUtils.getActiveUserName(getContext()),
 						selectionArgs[0], selectionArgs[1]);
 			}
+			break;
+		case PROFILES_PIC:
+			qb.setTables(ProfilesTable.TABLE);
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null, sortOrder);
 			break;
 		case EXAMS:
 			qb.setTables(ExamsTable.TABLE);
@@ -575,6 +588,7 @@ public class SigarraProvider extends ContentProvider {
 			table = FriendsTable.TABLE;
 			break;
 		case PROFILES:
+		case PROFILES_PIC:
 			table = ProfilesTable.TABLE;
 			break;
 		case EXAMS:

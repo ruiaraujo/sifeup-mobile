@@ -1,7 +1,6 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.ui.utils.ImageDownloader;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +29,6 @@ public class BaseFragment extends SherlockFragment {
 
 	public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
 	protected final static String DIALOG = "dialog";
-	private static ImageDownloader imageDownloader;
 
 	private ViewSwitcher switcher;
 	private View emptyScreen;
@@ -138,12 +136,6 @@ public class BaseFragment extends SherlockFragment {
 		getActivity().finish();
 		getActivity().overridePendingTransition(R.anim.home_enter,
 				R.anim.home_exit);
-	}
-
-	public synchronized static ImageDownloader getImagedownloader() {
-		if (imageDownloader == null)
-			imageDownloader = new ImageDownloader();
-		return imageDownloader;
 	}
 
 	protected void showRepeatTaskScreen(final String message) {

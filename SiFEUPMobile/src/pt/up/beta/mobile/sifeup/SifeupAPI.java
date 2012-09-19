@@ -791,13 +791,26 @@ public class SifeupAPI {
 		}
 		return null;
 	}
+	
+
+	public static Bitmap downloadBitmap(String strUrl) {
+		try {
+			return downloadBitmap(strUrl, AccountUtils.getAuthToken(null));
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	// the actual download code
-	public static Bitmap downloadBitmap(String url) {
+	public static Bitmap downloadBitmap(String url, String cookie) {
 		final HttpsURLConnection connection = get(url);
 		try {
-			connection.setRequestProperty("Cookie",
-					AccountUtils.getAuthToken(null));
+			connection.setRequestProperty("Cookie", cookie);
 			connection.setRequestProperty("connection", "close");
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);
@@ -817,10 +830,6 @@ public class SifeupAPI {
 			return BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
 					baf.length());
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
 			e.printStackTrace();
 		} finally {
 			connection.disconnect();

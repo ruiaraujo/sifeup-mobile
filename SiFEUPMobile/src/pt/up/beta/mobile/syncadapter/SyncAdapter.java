@@ -15,6 +15,7 @@
  */
 package pt.up.beta.mobile.syncadapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
+import pt.up.beta.mobile.utils.FileUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
@@ -44,6 +46,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -243,11 +246,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 										cursor.getString(0)));
 			}
 		} else {
-			// No notifications		
+			// No notifications
 			final ContentValues values = new ContentValues();
-			values.put(SigarraContract.LastSync.NOTIFICATIONS, System.currentTimeMillis());
-			getContext().getContentResolver().update(SigarraContract.LastSync.CONTENT_URI, values, SigarraContract.LastSync.PROFILE, SigarraContract.LastSync.getLastSyncSelectionArgs(account.name));
-			getContext().getContentResolver().notifyChange(SigarraContract.Notifcations.CONTENT_URI, null);
+			values.put(SigarraContract.LastSync.NOTIFICATIONS,
+					System.currentTimeMillis());
+			getContext().getContentResolver().update(
+					SigarraContract.LastSync.CONTENT_URI,
+					values,
+					SigarraContract.LastSync.PROFILE,
+					SigarraContract.LastSync
+							.getLastSyncSelectionArgs(account.name));
+			getContext().getContentResolver().notifyChange(
+					SigarraContract.Notifcations.CONTENT_URI, null);
 		}
 		cursor.close();
 		syncResult.stats.numEntries += jArray.length();
@@ -381,6 +391,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.PRUNE);
 		getContext().getContentResolver().insert(
 				SigarraContract.Profiles.CONTENT_URI, values);
+
+		// Getting pic
+		final ContentValues pic = new ContentValues();
+		final String picPath = getProfilePic(userCode, authToken, syncResult);
+		if (picPath != null) {
+			pic.put(SigarraContract.ProfileColumns.PIC, picPath);
+			getContext().getContentResolver().update(
+					SigarraContract.Profiles.PIC_CONTENT_URI,
+					pic,
+					SigarraContract.Profiles.PROFILE,
+					SigarraContract.Profiles
+							.getProfilePicSelectionArgs(userCode));
+		}
 		syncResult.stats.numEntries += 1;
 	}
 
@@ -397,9 +420,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		else
 			profile = SifeupAPI.getReply(SifeupAPI.getEmployeeUrl(userCode),
 					authToken);
+		final String picPath = getProfilePic(userCode, authToken, syncResult);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ProfileColumns.ID, userCode);
 		values.put(SigarraContract.ProfileColumns.CONTENT, profile);
+		if (picPath != null)
+			values.put(SigarraContract.ProfileColumns.PIC, picPath);
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
 		getContext().getContentResolver().insert(
 				SigarraContract.Profiles.CONTENT_URI, values);
@@ -416,10 +442,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			do {
 				final ContentValues friend = new ContentValues();
 				final String friendCode = c.getString(0);
+				final String friendPic = getProfilePic(friendCode, authToken,
+						syncResult);
 				friend.put(SigarraContract.ProfileColumns.ID, friendCode);
 				friend.put(SigarraContract.ProfileColumns.CONTENT, SifeupAPI
 						.getReply(SifeupAPI.getStudentUrl(friendCode),
 								authToken));
+				if (friendPic != null)
+					values.put(SigarraContract.ProfileColumns.PIC, friendPic);
 				friend.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
 				friends[i++] = friend;
 			} while (c.moveToNext());
@@ -429,6 +459,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 		c.close();
 
+	}
+
+	private String getProfilePic(String userCode, String authToken,
+			SyncResult syncResult) {
+		final File f = FileUtils.getFile(getContext(), userCode);
+		if (f == null)
+			return null;
+		final Bitmap pic = SifeupAPI.downloadBitmap(
+				SifeupAPI.getPersonPicUrl(userCode), authToken);
+		if (pic == null) {
+			syncResult.stats.numIoExceptions++;
+			return null;
+		}
+		FileUtils.writeFile(pic, f);
+		return f.getAbsolutePath();
 	}
 
 	private void getSubject(Account account, String code, String year,
@@ -499,7 +544,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			getContext().getContentResolver().bulkInsert(
 					SigarraContract.Subjects.CONTENT_URI, values);
 		else
-			getContext().getContentResolver().notifyChange(SigarraContract.Subjects.CONTENT_URI, null);
+			getContext().getContentResolver().notifyChange(
+					SigarraContract.Subjects.CONTENT_URI, null);
 		syncResult.stats.numEntries += subjects.size();
 	}
 }

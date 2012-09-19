@@ -8,6 +8,7 @@ public class ProfilesTable implements BaseColumns {
     // fields in the profiles table
     static final String KEY_ID_PROFILE = "_id";
     static final String KEY_CONTENT_PROFILE = "content";
+    static final String KEY_PROFILE_PIC = "pic_path";
 
 
     // database info
@@ -16,7 +17,8 @@ public class ProfilesTable implements BaseColumns {
     private static final String TABLE_CREATE = "CREATE TABLE "
             + TABLE + " (" + KEY_ID_PROFILE
             + " TEXT PRIMARY KEY , " + KEY_CONTENT_PROFILE
-            + " TEXT NOT NULL, " + SQL_CREATE_STATE
+            + " TEXT NOT NULL, " + KEY_PROFILE_PIC
+            + " TEXT , " + SQL_CREATE_STATE
             + " );";
     
 	static void onCreate(SQLiteDatabase database) {

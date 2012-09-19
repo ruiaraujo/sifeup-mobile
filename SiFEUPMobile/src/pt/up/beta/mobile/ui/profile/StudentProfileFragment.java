@@ -17,6 +17,7 @@ import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
+import pt.up.beta.mobile.ui.utils.LoaderDrawable;
 import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -64,10 +65,9 @@ public class StudentProfileFragment extends BaseFragment implements
 	/** User Info */
 	private Student me;
 	private List<ProfileDetail> contents;
-	
-	private final static int PROFILE_LOADER = 0;
-	private final static int FRIEND_LOADER = 1;
 
+	private final static int PROFILE_LOADER = 100;
+	private final static int FRIEND_LOADER = 200;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,11 +146,11 @@ public class StudentProfileFragment extends BaseFragment implements
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
 			friend.setVisibility(View.GONE);
 		else
-			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER, null,
-					new FriendChecker());
-		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER, null, this);
+			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER,
+					null, new FriendChecker());
+		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER,
+				null, this);
 	}
-
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.refresh_menu_items, menu);
@@ -213,41 +213,37 @@ public class StudentProfileFragment extends BaseFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Student> loader, Student student) {
-		if (student != null) {
-			if (getActivity() == null)
-				return;
-			me = student;
-			pic.setImageDrawable(getResources().getDrawable(
-					R.drawable.speaker_image_empty));
-			getImagedownloader().download(
-					SifeupAPI.getPersonPicUrl(me.getCode()), pic,
-					((BitmapDrawable) pic.getDrawable()).getBitmap());
-			contents = me.getProfileContents(getResources());
-			((SherlockFragmentActivity) getActivity()).getSupportActionBar()
-					.setTitle(me.getName());
-			name.setText(me.getName());
-			String[] from = new String[] { "title", "content" };
-			int[] to = new int[] { R.id.profile_item_title,
-					R.id.profile_item_content };
-			// prepare the list of all records
-			List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-			for (ProfileDetail s : contents) {
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put(from[0], s.title);
-				map.put(from[1], s.content);
-				fillMaps.add(map);
-			}
-
-			// fill in the grid_item layout
-			SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-					R.layout.list_item_profile, from, to);
-			details.setAdapter(adapter);
-			details.setOnItemClickListener(this);
-			details.setSelection(0);
-			setRefreshActionItemState(false);
-			showMainScreen();
-
+		if (getActivity() == null || student == null)
+			return;
+		me = student;
+		pic.setImageDrawable(new LoaderDrawable(getActivity()
+				.getSupportLoaderManager(), pic, me.getCode(), getActivity(),
+				((BitmapDrawable) getResources().getDrawable(
+						R.drawable.speaker_image_empty)).getBitmap()));
+		contents = me.getProfileContents(getResources());
+		((SherlockFragmentActivity) getActivity()).getSupportActionBar()
+				.setTitle(me.getName());
+		name.setText(me.getName());
+		String[] from = new String[] { "title", "content" };
+		int[] to = new int[] { R.id.profile_item_title,
+				R.id.profile_item_content };
+		// prepare the list of all records
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		for (ProfileDetail s : contents) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(from[0], s.title);
+			map.put(from[1], s.content);
+			fillMaps.add(map);
 		}
+
+		// fill in the grid_item layout
+		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
+				R.layout.list_item_profile, from, to);
+		details.setAdapter(adapter);
+		details.setOnItemClickListener(this);
+		details.setSelection(0);
+		setRefreshActionItemState(false);
+		showMainScreen();
 	}
 
 	@Override

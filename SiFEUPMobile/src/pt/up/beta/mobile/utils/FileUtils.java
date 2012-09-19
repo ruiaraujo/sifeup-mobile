@@ -57,7 +57,7 @@ public class FileUtils {
 
         try {
             out = new FileOutputStream(f);
-            bmp.compress(Bitmap.CompressFormat.PNG, 80, out);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

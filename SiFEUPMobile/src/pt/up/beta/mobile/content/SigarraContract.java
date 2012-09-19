@@ -18,6 +18,7 @@ public final class SigarraContract {
 	public interface ProfileColumns {
 		String ID = ProfilesTable.KEY_ID_PROFILE;
 		String CONTENT = ProfilesTable.KEY_CONTENT_PROFILE;
+		String PIC = ProfilesTable.KEY_PROFILE_PIC;
 	}
 
 	public interface FriendsColumns {
@@ -94,6 +95,7 @@ public final class SigarraContract {
 	static final String PATH_SUBJECTS = "subjects";
 	static final String PATH_FRIENDS = "friends";
 	static final String PATH_PROFILES = "profiles";
+	static final String PATH_PROFILES_PIC = "profiles_pic";
 	static final String PATH_EXAMS = "exams";
 	static final String PATH_ACADEMIC_PATH = "academic_path";
 	static final String PATH_TUITION = "tuition";
@@ -163,9 +165,12 @@ public final class SigarraContract {
 	public static class Profiles implements ProfileColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_PROFILES).build();
+		public static final Uri PIC_CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_PROFILES_PIC).build();
 
 		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.profile";
 		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.profile";
+		public static final String CONTENT_PIC = "image/jpg";
 
 		public static final String PROFILE = ID + "=?";
 
@@ -173,8 +178,14 @@ public final class SigarraContract {
 				String type) {
 			return new String[] { code, type };
 		}
+	
+		public static final String[] getProfilePicSelectionArgs(String code) {
+			return new String[] { code };
+		}
 
 		public static final String[] PROFILE_COLUMNS = { CONTENT };
+		public static final String[] PIC_COLUMNS = { PIC };
+
 
 	}
 

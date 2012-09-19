@@ -4,9 +4,10 @@ import java.util.List;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.Friend;
-import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.ui.utils.ImageDownloader;
+import pt.up.beta.mobile.ui.utils.LoaderDrawable;
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.LoaderManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,16 @@ public class FriendAdapter extends BaseAdapter {
 
 	private final List<Friend> friends;
 	private final LayoutInflater inflater;
-	private final ImageDownloader imageDownloader;
+	// private final ImageDownloader imageDownloader;
+	private final Context context;
+	private final LoaderManager loaderManager;
 
 	public FriendAdapter(List<Friend> friends, LayoutInflater inflater,
-			 ImageDownloader down) {
+			Context con, LoaderManager loaderManager) {
 		this.friends = friends;
 		this.inflater = inflater;
-		this.imageDownloader = down;
+		this.context = con.getApplicationContext();
+		this.loaderManager = loaderManager;
 	}
 
 	public int getCount() {
@@ -66,15 +70,14 @@ public class FriendAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.name.setText(friends.get(position).getName());
-		if ( friends.get(position).getCourse() != null )
+		if (friends.get(position).getCourse() != null)
 			holder.course.setText(friends.get(position).getCourse());
 		else
 			holder.course.setText("");
-		imageDownloader.download(SifeupAPI.getPersonPicUrl(friends
-				.get(position).getCode()), holder.pic,
-				((BitmapDrawable) holder.pic.getResources()
-						.getDrawable(R.drawable.speaker_image_empty))
-						.getBitmap());
+		holder.pic.setImageDrawable(new LoaderDrawable(loaderManager, holder.pic, friends.get(
+				position).getCode(), context, ((BitmapDrawable) holder.pic
+				.getResources().getDrawable(R.drawable.speaker_image_empty))
+				.getBitmap()));
 		return convertView;
 	}
 
