@@ -24,7 +24,7 @@ public class LoaderDrawable extends BitmapDrawable implements
 		this.image = image;
 		this.context = con;
 		this.code = code;
-		loaderManager.initLoader(LOADER_ID+code.hashCode(), null, this);
+		loaderManager.restartLoader(LOADER_ID+code.hashCode(), null, this);
 	}
 
 	@Override

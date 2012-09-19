@@ -652,7 +652,7 @@ public class ScheduleFragment extends BaseFragment implements
 			ProgressDialogFragment.newInstance(false).show(
 					getFragmentManager(), DIALOG);
 		}
-		getActivity().getSupportLoaderManager().initLoader(scheduleType, null,
+		getActivity().getSupportLoaderManager().restartLoader(scheduleType, null,
 				this);
 	}
 

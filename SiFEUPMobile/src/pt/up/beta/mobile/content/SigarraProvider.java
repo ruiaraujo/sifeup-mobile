@@ -467,22 +467,8 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
-				final Cursor syncState = getContext()
-						.getContentResolver()
-						.query(SigarraContract.LastSync.CONTENT_URI,
-								SigarraContract.LastSync.COLUMNS,
-								SigarraContract.LastSync.PROFILE,
-								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
-										.getActiveUserName(getContext())), null);
-				if (syncState.moveToFirst()) {
-					if (syncState.getLong(syncState
-							.getColumnIndex(SigarraContract.LastSync.PRINTING)) == 0) {
 						SyncAdapterUtils.syncPrintingQuota(AccountUtils
 								.getActiveUserName(getContext()));
-					}
-				} else
-					throw new RuntimeException("It should always have a result");
-				syncState.close();
 			}
 			break;
 		case SCHEDULE:
@@ -492,26 +478,11 @@ public class SigarraProvider extends ContentProvider {
 							selectionArgs[2], selectionArgs[3] }, null, null,
 					sortOrder);
 			if (c.getCount() == 0) {
-				final Cursor syncState = getContext()
-						.getContentResolver()
-						.query(SigarraContract.LastSync.CONTENT_URI,
-								SigarraContract.LastSync.COLUMNS,
-								SigarraContract.LastSync.PROFILE,
-								SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
-										.getActiveUserName(getContext())), null);
-				if (syncState.moveToFirst()) {
-					if (syncState.getLong(syncState
-							.getColumnIndex(SigarraContract.LastSync.SCHEDULE)) == 0) {
-						SyncAdapterUtils.syncSchedule(
-								AccountUtils.getActiveUserName(getContext()),
-								selectionArgs[0], selectionArgs[1],
-								selectionArgs[2], selectionArgs[3],
-								selectionArgs[4]);
+				SyncAdapterUtils.syncSchedule(
+						AccountUtils.getActiveUserName(getContext()),
+						selectionArgs[0], selectionArgs[1], selectionArgs[2],
+						selectionArgs[3], selectionArgs[4]);
 
-					}
-				} else
-					throw new RuntimeException("It should always have a result");
-				syncState.close();
 			}
 			break;
 		case NOTIFICATIONS:
