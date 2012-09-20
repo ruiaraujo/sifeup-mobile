@@ -1,9 +1,11 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.acra.ACRA;
+import org.apache.http.auth.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,9 @@ import org.json.JSONObject;
 import pt.up.beta.mobile.datatypes.ResultsPage;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.content.Context;
 import android.os.AsyncTask;
 
 public class SearchUtils {
@@ -30,11 +35,23 @@ public class SearchUtils {
 				.getStudentUrl(code));
 	}
 
-	public static ResultsPage getStudentsSearchReply(String query, int page) {
-		final String res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(
-				encode(query), page));
-		StudentsSearchParser parser = new StudentsSearchParser();
-		return (ResultsPage) parser.parse(res);
+	public static ResultsPage getStudentsSearchReply(String query, int page, Context context) {
+		String res;
+		try {
+			res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(
+					encode(query), page), AccountUtils.getAuthToken(context));
+			StudentsSearchParser parser = new StudentsSearchParser();
+			return (ResultsPage) parser.parse(res);
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private static String encode(String s) {

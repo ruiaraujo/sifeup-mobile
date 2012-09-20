@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.apache.http.auth.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,14 +94,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
+		String authToken = null;
 		try {
 			SifeupAPI.initSSLContext(getContext().getApplicationContext());
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
 					mAccountManager.blockingGetAuthToken(account,
 							Constants.AUTHTOKEN_TYPE, false));
 			// brand new cookie
-			final String authToken = mAccountManager.blockingGetAuthToken(
-					account, Constants.AUTHTOKEN_TYPE, false);
+			authToken = mAccountManager.blockingGetAuthToken(account,
+					Constants.AUTHTOKEN_TYPE, false);
 			if (authToken == null) {
 				throw new AuthenticatorException();
 			}
@@ -185,11 +187,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"
 							+ AccountUtils.getActiveUserCode(null)));
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, null);
+			syncResult.stats.numIoExceptions++;
 		}
 	}
 
 	private void syncCanteens(Account account, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String canteens = SifeupAPI.getReply(SifeupAPI.getCanteensUrl(),
 				authToken);
 		final ContentValues values = new ContentValues();
@@ -202,7 +208,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncNotifications(Account account, String authToken,
-			SyncResult syncResult) throws JSONException {
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		final String notificationReply = SifeupAPI.getReply(
 				SifeupAPI.getNotificationsUrl(), authToken);
 		JSONObject jObject = new JSONObject(notificationReply);
@@ -264,7 +271,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncSchedule(Account account, String authToken,
-			SyncResult syncResult) throws JSONException {
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		final String type;
 		if (mAccountManager.getUserData(account, Constants.USER_TYPE).equals(
 				SifeupAPI.STUDENT_TYPE))
@@ -287,7 +295,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void getSchedule(String code, String type, String initialDay,
 			String finalDay, String baseTime, String state, String authToken,
-			SyncResult syncResult) throws JSONException {
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		final String page;
 		if (SigarraContract.Schedule.STUDENT.equals(type))
 			page = SifeupAPI.getReply(
@@ -320,7 +329,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncPrintingQuota(Account account, String authToken,
-			SyncResult syncResult) throws JSONException {
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		final String printing = SifeupAPI.getReply(SifeupAPI
 				.getPrintingUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
@@ -335,7 +345,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncTuition(Account account, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String tuition = SifeupAPI.getReply(SifeupAPI
 				.getTuitionUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
@@ -349,7 +359,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncAcademicPath(Account account, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String academicPath = SifeupAPI.getReply(SifeupAPI
 				.getAcademicPathUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
@@ -363,7 +373,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncExams(Account account, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String exams = SifeupAPI.getReply(SifeupAPI
 				.getExamsUrl(mAccountManager.getUserData(account,
 						Constants.USER_NAME)), authToken);
@@ -377,7 +387,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void getProfile(String userCode, String type, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String profile;
 		if (type.equals(SifeupAPI.STUDENT_TYPE))
 			profile = SifeupAPI.getReply(SifeupAPI.getStudentUrl(userCode),
@@ -408,7 +418,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncProfiles(Account account, String authToken,
-			SyncResult syncResult) {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String userCode = mAccountManager.getUserData(account,
 				Constants.USER_NAME);
 		final String profile;
@@ -478,7 +488,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void getSubject(Account account, String code, String year,
 			String period, String authToken, SyncResult syncResult)
-			throws JSONException {
+			throws JSONException, AuthenticationException, IOException {
 		if (TextUtils.isEmpty(code)) {
 			syncSubjects(account, authToken, syncResult);
 			return;
@@ -501,7 +511,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncSubjects(Account account, String authToken,
-			SyncResult syncResult) throws JSONException {
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		// Cleaning old values
 		getContext().getContentResolver().delete(
 				SigarraContract.Subjects.CONTENT_URI,

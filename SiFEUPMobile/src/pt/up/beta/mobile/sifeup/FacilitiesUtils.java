@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,11 +129,17 @@ public class FacilitiesUtils {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected ERROR_TYPE doInBackground(InputStream... params) {
-			String page = SifeupAPI.getPage(params[0], "UTF-8");
-			if (page == null)
-				return ERROR_TYPE.GENERAL;
-			hotspots = (List<BuildingPicHotspot>) new BuldingHotSpotParser()
-					.parse(page);
+			String page;
+			try {
+				page = SifeupAPI.getPage(params[0], "UTF-8");
+				if (page == null)
+					return ERROR_TYPE.GENERAL;
+				hotspots = (List<BuildingPicHotspot>) new BuldingHotSpotParser()
+						.parse(page);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		}
 

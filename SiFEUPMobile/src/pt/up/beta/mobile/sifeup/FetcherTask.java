@@ -2,8 +2,7 @@ package pt.up.beta.mobile.sifeup;
 
 import java.io.IOException;
 
-import org.acra.ACRA;
-import org.json.JSONException;
+import org.apache.http.auth.AuthenticationException;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.accounts.AuthenticatorException;
@@ -40,31 +39,17 @@ public class FetcherTask extends
 				if (isCancelled())
 					return null;
 				String cookie = AccountUtils.getAuthToken(null);
-				page = SifeupAPI.getReply(pages[0], cookie);
-				int error = SifeupAPI.JSONError(page);
-				switch (error) {
-				case SifeupAPI.Errors.NO_AUTH: {
+				try {
+					page = SifeupAPI.getReply(pages[0], cookie);
+					result = parser.parse(page);
+				} catch (AuthenticationException e) {
 					if (secondTry) {
 						return ERROR_TYPE.AUTHENTICATION;
 					}
 					cookie = AccountUtils.renewAuthToken(null, cookie);
 					secondTry = true;
-					break;
-				}
-				case SifeupAPI.Errors.NO_ERROR:
-					result = parser.parse(page);
-					return null;
-				case SifeupAPI.Errors.NULL_PAGE:
-					return ERROR_TYPE.NETWORK;
 				}
 			} while (secondTry);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			ACRA.getErrorReporter().handleSilentException(e);
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
-			return ERROR_TYPE.GENERAL;
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 			return ERROR_TYPE.CANCELLED;

@@ -16,6 +16,10 @@
 
 package pt.up.beta.mobile.authenticator;
 
+import java.io.IOException;
+
+import org.apache.http.auth.AuthenticationException;
+
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.accounts.AbstractAccountAuthenticator;
@@ -100,26 +104,35 @@ class Authenticator extends AbstractAccountAuthenticator {
 					"invalid authTokenType");
 			return result;
 		}
+		try {
+			// Extract the username and password from the Account Manager, and
+			// ask
+			// the server for an appropriate AuthToken.
+			final AccountManager am = AccountManager.get(mContext);
+			final String password = am.getPassword(account);
+			if (password != null) {
+				String[] reply;
 
-		// Extract the username and password from the Account Manager, and ask
-		// the server for an appropriate AuthToken.
-		final AccountManager am = AccountManager.get(mContext);
-		final String password = am.getPassword(account);
-		if (password != null) {
-			 final String [] reply = SifeupAPI.authenticate(
-							am.getUserData(account, Constants.USER_NAME),
-							password);
-			 final String authToken = reply[1];
-			if (!TextUtils.isEmpty(authToken)) {
-				final Bundle result = new Bundle();
-				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-				result.putString(AccountManager.KEY_ACCOUNT_TYPE,
-						Constants.ACCOUNT_TYPE);
-				result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-				return result;
+				reply = SifeupAPI.authenticate(
+						am.getUserData(account, Constants.USER_NAME), password);
+				final String authToken = reply[1];
+				if (!TextUtils.isEmpty(authToken)) {
+					final Bundle result = new Bundle();
+					result.putString(AccountManager.KEY_ACCOUNT_NAME,
+							account.name);
+					result.putString(AccountManager.KEY_ACCOUNT_TYPE,
+							Constants.ACCOUNT_TYPE);
+					result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+					return result;
+				}
 			}
-		}
 
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new NetworkErrorException();
+		}
 		// If we get here, then we couldn't access the user's password - so we
 		// need to re-prompt them for their credentials. We do that by creating
 		// an intent to display our AuthenticatorActivity panel.

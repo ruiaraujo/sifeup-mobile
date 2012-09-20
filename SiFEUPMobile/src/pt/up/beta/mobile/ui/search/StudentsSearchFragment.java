@@ -177,7 +177,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		@Override
 		protected boolean cacheInBackground() throws Exception {
 			ResultsPage page = SearchUtils.getStudentsSearchReply(query,
-					results.size() * 15 + 1);
+					results.size() * 15 + 1, getActivity());
 			if ( page == null )
 				return false;
 			results.add(page);

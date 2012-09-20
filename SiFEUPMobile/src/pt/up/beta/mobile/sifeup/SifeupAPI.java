@@ -20,6 +20,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -710,88 +711,69 @@ public class SifeupAPI {
 	 * 
 	 * @param url
 	 * @return page
+	 * @throws IOException
+	 * @throws AuthenticationException
 	 */
-	public static String getReply(String strUrl, String cookie) {
+	public static String getReply(String strUrl, String cookie)
+			throws IOException, AuthenticationException {
 		String page = null;
-		try {
-			do {
-				final HttpsURLConnection connection = get(strUrl);
-				connection.setRequestProperty("Cookie", cookie);
-				connection.setRequestProperty("connection", "close");
-				final InputStream pageContent = connection.getInputStream();
-				String charset = getContentCharSet(connection.getContentType());
-				if (charset == null) {
-					charset = HTTP.DEFAULT_CONTENT_CHARSET;
-				}
-				page = getPage(pageContent, charset);
-				pageContent.close();
-				InputStream errStream = connection.getErrorStream();
-				if (errStream != null)
-					errStream.close();
-				connection.disconnect();
-				if (page == null)
-					return null;
-			} while (page.equals(""));
-			return page;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String getReply(String strUrl) {
-		try {
-			return getReply(strUrl, AccountUtils.getAuthToken(null));
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String[] authenticate(String username, String password) {
-		String page = null;
-		try {
-			HttpsURLConnection connection = null;
-			do {
-				connection = get(SifeupAPI.getAuthenticationUrl(username,
-						password));
-				connection.setRequestProperty("connection", "close");
-				final InputStream pageContent = connection.getInputStream();
-				String charset = getContentCharSet(connection.getContentType());
-				if (charset == null) {
-					charset = HTTP.DEFAULT_CONTENT_CHARSET;
-				}
-				page = getPage(pageContent, charset);
-				pageContent.close();
-				InputStream errStream = connection.getErrorStream();
-				if (errStream != null)
-					errStream.close();
-				connection.disconnect();
-				if (page == null)
-					return null;
-			} while (page.equals(""));
-			// TODO API should return 401
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-				// Saving cookie for later using throughout the program
-				String cookie = "";
-				String headerName = null;
-				for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
-					if (headerName.equalsIgnoreCase("Set-Cookie")) {
-						cookie += connection.getHeaderField(i) + "; ";
-					}
-				}
-				return new String[] { page, cookie };
+		do {
+			final HttpsURLConnection connection = get(strUrl);
+			connection.setRequestProperty("Cookie", cookie);
+			connection.setRequestProperty("connection", "close");
+			final InputStream pageContent = connection.getInputStream();
+			String charset = getContentCharSet(connection.getContentType());
+			if (charset == null) {
+				charset = HTTP.DEFAULT_CONTENT_CHARSET;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
+				throw new AuthenticationException();
+			page = getPage(pageContent, charset);
+			pageContent.close();
+			InputStream errStream = connection.getErrorStream();
+			if (errStream != null)
+				errStream.close();
+			connection.disconnect();
+			if (page == null)
+				return null;
+		} while (page.equals(""));
+		return page;
 	}
-	
+
+	public static String[] authenticate(String username, String password)
+			throws IOException, AuthenticationException {
+		String page = null;
+		HttpsURLConnection connection = null;
+		do {
+			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
+			connection.setRequestProperty("connection", "close");
+			final InputStream pageContent = connection.getInputStream();
+			String charset = getContentCharSet(connection.getContentType());
+			if (charset == null) {
+				charset = HTTP.DEFAULT_CONTENT_CHARSET;
+			}
+			page = getPage(pageContent, charset);
+			pageContent.close();
+			InputStream errStream = connection.getErrorStream();
+			if (errStream != null)
+				errStream.close();
+			connection.disconnect();
+			if (page == null)
+				return null;
+		} while (page.equals(""));
+		if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+			// Saving cookie for later using throughout the program
+			String cookie = "";
+			String headerName = null;
+			for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
+				if (headerName.equalsIgnoreCase("Set-Cookie")) {
+					cookie += connection.getHeaderField(i) + "; ";
+				}
+			}
+			return new String[] { page, cookie };
+		}
+		throw new AuthenticationException("No authentication");
+	}
 
 	public static Bitmap downloadBitmap(String strUrl) {
 		try {
@@ -887,7 +869,7 @@ public class SifeupAPI {
 		return charset;
 	}
 
-	public static String getPage(InputStream in) {
+	public static String getPage(InputStream in) throws IOException {
 		return getPage(in, HTTP.DEFAULT_CONTENT_CHARSET);
 	}
 
@@ -896,27 +878,24 @@ public class SifeupAPI {
 	 * 
 	 * @param in
 	 * @return
+	 * @throws IOException
 	 */
-	public static String getPage(InputStream in, String encoding) {
-		try {
-			BufferedInputStream bis = new BufferedInputStream(in);
-			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int read = 0;
-			byte[] buffer = new byte[512];
-			while (true) {
-				read = bis.read(buffer);
-				if (read == -1) {
-					break;
-				}
-				baf.append(buffer, 0, read);
+	public static String getPage(InputStream in, String encoding)
+			throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(in);
+		ByteArrayBuffer baf = new ByteArrayBuffer(50);
+		int read = 0;
+		byte[] buffer = new byte[512];
+		while (true) {
+			read = bis.read(buffer);
+			if (read == -1) {
+				break;
 			}
-			bis.close();
-			in.close();
-			return new String(baf.toByteArray(), encoding);
-		} catch (IOException e) {
-			e.printStackTrace();
+			baf.append(buffer, 0, read);
 		}
-		return null;
+		bis.close();
+		in.close();
+		return new String(baf.toByteArray(), encoding);
 	}
 
 	/**
