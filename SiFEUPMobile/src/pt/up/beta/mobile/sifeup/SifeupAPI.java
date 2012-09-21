@@ -47,6 +47,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
@@ -735,7 +736,7 @@ public class SifeupAPI {
 				errStream.close();
 			connection.disconnect();
 			if (page == null)
-				return null;
+				throw new IOException("Null page");
 		} while (page.equals(""));
 		return page;
 	}
@@ -759,7 +760,7 @@ public class SifeupAPI {
 				errStream.close();
 			connection.disconnect();
 			if (page == null)
-				return null;
+				throw new IOException("Null page");
 		} while (page.equals(""));
 		if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
 			// Saving cookie for later using throughout the program
@@ -770,7 +771,8 @@ public class SifeupAPI {
 					cookie += connection.getHeaderField(i) + "; ";
 				}
 			}
-			return new String[] { page, cookie };
+			if ( !TextUtils.isEmpty(cookie) )
+				return new String[] { page, cookie };
 		}
 		throw new AuthenticationException("No authentication");
 	}
