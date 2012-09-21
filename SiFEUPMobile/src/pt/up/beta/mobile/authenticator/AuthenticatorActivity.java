@@ -27,15 +27,21 @@ import pt.up.beta.mobile.ui.dialogs.AboutDialogFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -65,7 +71,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	/** The Intent extra to store username. */
 	public static final String PARAM_AUTHTOKEN_TYPE = "authtokenType";
 
-	
 	/** The tag used to log to adb console. */
 	private static final String TAG = "AuthenticatorActivity";
 	private AccountManager mAccountManager;
@@ -194,21 +199,30 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	 * @param result
 	 *            the confirmCredentials result.
 	 */
+	@TargetApi(8)
 	private void finishLogin(User user) {
 
 		Log.i(TAG, "finishLogin()");
 		final Account account = new Account(mUsername, Constants.ACCOUNT_TYPE);
 		if (mRequestNewAccount) {
-			mAccountManager.addAccountExplicitly(account, mPassword,
-					null);
+			mAccountManager.addAccountExplicitly(account, mPassword, null);
 			// Set contacts sync for this account.
 			ContentResolver.setSyncAutomatically(account,
 					SigarraContract.CONTENT_AUTHORITY, true);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+				ContentResolver.addPeriodicSync(account,
+						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
+						3 * 3600);
+			else
+				addPeriodicSync(account, SigarraContract.CONTENT_AUTHORITY,
+						new Bundle(), 3 * 3600);
 		} else {
 			mAccountManager.setPassword(account, user.getPassword());
 		}
-		mAccountManager.setUserData(account, Constants.USER_TYPE,user.getType());
-		mAccountManager.setUserData(account, Constants.USER_NAME,user.getUser());
+		mAccountManager.setUserData(account, Constants.USER_TYPE,
+				user.getType());
+		mAccountManager.setUserData(account, Constants.USER_NAME,
+				user.getUser());
 		final Intent intent = new Intent();
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
@@ -299,4 +313,26 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			ft.remove(prev).commitAllowingStateLoss();
 		}
 	}
+
+	private AlarmManager getAlarmManager() {
+		return (AlarmManager) getSystemService(ALARM_SERVICE);
+	}
+
+	private PendingIntent createOperation(Account account, String authority,
+			Bundle extras) {
+		return PeriodicSyncReceiver.createPendingIntent(
+				getApplicationContext(), account, authority, extras);
+	}
+
+	public void addPeriodicSync(Account account, String authority,
+			Bundle extras, long pollFrequency) {
+		long pollFrequencyMsec = pollFrequency * DateUtils.SECOND_IN_MILLIS;
+		AlarmManager manager = getAlarmManager();
+		int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		long triggerAtTime = SystemClock.elapsedRealtime() + pollFrequencyMsec;
+		long interval = pollFrequencyMsec;
+		PendingIntent operation = createOperation(account, authority, extras);
+		manager.setInexactRepeating(type, triggerAtTime, interval, operation);
+	}
+
 }

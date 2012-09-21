@@ -301,6 +301,8 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+        
+        <receiver android:name=".authenticator.PeriodicSyncReceiver" />
     </application>
 
 </manifest>

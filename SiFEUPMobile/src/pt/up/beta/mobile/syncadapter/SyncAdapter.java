@@ -48,7 +48,6 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -166,11 +165,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncSchedule(account, authToken, syncResult);
 				syncNotifications(account, authToken, syncResult);
 				syncCanteens(account, authToken, syncResult);
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)// TODO,
-																		// add
-																		// settings
-					syncResult.delayUntil = 3 * 3600; // delay the next sync for
-														// 3 hours
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
