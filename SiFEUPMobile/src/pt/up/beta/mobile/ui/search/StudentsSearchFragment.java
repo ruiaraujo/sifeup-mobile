@@ -38,7 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 public class StudentsSearchFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand {
+		OnItemClickListener, ResponseCommand<ResultsPage> {
 
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<ResultsPage> results = new ArrayList<ResultsPage>();
@@ -65,14 +65,14 @@ public class StudentsSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		if (query.matches(REGEX_STUDENT_CODE))
-		    task = SearchUtils.getSingleStudentSearchReply(query, this);
+			task = SearchUtils.getSingleStudentSearchReply(query, this, getActivity());
 		else
-		    task = SearchUtils.getStudentsSearchReply(query, 1, this);
-    }
-    
+			task = SearchUtils.getStudentsSearchReply(query, 1, this, getActivity());
+	}
+
 	private boolean hasMoreResults() {
 		if (results.isEmpty())
 			return true;
@@ -91,42 +91,27 @@ public class StudentsSearchFragment extends BaseFragment implements
 			goLogin();
 			break;
 		case NETWORK:
-            Toast.makeText(getActivity(), getString(R.string.toast_server_error),
-                    Toast.LENGTH_LONG).show();
-	        break;
+			Toast.makeText(getActivity(),
+					getString(R.string.toast_server_error), Toast.LENGTH_LONG)
+					.show();
+			break;
 		default:
 			showEmptyScreen(getString(R.string.general_error));
 			break;
 		}
 	}
 
-	public void onResultReceived(Object... results) {
+	public void onResultReceived(ResultsPage results) {
 		if (getActivity() == null)
 			return;
-		if (query.matches(REGEX_STUDENT_CODE)) {
-			if ( results == null )
-			{
-				showEmptyScreen(getString(R.string.toast_search_error));
-				return;
-			}
-			ResultsPage resultsPage = new ResultsPage();
-			resultsPage.setSearchSize(1);
-			resultsPage.setPage(1);
-			resultsPage.setPageResults(1);
-			// add student to the page results
-			resultsPage.getStudents().add((Student) results[0]);
-			// add page to global results
-			this.results.add(resultsPage);
-		} else {
-			final ResultsPage result = ( ResultsPage )results[0];
-			if ( result.getStudents().size()  == 0)
-			{
-				showEmptyScreen(getString(R.string.toast_search_error));
-				return;
-			}
-			else
-				this.results.add( result );
-		}
+
+		final ResultsPage result = results;
+		if (result.getStudents().size() == 0) {
+			showEmptyScreen(getString(R.string.toast_search_error));
+			return;
+		} else
+			this.results.add(result);
+
 		if (hasMoreResults()) {
 			adapter = new EndlessSearchAdapter(getActivity(),
 					new SearchCustomAdapter(getActivity(),
@@ -158,8 +143,8 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 		Intent i = new Intent(getActivity(), ProfileActivity.class);
 		// assumed only one page of results
-		Profile profile = results.get(position / 15).getStudents().get(
-				position % 15);
+		Profile profile = results.get(position / 15).getStudents()
+				.get(position % 15);
 		i.putExtra(Intent.EXTRA_TITLE, profile.getName());
 		i.putExtra(ProfileActivity.PROFILE_TYPE,
 				ProfileActivity.PROFILE_STUDENT);
@@ -178,7 +163,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		protected boolean cacheInBackground() throws Exception {
 			ResultsPage page = SearchUtils.getStudentsSearchReply(query,
 					results.size() * 15 + 1, getActivity());
-			if ( page == null )
+			if (page == null)
 				return false;
 			results.add(page);
 			if (results.isEmpty() || !hasMoreResults())
@@ -211,11 +196,11 @@ public class StudentsSearchFragment extends BaseFragment implements
 						.inflate(R.layout.list_item_search, parent, false);
 			}
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
-			name.setText(results.get(position / 15).getStudents().get(
-					position % 15).getName());
+			name.setText(results.get(position / 15).getStudents()
+					.get(position % 15).getName());
 			TextView course = (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position / 15).getStudents().get(
-					position % 15).getProgrammeName());
+			course.setText(results.get(position / 15).getStudents()
+					.get(position % 15).getProgrammeName());
 			return row;
 		}
 
@@ -234,9 +219,9 @@ public class StudentsSearchFragment extends BaseFragment implements
 	protected void onRepeat() {
 		showLoadingScreen();
 		if (query.matches(REGEX_STUDENT_CODE))
-		    task = SearchUtils.getSingleStudentSearchReply(query, this);
+			task = SearchUtils.getSingleStudentSearchReply(query, this, getActivity());
 		else
-		    task = SearchUtils.getStudentsSearchReply(query, 1, this);
+			task = SearchUtils.getStudentsSearchReply(query, 1, this, getActivity());
 	}
 
 }

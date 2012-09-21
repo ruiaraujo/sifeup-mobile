@@ -7,12 +7,16 @@ import java.util.List;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -21,37 +25,37 @@ public class FacilitiesUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getBuildingPic(
-			String building, String block, String floor, ResponseCommand command) {
-		return new BuildingsTask(command).execute(SifeupAPI.getBuildingPicUrl(
+			String building, String block, String floor, ResponseCommand<Bitmap> command, Context context) {
+		return new BuildingsTask(command, context).execute(SifeupAPI.getBuildingPicUrl(
 				building, block, floor));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(
-			String building, String room, ResponseCommand command) {
-		return new BuildingsTask(command).execute(SifeupAPI.getRoomPicUrl(building, room));
+			String building, String room, ResponseCommand<Bitmap> command, Context context) {
+		return new BuildingsTask(command,context ).execute(SifeupAPI.getRoomPicUrl(building, room));
 	}
 
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingsHotspot(
-			InputStream file, ResponseCommand command) {
+			InputStream file, ResponseCommand<List<BuildingPicHotspot>> command) {
 		return new BuildingsHotspotTask(command, null, null).execute(file);
 	}
 	
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingHotspot(
-			InputStream file, String buildingCode, String blockCode, ResponseCommand command) {
+			InputStream file, String buildingCode, String blockCode, ResponseCommand<List<BuildingPicHotspot>> command) {
 		return new BuildingsHotspotTask(command,buildingCode,blockCode ).execute(file);
 	}
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
-			String building, String block, String floor, int x , int y, ResponseCommand command) {
+			String building, String block, String floor, int x , int y, ResponseCommand<String> command) {
 		return new RoomFinderTask(command).execute(SifeupAPI.getRoomPostFinderUrl(building, block, floor, x, y));
 	}
 
 
 	private static class RoomFinderTask extends
 			AsyncTask<String, Void, ERROR_TYPE> {
-		private final ResponseCommand command;
+		private final ResponseCommand<String> command;
 		private String response;
-		public RoomFinderTask(ResponseCommand command) {
+		public RoomFinderTask(ResponseCommand<String> command) {
 			this.command = command;
 		}
 		
@@ -88,10 +92,10 @@ public class FacilitiesUtils {
 	private static class BuildingsHotspotTask extends
 			AsyncTask<InputStream, Void, ERROR_TYPE> {
 		private List<BuildingPicHotspot> hotspots;
-		private final ResponseCommand command;
+		private final ResponseCommand<List<BuildingPicHotspot>> command;
 		private final String buildingCode;
         private final String blockCode;
-		public BuildingsHotspotTask(ResponseCommand command, String buildingCode, String blockCode) {
+		public BuildingsHotspotTask(ResponseCommand<List<BuildingPicHotspot>> command, String buildingCode, String blockCode) {
 			this.command = command;
 			this.buildingCode = buildingCode;
 			if ( blockCode != null )
@@ -116,7 +120,9 @@ public class FacilitiesUtils {
 					{
 						if (buildingCode.equals(hot.getBuildingCode()) && blockCode.equals(hot.getBuildingBlock()) )
 						{
-							command.onResultReceived(hot);
+							List<BuildingPicHotspot> hotspot = new ArrayList<BuildingPicHotspot>();
+							hotspot.add(hot);
+							command.onResultReceived(hotspot);
 							return;
 						}
 					}
@@ -126,7 +132,7 @@ public class FacilitiesUtils {
 				command.onError(error);
 		}
 
-		@SuppressWarnings("unchecked")
+
 		@Override
 		protected ERROR_TYPE doInBackground(InputStream... params) {
 			String page;
@@ -134,10 +140,9 @@ public class FacilitiesUtils {
 				page = SifeupAPI.getPage(params[0], "UTF-8");
 				if (page == null)
 					return ERROR_TYPE.GENERAL;
-				hotspots = (List<BuildingPicHotspot>) new BuldingHotSpotParser()
+				hotspots = new BuldingHotSpotParser()
 						.parse(page);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;
@@ -150,9 +155,9 @@ public class FacilitiesUtils {
 	 * Collection exams.
 	 */
 
-	private static class BuldingHotSpotParser implements ParserCommand {
+	private static class BuldingHotSpotParser implements ParserCommand<List<BuildingPicHotspot>> {
 
-		public Object parse(String page) {
+		public List<BuildingPicHotspot> parse(String page) {
 			try {
 				final List<BuildingPicHotspot> hotspots = new ArrayList<BuildingPicHotspot>();
 				final JSONArray buildings = new JSONArray(page);
@@ -200,19 +205,33 @@ public class FacilitiesUtils {
 	private static class BuildingsTask extends
 			AsyncTask<String, Void, ERROR_TYPE> {
 		private Bitmap bitmap;
-		private final ResponseCommand command;
+		private final ResponseCommand<Bitmap> command;
+		private final Context context;
 
-		public BuildingsTask(ResponseCommand command) {
+		public BuildingsTask(ResponseCommand<Bitmap> command, Context context) {
 			this.command = command;
+			this.context = context;
 		}
 
 		@Override
 		// Actual download method, run in the task thread
 		protected ERROR_TYPE doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
-			bitmap = SifeupAPI.downloadBitmap(params[0]);
-			if (bitmap == null)
+			try {
+				bitmap = SifeupAPI.downloadBitmap(params[0], AccountUtils.getAuthToken(context), context);
+			} catch (AuthenticationException e) {
+				e.printStackTrace();
+				return ERROR_TYPE.AUTHENTICATION;
+			} catch (IOException e) {
+				e.printStackTrace();
 				return ERROR_TYPE.NETWORK;
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+				return ERROR_TYPE.AUTHENTICATION;
+			} catch (AuthenticatorException e) {
+				e.printStackTrace();
+				return ERROR_TYPE.AUTHENTICATION;
+			}
 			return null;
 		}
 

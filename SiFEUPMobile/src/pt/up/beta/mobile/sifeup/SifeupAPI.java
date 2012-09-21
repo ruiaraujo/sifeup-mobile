@@ -674,6 +674,9 @@ public class SifeupAPI {
 					.getSocketFactory(), 80));
 			SSLSocketFactory sslSocketFactory = new SSLSocketFactory(
 					localTrustStore);
+			sslSocketFactory
+					.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+
 			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
 			HttpParams params = new BasicHttpParams();
 			ClientConnectionManager cm = new ThreadSafeClientConnManager(
@@ -700,11 +703,32 @@ public class SifeupAPI {
 			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 					url).openConnection();
 			connection.setSSLSocketFactory(sslCtx.getSocketFactory());
+			connection.setRequestProperty("connection", "close");
 			return connection;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String getReply(String strUrl, String cookie, Context context)
+			throws IOException, AuthenticationException {
+		try {
+			try {
+				initSSLContext(context);
+				return getReply(strUrl, cookie);
+			} catch (AuthenticationException e) {
+				e.printStackTrace();
+				return getReply(strUrl,
+						AccountUtils.renewAuthToken(context, cookie));
+			}
+
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		}
+		throw new AuthenticationException();
 	}
 
 	/**
@@ -715,13 +739,12 @@ public class SifeupAPI {
 	 * @throws IOException
 	 * @throws AuthenticationException
 	 */
-	public static String getReply(String strUrl, String cookie)
+	private static String getReply(String strUrl, String cookie)
 			throws IOException, AuthenticationException {
 		String page = null;
 		do {
 			final HttpsURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
-			connection.setRequestProperty("connection", "close");
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
 			if (charset == null) {
@@ -738,16 +761,22 @@ public class SifeupAPI {
 			if (page == null)
 				throw new IOException("Null page");
 		} while (page.equals(""));
+		try {
+			if (JSONError(page) == Errors.NO_AUTH)
+				throw new AuthenticationException("No authentication");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return page;
 	}
 
-	public static String[] authenticate(String username, String password)
-			throws IOException, AuthenticationException {
+	public static String[] authenticate(String username, String password,
+			Context context) throws IOException, AuthenticationException {
+		initSSLContext(context);
 		String page = null;
 		HttpsURLConnection connection = null;
 		do {
 			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
-			connection.setRequestProperty("connection", "close");
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
 			if (charset == null) {
@@ -763,6 +792,12 @@ public class SifeupAPI {
 				throw new IOException("Null page");
 		} while (page.equals(""));
 		if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+			try {
+				if (JSONError(page) == Errors.NO_AUTH)
+					throw new AuthenticationException("No authentication");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			// Saving cookie for later using throughout the program
 			String cookie = "";
 			String headerName = null;
@@ -771,33 +806,42 @@ public class SifeupAPI {
 					cookie += connection.getHeaderField(i) + "; ";
 				}
 			}
-			if ( !TextUtils.isEmpty(cookie) )
+			if (!TextUtils.isEmpty(cookie))
 				return new String[] { page, cookie };
 		}
 		throw new AuthenticationException("No authentication");
 	}
 
-	public static Bitmap downloadBitmap(String strUrl) {
+	public static Bitmap downloadBitmap(String strUrl, String cookie,
+			Context context) throws IOException, AuthenticationException {
 		try {
-			return downloadBitmap(strUrl, AccountUtils.getAuthToken(null));
+			try {
+				initSSLContext(context);
+				return downloadBitmap(strUrl, cookie);
+			} catch (AuthenticationException e) {
+				e.printStackTrace();
+				return downloadBitmap(strUrl,
+						AccountUtils.renewAuthToken(context, cookie));
+			}
+
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 		} catch (AuthenticatorException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		return null;
+		throw new AuthenticationException();
 	}
 
 	// the actual download code
-	public static Bitmap downloadBitmap(String url, String cookie) {
+	public static Bitmap downloadBitmap(String url, String cookie)
+			throws AuthenticationException, IOException {
 		final HttpsURLConnection connection = get(url);
 		try {
 			connection.setRequestProperty("Cookie", cookie);
-			connection.setRequestProperty("connection", "close");
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
+				throw new AuthenticationException("Invalid cookie");
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
 			int read = 0;
 			int bufSize = 512;
@@ -811,14 +855,14 @@ public class SifeupAPI {
 			}
 			bis.close();
 			is.close();
+			connection.disconnect();
 			return BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
 					baf.length());
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
 			connection.disconnect();
+			throw e;
 		}
-		return null;
 
 	}
 
@@ -918,10 +962,10 @@ public class SifeupAPI {
 		String erro_msg = null;
 
 		if (jObject.has("erro")) {
-			erro = (String) jObject.get("erro");
+			erro = jObject.getString("erro");
 			Log.d("JSON", erro);
 			if (erro.substring(0, 8).equals("Autoriza")) {
-				erro_msg = (String) jObject.get("erro_msg");
+				erro_msg = jObject.getString("erro_msg");
 				Log.d("JSON", erro_msg);
 			}
 			return Errors.NO_AUTH;

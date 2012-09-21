@@ -161,7 +161,8 @@ public class ProfilePicLoader extends AsyncTaskLoader<Bitmap> {
 			mCursor.close();
 		}
 		mCursor = null;
-		bitmap.recycle();
+		if ( bitmap != null )
+			bitmap.recycle();
 		bitmap = null;
 	}
 }

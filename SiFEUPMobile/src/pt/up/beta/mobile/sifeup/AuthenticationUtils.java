@@ -11,6 +11,7 @@ import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.Context;
 import android.os.AsyncTask;
 
 public class AuthenticationUtils {
@@ -18,8 +19,8 @@ public class AuthenticationUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> authenticate(String code,
-			String password, ResponseCommand command) {
-		return new Authenticator(command).execute(code, password);
+			String password, ResponseCommand<User> command, Context context) {
+		return new Authenticator(command, context).execute(code, password);
 	}
 
 
@@ -35,11 +36,13 @@ public class AuthenticationUtils {
 
 	private static class Authenticator extends
 			AsyncTask<String, Void, ResponseCommand.ERROR_TYPE> {
-		private final ResponseCommand command;
+		private final ResponseCommand<User> command;
+		private final Context context;
 		private User user;
 
-		private Authenticator(ResponseCommand com) {
+		private Authenticator(ResponseCommand<User> com, Context context) {
 			command = com;
+			this.context = context;
 		}
 
 		protected void onPostExecute(ERROR_TYPE result) {
@@ -53,7 +56,7 @@ public class AuthenticationUtils {
 		protected ERROR_TYPE doInBackground(String... code) {
 			String[] page;
 			try {
-				page = SifeupAPI.authenticate(code[0], code[1]);
+				page = SifeupAPI.authenticate(code[0], code[1], context);
 				if (page == null)
 					return ERROR_TYPE.GENERAL;
 				user = JSONUser(page[0]);
@@ -73,7 +76,7 @@ public class AuthenticationUtils {
 				e.printStackTrace();
 				return ERROR_TYPE.NETWORK;
 			}
-			return ERROR_TYPE.GENERAL;
+			return null;
 		}
 
 		@Override
@@ -84,24 +87,26 @@ public class AuthenticationUtils {
 
 	public static AsyncTask<String, Void, String> setPasswordReply(String code,
 			String oldPassword, String newPassword, String confirmNewPassword,
-			String system, ResponseCommand command) {
-		return new PasswordTask(command).execute(code, oldPassword,
+			String system, ResponseCommand<String[]> command, Context context) {
+		return new PasswordTask(command, context).execute(code, oldPassword,
 				newPassword, confirmNewPassword, system);
 	}
 
 	/** Classe privada para a busca de dados ao servidor */
 	private static class PasswordTask extends AsyncTask<String, Void, String> {
-		private final ResponseCommand com;
+		private final ResponseCommand<String[]> com;
+		private final Context context;
 
-		private PasswordTask(ResponseCommand com) {
+		private PasswordTask(ResponseCommand<String[]> com, Context context) {
 			this.com = com;
+			this.context = context;
 		}
 
 		protected void onPostExecute(String result) {
 			if (result.equals("Success")) {
-				com.onResultReceived();
+				com.onResultReceived(null);
 			} else if (result.equals("Error")) {
-				com.onResultReceived(errorTitle, errorContent);
+				com.onResultReceived(new String[]{errorTitle, errorContent});
 			} else if (result.equals("Net"))
 				com.onError(ERROR_TYPE.NETWORK);
 			else
@@ -113,7 +118,7 @@ public class AuthenticationUtils {
 			try {
 				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(
 						strings[0], strings[1], strings[2], strings[3],
-						strings[4]), AccountUtils.getAuthToken(null));
+						strings[4]), AccountUtils.getAuthToken(context), context);
 				int error = SifeupAPI.JSONError(page);
 				switch (error) {
 				case SifeupAPI.Errors.NO_AUTH:

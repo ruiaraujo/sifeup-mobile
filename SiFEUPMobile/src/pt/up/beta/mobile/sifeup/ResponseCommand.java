@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.sifeup;
 
-public interface ResponseCommand {
+public interface ResponseCommand<T> {
 
 	enum ERROR_TYPE{
 		CANCELLED,
@@ -10,5 +10,5 @@ public interface ResponseCommand {
 	};
 	public void onError( ERROR_TYPE error );
 	
-	public void onResultReceived( Object ... results );
+	public void onResultReceived( T results );
 }

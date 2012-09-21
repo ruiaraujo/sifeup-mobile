@@ -23,15 +23,15 @@ public class SearchUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
-			String query, int page, ResponseCommand command) {
-		return new FetcherTask(command, new StudentsSearchParser())
+			String query, int page, ResponseCommand<ResultsPage> command, Context context) {
+		return new FetcherTask<ResultsPage>(command, new StudentsSearchParser(), context)
 				.execute(SifeupAPI.getStudentsSearchUrl(encode(query), page));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getSingleStudentSearchReply(
-			String code, ResponseCommand command) {
-		return new FetcherTask(new SingleStudentCom(command),
-				new SingleStudentSearchParser()).execute(SifeupAPI
+			String code, ResponseCommand<ResultsPage> command, Context context) {
+		return new FetcherTask<Student>(new SingleStudentCom(command),
+				new SingleStudentSearchParser(), context).execute(SifeupAPI
 				.getStudentUrl(code));
 	}
 
@@ -39,7 +39,7 @@ public class SearchUtils {
 		String res;
 		try {
 			res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(
-					encode(query), page), AccountUtils.getAuthToken(context));
+					encode(query), page), AccountUtils.getAuthToken(context), context);
 			StudentsSearchParser parser = new StudentsSearchParser();
 			return (ResultsPage) parser.parse(res);
 		} catch (AuthenticationException e) {
@@ -68,9 +68,9 @@ public class SearchUtils {
 	 * Collection exams.
 	 */
 
-	private static class StudentsSearchParser implements ParserCommand {
+	private static class StudentsSearchParser implements ParserCommand<ResultsPage> {
 
-		public Object parse(String page) {
+		public ResultsPage parse(String page) {
 			try {
 				ResultsPage resultsPage = new ResultsPage();
 				JSONObject jObject = new JSONObject(page);
@@ -126,10 +126,10 @@ public class SearchUtils {
 		}
 	}
 
-	private static class SingleStudentSearchParser implements ParserCommand {
+	private static class SingleStudentSearchParser implements ParserCommand<Student> {
 
 		@Override
-		public Object parse(String page) {
+		public Student parse(String page) {
 			try {
 				Student me = new Student();
 				JSONObject jObject = new JSONObject(page);
@@ -167,22 +167,27 @@ public class SearchUtils {
 		}
 	}
 
-	private static class SingleStudentCom implements ResponseCommand {
-		private final ResponseCommand com;
+	private static class SingleStudentCom implements ResponseCommand<Student> {
+		private final ResponseCommand<ResultsPage> com;
 
-		public SingleStudentCom(final ResponseCommand com) {
+		public SingleStudentCom(final ResponseCommand<ResultsPage> com) {
 			this.com = com;
 		}
 
 		public void onError(ERROR_TYPE error) {
 			if (error == ERROR_TYPE.NETWORK)
-				com.onResultReceived((Object[]) null);
+				com.onResultReceived(null);
 			else
 				com.onError(error);
 		}
 
-		public void onResultReceived(Object... results) {
-			com.onResultReceived(results);
+		public void onResultReceived(Student student) {
+			ResultsPage resultsPage = new ResultsPage();
+			resultsPage.setSearchSize(1);
+			resultsPage.setPage(1);
+			resultsPage.setPageResults(1);
+			resultsPage.getStudents().add(student);
+			com.onResultReceived(resultsPage);
 		}
 
 	}

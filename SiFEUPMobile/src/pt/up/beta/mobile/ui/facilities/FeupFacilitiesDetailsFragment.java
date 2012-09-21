@@ -1,10 +1,17 @@
 package pt.up.beta.mobile.ui.facilities;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import java.util.List;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
-
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.datatypes.ScheduleRoom;
+import pt.up.beta.mobile.sifeup.FacilitiesUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
+import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import pt.up.beta.mobile.ui.utils.TouchImageView;
+import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,16 +25,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
-import pt.up.beta.mobile.datatypes.ScheduleRoom;
-import pt.up.beta.mobile.sifeup.FacilitiesUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
-import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
-import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
-import pt.up.beta.mobile.ui.utils.TouchImageView;
-import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
-import pt.up.beta.mobile.R;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 /**
  * This interface is responsible for displaying information detailed of a
@@ -37,7 +38,7 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class FeupFacilitiesDetailsFragment extends BaseFragment implements
-        ResponseCommand, OnNavigationListener, OnTapListener {
+        ResponseCommand<Bitmap>, OnNavigationListener, OnTapListener {
     public final static String BUILDING_EXTRA = "pt.up.beta.mobile.ui.facilities.BUILDING";
     public final static String ROOM_EXTRA = "pt.up.beta.mobile.ui.facilities.ROOM";
 
@@ -45,6 +46,8 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
     private BuildingPicHotspot building;
     private ScheduleRoom room;
     private int currentFloor = 0;
+    private RoomDetector roomDetector = new RoomDetector();
+    private BuildingFinder buildingFinder = new BuildingFinder();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,13 +128,21 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         if (room != null)
             task = FacilitiesUtils.getBuildingHotspot(getResources()
                     .openRawResource(R.raw.buildings_coordinates), room
-                    .getBuildingCode(), room.getBlockCode(), this);
+                    .getBuildingCode(), room.getBlockCode(), buildingFinder);
         else
             task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
                     building.getBuildingBlock(),
-                    Integer.toString(currentFloor), this);
+                    Integer.toString(currentFloor), this, getActivity());
 
     }
+    
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if ( pic != null && pic.getDrawable() != null)
+			showMainScreen();
+	}
 
     public void onError(ERROR_TYPE error) {
         if (getActivity() == null)
@@ -149,30 +160,10 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
     }
 
     @Override
-    public void onResultReceived(Object... results) {
+    public void onResultReceived(Bitmap result) {
         if (getActivity() == null)
             return;
-        if (results[0] instanceof String) {
-            Intent i = new Intent(getActivity(), ScheduleActivity.class);
-            i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-                    ScheduleFragment.SCHEDULE_ROOM);
-            i.putExtra(ScheduleFragment.SCHEDULE_CODE, results[0].toString());
-            i.putExtra(Intent.EXTRA_TITLE,
-                    getString(R.string.title_schedule_arg, results[0]));
-            Toast.makeText(getActivity(), results[0].toString(),
-                    Toast.LENGTH_SHORT).show();
-            startActivity(i);
-            showMainScreen();
-            return;
-        }
-        if (building == null) {
-            building = (BuildingPicHotspot) results[0];
-            setUpNavigation();
-            task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                    room.getRoomCode(), this);
-            return;
-        }
-        pic.setImageBitmap((Bitmap) results[0]);
+        pic.setImageBitmap( result);
         pic.setMaxZoom(6);
         pic.setOnTapListener(this);
         showMainScreen();
@@ -183,10 +174,10 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         if (room == null)
             task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
                     building.getBuildingBlock(),
-                    Integer.toString(currentFloor), this);
+                    Integer.toString(currentFloor), this, getActivity());
         else
             task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                    room.getRoomCode(), this);
+                    room.getRoomCode(), this, getActivity());
 
     }
 
@@ -204,13 +195,13 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
                             .substring(0, 1));
             if (roomFloor == currentFloor) {
                 task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                        room.getRoomCode(), this);
+                        room.getRoomCode(), this ,getActivity());
                 return true;
             }
         }
         task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
                 building.getBuildingBlock(), Integer.toString(currentFloor),
-                this);
+                this, getActivity());
 
         return true;
     }
@@ -222,7 +213,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         showLoadingScreen();
         FacilitiesUtils.getRoomCode(building.getBuildingCode(),
                 building.getBuildingBlock(), Integer.toString(currentFloor), x,
-                y, this);
+                y, roomDetector);
         return true;
     }
 
@@ -230,4 +221,70 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
     public boolean onSingleTapUp(MotionEvent e) {
         return true;
     }
+    
+    private class RoomDetector implements ResponseCommand<String>{
+
+		@Override
+		public void onError(ERROR_TYPE error) {
+			if (getActivity() == null)
+	            return;
+	        if (error == ERROR_TYPE.NETWORK) {
+	            if (pic.getDrawable() == null)
+	                showRepeatTaskScreen(getString(R.string.toast_server_error));
+	            else {
+	                Toast.makeText(getActivity(), R.string.toast_server_error,
+	                        Toast.LENGTH_SHORT).show();
+	                showMainScreen();
+	            }
+	        } else
+	            showEmptyScreen(getString(R.string.general_error));			
+		}
+
+		@Override
+		public void onResultReceived(String results) {
+			Intent i = new Intent(getActivity(), ScheduleActivity.class);
+            i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+                    ScheduleFragment.SCHEDULE_ROOM);
+            i.putExtra(ScheduleFragment.SCHEDULE_CODE, results.toString());
+            i.putExtra(Intent.EXTRA_TITLE,
+                    getString(R.string.title_schedule_arg, results));
+            Toast.makeText(getActivity(), results.toString(),
+                    Toast.LENGTH_SHORT).show();
+            startActivity(i);
+            return;
+		}
+    	
+    }
+    
+
+	private class BuildingFinder implements ResponseCommand<List<BuildingPicHotspot>>{
+
+		@Override
+		public void onError(ERROR_TYPE error) {
+			if (getActivity() == null)
+				return;
+	        if (error == ERROR_TYPE.NETWORK) {
+	            if (pic.getDrawable() == null)
+	                showRepeatTaskScreen(getString(R.string.toast_server_error));
+	            else {
+	                Toast.makeText(getActivity(), R.string.toast_server_error,
+	                        Toast.LENGTH_SHORT).show();
+	                showMainScreen();
+	            }
+	        } else
+	            showEmptyScreen(getString(R.string.general_error));		
+		}
+
+		@Override
+		public void onResultReceived(List<BuildingPicHotspot> results) {	
+	        if (getActivity() == null)
+	            return;	
+			building = results.get(0);
+            setUpNavigation();
+            task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
+                    room.getRoomCode(), FeupFacilitiesDetailsFragment.this, getActivity());
+		}
+		
+	}
+
 }

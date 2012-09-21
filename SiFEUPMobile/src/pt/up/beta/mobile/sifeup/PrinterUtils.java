@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.Time;
 
@@ -14,14 +15,14 @@ public class PrinterUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getPrintRefReply(
-			String code, ResponseCommand command) {
-		return new FetcherTask(command, new PrintRefParser()).execute(SifeupAPI
+			String code, ResponseCommand<RefMB> command, Context context) {
+		return new FetcherTask<RefMB>(command, new PrintRefParser(), context).execute(SifeupAPI
 				.getPrintingRefUrl(code));
 	}
 
-	private static class PrintRefParser implements ParserCommand {
+	private static class PrintRefParser implements ParserCommand<RefMB> {
 
-		public Object parse(String page) {
+		public RefMB parse(String page) {
 			try {
 				JSONObject jObject = new JSONObject(page);
 				final RefMB ref = new RefMB();

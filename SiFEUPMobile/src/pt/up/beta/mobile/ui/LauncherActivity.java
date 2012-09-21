@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -29,8 +30,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		OnItemClickListener {
 	private static final int FIRST_ACCOUNT = 0;
 	private static final int ADDING_OTHER_ACCOUNT = 1;
-	
-	
+
 	private AccountManager mAccountManager;
 	public static final String LOGOUT_FLAG = "pt.up.fe.mobile.ui.logout";
 	public static final String PREF_ACTIVE_USER = "pt.up.fe.mobile.ui.USERNAME";
@@ -38,7 +38,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 	private boolean logOut;
 
 	/** Called when the activity is first created. */
-	@TargetApi(16)
+	@TargetApi(11)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,22 +48,24 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				startActivityForResult(
-						new Intent(getBaseContext(), AuthenticatorActivity.class), ADDING_OTHER_ACCOUNT);
+				startActivityForResult(new Intent(getBaseContext(),
+						AuthenticatorActivity.class), ADDING_OTHER_ACCOUNT);
 			}
 		});
 		mAccountManager = AccountManager.get(getApplicationContext());
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-				.detectAll() // or
-																		// .detectAll()
-																		// for
-																		// all
-																		// detectable
-																		// problems
-				.penaltyLog().build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+					.detectAll().penaltyLog().build());
+			final StrictMode.VmPolicy.Builder builder ;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				builder = new StrictMode.VmPolicy.Builder()
 				.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-				.penaltyLog().penaltyDeath().build());
+				.penaltyLog().penaltyDeath();
+			else
+				builder = new StrictMode.VmPolicy.Builder()
+			.detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath();
+			StrictMode.setVmPolicy(builder.build());
+		}
 
 	}
 
@@ -89,7 +91,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		final String activeUser = loginSettings.getString(PREF_ACTIVE_USER, "");
 		if (accounts.length == 0) {
 			startActivityForResult(
-					new Intent(this, AuthenticatorActivity.class), FIRST_ACCOUNT);
+					new Intent(this, AuthenticatorActivity.class),
+					FIRST_ACCOUNT);
 		} else {
 			final String[] accountNames = new String[accounts.length];
 			int i = 0;
@@ -110,8 +113,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 
 			ListView accountList = (ListView) findViewById(R.id.account_list);
 			accountList.setAdapter(new ArrayAdapter<String>(
-					getApplicationContext(),
-					R.layout.list_item_simple, accountNames));
+					getApplicationContext(), R.layout.list_item_simple,
+					accountNames));
 			accountList.setOnItemClickListener(this);
 		}
 	}
@@ -120,14 +123,14 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		if (resultCode == RESULT_OK) {
 			Account[] accounts = mAccountManager
 					.getAccountsByType(Constants.ACCOUNT_TYPE);
-			if ( accounts.length == 0 ){
+			if (accounts.length == 0) {
 				finish();
 				return;
 			}
 			SharedPreferences loginSettings = PreferenceManager
 					.getDefaultSharedPreferences(getApplicationContext());
 			final SharedPreferences.Editor editor = loginSettings.edit();
-			
+
 			editor.putString(PREF_ACTIVE_USER, accounts[0].name);
 			new Thread(new Runnable() {
 				public void run() {
@@ -141,8 +144,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		}
 
 		if (resultCode == RESULT_CANCELED) {
-			if ( requestCode == FIRST_ACCOUNT )
-				finish();		
+			if (requestCode == FIRST_ACCOUNT)
+				finish();
 		}
 	}
 

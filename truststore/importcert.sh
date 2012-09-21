@@ -8,12 +8,12 @@ fi
 CACERT=$1
 BCJAR=bcprov-jdk15on-146.jar
 
-TRUSTSTORE=res/raw/sigarratruststore.bks
+TRUSTSTORE=../SiFEUPMobile/res/raw/sigarratruststore.bks
 ALIAS=`openssl x509 -inform PEM -subject_hash -noout -in $CACERT`
 
-if [ -f $TRUSTSTORE ]; then
-    rm $TRUSTSTORE || exit 1
-fi
+#if [ -f $TRUSTSTORE ]; then
+#    rm $TRUSTSTORE || exit 1
+#fi
 
 echo "Adding certificate to $TRUSTSTORE..."
 keytool -import -v -trustcacerts -alias $ALIAS \

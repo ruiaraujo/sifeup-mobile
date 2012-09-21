@@ -33,10 +33,11 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class FeupFacilitiesFragment extends BaseFragment implements
-		ResponseCommand, OnTapListener {
+		ResponseCommand<Bitmap>, OnTapListener {
 
 	private TouchImageView pic;
 	private List<BuildingPicHotspot> hotspots;
+	private HotspotBuilder hotspotBuilder = new HotspotBuilder();;
 	
 	static final String welcomeScreenShownPref = "welcomeScreenShown";
 
@@ -69,7 +70,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		task = FacilitiesUtils.getBuildingsHotspot(getResources()
-				.openRawResource(R.raw.buildings_coordinates), this);
+				.openRawResource(R.raw.buildings_coordinates), hotspotBuilder);
 	}
 
 	public void onError(ERROR_TYPE error) {
@@ -81,17 +82,11 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.general_error));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onResultReceived(Object... results) {
+	public void onResultReceived(Bitmap results) {
 		if (getActivity() == null)
 			return;
-		if (hotspots == null) {
-			hotspots = (List<BuildingPicHotspot>) results[0];
-			task = FacilitiesUtils.getBuildingPic("", "", "", this);
-			return;
-		}
-		pic.setImageBitmap((Bitmap) results[0]);
+		pic.setImageBitmap( results);
 		pic.setMaxZoom(6);
 		pic.setOnTapListener(this);
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -112,9 +107,9 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		showLoadingScreen();
 		if (hotspots == null)
 			task = FacilitiesUtils.getBuildingsHotspot(getResources()
-					.openRawResource(R.raw.buildings_coordinates), this);
+					.openRawResource(R.raw.buildings_coordinates), hotspotBuilder);
 		else
-			task = FacilitiesUtils.getBuildingPic("", "", "", this);
+			task = FacilitiesUtils.getBuildingPic("", "", "", this, getActivity());
 	}
 
 	@Override
@@ -157,5 +152,25 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			}
 		}
 		return true;
+	}
+	
+	private class HotspotBuilder implements ResponseCommand<List<BuildingPicHotspot>>{
+
+		@Override
+		public void onError(ERROR_TYPE error) {
+			if (getActivity() == null)
+				return;
+			if (error == ERROR_TYPE.NETWORK)
+				showRepeatTaskScreen(getString(R.string.toast_server_error));
+			else
+				showEmptyScreen(getString(R.string.general_error));
+		}
+
+		@Override
+		public void onResultReceived(List<BuildingPicHotspot> results) {
+			hotspots = results;
+			task = FacilitiesUtils.getBuildingPic("", "", "", FeupFacilitiesFragment.this, getActivity());			
+		}
+		
 	}
 }

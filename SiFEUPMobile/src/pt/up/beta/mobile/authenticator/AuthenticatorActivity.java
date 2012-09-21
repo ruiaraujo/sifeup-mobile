@@ -55,7 +55,7 @@ import android.widget.TextView;
  * Activity which displays login screen to the user.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity
-		implements ResponseCommand, OnDismissListener {
+		implements ResponseCommand<User>, OnDismissListener {
 
 	private static final String DIALOG_AUTHENTICATING = "connecting";
 	private static final String DIALOG_ABOUT = "about";
@@ -166,7 +166,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			showProgress();
 
 			mAuthTask = AuthenticationUtils.authenticate(mUsername, mPassword,
-					this);
+					this, this);
 		}
 	}
 
@@ -284,9 +284,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		}
 	}
 
-	public void onResultReceived(Object... results) {
+	public void onResultReceived(User user) {
 		hideProgress();
-		User user = (User) results[0];
 		if (!mConfirmCredentials) {
 			finishLogin(user);
 		} else {

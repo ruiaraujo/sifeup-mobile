@@ -33,7 +33,7 @@ import android.widget.Toast;
  * 
  */
 public class ChangePasswordFragment extends BaseFragment implements
-		ResponseCommand {
+		ResponseCommand<String[]> {
 
 	private String errorTitle;
 	private String errorContent;
@@ -126,7 +126,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 						.toString(), actualPasswordText.getText().toString(),
 						newPasswordText.getText().toString(),
 						confirmNewPasswordText.getText().toString(), "S",
-						ChangePasswordFragment.this);
+						ChangePasswordFragment.this, getActivity());
 			}
 		});
 
@@ -227,11 +227,11 @@ public class ChangePasswordFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(Object... results) {
+	public void onResultReceived(String[] results) {
 		if (getActivity() == null)
 			return;
 		removeDialog(DIALOG);
-		if (results.length > 0) { // error while setting it
+		if (results != null && results.length >= 2) { // error while setting it
 			errorTitle = results[0].toString();
 			errorContent = results[1].toString();
 			DialogFragment df = new DialogFragment() {
@@ -270,7 +270,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 		AuthenticationUtils.setPasswordReply(usernameText.getText().toString(),
 				actualPasswordText.getText().toString(), newPasswordText
 						.getText().toString(), confirmNewPasswordText.getText()
-						.toString(), "S", ChangePasswordFragment.this);
+						.toString(), "S", ChangePasswordFragment.this, getActivity());
 	}
 
 }

@@ -27,7 +27,7 @@ import android.widget.Toast;
  * 
  */
 public class ParkOccupationFragment extends BaseFragment implements
-		ResponseCommand {
+		ResponseCommand<Park> {
 
 	private final static String PARK_KEY = "pt.up.fe.mobile.ui.studentarea.PARKS";
 
@@ -57,7 +57,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 			parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
 			if (parks == null) {
 				parks = new ArrayList<Park>();
-				task = ParkUtils.getParkReply("P1", this);
+				task = ParkUtils.getParkReply("P1", this, getActivity());
 			} else {
 				ParkAdapter adapter = new ParkAdapter(getActivity(),
 						R.layout.list_item_park);
@@ -66,7 +66,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 			}
 		} else {
 			parks = new ArrayList<Park>();
-			task = ParkUtils.getParkReply("P1", this);
+			task = ParkUtils.getParkReply("P1", this, getActivity());
 		}
 	}
 
@@ -132,18 +132,18 @@ public class ParkOccupationFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(Object... results) {
+	public void onResultReceived(Park result) {
 		if (getActivity() == null)
 			return;
-		parks.add((Park) results[0]);
+		parks.add(result);
 		switch (parks.size()) {
 		case 1:
 			parks.get(0).setName(getString(R.string.label_personnel_per_park));
-			ParkUtils.getParkReply("P3", this);
+			ParkUtils.getParkReply("P3", this, getActivity());
 			break;
 		case 2:
 			parks.get(1).setName(getString(R.string.label_student_park));
-			ParkUtils.getParkReply("P4", this);
+			ParkUtils.getParkReply("P4", this, getActivity());
 			break;
 		case 3:
 			parks.get(2).setName(
@@ -160,13 +160,13 @@ public class ParkOccupationFragment extends BaseFragment implements
 		showLoadingScreen();
 		switch (parks.size()) {
 		case 0:
-			ParkUtils.getParkReply("P1", this);
+			ParkUtils.getParkReply("P1", this, getActivity());
 			break;
 		case 1:
-			ParkUtils.getParkReply("P3", this);
+			ParkUtils.getParkReply("P3", this, getActivity());
 			break;
 		case 2:
-			ParkUtils.getParkReply("P4", this);
+			ParkUtils.getParkReply("P4", this, getActivity());
 			break;
 		}
 	}

@@ -27,7 +27,7 @@ import pt.up.beta.mobile.R;
  * @author Ângela Igreja
  *
  */
-public class PrintRefFragment extends BaseFragment implements ResponseCommand{
+public class PrintRefFragment extends BaseFragment implements ResponseCommand<RefMB>{
 	
 	private final static String PRINT_REF_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_REF";
 
@@ -69,7 +69,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
         {
             ref = savedInstanceState.getParcelable(PRINT_REF_KEY);
             if ( ref == null )
-                task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
+                task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
             else
             {
                 displayData();
@@ -78,7 +78,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
         }
         else
         {
-            task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
+            task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
         }
     }
     
@@ -148,8 +148,8 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 		}
 	}
 
-	public void onResultReceived(Object... results) {
-		ref = (RefMB) results[0];
+	public void onResultReceived(RefMB result) {
+		ref = result;
 		displayData();
 		showMainScreen();
 	}
@@ -169,7 +169,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand{
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this);
+        task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
 	}
 
 }
