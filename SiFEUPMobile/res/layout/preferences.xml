@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <PreferenceCategory android:title="@string/lb_sync_preferences" >
+
+        <ListPreference
+            android:defaultValue="@integer/default_sync_interval"
+            android:entries="@array/sync_intervals"
+            android:entryValues="@array/sync_intervals_values"
+            android:key="@string/key_sync_interval"
+            android:title="@string/lb_sync_interval_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

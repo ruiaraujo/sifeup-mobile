@@ -25,6 +25,32 @@
     <string name="bt_add_account">Adicione uma conta</string>
 
     <!-- *************************************************************************************** -->
+    <!-- PREFERENCES -->
+    <string name="title_preferences">Settings</string>
+    <string name="lb_sync_preferences">Configure syncronization</string>
+    <string name="lb_sync_preferences_sum">Configure period</string>
+    <string name="lb_sync_interval_title">Refresh Interval</string>
+    <string name="key_sync_interval">sync_interval</string>
+    <string name="lb_preferences_title">Settings</string>
+
+    <string-array name="sync_intervals">
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>One day</item>
+        <item>One week</item>
+    </string-array>
+    <string-array name="sync_intervals_values">
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+        <item>168</item>
+    </string-array>
+
+    <!-- *************************************************************************************** -->
     <!-- LOGIN -->
 
     <string name="lb_login_username">Utilizador</string>

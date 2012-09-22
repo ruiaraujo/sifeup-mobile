@@ -92,6 +92,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			startActivity(new Intent(this, Preferences.class));
+			return true;
 		case R.id.menu_search:
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;

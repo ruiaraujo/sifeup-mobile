@@ -67,6 +67,15 @@ public class AccountUtils {
 					Constants.AUTHTOKEN_TYPE, false);
 		return authToken;
 	}
+	
+	public static Account getActiveAccount(final Context context) {
+		if (needsInit()) {
+			if ( !init(context) ) 
+				return null;
+		}
+		return mAccount;
+	}
+
 
 	/**
 	 * Get Login Code

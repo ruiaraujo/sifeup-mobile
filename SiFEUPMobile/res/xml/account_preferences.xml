@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/lb_sync_preferences" />
+
+    <PreferenceScreen
+        android:key="account_settings"
+        android:title="@string/lb_sync_preferences"
+        android:summary="@string/lb_sync_preferences_sum">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="pt.up.beta.mobile"
+            android:targetClass="pt.up.beta.mobile.ui.Preferences" />
+    </PreferenceScreen>
+    
+</PreferenceScreen>

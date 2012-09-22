@@ -24,6 +24,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.format.DateUtils;
 
 /**
  * A {@link BroadcastReceiver} that handles {@link AlarmManager} broadcasts to
@@ -42,6 +44,24 @@ public final class PeriodicSyncReceiver extends BroadcastReceiver {
 	private static final String KEY_AUTHORITY = "authority";
 
 	private static final String KEY_USERDATA = "userdata";
+	
+
+	private static AlarmManager getAlarmManager(Context context) {
+		return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+	}
+
+	public static void addPeriodicSync(Context context, Account account, String authority,
+			Bundle extras, long pollFrequency) {
+		long pollFrequencyMsec = pollFrequency * DateUtils.SECOND_IN_MILLIS;
+		final AlarmManager manager = getAlarmManager(context);
+		int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		long triggerAtTime = SystemClock.elapsedRealtime() + pollFrequencyMsec;
+		long interval = pollFrequencyMsec;
+		PendingIntent operation = PeriodicSyncReceiver.createPendingIntent(
+				context, account, authority, extras);
+		manager.cancel(operation);
+		manager.setInexactRepeating(type, triggerAtTime, interval, operation);
+	}
 
 	static Intent createIntent(Context context, Account account,
 			String authority, Bundle extras) {

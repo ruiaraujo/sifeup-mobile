@@ -28,8 +28,6 @@ import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -37,11 +35,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -207,15 +204,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		if (mRequestNewAccount) {
 			mAccountManager.addAccountExplicitly(account, mPassword, null);
 			// Set contacts sync for this account.
+
+			String syncIntervalValue = PreferenceManager
+					.getDefaultSharedPreferences(getApplicationContext())
+					.getString(
+							getString(R.string.key_sync_interval),
+							Integer.toString(getResources().getInteger(
+									R.integer.default_sync_interval)));
 			ContentResolver.setSyncAutomatically(account,
 					SigarraContract.CONTENT_AUTHORITY, true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
 				ContentResolver.addPeriodicSync(account,
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
-						3 * 3600);
+						Integer.parseInt(syncIntervalValue) * 3600);
 			else
-				addPeriodicSync(account, SigarraContract.CONTENT_AUTHORITY,
-						new Bundle(), 3 * 3600);
+				PeriodicSyncReceiver.addPeriodicSync(this, account,
+						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
+						Integer.parseInt(syncIntervalValue) * 3600);
 		} else {
 			mAccountManager.setPassword(account, user.getPassword());
 		}
@@ -311,27 +316,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		if (prev != null) {
 			ft.remove(prev).commitAllowingStateLoss();
 		}
-	}
-
-	private AlarmManager getAlarmManager() {
-		return (AlarmManager) getSystemService(ALARM_SERVICE);
-	}
-
-	private PendingIntent createOperation(Account account, String authority,
-			Bundle extras) {
-		return PeriodicSyncReceiver.createPendingIntent(
-				getApplicationContext(), account, authority, extras);
-	}
-
-	public void addPeriodicSync(Account account, String authority,
-			Bundle extras, long pollFrequency) {
-		long pollFrequencyMsec = pollFrequency * DateUtils.SECOND_IN_MILLIS;
-		AlarmManager manager = getAlarmManager();
-		int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-		long triggerAtTime = SystemClock.elapsedRealtime() + pollFrequencyMsec;
-		long interval = pollFrequencyMsec;
-		PendingIntent operation = createOperation(account, authority, extras);
-		manager.setInexactRepeating(type, triggerAtTime, interval, operation);
 	}
 
 }

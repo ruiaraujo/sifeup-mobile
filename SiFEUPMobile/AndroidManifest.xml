@@ -37,9 +37,9 @@
         android:required="false" />
 
     <application
+        android:name=".FEUPMobileApplication"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:name=".FEUPMobileApplication"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sigarra" >
 
@@ -49,7 +49,7 @@
             android:name=".ui.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.Sigarra.Home"/>
+            android:theme="@style/Theme.Sigarra.Home" />
         <activity
             android:name=".ui.LauncherActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -181,9 +181,11 @@
             android:label="@string/title_tuition_refs_list" />
         <activity
             android:name=".ui.services.tuition.TuitionRefDetailActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition_ref_detail" />
         <activity
             android:name=".sendtosamba.SendToSambaActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_samba_uploader"
             android:noHistory="true"
             android:theme="@style/Theme.Invisible" >
@@ -199,7 +201,7 @@
 
         <service android:name=".sendtosamba.UploaderService" />
         <service android:name=".downloader.DownloaderService" />
-        
+
         <activity
             android:name=".ui.search.SearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -258,9 +260,9 @@
             android:exported="false" />
         <provider
             android:name=".content.SigarraProvider"
-    		android:label="Sigarra"
             android:authorities="pt.up.fe.mobile.content.SigarraProvider"
             android:exported="false"
+            android:label="Sigarra"
             android:syncable="true" />
 
         <!-- The authenticator service -->
@@ -276,6 +278,10 @@
                 android:resource="@xml/authenticator" />
         </service>
 
+        <activity
+            android:name=".ui.Preferences"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_preferences" />
         <activity
             android:name=".authenticator.AuthenticatorActivity"
             android:configChanges="orientation"
@@ -301,7 +307,7 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        
+
         <receiver android:name=".authenticator.PeriodicSyncReceiver" />
     </application>
 

@@ -1,3 +1,4 @@
 <resources>
     <integer name="text_header_max_lines">3</integer>
+    <integer name="default_sync_interval">24</integer>
 </resources>
