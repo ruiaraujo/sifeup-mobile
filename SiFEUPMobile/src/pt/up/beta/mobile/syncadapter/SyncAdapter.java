@@ -73,6 +73,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	final static String ACADEMIC_PATH = "academic_path";
 	final static String PRINTING_QUOTA = "printing_quota";
 	final static String NOTIFICATIONS = "notifications";
+	final static String PROFILE_PIC = "pic";
 	final static String USER_CODE = "code";
 
 	final static String SCHEDULE = "schedule";
@@ -123,6 +124,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 				if (ACADEMIC_PATH.equals(extras.getSerializable(REQUEST_TYPE))) {
 					syncAcademicPath(account, authToken, syncResult);
+					return;
+				}
+				if (PROFILE_PIC.equals(extras.getSerializable(REQUEST_TYPE))) {
+					syncProfilePic(extras.getString(USER_CODE), authToken, syncResult);
 					return;
 				}
 				if (TUITION.equals(extras.getSerializable(REQUEST_TYPE))) {
@@ -297,10 +302,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					.getReply(SifeupAPI.getTeacherScheduleUrl(code, initialDay,
 							finalDay), authToken, getContext());
 		} else if (SigarraContract.Schedule.ROOM.equals(type)) {
-			page = SifeupAPI
-					.getReply(SifeupAPI.getRoomScheduleUrl(
-							code.substring(0, 1), code.substring(1),
-							initialDay, finalDay), authToken, getContext());
+			page = SifeupAPI.getReply(
+					SifeupAPI.getRoomScheduleUrl(code.substring(0, 1),
+							code.substring(1), initialDay, finalDay),
+					authToken, getContext());
 		} else
 			page = SifeupAPI.getReply(
 					SifeupAPI.getUcScheduleUrl(code, initialDay, finalDay),
@@ -461,6 +466,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	}
 
+	private void syncProfilePic(String userCode, String authToken,
+			SyncResult syncResult) throws AuthenticationException, IOException {
+		final String picPath = getProfilePic(userCode, authToken, syncResult);
+		if (picPath == null)
+			return;
+		final ContentValues values = new ContentValues();
+		values.put(SigarraContract.ProfileColumns.PIC, picPath);
+		getContext().getContentResolver().update(
+				SigarraContract.Profiles.PIC_CONTENT_URI, values,
+				SigarraContract.Profiles.PROFILE,
+				SigarraContract.Profiles.getProfilePicSelectionArgs(userCode));
+
+	}
+
 	private String getProfilePic(String userCode, String authToken,
 			SyncResult syncResult) throws AuthenticationException, IOException {
 		final File f = FileUtils.getFile(getContext(), userCode);
@@ -484,9 +503,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			return;
 		}
 		final String subjectContent = SifeupAPI.getReply(
-				SifeupAPI.getSubjectContentUrl(code, year, period), authToken, getContext());
+				SifeupAPI.getSubjectContentUrl(code, year, period), authToken,
+				getContext());
 		final String subjectFiles = SifeupAPI.getReply(
-				SifeupAPI.getSubjectFilestUrl(code, year, period), authToken, getContext());
+				SifeupAPI.getSubjectFilestUrl(code, year, period), authToken,
+				getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.SubjectsColumns.USER_NAME, "");
 		values.put(SigarraContract.SubjectsColumns.CODE, code);
@@ -549,6 +570,5 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					SigarraContract.Subjects.CONTENT_URI, null);
 		syncResult.stats.numEntries += subjects.size();
 	}
-	
-	
+
 }

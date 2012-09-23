@@ -16,6 +16,9 @@
 
 package pt.up.beta.mobile.loaders;
 
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -59,7 +62,11 @@ public class ProfilePicLoader extends AsyncTaskLoader<Bitmap> {
 			mCursor = cursor;
 
 			if (cursor.moveToFirst()) {
-				return BitmapFactory.decodeFile(cursor.getString(0));
+				final Bitmap bitmap = BitmapFactory.decodeFile(cursor.getString(cursor.getColumnIndex(SigarraContract.Profiles.PIC)));
+				if ( bitmap == null ){
+					SyncAdapterUtils.syncProfilePic(AccountUtils.getActiveUserName(getContext()), mSelectionArgs[0]);
+				}
+				return bitmap;
 			}
 		}
 		return null;

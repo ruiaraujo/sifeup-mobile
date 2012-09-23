@@ -47,6 +47,19 @@ public class SyncAdapterUtils {
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);
 	}
+	
+
+	public static void syncProfilePic(final String accountName, final String code) {
+		final Bundle extras = new Bundle();
+		extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		extras.putBoolean(SyncAdapter.SINGLE_REQUEST, true);
+		extras.putString(SyncAdapter.REQUEST_TYPE, SyncAdapter.PROFILE_PIC);
+		extras.putString(SyncAdapter.USER_CODE, code);
+		ContentResolver.requestSync(new Account(accountName,
+				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
+				extras);
+	}
 
 	public static void syncExams(final String accountName) {
 		final Bundle extras = new Bundle();

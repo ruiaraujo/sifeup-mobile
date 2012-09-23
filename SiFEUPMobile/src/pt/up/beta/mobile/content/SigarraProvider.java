@@ -467,8 +467,8 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
-						SyncAdapterUtils.syncPrintingQuota(AccountUtils
-								.getActiveUserName(getContext()));
+				SyncAdapterUtils.syncPrintingQuota(AccountUtils
+						.getActiveUserName(getContext()));
 			}
 			break;
 		case SCHEDULE:
