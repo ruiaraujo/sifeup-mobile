@@ -154,9 +154,9 @@ public class SearchUtils {
 				if (jObject.has("email_alternativo"))
 					me.setEmailAlt(jObject.getString("email_alternativo"));
 				if (jObject.has("telemovel"))
-					me.setMobile(jObject.getString("telemovel"));
+					me.setMobilePhone(jObject.getString("telemovel"));
 				if (jObject.has("telefone"))
-					me.setTelephone(jObject.getString("telefone"));
+					me.setPhone(jObject.getString("telefone"));
 				if (jObject.has("ramo"))
 					me.setBranch(jObject.getString("ramo"));
 				return me;

@@ -27,10 +27,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SyncStates;
+import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Notification;
+import pt.up.beta.mobile.datatypes.Profile;
+import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
@@ -127,7 +131,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					return;
 				}
 				if (PROFILE_PIC.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncProfilePic(extras.getString(USER_CODE), authToken, syncResult);
+					syncProfilePic(extras.getString(USER_CODE), authToken,
+							syncResult);
 					return;
 				}
 				if (TUITION.equals(extras.getSerializable(REQUEST_TYPE))) {
@@ -413,18 +418,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncProfiles(Account account, String authToken,
-			SyncResult syncResult) throws AuthenticationException, IOException {
+			SyncResult syncResult) throws AuthenticationException, IOException,
+			JSONException {
+		final List<Profile> rawContacts = new ArrayList<Profile>();
 		final String userCode = mAccountManager.getUserData(account,
 				Constants.USER_NAME);
 		final String profile;
 		final String type = mAccountManager.getUserData(account,
 				Constants.USER_TYPE);
-		if (type.equals(SifeupAPI.STUDENT_TYPE))
+		final Profile me;
+		if (type.equals(SifeupAPI.STUDENT_TYPE)) {
 			profile = SifeupAPI.getReply(SifeupAPI.getStudentUrl(userCode),
 					authToken, getContext());
-		else
+			me = Student.parseJSON(profile);
+		} else {
 			profile = SifeupAPI.getReply(SifeupAPI.getEmployeeUrl(userCode),
 					authToken, getContext());
+			me = Employee.parseJSON(profile);
+		}
+		rawContacts.add(me);
 		final String picPath = getProfilePic(userCode, authToken, syncResult);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ProfileColumns.ID, userCode);
@@ -437,33 +449,59 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		syncResult.stats.numEntries += 1;
 		final Cursor c = getContext().getContentResolver().query(
 				SigarraContract.Friends.CONTENT_URI,
-				new String[] { SigarraContract.FriendsColumns.CODE_FRIEND },
+				new String[] { SigarraContract.FriendsColumns.CODE_FRIEND,
+						SigarraContract.FriendsColumns.COURSE_FRIEND },
 				SigarraContract.Friends.USER_FRIENDS,
 				SigarraContract.Friends.getUserFriendsSelectionArgs(userCode),
 				null);
-		if (c.moveToFirst()) {
-			final ContentValues[] friends = new ContentValues[c.getCount()];
-			int i = 0;
-			do {
-				final ContentValues friend = new ContentValues();
-				final String friendCode = c.getString(0);
-				final String friendPic = getProfilePic(friendCode, authToken,
-						syncResult);
-				friend.put(SigarraContract.ProfileColumns.ID, friendCode);
-				friend.put(SigarraContract.ProfileColumns.CONTENT, SifeupAPI
-						.getReply(SifeupAPI.getStudentUrl(friendCode),
-								authToken, getContext()));
-				if (friendPic != null)
-					values.put(SigarraContract.ProfileColumns.PIC, friendPic);
-				friend.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
-				friends[i++] = friend;
-			} while (c.moveToNext());
-			getContext().getContentResolver().bulkInsert(
-					SigarraContract.Profiles.CONTENT_URI, friends);
-			syncResult.stats.numEntries += friends.length;
+		try {
+			if (c.moveToFirst()) {
+				final ContentValues[] friends = new ContentValues[c.getCount()];
+				int i = 0;
+				do {
+					final ContentValues friendValues = new ContentValues();
+					final String friendCode = c
+							.getString(c
+									.getColumnIndex(SigarraContract.FriendsColumns.CODE_FRIEND));
+					final String friendPic = getProfilePic(friendCode,
+							authToken, syncResult);
+					friendValues.put(SigarraContract.ProfileColumns.ID,
+							friendCode);
+					final String friendCourse = c
+							.getString(c
+									.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND));
+					final Profile friend;
+					final String friendPage;
+					if (friendCourse != null) {
+						friendPage = SifeupAPI.getReply(
+								SifeupAPI.getStudentUrl(friendCode), authToken,
+								getContext());
+						friend = Student.parseJSON(friendPage);
+					} else {
+						friendPage = SifeupAPI.getReply(
+								SifeupAPI.getEmployeeUrl(friendCode),
+								authToken, getContext());
+						friend = Employee.parseJSON(friendPage);
+					}
+					rawContacts.add(friend);
+					friendValues.put(SigarraContract.ProfileColumns.CONTENT,
+							friendPage);
+					if (friendPic != null)
+						friendValues.put(SigarraContract.ProfileColumns.PIC,
+								friendPic);
+					friendValues.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
+					friends[i++] = friendValues;
+				} while (c.moveToNext());
+				getContext().getContentResolver().bulkInsert(
+						SigarraContract.Profiles.CONTENT_URI, friends);
+				syncResult.stats.numEntries += friends.length;
+			}
 		}
-		c.close();
-
+		finally {
+			c.close();
+		}
+		ContactManager.setAccountContactsVisibility(getContext(), account, true);
+		ContactManager.updateContacts(getContext(), account.name, rawContacts);
 	}
 
 	private void syncProfilePic(String userCode, String authToken,

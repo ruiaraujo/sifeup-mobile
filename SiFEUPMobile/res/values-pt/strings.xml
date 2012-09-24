@@ -321,4 +321,8 @@
     <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Operação não suportada</string>
 
+    <!-- *************************************************************************************** -->
+    <!-- CONTACTS INTEGRATION -->
+    <string name="action_view_profile">Ver perfil</string>
+
 </resources>

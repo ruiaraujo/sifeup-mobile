@@ -19,6 +19,7 @@ package pt.up.beta.mobile.loaders;
 import org.acra.ACRA;
 import org.json.JSONException;
 
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
@@ -63,7 +64,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					return Employee.parseJSON(cursor.getString(0));
+					return Employee.parseJSON(cursor.getString(cursor.getColumnIndex(SigarraContract.Profiles.CONTENT)));
 				} catch (JSONException e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);

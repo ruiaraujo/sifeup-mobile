@@ -328,4 +328,8 @@
     <string name="notification_uploader_error">Error while uploading\n<xliff:g id="file">%1$s</xliff:g></string>
     <string name="notification_unsupported">Unsupported Operation</string>
 
+    <!-- *************************************************************************************** -->
+    <!-- CONTACTS INTEGRATION -->
+    <string name="action_view_profile">View profile</string>
+
 </resources>

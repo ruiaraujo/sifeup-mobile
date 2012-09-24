@@ -30,15 +30,6 @@ public class Employee extends Profile implements Serializable {
 	/** Employee State - "A" */
 	private String state;
 
-	/** Employee email - "gils@fe.up.pt" */
-	private String email;
-
-	/** Employee alternative email. May be empty. */
-	private String emailAlt;
-
-	/** Employee Phone - "22 557 4109" */
-	private String phone;
-
 	/** Employee External Phone. May be empty. */
 	private String extPhone;
 
@@ -47,9 +38,6 @@ public class Employee extends Profile implements Serializable {
 
 	/** Employee Voip Ext. - 3084 */
 	private Integer voipExt;
-
-	/** Employee Mobile Phone - 913970682 */
-	private String mobilePhone;
 
 	/** Employee Rooms - D109 */
 	private List<Room> rooms;
@@ -95,17 +83,17 @@ public class Employee extends Profile implements Serializable {
 		if (jObject.has("estado"))
 			employee.state = jObject.getString("estado");
 		if (jObject.has("email"))
-			employee.email = jObject.getString("email");
+			employee.setEmail(jObject.getString("email"));
 		if (jObject.has("email_alt"))
-			employee.emailAlt = jObject.getString("email_alt");
+			employee.setEmailAlt(jObject.getString("email_alt"));
 		if (jObject.has("telefone"))
-			employee.phone = jObject.getString("telefone");
+			employee.setPhone(jObject.getString("telefone"));
 		if (jObject.has("ext_tel"))
 			employee.extPhone = jObject.getString("ext_tel");
 		if (jObject.has("voip_ext"))
 			employee.voipExt = jObject.getInt("voip_ext");
 		if (jObject.has("telemovel"))
-			employee.mobilePhone = jObject.getString("telemovel");
+			employee.setMobilePhone(jObject.getString("telemovel"));
 
 		if (jObject.has("salas")) {
 			JSONArray jArray = jObject.getJSONArray("salas");
@@ -148,23 +136,23 @@ public class Employee extends Profile implements Serializable {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_code), code, null));
 		}
-		if (email != null && !email.equals("")) {
+		if (getEmail() != null && !getEmail().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_email), email, Type.EMAIL));
+					.getString(R.string.profile_title_email), getEmail(), Type.EMAIL));
 		}
-		if (emailAlt != null && !emailAlt.equals("")) {
+		if (getEmailAlt() != null && !getEmailAlt().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_email_alt), emailAlt,
+					.getString(R.string.profile_title_email_alt), getEmailAlt(),
 					Type.EMAIL));
 		}
-		if (mobilePhone != null && !mobilePhone.equals("")) {
+		if (getMobilePhone() != null && !getMobilePhone().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_mobile), mobilePhone,
+					.getString(R.string.profile_title_mobile), getMobilePhone(),
 					Type.MOBILE));
 		}
-		if (phone != null && !phone.equals("")) {
+		if (getPhone() != null && !getPhone().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_telephone), phone,
+					.getString(R.string.profile_title_telephone), getPhone(),
 					Type.MOBILE));
 		}
 		if (extPhone != null && !extPhone.equals("")) {
