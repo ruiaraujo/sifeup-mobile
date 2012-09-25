@@ -34,6 +34,7 @@ import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
@@ -199,6 +200,18 @@ public class ContactOperations {
 			mValues.put(Email.DATA, email);
 			mValues.put(Email.TYPE, Email.TYPE_OTHER);
 			mValues.put(Email.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+			addInsertOp();
+		}
+		return this;
+	}
+	
+
+	public ContactOperations addWebPage(String url) {
+		mValues.clear();
+		if (!TextUtils.isEmpty(url)) {
+			mValues.put(Website.DATA, url);
+			mValues.put(Website.TYPE, Website.TYPE_WORK);
+			mValues.put(Website.MIMETYPE, Website.CONTENT_ITEM_TYPE);
 			addInsertOp();
 		}
 		return this;

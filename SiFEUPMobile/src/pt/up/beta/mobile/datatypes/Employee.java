@@ -21,9 +21,6 @@ import android.content.res.Resources;
 @SuppressWarnings("serial")
 public class Employee extends Profile implements Serializable {
 
-	/** Web page. May be empty. */
-	private String webPage;
-
 	/** Employee acronym - "GAOS" */
 	private String acronym;
 
@@ -77,7 +74,7 @@ public class Employee extends Profile implements Serializable {
 		if (jObject.has("nome"))
 			employee.name = jObject.getString("nome");
 		if (jObject.has("pagina_web"))
-			employee.webPage = jObject.getString("pagina_web");
+			employee.setWebPage(jObject.getString("pagina_web"));
 		if (jObject.has("sigla"))
 			employee.acronym = jObject.getString("sigla");
 		if (jObject.has("estado"))
@@ -170,9 +167,9 @@ public class Employee extends Profile implements Serializable {
 					.getString(R.string.profile_title_ext_voip), voipExt
 					.toString(), null));
 		}
-		if (webPage != null && !webPage.equals("")) {
+		if (getWebPage() != null && !getWebPage().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_website), webPage,
+					.getString(R.string.profile_title_website), getWebPage(),
 					Type.WEBPAGE));
 		}
 

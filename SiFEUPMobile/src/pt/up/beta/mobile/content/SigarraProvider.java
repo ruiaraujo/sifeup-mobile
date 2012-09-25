@@ -1,5 +1,7 @@
 package pt.up.beta.mobile.content;
 
+import pt.up.beta.mobile.contacts.ContactManager;
+import pt.up.beta.mobile.contacts.ContactsSyncAdapterUtils;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import android.content.ContentProvider;
@@ -86,6 +88,8 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case FRIENDS:
 			table = FriendsTable.TABLE;
+			// TODO: Add deleted flag to the friends table
+			ContactManager.deleteContact(getContext(), selectionArgs[1]);
 			break;
 		case PROFILES:
 		case PROFILES_PIC:
@@ -247,6 +251,8 @@ public class SigarraProvider extends ContentProvider {
 		case FRIENDS:
 			table = FriendsTable.TABLE;
 			nullHack = FriendsTable.KEY_COURSE_FRIEND;
+			ContactsSyncAdapterUtils.syncContacts(AccountUtils
+					.getActiveUserName(getContext()));
 			break;
 		case PROFILES:
 		case PROFILES_PIC:

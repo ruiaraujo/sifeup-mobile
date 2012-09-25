@@ -15,7 +15,6 @@
  */
 package pt.up.beta.mobile.contacts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.beta.mobile.Constants;
@@ -65,7 +64,6 @@ public class ContactManager {
 		final ContentResolver resolver = context.getContentResolver();
 		final BatchOperation batchOperation = new BatchOperation(context,
 				resolver);
-		final List<Profile> newUsers = new ArrayList<Profile>();
 
 		Log.d(TAG, "In SyncContacts");
 		for (final Profile rawContact : rawContacts) {
@@ -77,7 +75,8 @@ public class ContactManager {
 			// contains the correct serverId.
 			final long rawContactId = lookupRawContact(resolver,
 					rawContact.getCode());
-			if (rawContactId != 0) { //TODO:Check if this is the correct behaviour
+			if (rawContactId != 0) { // TODO:Check if this is the correct
+										// behaviour
 				if (isDeletedRawContact(resolver, rawContact.getCode())) {
 					deleteContact(context, rawContactId, batchOperation);
 				} else
@@ -85,7 +84,6 @@ public class ContactManager {
 							rawContactId, batchOperation);
 			} else {
 				Log.d(TAG, "In addContact");
-				newUsers.add(rawContact);
 				addContact(context, account, rawContact, true, batchOperation);
 			}
 			// A sync adapter should batch operations on multiple contacts,
@@ -128,6 +126,7 @@ public class ContactManager {
 		contactOp.addName(rawContact.getName(), null, null)
 				.addEmail(rawContact.getEmail())
 				.addAltEmail(rawContact.getEmailAlt())
+				.addWebPage(rawContact.getWebPage())
 				.addPhone(rawContact.getMobilePhone(), Phone.TYPE_WORK_MOBILE)
 				.addPhone(rawContact.getPhone(), Phone.TYPE_WORK)
 				.addAvatar(context.getContentResolver(), rawContact.getCode());
@@ -213,7 +212,7 @@ public class ContactManager {
 						contactOp.updateEmail(rawContact.getEmail(),
 								c.getString(DataQuery.COLUMN_EMAIL_ADDRESS),
 								Email.TYPE_WORK, uri);
-					} else if (emailType == Email.TYPE_OTHER){
+					} else if (emailType == Email.TYPE_OTHER) {
 						existingAltEmail = true;
 						contactOp.updateEmail(rawContact.getEmailAlt(),
 								c.getString(DataQuery.COLUMN_EMAIL_ADDRESS),
@@ -291,6 +290,30 @@ public class ContactManager {
 		batchOperation.add(ContactOperations.newDeleteCpo(
 				ContentUris.withAppendedId(RawContacts.CONTENT_URI,
 						rawContactId), true, true).build());
+	}
+
+	/**
+	 * Deletes a contact from the platform contacts provider. This method is
+	 * used both for contacts that were deleted locally and then that deletion
+	 * was synced to the server, and for contacts that were deleted on the
+	 * server and the deletion was synced to the client.
+	 * 
+	 * @param context
+	 *            the Authenticator Activity context
+	 * @param rawContactId
+	 *            the unique Id for this rawContact in contacts provider
+	 */
+	public static void deleteContact(Context context, String serverId) {
+		final long rawContactId = lookupRawContact(
+				context.getContentResolver(), serverId);
+		if (rawContactId != 0) {
+			final BatchOperation batchOperation = new BatchOperation(context,
+					context.getContentResolver());
+			batchOperation.add(ContactOperations.newDeleteCpo(
+					ContentUris.withAppendedId(RawContacts.CONTENT_URI,
+							rawContactId), true, true).build());
+			batchOperation.execute();
+		}
 	}
 
 	private static boolean isDeletedRawContact(ContentResolver resolver,
@@ -425,13 +448,13 @@ public class ContactManager {
 				Data.DATA3, Data.DATA15, Data.SYNC1 };
 
 		public static final int COLUMN_ID = 0;
-		public static final int COLUMN_SERVER_ID = 1;
+		//public static final int COLUMN_SERVER_ID = 1;
 		public static final int COLUMN_MIMETYPE = 2;
 		public static final int COLUMN_DATA1 = 3;
 		public static final int COLUMN_DATA2 = 4;
 		public static final int COLUMN_DATA3 = 5;
-		public static final int COLUMN_DATA15 = 6;
-		public static final int COLUMN_SYNC1 = 7;
+		//public static final int COLUMN_DATA15 = 6;
+		//public static final int COLUMN_SYNC1 = 7;
 
 		public static final Uri CONTENT_URI = Data.CONTENT_URI;
 
@@ -442,7 +465,7 @@ public class ContactManager {
 		public static final int COLUMN_FULL_NAME = COLUMN_DATA1;
 		public static final int COLUMN_GIVEN_NAME = COLUMN_DATA2;
 		public static final int COLUMN_FAMILY_NAME = COLUMN_DATA3;
-		public static final int COLUMN_AVATAR_IMAGE = COLUMN_DATA15;
+		//public static final int COLUMN_AVATAR_IMAGE = COLUMN_DATA15;
 
 		public static final String SELECTION = Data.RAW_CONTACT_ID + "=?";
 	}

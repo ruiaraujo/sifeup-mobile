@@ -26,6 +26,9 @@ public abstract class Profile {
 	private String mobilePhone;
 
 
+	/** Web page. May be empty. */
+	private String webPage;
+
 	
 	public String getCode() {
 		return code;
@@ -130,5 +133,13 @@ public abstract class Profile {
 		if ( !TextUtils.isEmpty(last) )
 			st.append(last);
 		return st.toString();
+	}
+
+	public String getWebPage() {
+		return webPage;
+	}
+
+	public void setWebPage(String webPage) {
+		this.webPage = webPage;
 	}
 }
