@@ -21,9 +21,9 @@ import android.provider.ContactsContract.Data;
 /*
  * The standard columns representing contact's info from social apps.
  */
-public final class SyncAdapterContactColumns {
+public final class ProfileContactColumns {
 
-    private SyncAdapterContactColumns() {
+    private ProfileContactColumns() {
     }
 
     /**
@@ -31,9 +31,11 @@ public final class SyncAdapterContactColumns {
      */
     public static final String MIME_PROFILE = SigarraContract.Profiles.CONTENT_ITEM_TYPE;
 
-    public static final String DATA_PID = Data.DATA1;
+    public static final String DATA_CODE = Data.DATA1;
 
     public static final String DATA_SUMMARY = Data.DATA2;
 
     public static final String DATA_DETAIL = Data.DATA3;
+    
+    public static final String DATA_TYPE = Data.DATA4;
 }

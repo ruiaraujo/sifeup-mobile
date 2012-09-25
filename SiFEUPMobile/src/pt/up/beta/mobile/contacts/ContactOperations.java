@@ -272,15 +272,16 @@ public class ContactOperations {
 	 *            the userId of the sample SyncAdapter user object
 	 * @return instance of ContactOperations
 	 */
-	public ContactOperations addProfileAction(String userId) {
+	public ContactOperations addProfileAction(String userId, String type) {
 		mValues.clear();
 		if (userId != null) {
-			mValues.put(SyncAdapterContactColumns.DATA_PID, userId);
-			mValues.put(SyncAdapterContactColumns.DATA_SUMMARY,
+			mValues.put(ProfileContactColumns.DATA_CODE, userId);
+			mValues.put(ProfileContactColumns.DATA_TYPE, type);
+			mValues.put(ProfileContactColumns.DATA_SUMMARY,
 					mContext.getString(R.string.app_name));
-			mValues.put(SyncAdapterContactColumns.DATA_DETAIL,
+			mValues.put(ProfileContactColumns.DATA_DETAIL,
 					mContext.getString(R.string.action_view_profile));
-			mValues.put(Data.MIMETYPE, SyncAdapterContactColumns.MIME_PROFILE);
+			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME_PROFILE);
 			addInsertOp();
 		}
 		return this;
@@ -444,9 +445,9 @@ public class ContactOperations {
 	 *            Uri for the existing raw contact to be updated
 	 * @return instance of ContactOperations
 	 */
-	public ContactOperations updateProfileAction(Integer userId, Uri uri) {
+	public ContactOperations updateProfileAction(String userId, Uri uri) {
 		mValues.clear();
-		mValues.put(SyncAdapterContactColumns.DATA_PID, userId);
+		mValues.put(ProfileContactColumns.DATA_CODE, userId);
 		addUpdateOp(uri);
 		return this;
 	}

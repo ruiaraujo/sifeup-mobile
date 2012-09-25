@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.sifeup.SifeupUtils;
 import android.content.res.Resources;
 
@@ -179,5 +180,10 @@ public class Student extends Profile implements Serializable {
 		if (jObject.has("ramo"))
 			me.setBranch(jObject.getString("ramo"));
 		return me;
+	}
+
+	@Override
+	public String getType() {
+		return SifeupAPI.STUDENT_TYPE;
 	}
 }

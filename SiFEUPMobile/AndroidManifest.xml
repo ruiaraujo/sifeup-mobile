@@ -58,6 +58,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.feup.profile" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.services.PrintActivity"
@@ -157,14 +164,7 @@
         <activity
             android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_tuition" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.TAB" />
-            </intent-filter>
-        </activity>
+            android:label="@string/title_tuition" />
         <activity
             android:name=".ui.services.tuition.TuitionHistoryActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -305,8 +305,6 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sigarrasyncadapter" />
         </service>
-        
-        
         <service
             android:name=".contacts.ContactsSyncService"
             android:exported="true" >
@@ -317,6 +315,9 @@
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/contactsyncadapter" />
+            <meta-data
+                android:name="android.provider.CONTACTS_STRUCTURE"
+                android:resource="@xml/contacts" />
         </service>
 
         <receiver android:name=".authenticator.PeriodicSyncReceiver" />

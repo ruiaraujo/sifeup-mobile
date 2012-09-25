@@ -169,7 +169,7 @@ public final class SigarraContract {
 				.appendPath(PATH_PROFILES_PIC).build();
 
 		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.profile";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.profile";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.profile";
 		public static final String CONTENT_PIC = "image/jpg";
 
 		public static final String PROFILE = ID + "=?";

@@ -3,12 +3,18 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
+import pt.up.beta.mobile.contacts.ContactManager;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -56,14 +62,16 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 					.detectAll().penaltyLog().build());
-			final StrictMode.VmPolicy.Builder builder ;
+			final StrictMode.VmPolicy.Builder builder;
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				builder = new StrictMode.VmPolicy.Builder()
-				.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-				.penaltyLog().penaltyDeath();
+						.detectLeakedSqlLiteObjects()
+						.detectLeakedClosableObjects().penaltyLog()
+						.penaltyDeath();
 			else
 				builder = new StrictMode.VmPolicy.Builder()
-			.detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath();
+						.detectLeakedSqlLiteObjects().penaltyLog()
+						.penaltyDeath();
 			StrictMode.setVmPolicy(builder.build());
 		}
 
@@ -99,10 +107,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			for (Account account : accounts) {
 				accountNames[i++] = account.name;
 				if (account.name.equals(activeUser) && !logOut) {
-					startActivity(new Intent(this, HomeActivity.class));
-					finish();
-					overridePendingTransition(R.anim.slide_right_in,
-							R.anim.slide_right_out);
+					launchNextActivity();
 					return;
 				}
 			}
@@ -137,10 +142,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 					editor.commit();
 				}
 			}).start();
-			startActivity(new Intent(this, HomeActivity.class));
-			finish();
-			overridePendingTransition(R.anim.slide_right_in,
-					R.anim.slide_right_out);
+			launchNextActivity();
 		}
 
 		if (resultCode == RESULT_CANCELED) {
@@ -163,8 +165,50 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 				editor.commit();
 			}
 		}).start();
+		launchNextActivity();
+	}
+
+	private void launchNextActivity() {
+		final Intent intent = getIntent();
+		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+			if (intent.getType() == null
+					|| intent.getType().equals(
+							SigarraContract.Profiles.CONTENT_ITEM_TYPE)) {
+				final Uri uri = intent.getData();
+				new AsyncTask<Void, Void, String[]>() {
+					@Override
+					protected void onPostExecute(String[] profileDetails) {
+						startActivity(new Intent(getApplicationContext(),
+								ProfileActivity.class)
+								.putExtra(ProfileActivity.PROFILE_CODE,
+										profileDetails[0])
+								.putExtra(
+										ProfileActivity.PROFILE_TYPE,
+										SifeupAPI.STUDENT_TYPE
+												.equals(profileDetails[1]) ? ProfileActivity.PROFILE_STUDENT
+												: ProfileActivity.PROFILE_EMPLOYEE));
+						finish();
+						overridePendingTransition(R.anim.slide_right_in,
+								R.anim.slide_right_out);
+					}
+
+					@Override
+					protected void onPreExecute() {
+						setContentView(R.layout.loading_view);
+					}
+
+					@Override
+					protected String[] doInBackground(Void... params) {
+						return ContactManager.getProfileDataContact(
+								getContentResolver(), uri);
+					}
+				}.execute();
+				return;
+			}
+		}
 		startActivity(new Intent(this, HomeActivity.class));
 		finish();
 		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+
 	}
 }

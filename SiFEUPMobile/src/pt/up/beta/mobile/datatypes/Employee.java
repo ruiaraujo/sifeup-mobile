@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.sifeup.SifeupUtils;
 import android.content.res.Resources;
 
@@ -185,5 +186,10 @@ public class Employee extends Profile implements Serializable {
 					+ roomCode.toString(), Type.ROOM));
 		}
 		return result;
+	}
+
+	@Override
+	public String getType() {
+		return SifeupAPI.EMPLOYEE_TYPE;
 	}
 }
