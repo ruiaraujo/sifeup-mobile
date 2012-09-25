@@ -112,8 +112,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_SUBJECTS).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.subject";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.subject";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.subject";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.subject";
 
 		/** Default "ORDER BY" clause. */
 		public static final String DEFAULT_SORT = PERIOD + " ASC, " + NAME_PT
@@ -138,8 +138,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_FRIENDS).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.subject";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.subject";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.subject";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.subject";
 
 		/** Default "ORDER BY" clause. */
 		public static final String DEFAULT_SORT = NAME_FRIEND + " ASC ";
@@ -168,7 +168,7 @@ public final class SigarraContract {
 		public static final Uri PIC_CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_PROFILES_PIC).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.profile";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.profile";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.profile";
 		public static final String CONTENT_PIC = "image/jpg";
 
@@ -193,8 +193,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_EXAMS).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.exams";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.exam";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.exams";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.exam";
 
 		public static final String PROFILE = ID + "=?";
 
@@ -210,8 +210,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_ACADEMIC_PATH).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.academic_path";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.academic_path";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.academic_path";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.academic_path";
 
 		public static final String PROFILE = ID + "=?";
 
@@ -227,8 +227,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_TUITION).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.tuition";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.tuition";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.tuition";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.tuition";
 
 		public static final String PROFILE = ID + "=?";
 
@@ -244,8 +244,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_PRINTING).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.printing_quota";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.printing_quota";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.printing_quota";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.printing_quota";
 
 		public static final String PROFILE = ID + "=?";
 
@@ -261,8 +261,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_SCHEDULE).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.schedule";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.schedule";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.schedule";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.schedule";
 
 		public static final String SCHEDULE_SELECTION = CODE + "=? AND "
 				+ INITIAL_DAY + "=? AND " + FINAL_DAY + "=? AND "
@@ -305,8 +305,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_NOTIFICATIONS).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.notifications";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.notifications";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.notifications";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.notifications";
 
 		public static final String PROFILE = CODE + "=?";
 
@@ -332,8 +332,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_CANTEENS).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.canteens";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.canteens";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.canteens";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.canteens";
 
 		public static final String DEFAULT_ID = CanteensTable.DEFAULT_ID;
 		
@@ -345,8 +345,8 @@ public final class SigarraContract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_LAST_SYNC).build();
 
-		public static final String CONTENT_TYPE = "vnd.feup.cursor.dir/vnd.feup.last_sync";
-		public static final String CONTENT_ITEM_TYPE = "vnd.feup.cursor.item/vnd.feup.last_sync";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.last_sync";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.last_sync";
 
 		public static final String PROFILE = ID + "=?";
 		

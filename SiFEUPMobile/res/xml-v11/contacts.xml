@@ -8,4 +8,11 @@
         android:mimeType="vnd.android.cursor.item/vnd.feup.profile"
         android:summaryColumn="data2" />
 
+    <ContactsDataKind
+        android:detailColumn="data3"
+        android:detailSocialSummary="true"
+        android:icon="@drawable/icon"
+        android:mimeType="vnd.android.cursor.item/vnd.feup.schedule"
+        android:summaryColumn="data2" />
+
 </ContactsAccountType>

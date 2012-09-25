@@ -270,19 +270,32 @@ public class ContactOperations {
 	 * 
 	 * @param userId
 	 *            the userId of the sample SyncAdapter user object
+	 * @param shortName 
 	 * @return instance of ContactOperations
 	 */
-	public ContactOperations addProfileAction(String userId, String type) {
+	public ContactOperations addProfileAction(String userId, String type, String shortName) {
 		mValues.clear();
 		if (userId != null) {
 			mValues.put(ProfileContactColumns.DATA_CODE, userId);
 			mValues.put(ProfileContactColumns.DATA_TYPE, type);
+			mValues.put(ProfileContactColumns.DATA_NAME, shortName);
 			mValues.put(ProfileContactColumns.DATA_SUMMARY,
 					mContext.getString(R.string.app_name));
 			mValues.put(ProfileContactColumns.DATA_DETAIL,
 					mContext.getString(R.string.action_view_profile));
 			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME_PROFILE);
 			addInsertOp();
+			mValues.clear();
+			mValues.put(ProfileContactColumns.DATA_CODE, userId);
+			mValues.put(ProfileContactColumns.DATA_TYPE, type);
+			mValues.put(ProfileContactColumns.DATA_NAME, shortName);
+			mValues.put(ProfileContactColumns.DATA_SUMMARY,
+					mContext.getString(R.string.app_name));
+			mValues.put(ProfileContactColumns.DATA_DETAIL,
+					mContext.getString(R.string.action_view_schedule));
+			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME_SCHEDULE);
+			addInsertOp();
+			
 		}
 		return this;
 	}
@@ -439,15 +452,15 @@ public class ContactOperations {
 	/**
 	 * Updates contact's profile action
 	 * 
-	 * @param userId
+	 * @param name
 	 *            sample SyncAdapter user id
 	 * @param uri
 	 *            Uri for the existing raw contact to be updated
 	 * @return instance of ContactOperations
 	 */
-	public ContactOperations updateProfileAction(String userId, Uri uri) {
+	public ContactOperations updateProfileAction(String name, Uri uri) {
 		mValues.clear();
-		mValues.put(ProfileContactColumns.DATA_CODE, userId);
+		mValues.put(ProfileContactColumns.DATA_NAME, name);
 		addUpdateOp(uri);
 		return this;
 	}

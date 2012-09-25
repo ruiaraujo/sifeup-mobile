@@ -331,5 +331,6 @@
     <!-- *************************************************************************************** -->
     <!-- CONTACTS INTEGRATION -->
     <string name="action_view_profile">View profile</string>
+    <string name="action_view_schedule">View schedule</string>
 
 </resources>

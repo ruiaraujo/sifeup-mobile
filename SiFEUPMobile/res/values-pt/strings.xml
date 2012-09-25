@@ -324,5 +324,6 @@
     <!-- *************************************************************************************** -->
     <!-- CONTACTS INTEGRATION -->
     <string name="action_view_profile">Ver perfil</string>
+    <string name="action_view_schedule">Ver horário</string>
 
 </resources>
