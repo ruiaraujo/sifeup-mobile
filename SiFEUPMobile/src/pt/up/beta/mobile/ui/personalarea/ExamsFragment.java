@@ -10,7 +10,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.loaders.ExamsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
@@ -108,7 +108,7 @@ public class ExamsFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncExams(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncExams(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

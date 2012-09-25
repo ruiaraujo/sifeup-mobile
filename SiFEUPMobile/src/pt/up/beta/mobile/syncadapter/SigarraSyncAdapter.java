@@ -27,14 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SyncStates;
-import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Notification;
-import pt.up.beta.mobile.datatypes.Profile;
-import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
@@ -47,17 +43,19 @@ import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	final static String SINGLE_REQUEST = "single_request";
 	final static String REQUEST_TYPE = "request_type";
@@ -89,7 +87,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private final AccountManager mAccountManager;
 
-	public SyncAdapter(Context context, boolean autoInitialize) {
+	public SigarraSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		mAccountManager = AccountManager.get(context);
 	}
@@ -420,23 +418,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncProfiles(Account account, String authToken,
 			SyncResult syncResult) throws AuthenticationException, IOException,
 			JSONException {
-		final List<Profile> rawContacts = new ArrayList<Profile>();
 		final String userCode = mAccountManager.getUserData(account,
 				Constants.USER_NAME);
 		final String profile;
 		final String type = mAccountManager.getUserData(account,
 				Constants.USER_TYPE);
-		final Profile me;
 		if (type.equals(SifeupAPI.STUDENT_TYPE)) {
 			profile = SifeupAPI.getReply(SifeupAPI.getStudentUrl(userCode),
 					authToken, getContext());
-			me = Student.parseJSON(profile);
 		} else {
 			profile = SifeupAPI.getReply(SifeupAPI.getEmployeeUrl(userCode),
 					authToken, getContext());
-			me = Employee.parseJSON(profile);
 		}
-		rawContacts.add(me);
 		final String picPath = getProfilePic(userCode, authToken, syncResult);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ProfileColumns.ID, userCode);
@@ -470,20 +463,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					final String friendCourse = c
 							.getString(c
 									.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND));
-					final Profile friend;
 					final String friendPage;
 					if (friendCourse != null) {
 						friendPage = SifeupAPI.getReply(
 								SifeupAPI.getStudentUrl(friendCode), authToken,
 								getContext());
-						friend = Student.parseJSON(friendPage);
 					} else {
 						friendPage = SifeupAPI.getReply(
 								SifeupAPI.getEmployeeUrl(friendCode),
 								authToken, getContext());
-						friend = Employee.parseJSON(friendPage);
 					}
-					rawContacts.add(friend);
 					friendValues.put(SigarraContract.ProfileColumns.CONTENT,
 							friendPage);
 					if (friendPic != null)
@@ -496,12 +485,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						SigarraContract.Profiles.CONTENT_URI, friends);
 				syncResult.stats.numEntries += friends.length;
 			}
-		}
-		finally {
+		} finally {
 			c.close();
 		}
-		ContactManager.setAccountContactsVisibility(getContext(), account, true);
-		ContactManager.updateContacts(getContext(), account.name, rawContacts);
+		//Request sync for the contacts, if it is disabled in Settings
+		// the sync won't be called
+		ContentResolver.requestSync(account, ContactsContract.AUTHORITY,
+				new Bundle());
 	}
 
 	private void syncProfilePic(String userCode, String authToken,

@@ -9,7 +9,7 @@ import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;
 import pt.up.beta.mobile.loaders.CanteenLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -92,7 +92,7 @@ public class LunchMenuFragment extends BaseFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncCanteens(AccountUtils
+			SigarraSyncAdapterUtils.syncCanteens(AccountUtils
 					.getActiveUserName(getActivity()));
 			return true;
 		}

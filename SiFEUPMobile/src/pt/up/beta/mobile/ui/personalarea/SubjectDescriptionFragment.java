@@ -19,7 +19,7 @@ import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
@@ -145,7 +145,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncSubject(AccountUtils.getActiveUserName(getActivity()),code, year, period);
+			SigarraSyncAdapterUtils.syncSubject(AccountUtils.getActiveUserName(getActivity()),code, year, period);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

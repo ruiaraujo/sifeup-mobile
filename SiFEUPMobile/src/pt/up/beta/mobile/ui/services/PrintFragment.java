@@ -5,7 +5,7 @@ package pt.up.beta.mobile.ui.services;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -113,7 +113,7 @@ public class PrintFragment extends BaseFragment implements LoaderCallbacks<Curso
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncPrintingQuota(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncPrintingQuota(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -295,7 +295,7 @@
         </activity>
 
         <service
-            android:name=".syncadapter.SyncService"
+            android:name=".syncadapter.SigarraSyncService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -303,7 +303,20 @@
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/sigarrasyncadapter" />
+        </service>
+        
+        
+        <service
+            android:name=".contacts.ContactsSyncService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/contactsyncadapter" />
         </service>
 
         <receiver android:name=".authenticator.PeriodicSyncReceiver" />

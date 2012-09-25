@@ -1,7 +1,7 @@
 package pt.up.beta.mobile.content;
 
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -353,12 +353,12 @@ public class SigarraProvider extends ContentProvider {
 						 * This means we re getting single subject
 						 */
 						if (selectionArgs.length == 3)
-							SyncAdapterUtils.syncSubject(AccountUtils
+							SigarraSyncAdapterUtils.syncSubject(AccountUtils
 									.getActiveUserName(getContext()),
 									selectionArgs[0], selectionArgs[2],
 									selectionArgs[1]);
 						else
-							SyncAdapterUtils.syncSubjects(AccountUtils
+							SigarraSyncAdapterUtils.syncSubjects(AccountUtils
 									.getActiveUserName(getContext()));
 
 					}
@@ -381,7 +381,7 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					new String[] { selectionArgs[0] }, null, null, sortOrder);
 			if (c.getCount() == 0) {
-				SyncAdapterUtils.syncProfile(
+				SigarraSyncAdapterUtils.syncProfile(
 						AccountUtils.getActiveUserName(getContext()),
 						selectionArgs[0], selectionArgs[1]);
 			}
@@ -406,7 +406,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState.getLong(syncState
 							.getColumnIndex(SigarraContract.LastSync.EXAMS)) == 0) {
-						SyncAdapterUtils.syncExams(AccountUtils
+						SigarraSyncAdapterUtils.syncExams(AccountUtils
 								.getActiveUserName(getContext()));
 					}
 				} else
@@ -431,7 +431,7 @@ public class SigarraProvider extends ContentProvider {
 					if (syncState
 							.getLong(syncState
 									.getColumnIndex(SigarraContract.LastSync.ACADEMIC_PATH)) == 0) {
-						SyncAdapterUtils.syncAcademicPath(AccountUtils
+						SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
 								.getActiveUserName(getContext()));
 					}
 				} else
@@ -454,7 +454,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState.getLong(syncState
 							.getColumnIndex(SigarraContract.LastSync.TUIION)) == 0) {
-						SyncAdapterUtils.syncTuitions(AccountUtils
+						SigarraSyncAdapterUtils.syncTuitions(AccountUtils
 								.getActiveUserName(getContext()));
 					}
 				} else
@@ -467,7 +467,7 @@ public class SigarraProvider extends ContentProvider {
 			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
-				SyncAdapterUtils.syncPrintingQuota(AccountUtils
+				SigarraSyncAdapterUtils.syncPrintingQuota(AccountUtils
 						.getActiveUserName(getContext()));
 			}
 			break;
@@ -478,7 +478,7 @@ public class SigarraProvider extends ContentProvider {
 							selectionArgs[2], selectionArgs[3] }, null, null,
 					sortOrder);
 			if (c.getCount() == 0) {
-				SyncAdapterUtils.syncSchedule(
+				SigarraSyncAdapterUtils.syncSchedule(
 						AccountUtils.getActiveUserName(getContext()),
 						selectionArgs[0], selectionArgs[1], selectionArgs[2],
 						selectionArgs[3], selectionArgs[4]);
@@ -501,7 +501,7 @@ public class SigarraProvider extends ContentProvider {
 					if (syncState
 							.getLong(syncState
 									.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
-						SyncAdapterUtils.syncNotifications(AccountUtils
+						SigarraSyncAdapterUtils.syncNotifications(AccountUtils
 								.getActiveUserName(getContext()));
 					}
 				} else
@@ -526,7 +526,7 @@ public class SigarraProvider extends ContentProvider {
 				if (syncState.moveToFirst()) {
 					if (syncState.getLong(syncState
 							.getColumnIndex(SigarraContract.LastSync.CANTEENS)) == 0) {
-						SyncAdapterUtils.syncCanteens(AccountUtils
+						SigarraSyncAdapterUtils.syncCanteens(AccountUtils
 								.getActiveUserName(getContext()));
 					}
 				} else

@@ -8,7 +8,7 @@ import pt.up.beta.mobile.datatypes.AcademicYear;
 import pt.up.beta.mobile.loaders.AcademicPathLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
@@ -111,7 +111,7 @@ public class AcademicPathFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncAcademicPath(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -10,7 +10,7 @@ import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.loaders.ScheduleLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
@@ -240,7 +240,7 @@ public class ScheduleFragment extends BaseFragment implements
 			default:
 				throw new RuntimeException("Invalid schedule type");
 			}
-			SyncAdapterUtils.syncSchedule(
+			SigarraSyncAdapterUtils.syncSchedule(
 					AccountUtils.getActiveUserName(getActivity()),
 					scheduleCode, initialDay, finalDay, type,
 					Long.toString(mondayMillis));

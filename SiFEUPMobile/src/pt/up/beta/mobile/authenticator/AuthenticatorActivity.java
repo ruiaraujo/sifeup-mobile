@@ -36,6 +36,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -213,6 +214,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 									R.integer.default_sync_interval)));
 			ContentResolver.setSyncAutomatically(account,
 					SigarraContract.CONTENT_AUTHORITY, true);
+			ContentResolver.setSyncAutomatically(account,
+					ContactsContract.AUTHORITY, true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
 				ContentResolver.addPeriodicSync(account,
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),

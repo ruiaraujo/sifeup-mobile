@@ -9,7 +9,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.loaders.NotificationsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,7 +69,7 @@ public class NotificationsFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			SyncAdapterUtils.syncNotifications(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncNotifications(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

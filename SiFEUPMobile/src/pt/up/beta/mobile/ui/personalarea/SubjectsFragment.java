@@ -9,7 +9,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.loaders.SubjectsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import android.content.Intent;
@@ -68,7 +68,7 @@ public class SubjectsFragment extends BaseFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {		
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncSubjects(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncSubjects(AccountUtils.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -12,7 +12,7 @@ import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.loaders.EmployeeLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SyncAdapterUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
@@ -158,7 +158,7 @@ public class EmployeeProfileFragment extends BaseFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SyncAdapterUtils.syncProfile(
+			SigarraSyncAdapterUtils.syncProfile(
 					AccountUtils.getActiveUserName(getActivity()), code,
 					SifeupAPI.EMPLOYEE_TYPE);
 
