@@ -11,6 +11,14 @@
             android:entryValues="@array/sync_intervals_values"
             android:key="@string/key_sync_interval"
             android:title="@string/lb_sync_interval_title" />
+        
+        <ListPreference
+            android:defaultValue="@integer/default_notifications_sync_interval"
+            android:entries="@array/sync_intervals"
+            android:entryValues="@array/sync_intervals_values"
+            android:key="@string/key_notifications_sync_interval"
+            android:title="@string/lb_sync_notifications_interval_title" />
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

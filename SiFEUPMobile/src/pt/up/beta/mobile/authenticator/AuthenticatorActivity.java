@@ -23,6 +23,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.dialogs.AboutDialogFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
@@ -212,18 +213,39 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 							getString(R.string.key_sync_interval),
 							Integer.toString(getResources().getInteger(
 									R.integer.default_sync_interval)));
+
+			String syncNotIntervalValue = PreferenceManager
+					.getDefaultSharedPreferences(getApplicationContext())
+					.getString(
+							getString(R.string.key_notifications_sync_interval),
+							Integer.toString(getResources().getInteger(
+									R.integer.default_sync_interval)));
+
 			ContentResolver.setSyncAutomatically(account,
 					SigarraContract.CONTENT_AUTHORITY, true);
 			ContentResolver.setSyncAutomatically(account,
 					ContactsContract.AUTHORITY, true);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 				ContentResolver.addPeriodicSync(account,
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
-			else
+
+				ContentResolver.addPeriodicSync(account,
+						SigarraContract.CONTENT_AUTHORITY,
+						SigarraSyncAdapterUtils.getNotificationsBundle(),
+						Integer.parseInt(syncNotIntervalValue) * 3600);
+			} else {
+				PeriodicSyncReceiver.cancelPreviousAlarms(this, account,
+						SigarraContract.CONTENT_AUTHORITY, new Bundle());
 				PeriodicSyncReceiver.addPeriodicSync(this, account,
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
+
+				PeriodicSyncReceiver.addPeriodicSync(this, account,
+						SigarraContract.CONTENT_AUTHORITY,
+						SigarraSyncAdapterUtils.getNotificationsBundle(),
+						Integer.parseInt(syncNotIntervalValue) * 3600);
+			}
 		} else {
 			mAccountManager.setPassword(account, user.getPassword());
 		}

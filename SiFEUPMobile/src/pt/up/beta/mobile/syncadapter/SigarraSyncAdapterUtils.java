@@ -104,13 +104,18 @@ public class SigarraSyncAdapterUtils {
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);
 	}
-
-	public static void syncNotifications(final String accountName) {
+	
+	public static Bundle getNotificationsBundle(){
 		final Bundle extras = new Bundle();
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		extras.putBoolean(SigarraSyncAdapter.SINGLE_REQUEST, true);
 		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.NOTIFICATIONS);
+		return extras;
+	}
+
+	public static void syncNotifications(final String accountName) {
+		final Bundle extras = getNotificationsBundle();
 		ContentResolver.requestSync(new Account(accountName,
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);

@@ -29,8 +29,10 @@
     <string name="title_preferences">Settings</string>
     <string name="lb_sync_preferences">Configure syncronization</string>
     <string name="lb_sync_preferences_sum">Configure period</string>
+    <string name="lb_sync_notifications_interval_title">Notifications Refresh Interval</string>
     <string name="lb_sync_interval_title">Refresh Interval</string>
     <string name="key_sync_interval">sync_interval</string>
+    <string name="key_notifications_sync_interval">notifications_sync_interval</string>
     <string name="lb_preferences_title">Settings</string>
 
     <string-array name="sync_intervals">

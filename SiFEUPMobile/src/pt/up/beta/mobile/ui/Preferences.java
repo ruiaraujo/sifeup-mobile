@@ -4,6 +4,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.PeriodicSyncReceiver;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -26,6 +27,8 @@ public class Preferences extends SherlockPreferenceActivity implements
 	private String[] syncDisplayOptions;
 	private String[] syncDisplayValues;
 	private Preference syncInterval;
+	private Preference notificationsSyncInterval;
+
 	private SharedPreferences sharedPreferences;
 
 	@SuppressWarnings("deprecation")
@@ -37,6 +40,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 				.getDefaultSharedPreferences(getApplicationContext());
 
 		syncInterval = findPreference(getString(R.string.key_sync_interval));
+		notificationsSyncInterval = findPreference(getString(R.string.key_notifications_sync_interval));
 		syncDisplayOptions = getResources().getStringArray(
 				R.array.sync_intervals);
 		syncDisplayValues = getResources().getStringArray(
@@ -65,7 +69,12 @@ public class Preferences extends SherlockPreferenceActivity implements
 				getString(R.string.key_sync_interval),
 				Integer.toString(getResources().getInteger(
 						R.integer.default_sync_interval)));
-		updateListSummary(syncIntervalValue);
+
+		String syncNotIntervalValue = sharedPreferences.getString(
+				getString(R.string.key_notifications_sync_interval),
+				Integer.toString(getResources().getInteger(
+						R.integer.default_sync_interval)));
+		updateListSummary(syncIntervalValue, syncNotIntervalValue);
 
 		// Set up a listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences()
@@ -140,12 +149,15 @@ public class Preferences extends SherlockPreferenceActivity implements
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 	}
 
-	private void updateListSummary(String syncIntervalValue) {
+	private void updateListSummary(String syncIntervalValue,
+			String syncNotIntervalValue) {
 
 		for (int i = 0; i < syncDisplayValues.length; ++i) {
 			if (syncDisplayValues[i].equals(syncIntervalValue)) {
 				syncInterval.setSummary(syncDisplayOptions[i]);
-				break;
+			}
+			if (syncDisplayValues[i].equals(syncNotIntervalValue)) {
+				notificationsSyncInterval.setSummary(syncDisplayOptions[i]);
 			}
 		}
 	}
@@ -159,23 +171,43 @@ public class Preferences extends SherlockPreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(getString(R.string.key_sync_interval))) {
+		if (key.equals(getString(R.string.key_sync_interval))
+				|| key.equals(getString(R.string.key_notifications_sync_interval))) {
 
 			String syncIntervalValue = sharedPreferences.getString(
 					getString(R.string.key_sync_interval),
 					Integer.toString(getResources().getInteger(
 							R.integer.default_sync_interval)));
-			updateListSummary(syncIntervalValue);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+
+			String syncNotIntervalValue = sharedPreferences.getString(
+					getString(R.string.key_notifications_sync_interval),
+					Integer.toString(getResources().getInteger(
+							R.integer.default_sync_interval)));
+			updateListSummary(syncIntervalValue, syncNotIntervalValue);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 				ContentResolver.addPeriodicSync(
 						AccountUtils.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
-			else {
+				ContentResolver.addPeriodicSync(
+						AccountUtils.getActiveAccount(getApplicationContext()),
+						SigarraContract.CONTENT_AUTHORITY,
+						SigarraSyncAdapterUtils.getNotificationsBundle(),
+						Integer.parseInt(syncNotIntervalValue) * 3600);
+			} else {
+				PeriodicSyncReceiver.cancelPreviousAlarms(this,
+						AccountUtils.getActiveAccount(getApplicationContext()),
+						SigarraContract.CONTENT_AUTHORITY, new Bundle());
 				PeriodicSyncReceiver.addPeriodicSync(this,
 						AccountUtils.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
+				PeriodicSyncReceiver.addPeriodicSync(this,
+						AccountUtils.getActiveAccount(getApplicationContext()),
+						SigarraContract.CONTENT_AUTHORITY,
+						SigarraSyncAdapterUtils.getNotificationsBundle(),
+						Integer.parseInt(syncNotIntervalValue) * 3600);
+
 			}
 			return;
 		}

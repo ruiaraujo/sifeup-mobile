@@ -49,6 +49,14 @@ public final class PeriodicSyncReceiver extends BroadcastReceiver {
 	private static AlarmManager getAlarmManager(Context context) {
 		return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 	}
+	
+	public static void cancelPreviousAlarms(Context context, Account account, String authority,
+			Bundle extras){
+		final AlarmManager manager = getAlarmManager(context);
+		PendingIntent operation = PeriodicSyncReceiver.createPendingIntent(
+				context, account, authority, extras);
+		manager.cancel(operation);
+	}
 
 	public static void addPeriodicSync(Context context, Account account, String authority,
 			Bundle extras, long pollFrequency) {
@@ -59,7 +67,6 @@ public final class PeriodicSyncReceiver extends BroadcastReceiver {
 		long interval = pollFrequencyMsec;
 		PendingIntent operation = PeriodicSyncReceiver.createPendingIntent(
 				context, account, authority, extras);
-		manager.cancel(operation);
 		manager.setInexactRepeating(type, triggerAtTime, interval, operation);
 	}
 
