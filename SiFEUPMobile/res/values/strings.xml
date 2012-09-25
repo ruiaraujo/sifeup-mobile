@@ -26,20 +26,20 @@
 
     <!-- *************************************************************************************** -->
     <!-- PREFERENCES -->
-    <string name="title_preferences">Definições</string>
-    <string name="lb_sync_preferences">Configurar sincronização</string>
-    <string name="lb_sync_preferences_sum">Configurar período</string>
-    <string name="lb_sync_interval_title">Intervalo de actualização</string>
+    <string name="title_preferences">Settings</string>
+    <string name="lb_sync_preferences">Configure syncronization</string>
+    <string name="lb_sync_preferences_sum">Configure period</string>
+    <string name="lb_sync_interval_title">Refresh Interval</string>
     <string name="key_sync_interval">sync_interval</string>
-    <string name="lb_preferences_title">Definições</string>
+    <string name="lb_preferences_title">Settings</string>
 
     <string-array name="sync_intervals">
-        <item>1 hora</item>
-        <item>3 horas</item>
-        <item>6 horas</item>
-        <item>12 horas</item>
-        <item>Um dia</item>
-        <item>Uma semana</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>One day</item>
+        <item>One week</item>
     </string-array>
     <string-array name="sync_intervals_values">
         <item>1</item>
