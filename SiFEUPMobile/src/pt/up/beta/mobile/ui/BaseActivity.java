@@ -7,28 +7,45 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 /**
  * A base activity that defers common functionality across app activities. This
  * class shouldn't be used directly; instead, activities should inherit from
  * {@link BaseSinglePaneActivity} or {@link BaseMultiPaneActivity}.
  */
-public abstract class BaseActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends SlidingFragmentActivity {
 	protected ActionBar actionbar;
 
-	protected void onCreate(Bundle o) {
+	public void onCreate(Bundle o) {
 		super.onCreate(o);
 		GoogleAnalyticsSessionManager.getInstance(getApplication())
 				.incrementActivityCount();
 		actionbar = getSupportActionBar();
+
+		// set the Behind View
+		setBehindContentView(R.layout.menu_frame);
+		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+		t.replace(R.id.menu_frame, new MenuFragment());
+		t.commit();
+
+		// customize the SlidingMenu
+		final SlidingMenu sm = getSlidingMenu();
+		sm.setShadowWidthRes(R.dimen.shadow_width);
+		sm.setShadowDrawable(R.drawable.shadow);
+		sm.setBehindOffsetRes(R.dimen.actionbar_home_width);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
+		setSlidingActionBarEnabled(false);
 	}
 
 	@Override
@@ -55,7 +72,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
+	public void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// NOTE: there needs to be a content view set before this is called, so
 		// this method
@@ -112,9 +129,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	 * Invoke "home" action, returning to {@link HomeActivity}.
 	 */
 	protected void goUp() {
-		if (this instanceof HomeActivity)
+		if (this instanceof HomeActivity){
+			toggle();
 			return;
-
+		}
 		final Intent upIntent = new Intent(this, HomeActivity.class);
 
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {

@@ -26,7 +26,7 @@ public class SearchActivity extends BaseSinglePaneActivity {
     private StudentsSearchFragment studentsFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();        
@@ -45,7 +45,7 @@ public class SearchActivity extends BaseSinglePaneActivity {
 
 
 	@Override
-	protected Fragment onCreatePane() {
+	public Fragment onCreatePane() {
 		return studentsFragment = new StudentsSearchFragment();
 	}
 
