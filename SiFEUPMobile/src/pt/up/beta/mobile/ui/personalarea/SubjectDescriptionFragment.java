@@ -50,7 +50,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
-import com.viewpagerindicator.TitleProvider;
+
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -157,9 +157,9 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	 * @author Ângela Igreja
 	 * 
 	 */
-	class PagerSubjectAdapter extends PagerAdapter implements TitleProvider {
+	class PagerSubjectAdapter extends PagerAdapter {
 		@Override
-		public String getTitle(int position) {
+	    public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
 				return getString(R.string.objectives);

@@ -30,7 +30,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
-import com.viewpagerindicator.TitleProvider;
 
 /**
  * Lunch Menu Fragment
@@ -126,12 +125,12 @@ public class LunchMenuFragment extends BaseFragment implements
 	 * @author Ângela Igreja
 	 * 
 	 */
-	class PagerMenuAdapter extends PagerAdapter implements TitleProvider {
+	class PagerMenuAdapter extends PagerAdapter {
 
-		@Override
-		public String getTitle(int pos) {
-			return canteens.get(pos).getDescription();
-		}
+	    @Override
+	    public CharSequence getPageTitle(int position) {
+			return canteens.get(position).getDescription();
+	    }
 
 		public void destroyItem(View collection, int position, Object view) {
 			((ViewPager) collection).removeView((View) view);
