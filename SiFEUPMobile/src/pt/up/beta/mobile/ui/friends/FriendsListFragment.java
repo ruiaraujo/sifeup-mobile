@@ -81,7 +81,7 @@ public class FriendsListFragment extends BaseFragment implements
 
 	public void onResume() {
 		super.onResume();
-	    getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+		getActivity().getSupportLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -127,9 +127,7 @@ public class FriendsListFragment extends BaseFragment implements
 					ProfileActivity.PROFILE_EMPLOYEE);
 		i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
 		i.putExtra(Intent.EXTRA_TITLE, f.getName());
-		startActivity(i);
-		getActivity().overridePendingTransition(R.anim.slide_right_in,
-				R.anim.slide_right_out);
+		getBaseActivity().openActivityOrFragment(i);
 	}
 
 	@Override
@@ -154,7 +152,8 @@ public class FriendsListFragment extends BaseFragment implements
 
 		// fill in the grid_item layout
 		list.setAdapter(new FriendAdapter(friends, getActivity()
-				.getLayoutInflater(),getActivity(), getActivity().getSupportLoaderManager()));
+				.getLayoutInflater(), getActivity(), getActivity()
+				.getSupportLoaderManager()));
 		list.setOnItemClickListener(this);
 		showMainScreen();
 		Log.i(TAG, "list loaded successfully");

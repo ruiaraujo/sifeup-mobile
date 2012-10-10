@@ -11,7 +11,8 @@
 
     <color name="body_text_1_inverse">#ffffffff</color>
     <color name="body_text_2_inverse">#99ffffff</color>
-
+	<color name="dark_gray">#ff333333</color>
+	<color name="light_gray">#ff999999</color>
     
     <color name="feup">#ff8c2d19</color>
     <color name="hyperlink">#ffff549f</color>

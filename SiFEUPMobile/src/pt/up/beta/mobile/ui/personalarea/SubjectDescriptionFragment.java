@@ -586,8 +586,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			((ListView) contents.findViewById(R.id.generic_list))
 					.setAdapter(getSubjectContentAdapter());
 		} else {
-			if (getActivity() != null)
+			if (getActivity() != null){
 				getActivity().finish();
+				getActivity().overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+			}
 		}
 	}
 

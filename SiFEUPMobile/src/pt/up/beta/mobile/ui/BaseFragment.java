@@ -96,9 +96,8 @@ public class BaseFragment extends SherlockFragment {
 
 	@Override
 	public void startActivity(Intent intent) {
-		super.startActivity(intent);
-		getActivity().overridePendingTransition(R.anim.slide_right_in,
-				R.anim.slide_right_out);
+		final BaseActivity activity = (BaseActivity) getActivity();
+		activity.openActivityOrFragment(intent); 
 	}
 
 	@Override
@@ -176,7 +175,13 @@ public class BaseFragment extends SherlockFragment {
 			ft.remove(prev).commitAllowingStateLoss();
 		}
 	}
-
+	
+	public BaseActivity getBaseActivity(){
+		if ( getActivity() == null || !(getActivity() instanceof BaseActivity) )
+			return null;
+		return ((BaseActivity)getActivity());
+	}
+	
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;
 		super.onCreateOptionsMenu(menu, inflater);

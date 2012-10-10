@@ -1,12 +1,12 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
+import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -26,15 +26,17 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 public abstract class BaseActivity extends SlidingFragmentActivity {
 	protected ActionBar actionbar;
 
+	private Handler mHandler = new Handler();
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
-		GoogleAnalyticsSessionManager.getInstance(getApplication())
-				.incrementActivityCount();
+		// GoogleAnalyticsSessionManager.getInstance(getApplication())
+		// .incrementActivityCount();
 		actionbar = getSupportActionBar();
 
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);
-		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+		FragmentTransaction t = this.getSupportFragmentManager()
+				.beginTransaction();
 		t.replace(R.id.menu_frame, new MenuFragment());
 		t.commit();
 
@@ -51,13 +53,13 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//TODO: we need to improve this
-		//if (!AccountUtils.isAccountValid(this)) {
-			//	goLogin();
-		//}
+		// TODO: we need to improve this
+		// if (!AccountUtils.isAccountValid(this)) {
+		// goLogin();
+		// }
 		// Example of how to track a pageview event
-		AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
-				getClass().getSimpleName());
+		// AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
+		// getClass().getSimpleName());
 	}
 
 	@Override
@@ -65,10 +67,10 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		super.onDestroy();
 
 		// Purge analytics so they don't hold references to this activity
-		GoogleAnalyticsSessionManager.getInstance().dispatch();
+		// GoogleAnalyticsSessionManager.getInstance().dispatch();
 
 		// Need to do this for every activity that uses google analytics
-		GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();
+		// GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();
 	}
 
 	@Override
@@ -129,11 +131,11 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 * Invoke "home" action, returning to {@link HomeActivity}.
 	 */
 	protected void goUp() {
-		if (this instanceof HomeActivity){
+		if (this instanceof PersonalAreaActivity) {
 			toggle();
 			return;
 		}
-		final Intent upIntent = new Intent(this, HomeActivity.class);
+		final Intent upIntent = new Intent(this, PersonalAreaActivity.class);
 
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is not part of the application's task, so create a
@@ -145,20 +147,15 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		} else {
 			// This activity is part of the application's task, so simply
 			// navigate up to the hierarchical parent activity.
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ){
-	            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(upIntent);
-	            finish();
-			}
-			else
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(upIntent);
+				finish();
+			} else
 				NavUtils.navigateUpTo(this, upIntent);
 		}
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
-	
-	
-	
-	
 
 	/**
 	 * Takes a given intent and either starts a new activity to handle it (the
@@ -169,9 +166,17 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 * 
 	 * @param intent
 	 */
-	public void openActivityOrFragment(Intent intent) {
+	public void openActivityOrFragment(final Intent intent) {
 		// Default implementation simply calls startActivity
-		startActivity(intent);
+		showAbove();
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				startActivity(intent);
+				overridePendingTransition(R.anim.fade_in,
+						android.R.anim.fade_out);
+			}
+		});
 	}
 
 	/**
@@ -236,12 +241,12 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		finish();
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 }
