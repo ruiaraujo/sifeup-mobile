@@ -3,7 +3,7 @@ package pt.up.beta.mobile.ui.webclient;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -29,7 +29,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class WebviewFragment extends BaseFragment {
+public class WebviewFragment extends BaseLoadingFragment {
 
 	private WebView mWebView;
 	private ProgressBar progressWebView;

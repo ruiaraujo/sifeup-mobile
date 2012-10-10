@@ -19,7 +19,7 @@ import android.widget.ZoomControls;
 
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import pt.up.beta.mobile.ui.utils.TouchImageView;
 import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
@@ -32,7 +32,7 @@ import pt.up.beta.mobile.R;
  * @author Ângela Igreja
  * 
  */
-public class FeupFacilitiesFragment extends BaseFragment implements
+public class FeupFacilitiesFragment extends BaseLoadingFragment implements
 		ResponseCommand<Bitmap>, OnTapListener {
 
 	private TouchImageView pic;

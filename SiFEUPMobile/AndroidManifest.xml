@@ -85,7 +85,7 @@
         <activity
             android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_student_area" />
+            android:label="@string/title_personal_area" />
         <activity
             android:name=".ui.services.ServicesActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"

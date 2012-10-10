@@ -4,7 +4,8 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
+    android:drawableRight="@drawable/ic_launcher"
+    android:focusable="false"
     android:gravity="center_vertical"
-    android:drawableRight="@drawable/ic_launcher" 
     android:padding="10dp"
     android:textAppearance="@android:style/TextAppearance.Medium" />

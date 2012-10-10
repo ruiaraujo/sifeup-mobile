@@ -23,7 +23,7 @@ import android.widget.SimpleAdapter;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.R;
 
 /**
@@ -35,7 +35,7 @@ import pt.up.beta.mobile.R;
  * @author Ângela Igreja
  * 
  */
-public class NewsFragment extends BaseFragment implements
+public class NewsFragment extends BaseLoadingFragment implements
         AdapterView.OnItemClickListener {
 
     /** News Feed from FEUP */

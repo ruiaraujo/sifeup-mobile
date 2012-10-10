@@ -6,10 +6,11 @@ import pt.up.beta.mobile.datatypes.AcademicPath;
 import pt.up.beta.mobile.datatypes.AcademicUC;
 import pt.up.beta.mobile.datatypes.AcademicYear;
 import pt.up.beta.mobile.loaders.AcademicPathLoader;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;
@@ -36,8 +37,8 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  * @author Ângela Igreja
  * 
  */
-public class AcademicPathFragment extends BaseFragment implements
-		 OnChildClickListener, LoaderCallbacks<AcademicPath> {
+public class AcademicPathFragment extends BaseLoadingFragment implements
+		OnChildClickListener, LoaderCallbacks<AcademicPath> {
 
 	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
 
@@ -77,21 +78,23 @@ public class AcademicPathFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.title_academic_path);
 		if (savedInstanceState != null) {
 			academicPath = savedInstanceState.getParcelable(ACADEMIC_KEY);
 			if (academicPath == null)
-				getActivity().getSupportLoaderManager().initLoader(0, null,
-						this);
+				getActivity().getSupportLoaderManager().initLoader(
+						LoadersConstants.ACADEMIC_PATH, null, this);
 			else {
 				displayData();
 				showMainScreen();
 			}
 		} else {
-			getActivity().getSupportLoaderManager().initLoader(0, null, this);
+			getActivity().getSupportLoaderManager().initLoader(
+					LoadersConstants.ACADEMIC_PATH, null, this);
 
 		}
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.webclient_menu_items, menu);
@@ -111,7 +114,8 @@ public class AcademicPathFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -232,24 +236,20 @@ public class AcademicPathFragment extends BaseFragment implements
 				.getChild(groupPosition, childPosition);
 		if (uc == null)
 			return true;
-		if (getActivity() == null)
-			return true;
-		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
-
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
-				uc.getCourseAcronym());
-		i.putExtra(
-				SubjectDescriptionFragment.SUBJECT_YEAR,
-				Integer.toString(uc.getYear()) + "/"
-						+ Integer.toString(uc.getYear() + 1));
 		final String semester = uc.getSemester().equals("A") ? uc.getSemester()
 				: uc.getSemester() + "S";
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, semester);
 		String title = uc.getNamePt();
 		if (!UIUtils.isLocalePortuguese() && uc.getNameEn().trim().length() > 0)
 			title = uc.getNameEn();
-		i.putExtra(Intent.EXTRA_TITLE, title);
-		startActivity(i);
+		final Bundle extras = new Bundle();
+		extras.putString(SubjectDescriptionFragment.SUBJECT_CODE,
+				uc.getCourseAcronym());
+		extras.putString(SubjectDescriptionFragment.SUBJECT_YEAR,
+				Integer.toString(uc.getYear()) + "/"
+						+ Integer.toString(uc.getYear() + 1));
+		extras.putString(SubjectDescriptionFragment.SUBJECT_PERIOD,
+				semester);
+		openFragment(SubjectDescriptionFragment.class, extras,title);
 		return true;
 	}
 

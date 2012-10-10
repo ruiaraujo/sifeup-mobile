@@ -22,6 +22,8 @@ import pt.up.beta.mobile.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 /**
  * A {@link BaseActivity} that simply contains a single fragment. The intent used to invoke this
@@ -56,4 +58,5 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
      * The returned fragment's arguments will be set to the intent used to invoke this activity.
      */
     protected abstract Fragment onCreatePane();
+    
 }

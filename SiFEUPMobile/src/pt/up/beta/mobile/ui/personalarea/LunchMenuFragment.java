@@ -8,9 +8,10 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;
 import pt.up.beta.mobile.loaders.CanteenLoader;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -37,7 +38,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  * @author Ângela Igreja
  * 
  */
-public class LunchMenuFragment extends BaseFragment implements
+public class LunchMenuFragment extends BaseLoadingFragment implements
 		LoaderCallbacks<List<Canteen>> {
 	private final static String CANTEEN_KEY = "pt.up.fe.mobile.ui.studentarea.CANTEENS";
 
@@ -69,17 +70,18 @@ public class LunchMenuFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.title_lunch_menu);
 		if (savedInstanceState != null) {
 			canteens = savedInstanceState.getParcelableArrayList(CANTEEN_KEY);
 			if (canteens == null)
-				getActivity().getSupportLoaderManager().initLoader(0, null,
+				getActivity().getSupportLoaderManager().initLoader(LoadersConstants.CANTEENS, null,
 						this);
 			else {
 				buildPages();
 				showMainScreen();
 			}
 		} else {
-			getActivity().getSupportLoaderManager().initLoader(0, null, this);
+			getActivity().getSupportLoaderManager().initLoader(LoadersConstants.CANTEENS, null, this);
 		}
 	}
 

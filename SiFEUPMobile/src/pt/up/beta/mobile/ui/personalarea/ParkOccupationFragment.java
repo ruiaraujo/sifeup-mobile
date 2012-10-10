@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import pt.up.beta.mobile.datatypes.Park;
 import pt.up.beta.mobile.sifeup.ParkUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.R;
 import android.content.Context;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import android.widget.Toast;
  * @author Ângela Igreja
  * 
  */
-public class ParkOccupationFragment extends BaseFragment implements
+public class ParkOccupationFragment extends BaseLoadingFragment implements
 		ResponseCommand<Park> {
 
 	private final static String PARK_KEY = "pt.up.fe.mobile.ui.studentarea.PARKS";
@@ -53,6 +53,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.title_park_occupation);
 		if (savedInstanceState != null) {
 			parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
 			if (parks == null) {

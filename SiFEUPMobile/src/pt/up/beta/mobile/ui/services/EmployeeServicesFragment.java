@@ -43,16 +43,13 @@ public class EmployeeServicesFragment extends Fragment
 		    	{
 		    		case 0:
 		    		 startActivity(new Intent(getActivity(),PrintActivity.class));
-	                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 		    		 break;
 			    	case 1:
 				   		 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
-		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 			    	case 2:
 				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
 				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://sigarra.up.pt/feup/mail_dinamico.ficheiros"));
-		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 		    	}
 				return false;

@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -18,7 +18,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Rui Araújo
  * 
  */
-public class BaseFragment extends SherlockFragment implements FragmentOpener{
+public class BaseListFragment extends SherlockListFragment implements FragmentOpener{
 
 	public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
 	protected final static String DIALOG = "dialog";

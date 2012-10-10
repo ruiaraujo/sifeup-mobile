@@ -10,12 +10,12 @@ import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.loaders.EmployeeLoader;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.utils.LoaderDrawable;
 import android.content.AsyncQueryHandler;
@@ -53,7 +53,7 @@ import com.actionbarsherlock.view.MenuItem;
  * 
  * @author Ângela Igreja
  */
-public class EmployeeProfileFragment extends BaseFragment implements
+public class EmployeeProfileFragment extends BaseLoadingFragment implements
 		OnItemClickListener, LoaderCallbacks<Employee> {
 	private TextView name;
 	private ImageView pic;
@@ -65,9 +65,6 @@ public class EmployeeProfileFragment extends BaseFragment implements
 	/** User Info */
 	private Employee me;
 	private List<ProfileDetail> contents;
-
-	private final static int PROFILE_LOADER = 100;
-	private final static int FRIEND_LOADER = 200;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,16 +113,14 @@ public class EmployeeProfileFragment extends BaseFragment implements
 
 					@Override
 					public void onClick(View v) {
-						Intent i = new Intent(getActivity(),
-								ScheduleActivity.class);
-						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+						final Bundle extras = new Bundle();
+						extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 								ScheduleFragment.SCHEDULE_EMPLOYEE);
-						i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
-						i.putExtra(
-								Intent.EXTRA_TITLE,
-								getString(R.string.title_schedule_arg,
-										me.getName()));
-						startActivity(i);
+						extras.putString(ScheduleFragment.SCHEDULE_CODE,me.getCode());
+						openFragment(
+								ScheduleFragment.class,
+								extras,
+								getString(R.string.title_schedule_arg,me.getShortName()));
 					}
 				});
 		return getParentContainer();
@@ -144,9 +139,9 @@ public class EmployeeProfileFragment extends BaseFragment implements
 		if (code.equals(AccountUtils.getActiveUserCode(getActivity())))
 			friend.setVisibility(View.GONE);
 		else
-			getActivity().getSupportLoaderManager().initLoader(FRIEND_LOADER,
+			getActivity().getSupportLoaderManager().restartLoader(LoadersConstants.FRIEND_TEST,
 					null, new FriendChecker());
-		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER,
+		getActivity().getSupportLoaderManager().restartLoader(LoadersConstants.PROFILE,
 				null, this);
 	}
 
@@ -175,16 +170,16 @@ public class EmployeeProfileFragment extends BaseFragment implements
 					Uri.parse(contents.get(position).content));
 			startActivity(browserIntent);
 		} else if (contents.get(position).type == Profile.Type.ROOM) {
-			final Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+			final Bundle extras = new Bundle();
+			extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 					ScheduleFragment.SCHEDULE_ROOM);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE,
+			extras.putString(ScheduleFragment.SCHEDULE_CODE,
 					contents.get(position).content);
-			i.putExtra(
-					Intent.EXTRA_TITLE,
+			openFragment(
+					ScheduleFragment.class,
+					extras,
 					getString(R.string.title_schedule_arg,
 							contents.get(position).content));
-			startActivity(i);
 		} else if (contents.get(position).type == Profile.Type.EMAIL) {
 			final Intent i = new Intent(Intent.ACTION_SEND);
 			i.setType("message/rfc822");

@@ -9,9 +9,10 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.loaders.ExamsLoader;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
@@ -37,7 +38,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ExamsFragment extends BaseFragment implements
+public class ExamsFragment extends BaseLoadingFragment implements
 		LoaderCallbacks<List<Exam>> {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
@@ -66,20 +67,21 @@ public class ExamsFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.title_exams);
 		personCode = getArguments().getString(PROFILE_CODE);
 		if (personCode == null)
 			personCode = AccountUtils.getActiveUserCode(getActivity());
 		if (savedInstanceState != null) {
 			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
 			if (exams == null) {
-				getActivity().getSupportLoaderManager().initLoader(0, null,
+				getActivity().getSupportLoaderManager().initLoader(LoadersConstants.EXAMS, null,
 						this);
 			} else {
 				if (populateList())
 					showMainScreen();
 			}
 		} else
-			getActivity().getSupportLoaderManager().initLoader(0, null, this);
+			getActivity().getSupportLoaderManager().initLoader(LoadersConstants.EXAMS, null, this);
 
 	}
 

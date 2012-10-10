@@ -16,11 +16,12 @@ import pt.up.beta.mobile.datatypes.SubjectFiles;
 import pt.up.beta.mobile.datatypes.SubjectFiles.File;
 import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
 import pt.up.beta.mobile.downloader.DownloaderService;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
@@ -51,10 +52,9 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
 
-
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-public class SubjectDescriptionFragment extends BaseFragment implements
+public class SubjectDescriptionFragment extends BaseLoadingFragment implements
 		OnPageChangeListener, LoaderCallbacks<Subject> {
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE";
@@ -114,7 +114,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().getSupportLoaderManager().restartLoader(LoadersConstants.SUBJECT, null, this);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -125,15 +125,15 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_subject_schedule) {
-			Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+			final Bundle extras = new Bundle();
+			extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 					ScheduleFragment.SCHEDULE_UC);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE, code);
-			i.putExtra(
-					Intent.EXTRA_TITLE,
+			extras.putString(ScheduleFragment.SCHEDULE_CODE, code);
+			openFragment(
+					ScheduleFragment.class,
+					extras,
 					getString(R.string.title_schedule_arg,
 							subject != null ? subject.getNamePt() : code));
-			startActivity(i);
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
@@ -145,7 +145,9 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncSubject(AccountUtils.getActiveUserName(getActivity()),code, year, period);
+			SigarraSyncAdapterUtils.syncSubject(
+					AccountUtils.getActiveUserName(getActivity()), code, year,
+					period);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -159,7 +161,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	 */
 	class PagerSubjectAdapter extends PagerAdapter {
 		@Override
-	    public CharSequence getPageTitle(int position) {
+		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
 				return getString(R.string.objectives);
@@ -625,7 +627,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			if (!UIUtils.isLocalePortuguese()
 					&& !TextUtils.isEmpty(subject.getNameEn().trim()))
 				title = subject.getNameEn();
-			getSherlockActivity().getSupportActionBar().setTitle(title);
+			getActivity().setTitle(title);
 			subjectFiles = subject.getFiles();
 			// Start at a custom position
 			indicator.setCurrentItem(0);

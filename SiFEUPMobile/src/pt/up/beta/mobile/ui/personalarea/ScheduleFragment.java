@@ -8,11 +8,12 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.loaders.ScheduleLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
@@ -20,7 +21,6 @@ import pt.up.beta.mobile.utils.calendar.Event;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,7 +58,7 @@ import external.com.google.android.apps.iosched.util.MotionEventUtils;
  * @author Ângela Igreja
  * 
  */
-public class ScheduleFragment extends BaseFragment implements
+public class ScheduleFragment extends BaseLoadingFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
 		OnClickListener, LoaderCallbacks<List<ScheduleBlock>> {
 
@@ -598,9 +598,9 @@ public class ScheduleFragment extends BaseFragment implements
 						Toast.LENGTH_SHORT).show();
 			if (getActivity() == null)
 				return;
-			Intent i = new Intent(getActivity(), ClassDescriptionActivity.class);
-			i.putExtra(ClassDescriptionFragment.BLOCK, block);
-			startActivity(i);
+			final Bundle extras = new Bundle();
+			extras.putParcelable(ClassDescriptionFragment.BLOCK, block);
+			openFragment(ClassDescriptionFragment.class, extras, null);
 		}
 	}
 
@@ -652,8 +652,11 @@ public class ScheduleFragment extends BaseFragment implements
 			ProgressDialogFragment.newInstance(false).show(
 					getFragmentManager(), DIALOG);
 		}
-		getActivity().getSupportLoaderManager().restartLoader(scheduleType, null,
-				this);
+		final Bundle extras = new Bundle();
+		extras.putInt(SCHEDULE_TYPE, scheduleType);
+		getActivity().getSupportLoaderManager().restartLoader(
+				LoadersConstants.SCHEDULE,
+				extras, this);
 	}
 
 	protected void onRepeat() {
@@ -677,7 +680,7 @@ public class ScheduleFragment extends BaseFragment implements
 		monday.normalize(false);
 		final String finalDay = monday.format("%Y%m%d");
 		final String[] selectionArgs;
-		switch (loaderId) {
+		switch (options.getInt(SCHEDULE_TYPE)) {
 		case SCHEDULE_STUDENT:
 			selectionArgs = SigarraContract.Schedule
 					.getStudentScheduleSelectionArgs(scheduleCode, initialDay,

@@ -7,10 +7,11 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.loaders.NotificationsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -34,7 +35,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Ângela Igreja
  * 
  */
-public class NotificationsFragment extends BaseFragment implements
+public class NotificationsFragment extends BaseLoadingFragment implements
 		OnItemClickListener,
 		LoaderCallbacks<List<Notification>> {
 
@@ -59,7 +60,8 @@ public class NotificationsFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().setTitle(R.string.title_notifications);
+		getActivity().getSupportLoaderManager().initLoader(LoadersConstants.NOTIFICATIONS, null, this);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

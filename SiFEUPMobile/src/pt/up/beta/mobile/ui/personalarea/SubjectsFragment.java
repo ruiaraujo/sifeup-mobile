@@ -7,12 +7,12 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.loaders.SubjectsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.utils.DateUtils;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -31,7 +31,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-public class SubjectsFragment extends BaseFragment implements
+public class SubjectsFragment extends BaseLoadingFragment implements
 		OnItemClickListener, LoaderCallbacks<List<Subject>> {
 
 	/** Contains all subscribed subjects */
@@ -57,7 +57,8 @@ public class SubjectsFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().setTitle(R.string.title_subjects);
+		getActivity().getSupportLoaderManager().initLoader(LoadersConstants.SUBJECTS, null, this);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -77,27 +78,22 @@ public class SubjectsFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {
-		if (getActivity() == null)
-			return;
-		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
-
+		final Bundle extras = new Bundle();
 		int secondYear = DateUtils.secondYearOfSchoolYear();
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
+		extras.putString(SubjectDescriptionFragment.SUBJECT_CODE,
 				subjects.get(position).getCode());
-		i.putExtra(
+		extras.putString(
 				SubjectDescriptionFragment.SUBJECT_YEAR,
 				Integer.toString(secondYear - 1) + "/"
 						+ Integer.toString(secondYear));
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD,
+		extras.putString(SubjectDescriptionFragment.SUBJECT_PERIOD,
 				subjects.get(position).getSemestre());
 		String title = subjects.get(position).getNamePt();
 		if (!UIUtils.isLocalePortuguese()
 				&& !TextUtils
 						.isEmpty(subjects.get(position).getNameEn()))
 			title = subjects.get(position).getNameEn();
-		i.putExtra(Intent.EXTRA_TITLE, title);
-
-		startActivity(i);
+		openFragment(SubjectDescriptionFragment.class, extras, title);
 
 	}
 

@@ -7,8 +7,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Friend;
 import pt.up.beta.mobile.loaders.FriendsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import android.content.AsyncQueryHandler;
@@ -36,7 +35,7 @@ import android.widget.ListView;
  * @author Ângela Igreja
  * 
  */
-public class FriendsListFragment extends BaseFragment implements
+public class FriendsListFragment extends BaseLoadingFragment implements
 		OnItemClickListener, LoaderCallbacks<List<Friend>> {
 
 	private static final String TAG = "FriendsListFragment";
@@ -81,7 +80,7 @@ public class FriendsListFragment extends BaseFragment implements
 
 	public void onResume() {
 		super.onResume();
-	    getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+		getActivity().getSupportLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -103,15 +102,19 @@ public class FriendsListFragment extends BaseFragment implements
 			String loginCode = friends.get(info.position).getCode();
 			if (getActivity() == null)
 				return true;
-			Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
+			final Bundle extras = new Bundle();
+			extras.putString(ScheduleFragment.SCHEDULE_CODE, loginCode);
 			if (friends.get(info.position).getCourse() == null)
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+				extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_EMPLOYEE);
 			else
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+				extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_STUDENT);
-			startActivity(i);
+			openFragment(
+					ScheduleFragment.class,
+					extras,
+					getString(R.string.title_schedule_arg,
+							friends.get(info.position).getName()));
 		}
 		return false;
 	}
@@ -128,8 +131,6 @@ public class FriendsListFragment extends BaseFragment implements
 		i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
 		i.putExtra(Intent.EXTRA_TITLE, f.getName());
 		startActivity(i);
-		getActivity().overridePendingTransition(R.anim.slide_right_in,
-				R.anim.slide_right_out);
 	}
 
 	@Override
@@ -154,7 +155,8 @@ public class FriendsListFragment extends BaseFragment implements
 
 		// fill in the grid_item layout
 		list.setAdapter(new FriendAdapter(friends, getActivity()
-				.getLayoutInflater(),getActivity(), getActivity().getSupportLoaderManager()));
+				.getLayoutInflater(), getActivity(), getActivity()
+				.getSupportLoaderManager()));
 		list.setOnItemClickListener(this);
 		showMainScreen();
 		Log.i(TAG, "list loaded successfully");

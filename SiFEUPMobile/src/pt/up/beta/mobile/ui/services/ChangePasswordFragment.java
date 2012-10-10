@@ -6,7 +6,7 @@ import pt.up.beta.mobile.datatypes.PasswordCheck;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -32,7 +32,7 @@ import android.widget.Toast;
  * @author Ângela Igreja
  * 
  */
-public class ChangePasswordFragment extends BaseFragment implements
+public class ChangePasswordFragment extends BaseLoadingFragment implements
 		ResponseCommand<String[]> {
 
 	private String errorTitle;

@@ -8,10 +8,11 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.datatypes.YearsTuition;
+import pt.up.beta.mobile.loaders.LoadersConstants;
 import pt.up.beta.mobile.loaders.TuitionLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -28,7 +29,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class TuitionRefListFragment extends BaseFragment implements
+public class TuitionRefListFragment extends BaseLoadingFragment implements
 		OnItemClickListener, LoaderCallbacks<List<YearsTuition>> {
 
 	private SimpleAdapter adapter;
@@ -53,7 +54,7 @@ public class TuitionRefListFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getActivity().getSupportLoaderManager().initLoader(LoadersConstants.TUITION, null, this);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

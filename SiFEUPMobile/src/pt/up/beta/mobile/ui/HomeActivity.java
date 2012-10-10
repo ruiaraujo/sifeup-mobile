@@ -2,7 +2,6 @@ package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -11,8 +10,6 @@ import android.support.v4.app.TaskStackBuilder;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -22,19 +19,6 @@ public class HomeActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
-		SlidingMenu sm = getSlidingMenu();
-		sm.setBehindScrollScale(0.0f);
-		sm.setBehindCanvasTransformer(
-				//Zoom effect
-				new CanvasTransformer() {
-			@Override
-			public void transformCanvas(Canvas canvas, float percentOpen) {
-				float scale = (float) (percentOpen * 0.25 + 0.75);
-				canvas.scale(scale, scale, canvas.getWidth() / 2,
-						canvas.getHeight() / 2);
-			}
-		});
 	}
 
 	@Override
@@ -90,5 +74,6 @@ public class HomeActivity extends BaseActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 
 }

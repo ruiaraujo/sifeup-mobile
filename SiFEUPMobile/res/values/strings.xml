@@ -98,8 +98,8 @@
 
     <!-- *************************************************************************************** -->
     <!-- STUDENT AREA -->
-    <string name="title_student_area">Personal Area</string>
-    <string name="btn_student_area">Personal Area</string>
+    <string name="title_personal_area">Personal Area</string>
+    <string name="btn_personal_area">Personal Area</string>
 
     <!-- Schedule -->
     <string name="title_schedule">Schedule</string>

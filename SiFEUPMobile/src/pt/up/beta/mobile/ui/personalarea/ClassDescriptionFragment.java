@@ -9,7 +9,7 @@ import com.actionbarsherlock.view.MenuItem;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
@@ -30,7 +30,7 @@ import android.widget.TextView;
  * @author Ângela Igreja
  * 
  */
-public class ClassDescriptionFragment extends BaseFragment {
+public class ClassDescriptionFragment extends BaseLoadingFragment {
 	/**
 	 * The key for the student code in the intent.
 	 */
@@ -42,13 +42,14 @@ public class ClassDescriptionFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		block = (ScheduleBlock) getArguments().getParcelable(BLOCK);
-		if ( block == null && savedInstanceState != null )
+		if (block == null && savedInstanceState != null)
 			block = savedInstanceState.getParcelable(BLOCK);
 	}
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(BLOCK, block);
-    }
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putParcelable(BLOCK, block);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,25 +67,21 @@ public class ClassDescriptionFragment extends BaseFragment {
 		subject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (getActivity() == null)
-					return;
-				Intent i = new Intent(getActivity(),
-						SubjectDescriptionActivity.class);
-				// assumed only one page of results
-				i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
+				final Bundle extras = new Bundle();
+				extras.putString(SubjectDescriptionFragment.SUBJECT_CODE,
 						block.getLectureCode());
-				i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR,
+				extras.putString(SubjectDescriptionFragment.SUBJECT_YEAR,
 						block.getYear());
-				i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD,
+				extras.putString(SubjectDescriptionFragment.SUBJECT_PERIOD,
 						block.getSemester());
-				i.putExtra(Intent.EXTRA_TITLE, block.getLectureAcronym());
-				startActivity(i);
-
+				openFragment(SubjectDescriptionFragment.class, extras,
+						block.getLectureAcronym());
 			}
 		});
 
 		// Teachers
-		LinearLayout teachersContainer = (LinearLayout) root.findViewById(R.id.list_teachers);
+		LinearLayout teachersContainer = (LinearLayout) root
+				.findViewById(R.id.list_teachers);
 		OnClickListener teacherClick = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -101,49 +98,44 @@ public class ClassDescriptionFragment extends BaseFragment {
 			}
 		};
 		List<ScheduleTeacher> teachers = block.getTeachers();
-		for ( ScheduleTeacher teacher : teachers )
-		{
-		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
-		    llItem.setText(teacher.toString());
-		    // To know wich item has been clicked
-		    llItem.setTag(teacher);
-		    // In the onClickListener just get the id using getTag() on the view
-		    llItem.setOnClickListener(teacherClick);
-		    teachersContainer.addView(llItem);
+		for (ScheduleTeacher teacher : teachers) {
+			TextView llItem = (TextView) inflater.inflate(
+					android.R.layout.simple_list_item_1, null);
+			llItem.setText(teacher.toString());
+			// To know wich item has been clicked
+			llItem.setTag(teacher);
+			// In the onClickListener just get the id using getTag() on the view
+			llItem.setOnClickListener(teacherClick);
+			teachersContainer.addView(llItem);
 		}
-		
-		
+
 		// Rooms
-		LinearLayout roomsContainer = (LinearLayout) root.findViewById(R.id.list_rooms);
+		LinearLayout roomsContainer = (LinearLayout) root
+				.findViewById(R.id.list_rooms);
 		OnClickListener roomClick = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				final ScheduleRoom room = (ScheduleRoom) v.getTag();
-				Intent i = new Intent(getActivity(), ScheduleActivity.class);
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+				final Bundle extras = new Bundle();
+				extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_ROOM);
-				i.putExtra(ScheduleFragment.SCHEDULE_CODE,
+				extras.putString(ScheduleFragment.SCHEDULE_CODE,
 						room.getBuildingCode() + room.getRoomCode());
-				i.putExtra(
-						Intent.EXTRA_TITLE,
-						getString(R.string.title_schedule_arg,
-								room.toString()));
-
-				startActivity(i);				
+				openFragment(ScheduleFragment.class, extras,
+						getString(R.string.title_schedule));
 			}
 		};
 		List<ScheduleRoom> rooms = block.getRooms();
-		for ( ScheduleRoom room : rooms )
-		{
-		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
-		    llItem.setText(room.toString());
-		    // To know wich item has been clicked
-		    llItem.setTag(room);
-		    // In the onClickListener just get the id using getTag() on the view
-		    llItem.setOnClickListener(roomClick);
-		    roomsContainer.addView(llItem);
+		for (ScheduleRoom room : rooms) {
+			TextView llItem = (TextView) inflater.inflate(
+					android.R.layout.simple_list_item_1, null);
+			llItem.setText(room.toString());
+			// To know wich item has been clicked
+			llItem.setTag(room);
+			// In the onClickListener just get the id using getTag() on the view
+			llItem.setOnClickListener(roomClick);
+			roomsContainer.addView(llItem);
 		}
-		
 
 		// Team
 		TextView team = (TextView) root.findViewById(R.id.class_team);

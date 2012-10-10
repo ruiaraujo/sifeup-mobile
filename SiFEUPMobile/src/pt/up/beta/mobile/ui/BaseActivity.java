@@ -3,10 +3,14 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.tracker.GoogleAnalyticsSessionManager;
+import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -16,6 +20,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 /**
@@ -23,7 +28,8 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
  * class shouldn't be used directly; instead, activities should inherit from
  * {@link BaseSinglePaneActivity} or {@link BaseMultiPaneActivity}.
  */
-public abstract class BaseActivity extends SlidingFragmentActivity {
+public abstract class BaseActivity extends SlidingFragmentActivity implements
+		FragmentOpener {
 	protected ActionBar actionbar;
 
 	public void onCreate(Bundle o) {
@@ -34,8 +40,11 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);
-		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-		t.replace(R.id.menu_frame, new MenuFragment());
+		FragmentTransaction t = this.getSupportFragmentManager()
+				.beginTransaction();
+		MenuFragment fragment = new MenuFragment();
+		fragment.setCallback(this);
+		t.replace(R.id.menu_frame, fragment);
 		t.commit();
 
 		// customize the SlidingMenu
@@ -45,16 +54,27 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		sm.setBehindOffsetRes(R.dimen.actionbar_home_width);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 
+		sm.setBehindScrollScale(0.0f);
+		sm.setBehindCanvasTransformer(
+		// Zoom effect
+		new CanvasTransformer() {
+			@Override
+			public void transformCanvas(Canvas canvas, float percentOpen) {
+				float scale = (float) (percentOpen * 0.25 + 0.75);
+				canvas.scale(scale, scale, canvas.getWidth() / 2,
+						canvas.getHeight() / 2);
+			}
+		});
 		setSlidingActionBarEnabled(false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//TODO: we need to improve this
-		//if (!AccountUtils.isAccountValid(this)) {
-			//	goLogin();
-		//}
+		// TODO: we need to improve this
+		// if (!AccountUtils.isAccountValid(this)) {
+		// goLogin();
+		// }
 		// Example of how to track a pageview event
 		AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
 				getClass().getSimpleName());
@@ -129,11 +149,11 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 * Invoke "home" action, returning to {@link HomeActivity}.
 	 */
 	protected void goUp() {
-		if (this instanceof HomeActivity){
+		if (this instanceof PersonalAreaActivity) {
 			toggle();
 			return;
 		}
-		final Intent upIntent = new Intent(this, HomeActivity.class);
+		final Intent upIntent = new Intent(this, PersonalAreaActivity.class);
 
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is not part of the application's task, so create a
@@ -145,20 +165,16 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		} else {
 			// This activity is part of the application's task, so simply
 			// navigate up to the hierarchical parent activity.
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ){
-	            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(upIntent);
-	            finish();
-			}
-			else
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(upIntent);
+				finish();
+			} else
 				NavUtils.navigateUpTo(this, upIntent);
 		}
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 	}
-	
-	
-	
-	
 
 	/**
 	 * Takes a given intent and either starts a new activity to handle it (the
@@ -189,7 +205,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 
 		final Uri data = intent.getData();
 		if (data != null) {
-			arguments.putParcelable(BaseFragment.URL_INTENT, data);
+			arguments.putParcelable(BaseLoadingFragment.URL_INTENT, data);
 		}
 
 		final Bundle extras = intent.getExtras();
@@ -236,12 +252,47 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		finish();
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 	}
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
+	}
+
+	@Override
+	public void openFragment(@SuppressWarnings("rawtypes") Class fragmentClass,
+			Bundle arguments, CharSequence title) {
+		Fragment fragment;
+		try {
+			fragment = (Fragment) fragmentClass.newInstance();
+			if (arguments == null)
+				arguments = Bundle.EMPTY;
+			fragment.setArguments(arguments);
+			if ( fragment instanceof BaseFragment ){
+				((BaseFragment)fragment).setCallback(this);
+			} else if( fragment instanceof BaseListFragment ){
+				((BaseListFragment)fragment).setCallback(this);
+			} 
+			final FragmentManager fm = getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			ft.setCustomAnimations(R.anim.fade_in,
+					android.R.anim.fade_out, R.anim.fade_in,
+					android.R.anim.fade_out);
+			ft.replace(R.id.root_container, fragment);
+			ft.addToBackStack(null);
+			ft.commit();
+			showAbove();
+			if (title != null)
+				setTitle(title);
+		} catch (InstantiationException e) {
+			throw new IllegalStateException("Error creating new fragment.", e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException("Error creating new fragment.", e);
+		}
+		return;
 	}
 
 }

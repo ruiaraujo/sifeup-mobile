@@ -16,7 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.PrinterUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.R;
 
 /**
@@ -27,7 +27,7 @@ import pt.up.beta.mobile.R;
  * @author Ângela Igreja
  *
  */
-public class PrintRefFragment extends BaseFragment implements ResponseCommand<RefMB>{
+public class PrintRefFragment extends BaseLoadingFragment implements ResponseCommand<RefMB>{
 	
 	private final static String PRINT_REF_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_REF";
 

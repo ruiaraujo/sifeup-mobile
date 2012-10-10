@@ -6,14 +6,12 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.BaseLoadingFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import pt.up.beta.mobile.ui.utils.TouchImageView;
 import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,7 +35,7 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  * @author Ângela Igreja
  * 
  */
-public class FeupFacilitiesDetailsFragment extends BaseFragment implements
+public class FeupFacilitiesDetailsFragment extends BaseLoadingFragment implements
         ResponseCommand<Bitmap>, OnNavigationListener, OnTapListener {
     public final static String BUILDING_EXTRA = "pt.up.beta.mobile.ui.facilities.BUILDING";
     public final static String ROOM_EXTRA = "pt.up.beta.mobile.ui.facilities.ROOM";
@@ -242,15 +240,16 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 
 		@Override
 		public void onResultReceived(String results) {
-			Intent i = new Intent(getActivity(), ScheduleActivity.class);
-            i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-                    ScheduleFragment.SCHEDULE_ROOM);
-            i.putExtra(ScheduleFragment.SCHEDULE_CODE, results.toString());
-            i.putExtra(Intent.EXTRA_TITLE,
-                    getString(R.string.title_schedule_arg, results));
+			final Bundle extras = new Bundle();
+			extras.putInt(ScheduleFragment.SCHEDULE_TYPE,
+					ScheduleFragment.SCHEDULE_ROOM);
+			extras.putString(ScheduleFragment.SCHEDULE_CODE,  results.toString());
             Toast.makeText(getActivity(), results.toString(),
                     Toast.LENGTH_SHORT).show();
-            startActivity(i);
+			openFragment(
+					ScheduleFragment.class,
+					extras,
+					getString(R.string.title_schedule_arg,results));
             return;
 		}
     	
