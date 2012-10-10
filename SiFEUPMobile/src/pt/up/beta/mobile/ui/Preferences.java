@@ -5,6 +5,7 @@ import pt.up.beta.mobile.authenticator.PeriodicSyncReceiver;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
+import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -127,7 +128,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 	 */
 	protected void goUp() {
 
-		final Intent upIntent = new Intent(this, HomeActivity.class);
+		final Intent upIntent = new Intent(this, PersonalAreaActivity.class);
 
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is not part of the application's task, so create a
@@ -146,7 +147,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 			} else
 				NavUtils.navigateUpTo(this, upIntent);
 		}
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 	private void updateListSummary(String syncIntervalValue,
@@ -164,7 +165,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 	@TargetApi(8)

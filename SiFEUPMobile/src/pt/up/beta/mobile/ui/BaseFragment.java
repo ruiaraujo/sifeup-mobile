@@ -97,7 +97,7 @@ public class BaseFragment extends SherlockFragment {
 	@Override
 	public void startActivity(Intent intent) {
 		final BaseActivity activity = (BaseActivity) getActivity();
-		activity.openActivityOrFragment(intent); 
+		activity.openActivityOrFragment(intent);
 	}
 
 	@Override
@@ -105,9 +105,9 @@ public class BaseFragment extends SherlockFragment {
 		super.onActivityCreated(savedInstanceState);
 		// Recovering the Cookie here
 		// as every activity will descend from this one.
-		//TODO: we need to improve this
-		//if (!AccountUtils.isAccountValid(getActivity()))
-			//goLogin();
+		// TODO: we need to improve this
+		// if (!AccountUtils.isAccountValid(getActivity()))
+		// goLogin();
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class BaseFragment extends SherlockFragment {
 						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		getActivity().finish();
-		getActivity().overridePendingTransition(R.anim.home_enter,
-				R.anim.home_exit);
+		getActivity().overridePendingTransition(R.anim.fade_in,
+				android.R.anim.fade_out);
 	}
 
 	protected void showRepeatTaskScreen(final String message) {
@@ -175,13 +175,13 @@ public class BaseFragment extends SherlockFragment {
 			ft.remove(prev).commitAllowingStateLoss();
 		}
 	}
-	
-	public BaseActivity getBaseActivity(){
-		if ( getActivity() == null || !(getActivity() instanceof BaseActivity) )
+
+	public BaseActivity getBaseActivity() {
+		if (getActivity() == null || !(getActivity() instanceof BaseActivity))
 			return null;
-		return ((BaseActivity)getActivity());
+		return ((BaseActivity) getActivity());
 	}
-	
+
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;
 		super.onCreateOptionsMenu(menu, inflater);
@@ -202,7 +202,8 @@ public class BaseFragment extends SherlockFragment {
 		if (refreshItem != null) {
 			if (refreshing) {
 				if (mRefreshIndeterminateProgressView == null) {
-					LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					LayoutInflater inflater = (LayoutInflater) getActivity()
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					mRefreshIndeterminateProgressView = inflater.inflate(
 							R.layout.actionbar_indeterminate_progress, null);
 				}

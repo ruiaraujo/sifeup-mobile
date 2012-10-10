@@ -210,8 +210,8 @@ public class WebviewFragment extends BaseFragment {
 			mWebView.goBack();
 		} else {
 			getActivity().finish();
-			getActivity().overridePendingTransition(R.anim.home_enter,
-					R.anim.home_exit);
+			getActivity().overridePendingTransition(R.anim.fade_in,
+					android.R.anim.fade_out);
 		}
 	}
 
