@@ -99,10 +99,6 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_map" />
         <activity
-            android:name=".ui.notifications.NotificationsActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_notifications" />
-        <activity
             android:name=".ui.notifications.NotificationsDescActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_notifications" />
@@ -110,15 +106,6 @@
             android:name=".ui.map.SettingsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_settings" />
-        <activity
-            android:name=".ui.personalarea.ScheduleActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:hardwareAccelerated="false"
-            android:label="@string/title_schedule" />
-        <activity
-            android:name=".ui.personalarea.LunchMenuActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_lunch_menu" />
         <activity
             android:name=".ui.profile.ProfileActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -151,19 +138,6 @@
             android:name=".ui.search.StudentsSearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_search" />
-        <activity
-            android:name=".ui.personalarea.SubjectsActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_subjects" />
-        <activity
-            android:name=".ui.personalarea.SubjectDescriptionActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_subjects"
-            android:theme="@style/Theme.Sigarra.TabPageIndicator" />
-        <activity
-            android:name=".ui.personalarea.AcademicPathActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_academic_path" />
         <activity
             android:name=".ui.services.tuition.TuitionActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"

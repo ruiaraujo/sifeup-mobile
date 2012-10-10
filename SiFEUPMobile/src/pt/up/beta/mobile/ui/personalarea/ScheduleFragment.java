@@ -18,11 +18,13 @@ import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -104,6 +106,7 @@ public class ScheduleFragment extends BaseLoadingFragment implements
 		scheduleType = getArguments().getInt(SCHEDULE_TYPE, 0);
 	}
 
+	@TargetApi(11)
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -111,6 +114,9 @@ public class ScheduleFragment extends BaseLoadingFragment implements
 		mInflater = inflater;
 		ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_schedule, getParentContainer(), true);
+		//Turning off hardware accelaration
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) 
+			root.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
 		mPager.setAdapter(new DayAdapter());// Workaround a android bug
 		mTitle = (TextView) root.findViewById(R.id.block_title);

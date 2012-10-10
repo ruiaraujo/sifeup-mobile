@@ -11,6 +11,7 @@
         <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
         <item name="spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
         <item name="spinnerItemStyle">@style/SpinnerItemStyle</item>
+        <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
         <!-- For Android 2.1+ -->
         <item name="actionBarStyle">@style/ActionBar</item>
     </style>
@@ -26,10 +27,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="Theme.Sigarra.TabPageIndicator" parent="style/Theme.Sigarra">
-        <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
-        <item name="android:textColor">@color/body_text_1</item>
-    </style>
 
     <style name="TitlePageIndicator">
         <item name="android:background">#FFFFFFFF</item>
@@ -44,6 +41,8 @@
 
     <style name="TabPageIndicator" parent="Widget.TabPageIndicator">
         <item name="android:background">@drawable/tab_indicator</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/body_text_1</item>
     </style>
 
 

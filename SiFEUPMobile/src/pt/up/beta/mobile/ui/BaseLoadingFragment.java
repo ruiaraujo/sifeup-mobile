@@ -1,13 +1,9 @@
 package pt.up.beta.mobile.ui;
 
 import pt.up.beta.mobile.R;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,27 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 /**
  * @author Rui Araújo
  * 
  */
-public class BaseLoadingFragment extends BaseFragment implements FragmentOpener{
-
-	public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
-	protected final static String DIALOG = "dialog";
-	private final static FragmentOpener sDummy = new FragmentOpener() {
-		@Override
-		public void openFragment(
-				@SuppressWarnings("rawtypes") Class fragmentClass,
-				Bundle arguments, CharSequence title) {
-		}
-	};
-
-	private FragmentOpener callback = sDummy;
+public class BaseLoadingFragment extends BaseFragment{
 
 	private ViewSwitcher switcher;
 	private View emptyScreen;
@@ -103,11 +83,6 @@ public class BaseLoadingFragment extends BaseFragment implements FragmentOpener{
 	}
 
 	@Override
-	public void startActivity(Intent intent) {
-		super.startActivity(intent);
-	}
-
-	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		// Recovering the Cookie here
@@ -123,18 +98,6 @@ public class BaseLoadingFragment extends BaseFragment implements FragmentOpener{
 		if (task != null) {
 			task.cancel(true);
 		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		setCallback(sDummy);
-	}
-
-	@TargetApi(11)
-	@Override
-	public void onPause() {
-		super.onPause();
 	}
 
 	public void goLogin() {
@@ -175,65 +138,6 @@ public class BaseLoadingFragment extends BaseFragment implements FragmentOpener{
 
 	protected void onRepeat() {
 
-	}
-
-	protected void removeDialog(String dialog) { // DialogFragment.show() will
-													// take care of adding the
-													// fragment
-		// in a transaction. We also want to remove any currently showing
-		// dialog, so make our own transaction and take care of that here.
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(dialog);
-		if (prev != null) {
-			ft.remove(prev).commitAllowingStateLoss();
-		}
-	}
-
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		mOptionsMenu = menu;
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	private Menu mOptionsMenu;
-	private View mRefreshIndeterminateProgressView = null;
-
-	public void setRefreshActionItemState(boolean refreshing) {
-		// On Honeycomb, we can set the state of the refresh button by giving it
-		// a custom
-		// action view.
-		if (mOptionsMenu == null) {
-			return;
-		}
-
-		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.menu_refresh);
-		if (refreshItem != null) {
-			if (refreshing) {
-				if (mRefreshIndeterminateProgressView == null) {
-					LayoutInflater inflater = (LayoutInflater) getActivity()
-							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					mRefreshIndeterminateProgressView = inflater.inflate(
-							R.layout.actionbar_indeterminate_progress, null);
-				}
-
-				refreshItem.setActionView(mRefreshIndeterminateProgressView);
-			} else {
-				refreshItem.setActionView(null);
-			}
-		}
-	}
-
-	public FragmentOpener getCallback() {
-		return callback;
-	}
-
-	public void setCallback(FragmentOpener callback) {
-		this.callback = callback;
-	}
-
-	@Override
-	public void openFragment(Class fragmentClass, Bundle arguments,
-			CharSequence title) {
-		callback.openFragment(fragmentClass, arguments, title);
 	}
 
 }
