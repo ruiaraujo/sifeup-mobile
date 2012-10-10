@@ -27,6 +27,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	protected ActionBar actionbar;
 
 	private Handler mHandler = new Handler();
+
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
 		// GoogleAnalyticsSessionManager.getInstance(getApplication())
@@ -233,12 +234,10 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 * 
 	 */
 	public void goLogin() {
-		Intent i = new Intent(this, LauncherActivity.class);
-		// i.putExtra(LauncherActivity.EXTRA_DIFFERENT_LOGIN,
-		// LauncherActivity.EXTRA_DIFFERENT_LOGIN_LOGOUT);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		Intent i = new Intent(this, LauncherActivity.class).putExtra(
+				LauncherActivity.LOGOUT_FLAG, true).addFlags(
+				Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		finish();
 		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);

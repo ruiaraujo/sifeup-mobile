@@ -173,7 +173,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 
 	private void launchNextActivity() {
 		final Intent intent = getIntent();
-		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+		if (intent.getAction() != null
+				&& intent.getAction().equals(Intent.ACTION_VIEW)) {
 			final Uri uri = intent.getData();
 			new AsyncTask<Void, Void, String[]>() {
 				@Override
