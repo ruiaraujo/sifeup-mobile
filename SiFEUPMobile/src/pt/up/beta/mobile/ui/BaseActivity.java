@@ -169,15 +169,21 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 */
 	public void openActivityOrFragment(final Intent intent) {
 		// Default implementation simply calls startActivity
-		showAbove();
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				startActivity(intent);
-				overridePendingTransition(R.anim.fade_in,
-						android.R.anim.fade_out);
-			}
-		});
+		if (getSlidingMenu().isBehindShowing()) {
+			//delay a bit to help prevent jankyness
+			showAbove();
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					startActivity(intent);
+					overridePendingTransition(R.anim.fade_in,
+							android.R.anim.fade_out);
+				}
+			}, 200);
+		} else {
+			startActivity(intent);
+			overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+		}
 	}
 
 	/**
