@@ -51,14 +51,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
-	final private static String WEBSERVICE = "https://sigarra.up.pt/feup/";
+	final private static String WEBSERVICE = "http://sigarradevp.up.pt/dev/mob/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
 	final private static String WEBSERVICE_SEP = "?";
-
+	//TODO
 	private interface WebServices {
-		String MOBILE = "mobc_geral.";
+		String STUDENT = "mob_fest_geral.";
+		String EMPLOYEE = "mob_func_geral.";
+		String PRINTING = "mob_geral.";
+		String NOTIFICATIONS = "mob_wf_geral.";
+		String SCHEDULE = "mobc_geral.";
 		String FACILITIES_IMG = "img.";
 		String PEOPLE_PIC = "fotografias_service.";
 		String SUBJECT_CONTENTS = "conteudos_service.";
@@ -283,7 +287,7 @@ public class SifeupAPI {
 	 * @return Notifications Url
 	 */
 	public static String getNotificationsUrl() {
-		return WEBSERVICE + WebServices.MOBILE + Notifications.NAME;
+		return WEBSERVICE + WebServices.NOTIFICATIONS + Notifications.NAME;
 	}
 
 	/**
