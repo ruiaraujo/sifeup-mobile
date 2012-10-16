@@ -15,9 +15,9 @@ public class PrinterUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getPrintRefReply(
-			String code, ResponseCommand<RefMB> command, Context context) {
+			String code, String value ,ResponseCommand<RefMB> command, Context context) {
 		return new FetcherTask<RefMB>(command, new PrintRefParser(), context).execute(SifeupAPI
-				.getPrintingRefUrl(code));
+				.getPrintingRefUrl(code,value));
 	}
 
 	private static class PrintRefParser implements ParserCommand<RefMB> {

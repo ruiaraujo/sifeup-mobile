@@ -85,8 +85,6 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		code = args.get(SUBJECT_CODE).toString();
-		year = args.get(SUBJECT_YEAR).toString();
-		period = args.get(SUBJECT_PERIOD).toString();
 		setHasOptionsMenu(true);
 	}
 
@@ -139,7 +137,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
 			Intent i = new Intent(getActivity(), WebviewActivity.class);
 			i.putExtra(WebviewFragment.URL_INTENT,
-					SifeupAPI.getSubjectSigarraUrl(code, year, period));
+					SifeupAPI.getSubjectSigarraUrl(code));
 			startActivity(i);
 			return true;
 		}

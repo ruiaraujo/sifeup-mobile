@@ -29,7 +29,8 @@ import pt.up.beta.mobile.R;
  */
 public class PrintRefFragment extends BaseFragment implements ResponseCommand<RefMB>{
 	
-	private final static String PRINT_REF_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_REF";
+	public final static String PRINT_REF_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_REF";
+	public final static String CODE_KEY = "pt.up.fe.mobile.ui.studentservices.CODE";
 
 	private RefMB ref;
 	private TextView nome;
@@ -69,7 +70,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand<Re
         {
             ref = savedInstanceState.getParcelable(PRINT_REF_KEY);
             if ( ref == null )
-                task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
+                task = PrinterUtils.getPrintRefReply(getArguments().getString(CODE_KEY),getArguments().getString(PRINT_REF_KEY), this, getActivity());
             else
             {
                 displayData();
@@ -78,7 +79,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand<Re
         }
         else
         {
-            task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
+            task = PrinterUtils.getPrintRefReply(getArguments().getString(CODE_KEY),getArguments().getString(PRINT_REF_KEY), this, getActivity());
         }
     }
     
@@ -169,7 +170,7 @@ public class PrintRefFragment extends BaseFragment implements ResponseCommand<Re
 
 	protected void onRepeat() {
 		showLoadingScreen();
-        task = PrinterUtils.getPrintRefReply(getArguments().getString("value"), this, getActivity());
+        task = PrinterUtils.getPrintRefReply(getArguments().getString(CODE_KEY),getArguments().getString(PRINT_REF_KEY), this, getActivity());
 	}
 
 }

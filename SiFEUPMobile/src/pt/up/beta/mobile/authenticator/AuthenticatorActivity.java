@@ -251,7 +251,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		}
 		mAccountManager.setUserData(account, Constants.USER_TYPE,
 				user.getType());
-		mAccountManager.setUserData(account, Constants.USER_NAME,
+		mAccountManager.setUserData(account, Constants.USER_CODE,
 				user.getUser());
 		final Intent intent = new Intent();
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);

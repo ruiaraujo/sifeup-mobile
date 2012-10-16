@@ -87,7 +87,7 @@ public class AccountUtils {
 			if ( !init(context) ) 
 				return null;
 		}
-		return mAccountManager.getUserData(mAccount, Constants.USER_NAME);
+		return mAccountManager.getUserData(mAccount, Constants.USER_CODE);
 	}
 
 	/**
