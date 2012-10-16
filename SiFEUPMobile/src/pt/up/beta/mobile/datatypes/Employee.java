@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.sifeup.SifeupUtils;
 import android.content.res.Resources;
 
 /**
@@ -68,7 +67,6 @@ public class Employee extends Profile implements Serializable {
 	 */
 	public static Employee parseJSON(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
-		SifeupUtils.removeEmptyKeys(jObject);
 		final Employee employee = new Employee();
 		if (jObject.has("codigo"))
 			employee.code = jObject.getString("codigo");

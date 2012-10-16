@@ -26,7 +26,7 @@ public final class SigarraContract {
 		String USER_CODE = FriendsTable.KEY_USER_CODE;
 		String CODE_FRIEND = FriendsTable.KEY_CODE_FRIEND;
 		String NAME_FRIEND = FriendsTable.KEY_NAME_FRIEND;
-		String COURSE_FRIEND = FriendsTable.KEY_COURSE_FRIEND;
+		String TYPE_FRIEND = FriendsTable.KEY_TYPE_FRIEND;
 	}
 
 	public interface ExamsColumns {
@@ -151,7 +151,7 @@ public final class SigarraContract {
 		}
 
 		public static final String[] FRIENDS_COLUMNS = { CODE_FRIEND,
-				NAME_FRIEND, COURSE_FRIEND };
+				NAME_FRIEND, TYPE_FRIEND };
 
 		public static final String FRIEND_SELECTION = USER_CODE + "=? AND "
 				+ CODE_FRIEND + "=?";

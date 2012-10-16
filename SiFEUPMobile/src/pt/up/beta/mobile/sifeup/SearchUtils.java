@@ -23,9 +23,11 @@ public class SearchUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
-			String query, int page, ResponseCommand<ResultsPage> command, Context context) {
-		return new FetcherTask<ResultsPage>(command, new StudentsSearchParser(), context)
-				.execute(SifeupAPI.getStudentsSearchUrl(encode(query), page));
+			String query, int page, ResponseCommand<ResultsPage> command,
+			Context context) {
+		return new FetcherTask<ResultsPage>(command,
+				new StudentsSearchParser(), context).execute(SifeupAPI
+				.getStudentsSearchUrl(encode(query), page));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getSingleStudentSearchReply(
@@ -35,11 +37,13 @@ public class SearchUtils {
 				.getStudenProfiletUrl(code));
 	}
 
-	public static ResultsPage getStudentsSearchReply(String query, int page, Context context) {
+	public static ResultsPage getStudentsSearchReply(String query, int page,
+			Context context) {
 		String res;
 		try {
-			res = SifeupAPI.getReply(SifeupAPI.getStudentsSearchUrl(
-					encode(query), page), AccountUtils.getAuthToken(context), context);
+			res = SifeupAPI.getReply(
+					SifeupAPI.getStudentsSearchUrl(encode(query), page),
+					AccountUtils.getAuthToken(context), context);
 			StudentsSearchParser parser = new StudentsSearchParser();
 			return (ResultsPage) parser.parse(res);
 		} catch (AuthenticationException e) {
@@ -68,7 +72,8 @@ public class SearchUtils {
 	 * Collection exams.
 	 */
 
-	private static class StudentsSearchParser implements ParserCommand<ResultsPage> {
+	private static class StudentsSearchParser implements
+			ParserCommand<ResultsPage> {
 
 		public ResultsPage parse(String page) {
 			try {
@@ -99,15 +104,6 @@ public class SearchUtils {
 							student.setCode("" + jStudent.getString("codigo"));
 						if (jStudent.has("nome"))
 							student.setName(jStudent.getString("nome"));
-						if (jStudent.has("cur_sigla"))
-							student.setProgrammeCode(jStudent
-									.getString("cur_sigla"));
-						if (jStudent.has("cur_nome"))
-							student.setProgrammeName(jStudent
-									.getString("cur_nome"));
-						if (jStudent.has("cur_name"))
-							student.setProgrammeNameEn(jStudent
-									.getString("nome"));
 
 						// add student to the page results
 						resultsPage.getStudents().add(student);
@@ -119,36 +115,26 @@ public class SearchUtils {
 				ACRA.getErrorReporter().handleSilentException(e);
 				ACRA.getErrorReporter().handleSilentException(
 						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n" + page));
-				
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
+
 			}
 			return null;
 		}
 	}
 
-	private static class SingleStudentSearchParser implements ParserCommand<Student> {
+	private static class SingleStudentSearchParser implements
+			ParserCommand<Student> {
 
 		@Override
 		public Student parse(String page) {
 			try {
 				Student me = new Student();
 				JSONObject jObject = new JSONObject(page);
-				SifeupUtils.removeEmptyKeys(jObject);
 				if (jObject.has("codigo"))
 					me.setCode(jObject.getString("codigo"));
 				if (jObject.has("nome"))
 					me.setName(jObject.getString("nome"));
-				if (jObject.has("curso_sigla"))
-					me.setProgrammeAcronym(jObject.getString("curso_sigla"));
-				if (jObject.has("curso_nome"))
-					me.setProgrammeName(jObject.getString("curso_nome"));
-				if (jObject.has("ano_lect_matricula"))
-					me.setRegistrationYear(jObject
-							.getString("ano_lect_matricula"));
-				if (jObject.has("estado"))
-					me.setState(jObject.getString("estado"));
-				if (jObject.has("ano_curricular"))
-					me.setAcademicYear(jObject.getString("ano_curricular"));
 				if (jObject.has("email"))
 					me.setEmail(jObject.getString("email"));
 				if (jObject.has("email_alternativo"))
@@ -157,8 +143,6 @@ public class SearchUtils {
 					me.setMobilePhone(jObject.getString("telemovel"));
 				if (jObject.has("telefone"))
 					me.setPhone(jObject.getString("telefone"));
-				if (jObject.has("ramo"))
-					me.setBranch(jObject.getString("ramo"));
 				return me;
 			} catch (JSONException e) {
 				e.printStackTrace();

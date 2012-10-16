@@ -62,7 +62,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			final Cursor c = getContext().getContentResolver().query(
 					SigarraContract.Friends.CONTENT_URI,
 					new String[] { SigarraContract.FriendsColumns.CODE_FRIEND,
-							SigarraContract.FriendsColumns.COURSE_FRIEND },
+							SigarraContract.FriendsColumns.TYPE_FRIEND },
 					SigarraContract.Friends.USER_FRIENDS,
 					SigarraContract.Friends
 							.getUserFriendsSelectionArgs(userCode), null);
@@ -74,7 +74,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 										.getColumnIndex(SigarraContract.FriendsColumns.CODE_FRIEND));
 						final String friendCourse = c
 								.getString(c
-										.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND));
+										.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND));
 						final Profile friend = getProfile(friendCode,
 								friendCourse != null ? SifeupAPI.STUDENT_TYPE
 										: SifeupAPI.EMPLOYEE_TYPE);

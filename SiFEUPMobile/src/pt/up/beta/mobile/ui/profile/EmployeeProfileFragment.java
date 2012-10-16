@@ -97,6 +97,8 @@ public class EmployeeProfileFragment extends BaseFragment implements
 							me.getCode());
 					values.put(SigarraContract.FriendsColumns.NAME_FRIEND,
 							me.getName());
+					values.put(SigarraContract.FriendsColumns.TYPE_FRIEND,
+							me.getType());
 					values.put(SigarraContract.FriendsColumns.USER_CODE,
 							AccountUtils.getActiveUserCode(getActivity()));
 					mQueryHandler.startInsert(0, null,

@@ -200,7 +200,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 					.get(position % 15).getName());
 			TextView course = (TextView) row.findViewById(R.id.friend_course);
 			course.setText(results.get(position / 15).getStudents()
-					.get(position % 15).getProgrammeName());
+					.get(position % 15).getProgrammeNames());
 			return row;
 		}
 

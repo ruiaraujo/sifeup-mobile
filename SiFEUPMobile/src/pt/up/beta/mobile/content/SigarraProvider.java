@@ -174,7 +174,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case FRIENDS:
 			table = FriendsTable.TABLE;
-			nullHack = FriendsTable.KEY_COURSE_FRIEND;
+			nullHack = FriendsTable.KEY_TYPE_FRIEND;
 			break;
 		case PROFILES:
 		case PROFILES_PIC:
@@ -250,7 +250,7 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case FRIENDS:
 			table = FriendsTable.TABLE;
-			nullHack = FriendsTable.KEY_COURSE_FRIEND;
+			nullHack = FriendsTable.KEY_TYPE_FRIEND;
 			ContactsSyncAdapterUtils.syncContacts(AccountUtils
 					.getActiveUserName(getContext()));
 			break;

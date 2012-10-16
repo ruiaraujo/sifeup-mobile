@@ -172,6 +172,8 @@
     <string name="profile_title_status">Estado</string>
     <string name="profile_title_website">Website</string>
     <string name="profile_title_year">Ano</string>
+    <string name="profile_title_faculty">Faculdade</string>
+    <string name="profile_title_course">Curso</string>
     <string name="profile_title_room">Sala</string>
     <string name="profile_choose_email_app">Escolha a aplicação de email:</string>
 

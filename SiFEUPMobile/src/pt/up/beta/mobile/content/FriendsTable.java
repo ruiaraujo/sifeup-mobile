@@ -9,7 +9,7 @@ public class FriendsTable  implements BaseColumns{
     static final String KEY_ID_FRIEND = "_id";
     static final String KEY_CODE_FRIEND = "code_friend";
     static final String KEY_NAME_FRIEND = "name_friend";
-    static final String KEY_COURSE_FRIEND = "course_friend";
+    static final String KEY_TYPE_FRIEND = "type_friend";
     static final String KEY_USER_CODE = "user_code";
 
     // database info
@@ -19,7 +19,7 @@ public class FriendsTable  implements BaseColumns{
             + TABLE + " (" + KEY_ID_FRIEND
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_CODE_FRIEND
             + " TEXT NOT NULL, " + KEY_NAME_FRIEND + " TEXT NOT NULL, "
-            + KEY_COURSE_FRIEND + " TEXT, " + KEY_USER_CODE
+            + KEY_TYPE_FRIEND + " TEXT, " + KEY_USER_CODE
             + " TEXT NOT NULL );";
     
 	static void onCreate(SQLiteDatabase database) {

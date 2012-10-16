@@ -61,7 +61,7 @@ public class Friend implements Comparable<Friend> {
 							mCursor.getString(mCursor
 									.getColumnIndex(SigarraContract.FriendsColumns.NAME_FRIEND)),
 							mCursor.getString(mCursor
-									.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND))));
+									.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND))));
 				} while (mCursor.moveToNext());
 				mCursor.close();
 			}

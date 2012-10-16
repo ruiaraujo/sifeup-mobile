@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.sifeup.SifeupUtils;
-
 /**
  * @author Ângela Igreja
  * 
@@ -236,7 +234,6 @@ public class SubjectFiles implements Serializable {
 					for (int j = 0; j < jFiles.length(); j++) {
 						File file = new File();
 						JSONObject jFile = jFiles.getJSONObject(j);
-						SifeupUtils.removeEmptyKeys(jFile);
 						if (jFile.has("codigo"))
 							file.setCode(jFile.getInt("codigo"));
 						if (jFile.has("nome"))

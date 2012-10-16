@@ -1,7 +1,5 @@
 package pt.up.beta.mobile.ui.profile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
@@ -38,7 +36,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -97,8 +94,8 @@ public class StudentProfileFragment extends BaseFragment implements
 							me.getCode());
 					values.put(SigarraContract.FriendsColumns.NAME_FRIEND,
 							me.getName());
-					values.put(SigarraContract.FriendsColumns.COURSE_FRIEND,
-							me.getProgrammeAcronym());
+					values.put(SigarraContract.FriendsColumns.TYPE_FRIEND,
+							me.getType());
 					values.put(SigarraContract.FriendsColumns.USER_CODE,
 							AccountUtils.getActiveUserCode(getActivity()));
 					mQueryHandler.startInsert(0, null,
@@ -171,6 +168,8 @@ public class StudentProfileFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 			long id) {
+		if ( position >= contents.size() )
+			return;
 		if (contents.get(position).type == Profile.Type.WEBPAGE) {
 			final Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 					Uri.parse(contents.get(position).content));
@@ -224,22 +223,8 @@ public class StudentProfileFragment extends BaseFragment implements
 		((SherlockFragmentActivity) getActivity()).getSupportActionBar()
 				.setTitle(me.getName());
 		name.setText(me.getName());
-		String[] from = new String[] { "title", "content" };
-		int[] to = new int[] { R.id.profile_item_title,
-				R.id.profile_item_content };
-		// prepare the list of all records
-		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		for (ProfileDetail s : contents) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(from[0], s.title);
-			map.put(from[1], s.content);
-			fillMaps.add(map);
-		}
-
 		// fill in the grid_item layout
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-				R.layout.list_item_profile, from, to);
-		details.setAdapter(adapter);
+		details.setAdapter(new StudentDetailsAdapter(me,getActivity()));
 		details.setOnItemClickListener(this);
 		details.setSelection(0);
 		setRefreshActionItemState(false);
