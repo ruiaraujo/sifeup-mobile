@@ -30,5 +30,5 @@ public class Constants {
     
     public static final String USER_TYPE = "pt.up.beta.mobile.USER_TYPE";
     
-    public static final String USER_NAME = "pt.up.beta.mobile.USER_NAME";
+    public static final String USER_CODE = "pt.up.beta.mobile.USER_NAME";
 }

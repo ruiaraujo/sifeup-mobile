@@ -32,7 +32,7 @@ public class SearchUtils {
 			String code, ResponseCommand<ResultsPage> command, Context context) {
 		return new FetcherTask<Student>(new SingleStudentCom(command),
 				new SingleStudentSearchParser(), context).execute(SifeupAPI
-				.getStudentUrl(code));
+				.getStudenProfiletUrl(code));
 	}
 
 	public static ResultsPage getStudentsSearchReply(String query, int page, Context context) {

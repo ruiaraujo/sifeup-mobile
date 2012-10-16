@@ -52,7 +52,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			final List<Profile> rawContacts = new ArrayList<Profile>();
 			final String userCode = mAccountManager.getUserData(account,
-					Constants.USER_NAME);
+					Constants.USER_CODE);
 			final String type = mAccountManager.getUserData(account,
 					Constants.USER_TYPE);
 			final Profile me = getProfile(userCode, type);
