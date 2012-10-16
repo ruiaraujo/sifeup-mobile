@@ -298,7 +298,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final String page;
 		if (SigarraContract.Schedule.STUDENT.equals(type))
 			page = SifeupAPI.getReply(
-					SifeupAPI.getScheduleUrl(code, initialDay, finalDay),
+					SifeupAPI.getStudentScheduleUrl(code, initialDay, finalDay),
 					authToken, getContext());
 		else if (SigarraContract.Schedule.EMPLOYEE.equals(type)) {
 			page = SifeupAPI

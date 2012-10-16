@@ -60,18 +60,282 @@ public class SifeupAPI {
 	private interface WebServices {
 		String STUDENT = "mob_fest_geral.";
 		String EMPLOYEE = "mob_func_geral.";
-		String PRINTING = "mob_geral.";
+		String PRINTING = "mob_imp_geral.";
 		String NOTIFICATIONS = "mob_wf_geral.";
-		String SCHEDULE = "mobc_geral.";
+		String SCHEDULE = "mobc_hor_geral.";	
+		String CANTEENS = "mob_eme_geral.";
+		String FACILITIES = "mob_instal_geral.";
+		String MAIL = "mob_mail_geral.";
+		String PARK = "mob_par_geral.";
+		String SUBJECT = "mob_ucurr_geral.";
+		String AUTHENTICATION = "mob_val_geral.";
+	
+		//External Services
 		String FACILITIES_IMG = "img.";
 		String PEOPLE_PIC = "fotografias_service.";
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
 		String NOTIFICATION_SIGARRA = "wf_geral.";
 		String ROOM_FINDER = "salas_geral.";
-		String ACADEMIC_PATH_SIGARRA = "alunos_ficha.";
+		String ACADEMIC_PATH_SIGARRA = "alunos_ficha."; 
+		
+		
+	}
+	
+	
+	//MOB_EME_GERAL
+
+	private interface Canteens {
+		String NAME = "cantinas";
+	}
+	
+	// MOB_FEST_GERAL
+
+	private interface StudentAverage {
+		String NAME = "media";
+		String COURSE_ID = "pv_fest_id";
+	}
+	
+	private interface StudentProfile {
+		String NAME = "perfil";
+		String CODE = "pv_codigo";
+	}
+	
+	private interface StudentsSearch {
+		String NAME = "pesquisa";
+		String QUERY = "pv_nome";
+		String PAGE = "pv_pag";
+		//TODO:ANGEL:COLOCAR OS RESTANTES CAMPOS.
 	}
 
+	private interface StudentTuiton{
+		String NAME = "propinas";
+		String CODE = "pv_codigo";
+	}
+	
+	private interface StudentSubjects{
+		String NAME = "ucurr_inscricoes";
+		String COURSE_ID = "pv_fest_id";
+		String SORTING = "pv_ordenacao"; 
+		String YEAR_MIN = "pv_ano_lectivo_min";
+		String YEAR_MAX = "pv_ano_lectivo_max";
+	}
+	
+	
+	//MOB_FUNC_GERAL
+	
+	
+	//.DS_DOCENTE
+	private interface TeacherSubjects{
+		String NAME = "ds_docente";
+		String CODE = "pv_codigo";
+		String YEAR = "pv_ano_lectivo";
+	}
+	
+	//.PERFIL
+	private interface EmployeeProfile {
+		String NAME = "perfil";
+		String CODE = "pv_codigo";
+	}
+	
+	//.PESQUISA
+	private interface EmployeeSearch {
+		String NAME = "pesquisa";
+		String QUERY = "pv_nome";
+		String PAGE = "pv_pag";
+		//TODO:ANGEL:COLOCAR OS RESTANTES CAMPOS.
+	}
+
+
+	
+	//MOB_HOR_GERAL
+	
+	//.DOCENTE 	
+	private interface TeacherSchedule {
+		String NAME = "docente";
+		String CODE = "pv_codigo";
+		String WEEK_END = "pv_semana_fim";
+		String WEEK_BEGIN = "pv_semana_ini";
+		String YEAR = "pv_ano_lectivo";
+		String PERIODS = "pv_periodos";
+	}
+
+	//.ESTUDANTE 
+	private interface StudentSchedule {
+		String NAME = "estudante";
+		String CODE = "pv_codigo";
+		String WEEK_END = "pv_semana_fim";
+		String WEEK_BEGIN = "pv_semana_ini";
+		String YEAR = "pv_ano_lectivo";
+		String PERIODS = "pv_periodos";
+	}
+
+	//.SALA 
+	private interface RoomSchedule {
+		String NAME = "sala";
+		String CODE = "pv_espaco_id";
+		String WEEK_END = "pv_semana_fim";
+		String WEEK_BEGIN = "pv_semana_ini";
+		String YEAR = "pv_ano_lectivo";
+		String PERIODS = "pv_periodos";
+	}
+
+	//.TURMA 
+	private interface ClassSchedule {
+		String NAME = "turma";
+		String CODE = "pv_turma_id";
+		String WEEK_END = "pv_semana_fim";
+		String WEEK_BEGIN = "pv_semana_ini";
+		String YEAR = "pv_ano_lectivo";
+		String PERIODS = "pv_periodos";
+	}
+	
+	//.UCURR
+	private interface SubjectSchedule {
+		String NAME = "ucurr";
+		String CODE = "pv_ocorrencia_id";
+		String WEEK_END = "pv_semana_fim";
+		String WEEK_BEGIN = "pv_semana_ini";
+		String YEAR = "pv_ano_lectivo";
+		String PERIODS = "pv_periodos";
+	}
+
+	
+	//MOB_IMP_GERAL
+	
+	//.GERAR_REFERENCIA_MB 
+	private interface PrintingRef {
+		String NAME = "gerar_propinas_mb";
+		String CODE = "pv_codigo";
+		String VALUE = "pv_valor";
+	}
+
+	//.SALDO 
+	private interface PrintingQuota {
+		String NAME = "saldo";
+		String CODE = "pv_codigo";
+	}
+	
+	//MOB_INSTAL_GERAL
+	
+	//.PERFIL 
+	private interface RoomProfile {
+		String NAME = "perfil";
+		String CODE = "pv_sala_id";
+	}
+	//.PESQUISA 
+	private interface RoomSearch {
+		String NAME = "pesquisa";
+		String CODE = "pv_sigla";
+		String PAGE = "pv_pag";
+	}
+	
+	
+	//MOB_MAIL_GERAL
+	
+	//.FICHEIROS 
+	private interface MailFiles {
+		String NAME = "ficheiros";
+		String CODE = "pv_codigo";
+	}
+	
+	
+	//MOB_PAR_GERAL
+	
+	//.OCUPACAO 
+	private interface ParkOcupation {
+		String NAME = "ocupacao";
+		String CODE = "pv_parque";
+	}
+	
+	                      
+	//MOB_UCURR_GERAL.CONTEUDOS
+	private interface SubjectContent {
+		String NAME = "conteudos";
+		String PAGE_ID = "pi_pag_id ";
+		String CODE = "pv_ocorrencia_id";
+	}	
+	
+	//MOB_UCURR_GERAL.OUTRAS_OCORRENCIAS 
+	private interface SubjectOtherOccurrences
+	{
+		String NAME = "outras_ocorrencias";
+		String CODE = "pv_ucurr_id";
+	}	
+		
+	//MOB_UCURR_GERAL.PERFIL 
+	private interface SubjectProfile {
+		String NAME = "perfil";
+		String CODE = "pv_ocorrencia_id";
+	}	
+	
+	//MOB_UCURR_GERAL.SUMARIO 
+	private interface SubjectSummary {
+		String NAME = "sumario";
+		String CODE = "pv_sumario_id";
+	}	
+	//MOB_UCURR_GERAL.SUMARIO_EDIT 
+	
+	  private interface SubjectSummaryEdit {
+			String NAME = "sumario_edit";
+			String CODE = "pv_sumario_id";
+			String SUMMARY = "pv_sumario"; 
+			String REAL_DATE ="pv_d_efetiva"; 
+			String NUMBER_STUDENTS = "pv_nalunos"; 
+			String TEACHER_CODE = "pv_doc_codigo"; 
+		} 
+	  
+	//MOB_UCURR_GERAL.SUM_AULAS  
+	  private interface ClassSummaries {
+			String NAME = "sum_aulas";
+			String OCURENCY = "pv_ocorrencia_id";
+			String CLASS = "pv_turma_id"; 
+			String TYPE ="pv_tipo_aula"; 
+		} 
+	                        
+	//MOB_UCURR_GERAL.SUM_TURMAS
+		private interface SubjectSumClasses {
+			String NAME = "sum_turmas";
+			String CODE = "pv_ocorrencia_id";
+		}
+	
+	
+	//MOB_UCURR_GERAL.UC_INSCRITOS
+		private interface SubjectRegistered {
+			String NAME = "uc_inscritos";
+			String CODE = "pv_ocorrencia_id";
+		}
+
+	//MOB_UCURR_GERAL.UC_TURMAS 
+		private interface SubjectClasses {
+			String NAME = "uc_turmas";
+			String CODE = "pv_ocorrencia_id";
+		}
+	
+	
+	//MOB_VAL_GERAL.AUTENTICA 
+		private interface Authentication {
+			String NAME = "autentica";
+			String LOGIN = "pv_login";
+			String PASSWORD = "pv_password";		
+		}
+	
+	//MOB_VAL_GERAL.MUDAR_PASSWORD 
+		private interface ChangePassword {
+			String NAME = "mudar_password";
+			String LOGIN = "pv_login";
+			String CURRENT_PASSWORD = "pv_password_actual";	
+			String NEW_PASSWORD = "pv_password_nova";	
+			String NEW_CONFIRM_PASSWORD = "pv_password_nova_conf";	
+			String SYSTEM = "pv_sistema";	
+		}
+		
+	//MOB_WF_GERAL.NOTIFICACOES
+		private interface Notifications {
+			String NAME = "notificacoes";
+			String CODE = "pv_codigo";
+		}
+		
 	private interface BuildingPic {
 		String NAME = "edi_img_grande";
 		String BUILDING = "p_edi";
@@ -93,25 +357,9 @@ public class SifeupAPI {
 		String X = "x";
 		String Y = "y";
 	}
-
-	private interface Student {
-		String NAME = "aluno";
-		String CODE = "pv_codigo";
-	}
-
-	private interface Employee {
-		String NAME = "ficha_func";
-		String CODE = "pv_codigo";
-	}
-
 	private interface PersonPic {
 		String NAME = "foto";
 		String CODE = "pct_cod";
-	}
-
-	private interface Tuition {
-		String NAME = "propinas";
-		String CODE = "pv_codigo";
 	}
 
 	private interface Exams {
@@ -119,71 +367,11 @@ public class SifeupAPI {
 		String CODE = "pv_codigo";
 	}
 
-	private interface Authentication {
-		String NAME = "autentica";
-		String CODE = "pv_login";
-		String PASSWORD = "pv_password";
-
-	}
-
-	private interface Printing {
-		String NAME = "saldo_imp";
-		String CODE = "pv_codigo";
-	}
-
-	private interface Schedule {
-		String NAME = "horario_aluno";
-		String CODE = "pv_codigo";
-		String BEGIN = "pv_semana_ini";
-		String END = "pv_semana_fim";
-	}
-
-	private interface Subjects {
-		String NAME = "inscricoes";
-		String CODE = "pv_codigo";
-		/** Not mandatory - if lacking assumed current. */
-		String YEAR = "pv_a_lectivo";
-	}
-
-	private interface StudentsSearch {
-		String NAME = "alunos_pesquisa";
-		String QUERY = "pv_nome";
-		String PAGE = "pv_primeiro";
-	}
-
-	private interface PrintingRef {
-		String NAME = "gerar_propinas_mb";
-		String VALUE = "pv_valor";
-	}
-
-	private interface AcademicPath {
-		String NAME = "ficha_aluno";
-		String CODE = "pv_codigo";
-	}
 
 	private interface AcademicPathSigarra {
 		String NAME = "ficha";
 		String CODE = "p_cod";
 	}
-
-	private interface SubjectDescription {
-		String NAME = "ficha_uc";
-		String CODE = "pv_cad_codigo";
-		/** Not mandatory - if lacking assumed current. */
-		String YEAR = "pv_ano_lectivo";
-		/** Not mandatory - if lacking assumed current. */
-		String PERIOD = "pv_periodo";
-	}
-
-	private interface SubjectContent {
-		String NAME = "conteudos_uc";
-		String CODE = "pv_uc_codigo";
-		/** Not mandatory - if lacking assumed current. */
-		String YEAR = "pv_ano_lectivo";
-		/** Not mandatory - if lacking assumed current. */
-		String PERIOD = "pv_periodo";
-	}
-
 	private interface SubjectSigarraContent {
 		String NAME = "formview";
 		String CODE = "p_cad_codigo";
@@ -198,46 +386,9 @@ public class SifeupAPI {
 		String ID = "pct_id";
 	}
 
-	private interface UcSchedule {
-		String NAME = "horario_uc";
-		String CODE = "pv_uc_codigo";
-	}
-
-	private interface TeacherSchedule {
-		String NAME = "horario_docente";
-	}
-
-	private interface RoomSchedule {
-		String NAME = "horario_sala";
-		String BUILDING_CODE = "pv_cod_edi";
-		String ROOM_CODE = "pv_cod_sala";
-	}
-
-	private interface Park {
-		String NAME = "ocupacao_parque";
-		String CODE = "pv_parque";
-	}
-
-	private interface Notifications {
-		String NAME = "notificacoes";
-	}
-
 	private interface NotificationsSigarra {
 		String NAME = "not_form_view";
 		String CODE = "pv_not_id";
-	}
-
-	private interface Canteens {
-		String NAME = "cantinas";
-	}
-
-	private interface SetPassword {
-		String NAME = "mudar_password";
-		String LOGIN = "pv_login";
-		String ACTUAL_PASSWORD = "pv_password_actual";
-		String NEW_PASSWORD = "pv_password_nova";
-		String CONFIRM_NEW_PASSWORD_ = "pv_password_nova_conf";
-		String SYSTEM = "pv_sistema";
 	}
 
 	public interface Errors {
@@ -262,8 +413,8 @@ public class SifeupAPI {
 	 * @return Authentication Url
 	 */
 	public static String getAuthenticationUrl(String code, String password) {
-		return WEBSERVICE + WebServices.MOBILE + Authentication.NAME
-				+ WEBSERVICE_SEP + Authentication.CODE + EQUALS + code
+		return WEBSERVICE + WebServices.AUTHENTICATION + Authentication.NAME
+				+ WEBSERVICE_SEP + Authentication.LOGIN + EQUALS + code
 				+ LINK_SEP + Authentication.PASSWORD + EQUALS + password;
 	}
 
@@ -275,10 +426,10 @@ public class SifeupAPI {
 	 * @param end
 	 * @return Schedule Url
 	 */
-	public static String getScheduleUrl(String code, String begin, String end) {
-		return WEBSERVICE + WebServices.MOBILE + Schedule.NAME + WEBSERVICE_SEP
-				+ Schedule.CODE + EQUALS + code + LINK_SEP + Schedule.BEGIN
-				+ EQUALS + begin + LINK_SEP + Schedule.END + EQUALS + end;
+	public static String getStudentScheduleUrl(String code, String begin, String end) {
+		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME + WEBSERVICE_SEP
+				+ StudentSchedule.CODE + EQUALS + code + LINK_SEP + StudentSchedule.WEEK_BEGIN
+				+ EQUALS + begin + LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end;
 	}
 
 	/**
@@ -341,8 +492,8 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getStudentUrl(String code) {
-		return WEBSERVICE + WebServices.MOBILE + Student.NAME + WEBSERVICE_SEP
-				+ Student.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.STUDENT + StudentProfile.NAME + WEBSERVICE_SEP
+				+ StudentProfile.CODE + EQUALS + code;
 	}
 
 	/**
@@ -611,7 +762,7 @@ public class SifeupAPI {
 	public static String getUcScheduleUrl(String code, String begin, String end) {
 		return WEBSERVICE + WebServices.MOBILE + UcSchedule.NAME
 				+ WEBSERVICE_SEP + UcSchedule.CODE + EQUALS + code + LINK_SEP
-				+ Schedule.BEGIN + EQUALS + begin + LINK_SEP + Schedule.END
+				+ Schedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP + Schedule.WEEK_END
 				+ EQUALS + end;
 	}
 
@@ -627,7 +778,7 @@ public class SifeupAPI {
 			String end) {
 		return WEBSERVICE + WebServices.MOBILE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + Schedule.CODE + EQUALS + code + LINK_SEP
-				+ Schedule.BEGIN + EQUALS + begin + LINK_SEP + Schedule.END
+				+ Schedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP + Schedule.WEEK_END
 				+ EQUALS + end;
 	}
 
@@ -639,13 +790,12 @@ public class SifeupAPI {
 	 * @param end
 	 * @return Schedule Url
 	 */
-	public static String getRoomScheduleUrl(String code, String roomCode,
+	public static String getRoomScheduleUrl(String code, 
 			String begin, String end) {
-		return WEBSERVICE + WebServices.MOBILE + RoomSchedule.NAME
-				+ WEBSERVICE_SEP + RoomSchedule.BUILDING_CODE + EQUALS + code
-				+ LINK_SEP + RoomSchedule.ROOM_CODE + EQUALS + roomCode
-				+ LINK_SEP + Schedule.BEGIN + EQUALS + begin + LINK_SEP
-				+ Schedule.END + EQUALS + end;
+		return WEBSERVICE + WebServices.SCHEDULE + RoomSchedule.NAME
+				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code
+				+ LINK_SEP + RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
+				+ RoomSchedule.WEEK_END + EQUALS + end;
 	}
 
 	private static DefaultHttpClient httpclient;
