@@ -113,6 +113,14 @@ public class SigarraSyncAdapterUtils {
 		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.NOTIFICATIONS);
 		return extras;
 	}
+	
+
+	public static Bundle getNotificationsPeriodicBundle(){
+		final Bundle extras = new Bundle();
+		extras.putBoolean(SigarraSyncAdapter.SINGLE_REQUEST, true);
+		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.NOTIFICATIONS);
+		return extras;
+	}
 
 	public static void syncNotifications(final String accountName) {
 		final Bundle extras = getNotificationsBundle();

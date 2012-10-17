@@ -67,7 +67,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			if (convertView == null
 					|| convertView.getTag().toString().equals(HEADER)) {
 				convertView = mInflater.inflate(R.layout.list_item_profile,
-						parent);
+						parent, false);
 				convertView.setTag(NORMAL);
 			}
 			final TextView title = (TextView) convertView
@@ -82,18 +82,18 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			if (convertView == null
 					|| convertView.getTag().toString().equals(NORMAL)) {
 				convertView = mInflater.inflate(
-						R.layout.list_item_grade_marker, parent);
+						R.layout.list_item_programme_marker, parent,false);
 				convertView.setTag(HEADER);
 			}
 			final TextView header = (TextView) convertView
-					.findViewById(R.id.grade_marker);
+					.findViewById(R.id.marker);
 			header.setText(R.string.profile_title_course);
 		} else {
 
 			if (convertView == null
 					|| convertView.getTag().toString().equals(HEADER)) {
 				convertView = mInflater.inflate(R.layout.list_item_profile,
-						parent);
+						parent,false);
 				convertView.setTag(NORMAL);
 			}
 			final TextView title = (TextView) convertView

@@ -127,6 +127,6 @@ public class StudentCourse {
 							.getString("inst_sigla"), course
 							.getString("ano_curricular")));
 		}
-		return null;
+		return arrayCourse;
 	}
 }

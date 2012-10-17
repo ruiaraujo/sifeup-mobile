@@ -227,18 +227,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 					ContactsContract.AUTHORITY, true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 				ContentResolver.addPeriodicSync(account,
-						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
+						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY,
 						Integer.parseInt(syncIntervalValue) * 3600);
-
 				ContentResolver.addPeriodicSync(account,
 						SigarraContract.CONTENT_AUTHORITY,
-						SigarraSyncAdapterUtils.getNotificationsBundle(),
-						Integer.parseInt(syncNotIntervalValue) * 3600);
+						SigarraSyncAdapterUtils
+								.getNotificationsPeriodicBundle(), Integer
+								.parseInt(syncNotIntervalValue) * 3600);
 			} else {
 				PeriodicSyncReceiver.cancelPreviousAlarms(this, account,
-						SigarraContract.CONTENT_AUTHORITY, new Bundle());
+						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY);
 				PeriodicSyncReceiver.addPeriodicSync(this, account,
-						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
+						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY,
 						Integer.parseInt(syncIntervalValue) * 3600);
 
 				PeriodicSyncReceiver.addPeriodicSync(this, account,

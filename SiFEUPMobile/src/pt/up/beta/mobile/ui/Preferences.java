@@ -189,11 +189,12 @@ public class Preferences extends SherlockPreferenceActivity implements
 						AccountUtils.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
-				ContentResolver.addPeriodicSync(
-						AccountUtils.getActiveAccount(getApplicationContext()),
+				ContentResolver.addPeriodicSync(AccountUtils
+						.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY,
-						SigarraSyncAdapterUtils.getNotificationsBundle(),
-						Integer.parseInt(syncNotIntervalValue) * 3600);
+						SigarraSyncAdapterUtils
+								.getNotificationsPeriodicBundle(), Integer
+								.parseInt(syncNotIntervalValue) * 3600);
 			} else {
 				PeriodicSyncReceiver.cancelPreviousAlarms(this,
 						AccountUtils.getActiveAccount(getApplicationContext()),
@@ -202,11 +203,12 @@ public class Preferences extends SherlockPreferenceActivity implements
 						AccountUtils.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY, new Bundle(),
 						Integer.parseInt(syncIntervalValue) * 3600);
-				PeriodicSyncReceiver.addPeriodicSync(this,
-						AccountUtils.getActiveAccount(getApplicationContext()),
+				PeriodicSyncReceiver.addPeriodicSync(this, AccountUtils
+						.getActiveAccount(getApplicationContext()),
 						SigarraContract.CONTENT_AUTHORITY,
-						SigarraSyncAdapterUtils.getNotificationsBundle(),
-						Integer.parseInt(syncNotIntervalValue) * 3600);
+						SigarraSyncAdapterUtils
+								.getNotificationsPeriodicBundle(), Integer
+								.parseInt(syncNotIntervalValue) * 3600);
 
 			}
 			return;

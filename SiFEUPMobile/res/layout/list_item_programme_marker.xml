@@ -1,0 +1,9 @@
+<TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/marker"
+	android:layout_gravity="left|center_vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="10dip"
+	android:textColor="@color/body_text_white"
+	android:background="@color/feup"
+	style="@style/ListItemTitle" />
