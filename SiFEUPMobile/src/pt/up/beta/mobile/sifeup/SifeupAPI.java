@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -933,12 +934,12 @@ public class SifeupAPI {
 		}
 	}
 
-	public static HttpsURLConnection get(String url) {
+	public static HttpURLConnection get(String url) {
 		try {
 
-			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
+			final HttpURLConnection connection = (HttpURLConnection) new URL(
 					url).openConnection();
-			connection.setSSLSocketFactory(sslCtx.getSocketFactory());
+			//connection.setSSLSocketFactory(sslCtx.getSocketFactory());
 			connection.setRequestProperty("connection", "close");
 			return connection;
 		} catch (IOException e) {
@@ -979,7 +980,7 @@ public class SifeupAPI {
 			throws IOException, AuthenticationException {
 		String page = null;
 		do {
-			final HttpsURLConnection connection = get(strUrl);
+			final HttpURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
@@ -1010,7 +1011,7 @@ public class SifeupAPI {
 			Context context) throws IOException, AuthenticationException {
 		initSSLContext(context);
 		String page = null;
-		HttpsURLConnection connection = null;
+		HttpURLConnection connection = null;
 		do {
 			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
 			final InputStream pageContent = connection.getInputStream();
@@ -1071,7 +1072,7 @@ public class SifeupAPI {
 	// the actual download code
 	public static Bitmap downloadBitmap(String url, String cookie)
 			throws AuthenticationException, IOException {
-		final HttpsURLConnection connection = get(url);
+		final HttpURLConnection connection = get(url);
 		try {
 			connection.setRequestProperty("Cookie", cookie);
 			final InputStream is = connection.getInputStream();
