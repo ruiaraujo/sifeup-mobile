@@ -127,12 +127,9 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         super.onActivityCreated(savedInstanceState);
         if (room != null)
             task = FacilitiesUtils.getBuildingHotspot(getResources()
-                    .openRawResource(R.raw.buildings_coordinates), room
-                    .getBuildingCode(), room.getBlockCode(), buildingFinder);
+                    .openRawResource(R.raw.buildings_coordinates), room.getRoomName(), buildingFinder);
         else
-            task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
-                    building.getBuildingBlock(),
-                    Integer.toString(currentFloor), this, getActivity());
+            task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),currentFloor, this, getActivity());
 
     }
     
@@ -172,12 +169,9 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
     protected void onRepeat() {
         showLoadingScreen();
         if (room == null)
-            task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
-                    building.getBuildingBlock(),
-                    Integer.toString(currentFloor), this, getActivity());
+            task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),currentFloor, this, getActivity());
         else
-            task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                    room.getRoomCode(), this, getActivity());
+            task = FacilitiesUtils.getRoomPic(room.getRoomCode(), this, getActivity());
 
     }
 
@@ -194,13 +188,11 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
                             .getRoomCode().substring(0, 2) : room.getRoomCode()
                             .substring(0, 1));
             if (roomFloor == currentFloor) {
-                task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                        room.getRoomCode(), this ,getActivity());
+                task = FacilitiesUtils.getRoomPic(room.getRoomCode(), this ,getActivity());
                 return true;
             }
         }
-        task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(),
-                building.getBuildingBlock(), Integer.toString(currentFloor),
+        task = FacilitiesUtils.getBuildingPic(building.getBuildingCode(), currentFloor,
                 this, getActivity());
 
         return true;
@@ -211,8 +203,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         final int x = Math.round(e.getX());
         final int y = Math.round(e.getY());
         showLoadingScreen();
-        FacilitiesUtils.getRoomCode(building.getBuildingCode(),
-                building.getBuildingBlock(), Integer.toString(currentFloor), x,
+        FacilitiesUtils.getRoomCode(building.getBuildingCode(), Integer.toString(currentFloor), x,
                 y, roomDetector);
         return true;
     }
@@ -281,8 +272,7 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 	            return;	
 			building = results.get(0);
             setUpNavigation();
-            task = FacilitiesUtils.getRoomPic(room.getBuildingCode(),
-                    room.getRoomCode(), FeupFacilitiesDetailsFragment.this, getActivity());
+            task = FacilitiesUtils.getRoomPic(room.getRoomCode(), FeupFacilitiesDetailsFragment.this, getActivity());
 		}
 		
 	}

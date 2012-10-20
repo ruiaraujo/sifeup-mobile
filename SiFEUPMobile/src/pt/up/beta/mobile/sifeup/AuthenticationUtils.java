@@ -121,7 +121,7 @@ public class AuthenticationUtils {
 						strings[4]), AccountUtils.getAuthToken(context), context);
 				int error = SifeupAPI.JSONError(page);
 				switch (error) {
-				case SifeupAPI.Errors.NO_AUTH:
+				case SifeupAPI.Errors.ERROR:
 					getError(page);
 					return "Error";
 				case SifeupAPI.Errors.NO_ERROR:

@@ -129,6 +129,7 @@
     <string name="title_subjects">Unidades Curriculares</string>
     <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
     <string name="lb_no_subjects">Não tem inscrições em Unidades Curricalares</string>
+    <string name="lb_no_courses">Não tem inscrições em Cursos</string>
 
     <!-- Subject Description -->
     <string name="objectives">Objectivos</string>
@@ -254,6 +255,7 @@
     <string name="lb_print_ref_title">Referência Gerada</string>
     <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
     <string name="print_ref_share_title">Partilhar Referência</string>
+    <string name="toast_invalid_value">O valor inserido não é suportado.</string>
 
     <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->

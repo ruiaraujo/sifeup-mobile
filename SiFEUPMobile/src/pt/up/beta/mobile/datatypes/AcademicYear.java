@@ -6,16 +6,14 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import pt.up.beta.mobile.datatypes.AcademicUC;
-
 public class AcademicYear implements Comparable<AcademicYear>, Parcelable{
 
 	private int year;
-	private final List<AcademicUC> firstSemester;
-	private final List<AcademicUC> secondSemester;
+	private final List<SubjectEntry> firstSemester;
+	private final List<SubjectEntry> secondSemester;
 	public AcademicYear(){
-		firstSemester = new ArrayList<AcademicUC>();
-		secondSemester = new ArrayList<AcademicUC>();
+		firstSemester = new ArrayList<SubjectEntry>();
+		secondSemester = new ArrayList<SubjectEntry>();
 	}
 	
 	public int getYear() {
@@ -24,10 +22,10 @@ public class AcademicYear implements Comparable<AcademicYear>, Parcelable{
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public List<AcademicUC> getFirstSemester() {
+	public List<SubjectEntry> getFirstSemester() {
 		return firstSemester;
 	}
-	public List<AcademicUC> getSecondSemester() {
+	public List<SubjectEntry> getSecondSemester() {
 		return secondSemester;
 	}
 	
@@ -48,10 +46,10 @@ public class AcademicYear implements Comparable<AcademicYear>, Parcelable{
 	
 	private AcademicYear(Parcel in){
 		year = in.readInt();
-		firstSemester = new ArrayList<AcademicUC>();
-		secondSemester = new ArrayList<AcademicUC>();
-		in.readTypedList(firstSemester, AcademicUC.CREATOR);
-		in.readTypedList(secondSemester, AcademicUC.CREATOR);
+		firstSemester = new ArrayList<SubjectEntry>();
+		secondSemester = new ArrayList<SubjectEntry>();
+		in.readTypedList(firstSemester, SubjectEntry.CREATOR);
+		in.readTypedList(secondSemester, SubjectEntry.CREATOR);
 	}
 	
 	public static final Parcelable.Creator<AcademicYear> CREATOR = new Parcelable.Creator<AcademicYear>() {

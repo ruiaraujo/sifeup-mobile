@@ -21,6 +21,8 @@ import java.util.List;
 import org.acra.ACRA;
 import org.json.JSONException;
 
+import com.google.gson.Gson;
+
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
@@ -113,10 +115,11 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (c.moveToFirst()) {
 				final String content = c.getString(c
 						.getColumnIndex(SigarraContract.Profiles.CONTENT));
+				final Gson gson = new Gson();
 				if (type.equals(SifeupAPI.STUDENT_TYPE))
-					profile = Student.parseJSON(content);
+					profile = gson.fromJson(content, Student.class);
 				else
-					profile = Employee.parseJSON(content);
+					profile = gson.fromJson(content, Employee.class);
 			}
 		} finally {
 			c.close();

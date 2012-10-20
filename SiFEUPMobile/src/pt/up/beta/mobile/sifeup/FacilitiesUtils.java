@@ -25,29 +25,28 @@ public class FacilitiesUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getBuildingPic(
-			String building, String block, String floor, ResponseCommand<Bitmap> command, Context context) {
+			String building, int floor, ResponseCommand<Bitmap> command, Context context) {
 		return new BuildingsTask(command, context).execute(SifeupAPI.getBuildingPicUrl(
-				building, block, floor));
+				building, floor));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(
-			String building, String room, ResponseCommand<Bitmap> command, Context context) {
-		return new BuildingsTask(command,context ).execute(SifeupAPI.getRoomPicUrl(building, room));
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(String room, ResponseCommand<Bitmap> command, Context context) {
+		return new BuildingsTask(command,context ).execute(SifeupAPI.getRoomPicUrl(room));
 	}
 
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingsHotspot(
 			InputStream file, ResponseCommand<List<BuildingPicHotspot>> command) {
-		return new BuildingsHotspotTask(command, null, null).execute(file);
+		return new BuildingsHotspotTask(command, null).execute(file);
 	}
 	
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingHotspot(
-			InputStream file, String buildingCode, String blockCode, ResponseCommand<List<BuildingPicHotspot>> command) {
-		return new BuildingsHotspotTask(command,buildingCode,blockCode ).execute(file);
+			InputStream file, String buildingCode, ResponseCommand<List<BuildingPicHotspot>> command) {
+		return new BuildingsHotspotTask(command,buildingCode ).execute(file);
 	}
 	
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
-			String building, String block, String floor, int x , int y, ResponseCommand<String> command) {
-		return new RoomFinderTask(command).execute(SifeupAPI.getRoomPostFinderUrl(building, block, floor, x, y));
+			String building,String floor, int x , int y, ResponseCommand<String> command) {
+		return new RoomFinderTask(command).execute(SifeupAPI.getRoomPostFinderUrl(building, floor, x, y));
 	}
 
 
@@ -94,14 +93,9 @@ public class FacilitiesUtils {
 		private List<BuildingPicHotspot> hotspots;
 		private final ResponseCommand<List<BuildingPicHotspot>> command;
 		private final String buildingCode;
-        private final String blockCode;
-		public BuildingsHotspotTask(ResponseCommand<List<BuildingPicHotspot>> command, String buildingCode, String blockCode) {
+		public BuildingsHotspotTask(ResponseCommand<List<BuildingPicHotspot>> command, String buildingCode) {
 			this.command = command;
 			this.buildingCode = buildingCode;
-			if ( blockCode != null )
-			    this.blockCode = blockCode;
-			else
-                this.blockCode = "";
 		}
 
 		@Override
@@ -118,7 +112,7 @@ public class FacilitiesUtils {
 				{
 					for ( BuildingPicHotspot hot : hotspots )
 					{
-						if (buildingCode.equals(hot.getBuildingCode()) && blockCode.equals(hot.getBuildingBlock()) )
+						if (buildingCode.equals(hot.getBuildingCode()) )
 						{
 							List<BuildingPicHotspot> hotspot = new ArrayList<BuildingPicHotspot>();
 							hotspot.add(hot);

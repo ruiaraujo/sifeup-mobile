@@ -19,16 +19,13 @@ public class SigarraSyncAdapterUtils {
 				extras);
 	}
 
-	public static void syncSubject(final String accountName, final String code,
-			final String year, final String period) {
+	public static void syncSubject(final String accountName, final String code) {
 		final Bundle extras = new Bundle();
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		extras.putBoolean(SigarraSyncAdapter.SINGLE_REQUEST, true);
 		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.SUBJECT);
-		extras.putString(SigarraSyncAdapter.SUBJECT_CODE, code);
-		extras.putString(SigarraSyncAdapter.SUBJECT_PERIOD, period);
-		extras.putString(SigarraSyncAdapter.SUBJECT_YEAR, year);
+		extras.putString(SigarraSyncAdapter.CODE, code);
 		ContentResolver.requestSync(new Account(accountName,
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);
@@ -55,7 +52,7 @@ public class SigarraSyncAdapterUtils {
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		extras.putBoolean(SigarraSyncAdapter.SINGLE_REQUEST, true);
 		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.PROFILE_PIC);
-		extras.putString(SigarraSyncAdapter.USER_CODE, code);
+		extras.putString(SigarraSyncAdapter.CODE, code);
 		ContentResolver.requestSync(new Account(accountName,
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);
@@ -141,7 +138,6 @@ public class SigarraSyncAdapterUtils {
 		extras.putString(SigarraSyncAdapter.SCHEDULE_INITIAL, initialTime);
 		extras.putString(SigarraSyncAdapter.SCHEDULE_FINAL, finalTime);
 		extras.putString(SigarraSyncAdapter.SCHEDULE_TYPE, type);
-		extras.putString(SigarraSyncAdapter.SCHEDULE_BASE_TIME, baseTime);
 		ContentResolver.requestSync(new Account(accountName,
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);

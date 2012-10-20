@@ -2,27 +2,27 @@ package pt.up.beta.mobile.ui.personalarea;
 
 import java.util.List;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
+import pt.up.beta.mobile.datatypes.ScheduleClass;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
-import pt.up.beta.mobile.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Class Description Fragment
@@ -73,10 +73,6 @@ public class ClassDescriptionFragment extends BaseFragment {
 				// assumed only one page of results
 				i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
 						block.getLectureCode());
-				i.putExtra(SubjectDescriptionFragment.SUBJECT_YEAR,
-						block.getYear());
-				i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD,
-						block.getSemester());
 				i.putExtra(Intent.EXTRA_TITLE, block.getLectureAcronym());
 				startActivity(i);
 
@@ -122,8 +118,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_ROOM);
-				i.putExtra(ScheduleFragment.SCHEDULE_CODE,
-						room.getBuildingCode() + room.getRoomCode());
+				i.putExtra(ScheduleFragment.SCHEDULE_CODE,room.getRoomCode());
 				i.putExtra(
 						Intent.EXTRA_TITLE,
 						getString(R.string.title_schedule_arg,
@@ -145,10 +140,44 @@ public class ClassDescriptionFragment extends BaseFragment {
 		}
 		
 
-		// Team
+		// Team		
+		List<ScheduleClass> classes = block.getClasses();
+		//only show if the class is a composition
 		TextView team = (TextView) root.findViewById(R.id.class_team);
-		team.setText(getString(R.string.class_team, block.getClassAcronym()));
+		if ( classes.size() > 1 )
+			team.setText(getString(R.string.class_team, block.getClassAcronym()));
+		else
+			team.setVisibility(View.GONE);
 
+		// Rooms
+		LinearLayout classContainer = (LinearLayout) root.findViewById(R.id.list_rooms);
+		OnClickListener classClick = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final ScheduleClass clas = (ScheduleClass) v.getTag();
+				Intent i = new Intent(getActivity(), ScheduleActivity.class);
+				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+						ScheduleFragment.SCHEDULE_CLASS);
+				i.putExtra(ScheduleFragment.SCHEDULE_CODE,clas.getCode());
+				i.putExtra(
+						Intent.EXTRA_TITLE,
+						getString(R.string.title_schedule_arg,
+								clas.getName()));
+
+				startActivity(i);				
+			}
+		};
+		for ( ScheduleClass clas : classes )
+		{
+		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    llItem.setText(clas.getName());
+		    // To know wich item has been clicked
+		    llItem.setTag(clas);
+		    // In the onClickListener just get the id using getTag() on the view
+		    llItem.setOnClickListener(classClick);
+		    classContainer.addView(llItem);
+		}
+		
 		// Start time
 		int startTime = block.getStartTime();
 		StringBuilder start = new StringBuilder();

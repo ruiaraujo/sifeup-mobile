@@ -1,29 +1,30 @@
 package pt.up.beta.mobile.ui.utils;
 
+import com.google.gson.annotations.SerializedName;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BuildingPicHotspot implements Parcelable{
+public class BuildingPicHotspot implements Parcelable {
+	@SerializedName("namePt")
 	private final String namePt;
+	@SerializedName("nameEn")
 	private final String nameEn;
+	@SerializedName("floors")
 	private final String buildingCode;
-	private final String buildingBlock;
+	@SerializedName("polyX")
 	private final int[] polyX;
+	@SerializedName("polyY")
 	private final int[] polyY;
+	@SerializedName("floors")
 	private final int[] floors;
 
 	public BuildingPicHotspot(String namePt, String nameEn,
-			String buildingCode, String buildingBlock, int[] polyX, int[] polyY,int[] floors) {
+			String buildingCode, String buildingBlock, int[] polyX,
+			int[] polyY, int[] floors) {
 		this.nameEn = nameEn;
 		this.namePt = namePt;
-		if (buildingCode != null)
-			this.buildingCode = buildingCode;
-		else
-			this.buildingCode = "";
-		if (buildingBlock != null)
-			this.buildingBlock = buildingBlock;
-		else
-			this.buildingBlock = "";
+		this.buildingCode = buildingCode;
 		this.polyX = polyX;
 		this.polyY = polyY;
 		this.floors = floors;
@@ -54,16 +55,11 @@ public class BuildingPicHotspot implements Parcelable{
 			j = i;
 		}
 		return oddNodes;
-		
 
 	}
 
 	public String getBuildingCode() {
 		return buildingCode;
-	}
-
-	public String getBuildingBlock() {
-		return buildingBlock;
 	}
 
 	public String getNameEn() {
@@ -85,28 +81,26 @@ public class BuildingPicHotspot implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		//We build these objects by hand so
-		//we know that these string will never be null
+		// We build these objects by hand so
+		// we know that these string will never be null
 		dest.writeString(namePt);
 		dest.writeString(nameEn);
 		dest.writeString(buildingCode);
-		dest.writeString(buildingBlock);
 		dest.writeIntArray(polyX);
 		dest.writeIntArray(polyY);
 		dest.writeIntArray(floors);
 	}
-	
-	private BuildingPicHotspot(Parcel in){
+
+	private BuildingPicHotspot(Parcel in) {
 		namePt = in.readString();
 		nameEn = in.readString();
 		buildingCode = in.readString();
-		buildingBlock = in.readString();
 		polyX = in.createIntArray();
 		polyY = in.createIntArray();
 		floors = in.createIntArray();
-		
+
 	}
-	
+
 	public static final Parcelable.Creator<BuildingPicHotspot> CREATOR = new Parcelable.Creator<BuildingPicHotspot>() {
 		public BuildingPicHotspot createFromParcel(Parcel in) {
 			return new BuildingPicHotspot(in);

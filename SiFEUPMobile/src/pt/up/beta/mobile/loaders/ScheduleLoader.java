@@ -16,20 +16,18 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.util.List;
-
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.datatypes.ScheduleBlock;
+import pt.up.beta.mobile.datatypes.Schedule;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -38,7 +36,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
+public class ScheduleLoader extends AsyncTaskLoader<Schedule> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -47,12 +45,12 @@ public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<ScheduleBlock> scheduleBlocks;
+	Schedule scheduleBlocks;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<ScheduleBlock> loadInBackground() {
+	public Schedule loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -67,11 +65,10 @@ public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
 			if (cursor.moveToFirst()) {
 				final String page = cursor.getString(cursor
 						.getColumnIndex(SigarraContract.Schedule.CONTENT));
-				final long millis = cursor.getLong(cursor
-						.getColumnIndex(SigarraContract.Schedule.BASE_TIME));
 				try {
-					return ScheduleBlock.parseListJSON(page, millis);
-				} catch (JSONException e) {
+					final Gson gson = new Gson();
+					return gson.fromJson(page, Schedule.class);
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
@@ -95,24 +92,19 @@ public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<ScheduleBlock> scheduleBlocks) {
+	public void deliverResult(Schedule scheduleBlocks) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (scheduleBlocks != null) {
-				scheduleBlocks.clear();
-			}
+			if (scheduleBlocks != null && scheduleBlocks.getBlocks() != null)
+				scheduleBlocks.getBlocks().clear();
+			scheduleBlocks = null;
 			return;
 		}
-		final List<ScheduleBlock> oldScheduleBlocks = this.scheduleBlocks;
 		this.scheduleBlocks = scheduleBlocks;
 		if (isStarted()) {
 			super.deliverResult(scheduleBlocks);
 		}
 
-		if (oldScheduleBlocks != null && oldScheduleBlocks != scheduleBlocks
-				&& oldScheduleBlocks.size() != 0) {
-			oldScheduleBlocks.clear();
-		}
 	}
 
 	/**
@@ -170,9 +162,9 @@ public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
 	}
 
 	@Override
-	public void onCanceled(List<ScheduleBlock> scheduleBlocks) {
+	public void onCanceled(Schedule scheduleBlocks) {
 		if (scheduleBlocks != null) {
-			scheduleBlocks.clear();
+			scheduleBlocks = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -190,8 +182,8 @@ public class ScheduleLoader extends AsyncTaskLoader<List<ScheduleBlock>> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (scheduleBlocks != null)
-			scheduleBlocks.clear();
+		if (scheduleBlocks != null && scheduleBlocks.getBlocks() != null)
+			scheduleBlocks.getBlocks().clear();
 		scheduleBlocks = null;
 	}
 }

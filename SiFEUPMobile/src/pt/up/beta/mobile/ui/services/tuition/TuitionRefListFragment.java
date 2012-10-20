@@ -108,11 +108,11 @@ public class TuitionRefListFragment extends BaseFragment implements
 
 		for (RefMB r : currentYear.getReferences()) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("name", r.getName());
-			map.put("amount", Double.toString(r.getAmount()) + "€");
-			map.put("date", r.getStartDate().format3339(true) + " "
+			map.put(from[0], r.getName());
+			map.put(from[1], Double.toString(r.getAmount()) + "€");
+			map.put(from[2], r.getStartDate() + " "
 					+ getString(R.string.interval_separator) + " "
-					+ r.getEndDate().format3339(true));
+					+ r.getEndDate());
 			fillMaps.add(map);
 		}
 

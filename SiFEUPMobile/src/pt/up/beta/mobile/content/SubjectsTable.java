@@ -3,29 +3,31 @@ package pt.up.beta.mobile.content;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-class SubjectsTable implements BaseColumns{
+class SubjectsTable implements BaseColumns {
 
 	// Database table
 	static final String TABLE = "subjects";
-	
+
 	static final String COLUMN_USER_NAME = "_id";
 	static final String COLUMN_CODE = "code";
 	static final String COLUMN_NAME_PT = "name_pt";
 	static final String COLUMN_NAME_EN = "name_en";
-	static final String COLUMN_YEAR = "year";
-	static final String COLUMN_PERIOD = "period";
 	static final String COLUMN_CONTENT = "content";
 	static final String COLUMN_FILES = "files";
+	static final String COLUMN_COURSE_CODE = "course_id";
+	static final String COLUMN_COURSE_NAME = "course_name";
+	static final String COLUMN_ENTRY = "course_entry";
 
 	// Database creation SQL statement
-	private static final String TABLE_CREATE = "create table "
-			+ TABLE + "(" + COLUMN_USER_NAME + " text not null, "
-			+ COLUMN_CODE + " text not null, " + COLUMN_YEAR
-			+ " text not null," + COLUMN_PERIOD + " text not null,"
-			+ COLUMN_NAME_PT + " text ," + COLUMN_NAME_EN + " text ,"
-			+ COLUMN_CONTENT + " text not null," + COLUMN_FILES
-			+ " text not null," + SQL_CREATE_STATE + ", PRIMARY KEY (" + COLUMN_USER_NAME + ","
-			+ COLUMN_CODE + "," + COLUMN_YEAR + "," + COLUMN_PERIOD + "));";
+	private static final String TABLE_CREATE = "CREATE TABLE " + TABLE + "("
+			+ COLUMN_USER_NAME + " TEXT NOT NULL, " + COLUMN_CODE
+			+ " TEXT NOT NULL, " + COLUMN_NAME_PT + " TEXT ," + COLUMN_NAME_EN
+			+ " TEXT DEFAULT NULL," + COLUMN_CONTENT + " TEXT NOT NULL,"
+			+ COLUMN_FILES + " TEXT NOT NULL," + COLUMN_COURSE_CODE
+			+ " TEXT DEFAULT NULL," + COLUMN_COURSE_NAME
+			+ " TEXT DEFAULT NULL," + COLUMN_ENTRY + " TEXT DEFAULT NULL,"
+			+ SQL_CREATE_STATE + ", PRIMARY KEY (" + COLUMN_USER_NAME + ","
+			+ COLUMN_CODE + "));";
 
 	static void onCreate(SQLiteDatabase database) {
 		database.execSQL(TABLE_CREATE);

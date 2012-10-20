@@ -8,16 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.content.SigarraContract;
-import android.database.Cursor;
-import android.util.Log;
-
 /**
  * @author Rui Araújo
  * 
  */
-@SuppressWarnings({ "unused", "serial" })
-public class Subject implements Serializable {
+public class Subject {
 	/** Subject code - EIC0083 */
 	private String code;
 
@@ -89,14 +84,14 @@ public class Subject implements Serializable {
 	
 	private SubjectFiles files;
 
-	public Subject() {
-		responsibles = new ArrayList<Responsible>();
-		workload = new ArrayList<Workload>();
-		worloadDesc = new ArrayList<WorloadDesc>();
-		evaluation = new ArrayList<EvaluationComponent>();
-		bibliography = new ArrayList<Book>();
-		software = new ArrayList<Software>();
-	}
+    public Subject() {
+            responsibles = new ArrayList<Responsible>();
+            workload = new ArrayList<Workload>();
+            worloadDesc = new ArrayList<WorloadDesc>();
+            evaluation = new ArrayList<EvaluationComponent>();
+            bibliography = new ArrayList<Book>();
+            software = new ArrayList<Software>();
+    }
 
 	public String getCode() {
 		return code;
@@ -291,7 +286,7 @@ public class Subject implements Serializable {
 	}
 
 	/** */
-	public class Book implements Serializable {
+	public static class Book implements Serializable {
 
 		/** */
 		private String type;
@@ -361,7 +356,7 @@ public class Subject implements Serializable {
 	}
 
 	/** */
-	private class Workload implements Serializable {
+	private static class Workload implements Serializable {
 
 		/** */
 		private String type;
@@ -374,7 +369,7 @@ public class Subject implements Serializable {
 	}
 
 	/** */
-	public class EvaluationComponent implements Serializable {
+	public static class EvaluationComponent implements Serializable {
 
 		/** */
 		private String description;
@@ -444,7 +439,7 @@ public class Subject implements Serializable {
 	}
 
 	/** */
-	private class Responsible implements Serializable {
+	private static class Responsible{
 
 		/** */
 		private String code;
@@ -457,7 +452,7 @@ public class Subject implements Serializable {
 	}
 
 	/** */
-	private class WorloadDesc implements Serializable {
+	private static class WorloadDesc {
 
 		/** */
 		private String type;
@@ -484,7 +479,7 @@ public class Subject implements Serializable {
 
 	}
 
-	public class Teacher implements Serializable {
+	public static class Teacher implements Serializable {
 
 		/** */
 		private String code;
@@ -527,7 +522,7 @@ public class Subject implements Serializable {
 		}
 	}
 
-	public class Software implements Serializable {
+	public static class Software  {
 
 		/** */
 		private String description;
@@ -730,55 +725,5 @@ public class Subject implements Serializable {
 		return res;
 	}
 
-	public static List<Subject> parseSubjectList(final String page)
-			throws JSONException {
-		final List<Subject> subjects = new ArrayList<Subject>();
-		final JSONObject jObject = new JSONObject(page);
-
-		if (jObject.has("inscricoes")) {
-			Log.v("JSON", "founded disciplines");
-			final JSONArray jArray = jObject.getJSONArray("inscricoes");
-
-			// iterate over jArray
-			for (int i = 0; i < jArray.length(); i++) {
-				// new JSONObject
-				final JSONObject jSubject = jArray.getJSONObject(i);
-				final Subject subject = new Subject();
-
-				if (jSubject.has("dis_codigo"))
-					subject.setCode(jSubject.getString("dis_codigo"));
-				if (jSubject.has("ano_curricular"))
-					subject.setYear(jSubject.getString("ano_curricular"));
-				subject.setNamePt(jSubject.optString("nome"));
-				subject.setNameEn(jSubject.optString("name"));
-				subject.setSemester(jSubject.optString("periodo"));
-
-				// add block to schedule
-				subjects.add(subject);
-			}
-		}
-		return subjects;
-	}
-
-	public static List<Subject> parseCursor(Cursor cursor) {
-		final List<Subject> subjects = new ArrayList<Subject>();
-		if (cursor.moveToFirst()) {
-			do {
-				final Subject subject = new Subject();
-				subject.setCode(cursor.getString(cursor
-						.getColumnIndex(SigarraContract.SubjectsColumns.CODE)));
-				subject.setYear(cursor.getString(cursor
-						.getColumnIndex(SigarraContract.SubjectsColumns.YEAR)));
-				subject.setNamePt(cursor.getString(cursor
-						.getColumnIndex(SigarraContract.SubjectsColumns.NAME_PT)));
-				subject.setNameEn(cursor.getString(cursor
-						.getColumnIndex(SigarraContract.SubjectsColumns.NAME_EN)));
-				subject.setSemester(cursor.getString(cursor
-						.getColumnIndex(SigarraContract.SubjectsColumns.PERIOD)));
-				subjects.add(subject);
-			} while (cursor.moveToNext());
-		}
-		return subjects;
-	}
 
 }

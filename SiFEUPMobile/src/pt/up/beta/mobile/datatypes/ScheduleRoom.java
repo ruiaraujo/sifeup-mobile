@@ -1,30 +1,28 @@
 package pt.up.beta.mobile.datatypes;
 
+import com.google.gson.annotations.SerializedName;
+
+import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ScheduleRoom implements Parcelable {
+	@SerializedName("espaco_id")
+	private final String roomCode; // 70252
+	@SerializedName("espaco_nome")
+	private final String roomName; // B002
 	
-	private final String roomCode; // 002
-	private final String buildingCode; // B
-	private final String blockCode; // ii
-	
-	public ScheduleRoom(String buildingCode, String blockCode, String roomCode) {
+	public ScheduleRoom(String blockCode, String roomCode) {
 		this.roomCode = roomCode;
-		this.buildingCode = buildingCode;
-		this.blockCode = blockCode;
+		this.roomName = blockCode;
 	}
 
 	public String getRoomCode() {
 		return roomCode;
 	}
 
-	public String getBuildingCode() {
-		return buildingCode;
-	}
-
-	public String getBlockCode() {
-		return blockCode;
+	public String getRoomName() {
+		return roomName;
 	}
 
 	@Override
@@ -34,21 +32,13 @@ public class ScheduleRoom implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(roomCode!=null?1:0);
-		if ( roomCode != null ) dest.writeString(roomCode);
-		dest.writeInt(buildingCode!=null?1:0);
-		if ( buildingCode != null ) dest.writeString(buildingCode);
-		dest.writeInt(blockCode!=null?1:0);
-		if ( blockCode != null ) dest.writeString(blockCode);
+		ParcelUtils.writeString(dest, roomCode);
+		ParcelUtils.writeString(dest, roomName);
 	}
 
 	private ScheduleRoom(Parcel in){
-		if ( in.readInt() == 1 ) roomCode = in.readString();
-		else roomCode = "";
-		if ( in.readInt() == 1 ) buildingCode = in.readString();
-		else buildingCode = "";
-		if ( in.readInt() == 1 ) blockCode = in.readString();
-		else blockCode = "";
+		roomCode = ParcelUtils.readString(in);
+		roomName = ParcelUtils.readString(in);
 	}
 	
     public static final Parcelable.Creator<ScheduleRoom> CREATOR = new Parcelable.Creator<ScheduleRoom>() {
@@ -63,6 +53,6 @@ public class ScheduleRoom implements Parcelable {
     
 	@Override
 	public String toString(){
-		return buildingCode+roomCode;
+		return roomName;
 	}
 }

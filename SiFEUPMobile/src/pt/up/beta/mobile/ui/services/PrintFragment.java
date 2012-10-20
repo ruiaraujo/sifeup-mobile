@@ -65,10 +65,16 @@ public class PrintFragment extends BaseFragment implements
 					public void onClick(View v) {
 						String newValue = value.getText().toString().trim();
 						try {
-							Double.valueOf(newValue);
+							if ( Double.valueOf(newValue) < 1.0) {
+								Toast.makeText(getActivity(),
+										getString(R.string.toast_invalid_value),
+										Toast.LENGTH_LONG).show();
+								value.requestFocus();
+								return;
+							}
 						} catch (NumberFormatException e) {
 							Toast.makeText(getActivity(),
-									getString(R.string.toast_auth_error),
+									getString(R.string.toast_invalid_value),
 									Toast.LENGTH_LONG).show();
 							value.requestFocus();
 							return;

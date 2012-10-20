@@ -3,19 +3,20 @@ package pt.up.beta.mobile.ui.personalarea;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.AcademicPath;
-import pt.up.beta.mobile.datatypes.AcademicUC;
 import pt.up.beta.mobile.datatypes.AcademicYear;
+import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.loaders.AcademicPathLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.webclient.WebviewActivity;
-import pt.up.beta.mobile.ui.webclient.WebviewFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -37,17 +39,15 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  * 
  */
 public class AcademicPathFragment extends BaseFragment implements
-		 OnChildClickListener, LoaderCallbacks<AcademicPath> {
+		OnChildClickListener, LoaderCallbacks<AcademicPath[]> {
 
 	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
 
 	/** All info about the student Academic Path */
-	private AcademicPath academicPath;
+	private AcademicPath[] academicPaths;
 
-	private TextView average;
-	private TextView year;
-
-	private ExpandableListView grades;
+	private ViewPager viewPager;
+	private TitlePageIndicator indicator;
 	private LayoutInflater mInflater;
 
 	@Override
@@ -61,25 +61,27 @@ public class AcademicPathFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.academic_path,
+		View root = inflater.inflate(R.layout.fragment_view_pager,
 				getParentContainer(), true);
-		grades = (ExpandableListView) root.findViewById(R.id.path_ucs_grade);
-		year = (TextView) root.findViewById(R.id.path_year);
-		average = (TextView) root.findViewById(R.id.path_average);
-		return getParentContainer(); // mandatory
+		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
+
+		// Find the indicator from the layout
+		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
+		return getParentContainer();// mandatory
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		if (academicPath != null)
-			outState.putParcelable(ACADEMIC_KEY, academicPath);
+		if (academicPaths != null)
+			outState.putParcelableArray(ACADEMIC_KEY, academicPaths);
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			academicPath = savedInstanceState.getParcelable(ACADEMIC_KEY);
-			if (academicPath == null)
+			academicPaths = (AcademicPath[]) savedInstanceState
+					.getParcelableArray(ACADEMIC_KEY);
+			if (academicPaths == null)
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
 			else {
@@ -91,45 +93,32 @@ public class AcademicPathFragment extends BaseFragment implements
 
 		}
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.webclient_menu_items, menu);
 		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_browser) {
-			Intent i = new Intent(getActivity(), WebviewActivity.class);
-			i.putExtra(WebviewFragment.URL_INTENT, SifeupAPI
-					.getAcademicPathSigarraUrl(AccountUtils
-							.getActiveUserCode(getActivity())));
-			startActivity(i);
-			return true;
-		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils.getActiveUserName(getActivity()));
+			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void displayData() {
-		average.setText(getString(R.string.path_average,
-				academicPath.getAverage()));
-		year.setText(getString(R.string.path_year,
-				academicPath.getCourseYears()));
-		grades.setAdapter(new AcademicPathAdapter());
-		grades.setOnChildClickListener(this);
 	}
 
 	private class AcademicPathAdapter extends BaseExpandableListAdapter {
 
 		public Object getChild(int groupPosition, int childPosition) {
-			AcademicYear year = academicPath.getUcs().get(groupPosition);
+			AcademicYear year = academicPaths[viewPager.getCurrentItem()]
+					.getUcs().get(groupPosition);
 			if (childPosition == 0) {
 				// first marker
 				return null;
@@ -137,7 +126,7 @@ public class AcademicPathFragment extends BaseFragment implements
 				// second marker
 				return null;
 			}
-			AcademicUC uc = null;
+			SubjectEntry uc = null;
 			if (childPosition <= year.getFirstSemester().size() + 1)
 				uc = year.getFirstSemester().get(childPosition - 1);
 			else
@@ -152,7 +141,8 @@ public class AcademicPathFragment extends BaseFragment implements
 
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
-			AcademicUC uc = (AcademicUC) getChild(groupPosition, childPosition);
+			SubjectEntry uc = (SubjectEntry) getChild(groupPosition,
+					childPosition);
 			if (uc == null) {
 				TextView marker = (TextView) mInflater.inflate(
 						R.layout.list_item_grade_marker, null);
@@ -177,26 +167,29 @@ public class AcademicPathFragment extends BaseFragment implements
 					.findViewById(R.id.grade_subject_name);
 			TextView gradeNumber = (TextView) root
 					.findViewById(R.id.grade_number);
-			gradeName.setText(uc.getNamePt());
-			gradeNumber.setText(getString(R.string.path_grade, uc.getGrade()));
+			gradeName.setText(uc.getUcurrnome());
+			gradeNumber.setText(getString(R.string.path_grade,
+					uc.getResultadomelhor()));
 			return root;
 		}
 
 		public int getChildrenCount(int groupPosition) {
 
-			AcademicYear year = academicPath.getUcs().get(groupPosition);
+			AcademicYear year = academicPaths[viewPager.getCurrentItem()]
+					.getUcs().get(groupPosition);
 			return year.getFirstSemester().size()
 					+ year.getSecondSemester().size() + 2;
 		}
 
 		public Object getGroup(int groupPosition) {
-			return getString(R.string.path_year,
-					academicPath.getUcs().get(groupPosition).getYear()
-							- academicPath.getBaseYear() + 1);
+			return getString(
+					R.string.path_year,
+					academicPaths[viewPager.getCurrentItem()].getUcs()
+							.get(groupPosition).getYear());
 		}
 
 		public int getGroupCount() {
-			return academicPath.getUcs().size();
+			return academicPaths[viewPager.getCurrentItem()].getUcs().size();
 		}
 
 		public long getGroupId(int groupPosition) {
@@ -228,7 +221,7 @@ public class AcademicPathFragment extends BaseFragment implements
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
-		AcademicUC uc = (AcademicUC) parent.getExpandableListAdapter()
+		SubjectEntry uc = (SubjectEntry) parent.getExpandableListAdapter()
 				.getChild(groupPosition, childPosition);
 		if (uc == null)
 			return true;
@@ -236,25 +229,18 @@ public class AcademicPathFragment extends BaseFragment implements
 			return true;
 		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
 
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
-				uc.getCourseAcronym());
-		i.putExtra(
-				SubjectDescriptionFragment.SUBJECT_YEAR,
-				Integer.toString(uc.getYear()) + "/"
-						+ Integer.toString(uc.getYear() + 1));
-		final String semester = uc.getSemester().equals("A") ? uc.getSemester()
-				: uc.getSemester() + "S";
-		i.putExtra(SubjectDescriptionFragment.SUBJECT_PERIOD, semester);
-		String title = uc.getNamePt();
-		if (!UIUtils.isLocalePortuguese() && uc.getNameEn().trim().length() > 0)
-			title = uc.getNameEn();
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, uc.getOcorrid());
+		String title = uc.getUcurrnome();
+		if (!UIUtils.isLocalePortuguese()
+				&& !TextUtils.isEmpty(uc.getUcurrname()))
+			title = uc.getUcurrname();
 		i.putExtra(Intent.EXTRA_TITLE, title);
 		startActivity(i);
 		return true;
 	}
 
 	@Override
-	public Loader<AcademicPath> onCreateLoader(int loaderId, Bundle options) {
+	public Loader<AcademicPath[]> onCreateLoader(int loaderId, Bundle options) {
 		return new AcademicPathLoader(getActivity(),
 				SigarraContract.AcademicPath.CONTENT_URI,
 				SigarraContract.AcademicPath.COLUMNS,
@@ -265,17 +251,78 @@ public class AcademicPathFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<AcademicPath> loader, AcademicPath result) {
+	public void onLoadFinished(Loader<AcademicPath[]> loader,
+			AcademicPath[] result) {
 		if (result == null)
 			return;
-		academicPath = result;
-		displayData();
+		academicPaths = result;
+		viewPager.setAdapter(new PagerCourseAdapter());
+		indicator.setViewPager(viewPager);
 		setRefreshActionItemState(false);
 		showMainScreen();
 	}
 
 	@Override
-	public void onLoaderReset(Loader<AcademicPath> loader) {
+	public void onLoaderReset(Loader<AcademicPath[]> loader) {
+	}
+
+	class PagerCourseAdapter extends PagerAdapter {
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return academicPaths[position].getCourseName();
+		}
+
+		public void destroyItem(View collection, int position, Object view) {
+			((ViewPager) collection).removeView((View) view);
+
+		}
+
+		public int getCount() {
+			return academicPaths.length;
+		}
+
+		public Object instantiateItem(View collection, int position) {
+			ViewGroup root = (ViewGroup) mInflater.inflate(
+					R.layout.academic_path, getParentContainer(), false);
+			final ExpandableListView grades = (ExpandableListView) root
+					.findViewById(R.id.path_ucs_grade);
+			final TextView year = (TextView) root.findViewById(R.id.path_year);
+			final TextView average = (TextView) root
+					.findViewById(R.id.path_average);
+
+			final String averageStr;
+			if (academicPaths[position].getAverage() == null)
+				averageStr = getString(R.string.no_data);
+			else
+				averageStr = academicPaths[position].getAverage();
+			average.setText(getString(R.string.path_average, averageStr));
+			year.setText(getString(R.string.path_year,
+					academicPaths[position].getCourseYears()));
+			grades.setAdapter(new AcademicPathAdapter());
+			grades.setOnChildClickListener(AcademicPathFragment.this);
+			((ViewPager) collection).addView(root, 0);
+			return root;
+		}
+
+		public boolean isViewFromObject(View view, Object object) {
+			return view == ((View) object);
+		}
+
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {
+			indicator.setViewPager(viewPager);
+		}
+
+		public Parcelable saveState() {
+			return null;
+		}
+
+		public void startUpdate(View arg0) {
+		}
+
+		public void finishUpdate(View arg0) {
+		}
+
 	}
 
 }

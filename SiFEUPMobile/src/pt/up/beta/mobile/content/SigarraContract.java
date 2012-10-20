@@ -9,10 +9,11 @@ public final class SigarraContract {
 		String CODE = SubjectsTable.COLUMN_CODE;
 		String NAME_PT = SubjectsTable.COLUMN_NAME_PT;
 		String NAME_EN = SubjectsTable.COLUMN_NAME_EN;
-		String YEAR = SubjectsTable.COLUMN_YEAR;
-		String PERIOD = SubjectsTable.COLUMN_PERIOD;
 		String CONTENT = SubjectsTable.COLUMN_CONTENT;
 		String FILES = SubjectsTable.COLUMN_FILES;
+		String COURSE_ID = SubjectsTable.COLUMN_COURSE_CODE;
+		String COURSE_NAME = SubjectsTable.COLUMN_COURSE_NAME;
+		String COURSE_ENTRY = SubjectsTable.COLUMN_ENTRY;
 	}
 
 	public interface ProfileColumns {
@@ -54,10 +55,8 @@ public final class SigarraContract {
 		String CONTENT = ScheduleTable.KEY_CONTENT;
 		String INITIAL_DAY = ScheduleTable.KEY_INITIAL_DAY;
 		String FINAL_DAY = ScheduleTable.KEY_FINAL_DAY;
-		String BASE_TIME = ScheduleTable.KEY_BASE_TIME;
 		String TYPE = ScheduleTable.KEY_TYPE;
 	}
-	
 
 	public interface NotificationsColumns {
 		String CODE = NotificationsTable.KEY_ID_USER;
@@ -65,14 +64,11 @@ public final class SigarraContract {
 		String CONTENT = NotificationsTable.KEY_NOTIFICATION;
 		String STATE = NotificationsTable.KEY_STATE;
 	}
-	
-
 
 	public interface CanteensColumns {
 		String ID = CanteensTable.KEY_ID;
 		String CONTENT = CanteensTable.KEY_CONTENT;
 	}
-	
 
 	public interface LastSyncColumns {
 		String ID = LastSyncTable.KEY_USER;
@@ -93,6 +89,7 @@ public final class SigarraContract {
 			+ CONTENT_AUTHORITY);
 
 	static final String PATH_SUBJECTS = "subjects";
+	static final String PATH_SUBJECT = "subjects";
 	static final String PATH_FRIENDS = "friends";
 	static final String PATH_PROFILES = "profiles";
 	static final String PATH_PROFILES_PIC = "profiles_pic";
@@ -111,26 +108,29 @@ public final class SigarraContract {
 	public static class Subjects implements SubjectsColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_SUBJECTS).build();
+		public static final Uri CONTENT_ITEM_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_SUBJECT).build();
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.subject";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.subject";
 
-		/** Default "ORDER BY" clause. */
-		public static final String DEFAULT_SORT = PERIOD + " ASC, " + NAME_PT
-				+ " ASC, " + NAME_EN + " ASC ";
+		public static final String[] SUBJECTS_COLUMNS = {
+				SigarraContract.SubjectsColumns.COURSE_ID,
+				SigarraContract.SubjectsColumns.COURSE_NAME,
+				SigarraContract.SubjectsColumns.COURSE_ENTRY };
 
-		public static final String USER_SUBJECTS = USER_NAME + "=?";
+		public static final String USER_SUBJECTS = USER_NAME + "=? AND "
+				+ COURSE_ENTRY + " IS NOT NULL";
 
 		public static final String[] getUserSubjectsSelectionArgs(String code) {
 			return new String[] { code };
 		}
 
-		public static final String SUBJECT_SELECTION = CODE + "=? AND "
-				+ PERIOD + "=? AND " + YEAR + "=?";
+		public static final String[] SUBJECT_COLUMNS = { CONTENT, FILES };
+		public static final String SUBJECT_SELECTION = CODE + "=?";
 
-		public static final String[] getSubjectsSelectionArgs(String code,
-				String year, String period) {
-			return new String[] { code, period, year };
+		public static final String[] getSubjectsSelectionArgs(String code) {
+			return new String[] { code };
 		}
 	}
 
@@ -178,14 +178,13 @@ public final class SigarraContract {
 				String type) {
 			return new String[] { code, type };
 		}
-	
+
 		public static final String[] getProfilePicSelectionArgs(String code) {
 			return new String[] { code };
 		}
 
 		public static final String[] PROFILE_COLUMNS = { CONTENT };
 		public static final String[] PIC_COLUMNS = { PIC };
-
 
 	}
 
@@ -268,12 +267,10 @@ public final class SigarraContract {
 				+ INITIAL_DAY + "=? AND " + FINAL_DAY + "=? AND "
 				+ ScheduleTable.KEY_TYPE + "=? ";
 
-
-		public static final String[] getRoomScheduleSelectionArgs( String code, String initialDay,
-				String finalDay, long mondayMillis) {
-			return new String[] { code, initialDay,
-					finalDay, ScheduleTable.TYPE.ROOM,
-					Long.toString(mondayMillis) };
+		public static final String[] getRoomScheduleSelectionArgs(String code,
+				String initialDay, String finalDay, long mondayMillis) {
+			return new String[] { code, initialDay, finalDay,
+					ScheduleTable.TYPE.ROOM, Long.toString(mondayMillis) };
 		}
 
 		public static final String[] getStudentScheduleSelectionArgs(
@@ -296,12 +293,12 @@ public final class SigarraContract {
 					ScheduleTable.TYPE.UC, Long.toString(mondayMillis) };
 		}
 
-		public static final String[] COLUMNS = { CONTENT, BASE_TIME };
+		public static final String[] COLUMNS = { CONTENT };
 
 	}
-	
 
-	public static class Notifcations implements NotificationsColumns, NotificationsTable.STATE {
+	public static class Notifcations implements NotificationsColumns,
+			NotificationsTable.STATE {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_NOTIFICATIONS).build();
 
@@ -313,20 +310,20 @@ public final class SigarraContract {
 		public static final String[] getNotificationsSelectionArgs(String code) {
 			return new String[] { code };
 		}
-		
+
 		public static final String DEFAULT_SORT = STATE + " ASC ";
 
-		
-		public static final String UPDATE_NOTIFICATION = CODE + "=? AND " + ID_NOTIFICATION + "=?";
+		public static final String UPDATE_NOTIFICATION = CODE + "=? AND "
+				+ ID_NOTIFICATION + "=?";
 
-		public static final String[] getNotificationsSelectionArgs(String code, String id) {
+		public static final String[] getNotificationsSelectionArgs(String code,
+				String id) {
 			return new String[] { code, id };
 		}
 
 		public static final String[] COLUMNS = { CONTENT, STATE };
 
 	}
-	
 
 	public static class Canteens implements CanteensColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -336,11 +333,11 @@ public final class SigarraContract {
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.canteens";
 
 		public static final String DEFAULT_ID = CanteensTable.DEFAULT_ID;
-		
+
 		public static final String[] COLUMNS = { CONTENT };
 
 	}
-	
+
 	public static class LastSync implements LastSyncColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
 				.appendPath(PATH_LAST_SYNC).build();
@@ -349,16 +346,14 @@ public final class SigarraContract {
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.last_sync";
 
 		public static final String PROFILE = ID + "=?";
-		
+
 		public static final String[] COLUMNS = null;
-		
+
 		public static final String[] getLastSyncSelectionArgs(String code) {
 			return new String[] { code };
 		}
 
 	}
-
-
 
 	private SigarraContract() {
 	}

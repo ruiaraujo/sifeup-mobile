@@ -9,11 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 public class YearsTuition implements Parcelable {
 	public static final int currentYear = 0;
@@ -146,6 +147,7 @@ public class YearsTuition implements Parcelable {
 
 	public static YearsTuition parseJSON(JSONObject yearInfo) {
 		try {
+			final Gson gson = new Gson();
 			final String year = yearInfo.getString("ano_lectivo");
 			final String courseCode = yearInfo.getString("curso_sigla");
 			final String courseName = yearInfo.getString("curso_nome");
@@ -182,11 +184,8 @@ public class YearsTuition implements Parcelable {
 			JSONArray jRefs = yearInfo.optJSONArray("referencias");
 			if (jRefs != null) {
 				for (int i = 0; i < jRefs.length(); i++) {
-					RefMB r = new RefMB();
-					if (r.load(jRefs.getJSONObject(i)))
-						references.add(r);
-					else
-						return null;
+					references.add(gson.fromJson(jRefs.getJSONObject(i)
+							.toString(), RefMB.class));
 				}
 			}
 			return new YearsTuition(year, courseCode, courseName, state, type,
@@ -199,9 +198,8 @@ public class YearsTuition implements Parcelable {
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"
-							+ AccountUtils
-									.getActiveUserCode(null)
-							+ "\n\n" + yearInfo.toString()));
+							+ AccountUtils.getActiveUserCode(null) + "\n\n"
+							+ yearInfo.toString()));
 			return null;
 
 		}
@@ -226,8 +224,7 @@ public class YearsTuition implements Parcelable {
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
 							new RuntimeException("Id:"
-									+ AccountUtils
-											.getActiveUserCode(null)
+									+ AccountUtils.getActiveUserCode(null)
 									+ "\n\n" + historyInfo.toString()));
 					return null;
 				}

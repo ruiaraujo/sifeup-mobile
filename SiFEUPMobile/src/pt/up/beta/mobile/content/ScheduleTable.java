@@ -8,7 +8,6 @@ public class ScheduleTable implements BaseColumns {
 	// fields in the profiles table
 	static final String KEY_ID = "_id";
 	static final String KEY_TYPE = "type";
-	static final String KEY_BASE_TIME = "time";
 	static final String KEY_INITIAL_DAY = "initial_day";
 	static final String KEY_FINAL_DAY = "final_day";
 	static final String KEY_CONTENT = "content";
@@ -26,9 +25,8 @@ public class ScheduleTable implements BaseColumns {
 	private static final String TABLE_CREATE = "CREATE TABLE " + TABLE + " ("
 			+ KEY_ID + " TEXT PRIMARY KEY , " + KEY_CONTENT
 			+ " TEXT NOT NULL, " + KEY_TYPE + " TEXT NOT NULL, "
-			+ KEY_BASE_TIME + " TEXT NOT NULL, " + KEY_INITIAL_DAY
-			+ " TEXT NOT NULL, " + KEY_FINAL_DAY + " TEXT NOT NULL, "
-			+ SQL_CREATE_STATE + " );";
+			+ KEY_INITIAL_DAY + " TEXT NOT NULL, " + KEY_FINAL_DAY
+			+ " TEXT NOT NULL, " + SQL_CREATE_STATE + " );";
 
 	static void onCreate(SQLiteDatabase database) {
 		database.execSQL(TABLE_CREATE);

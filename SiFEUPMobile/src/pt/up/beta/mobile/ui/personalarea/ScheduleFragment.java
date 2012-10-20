@@ -6,6 +6,7 @@ import java.util.List;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.Schedule;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.loaders.ScheduleLoader;
@@ -60,7 +61,7 @@ import external.com.google.android.apps.iosched.util.MotionEventUtils;
  */
 public class ScheduleFragment extends BaseFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
-		OnClickListener, LoaderCallbacks<List<ScheduleBlock>> {
+		OnClickListener, LoaderCallbacks<Schedule> {
 
 	private final static String SCHEDULE_KEY = "pt.up.fe.mobile.ui.studentarea.SCHEDULE";
 	private final static String MILLISECONDS_KEY = "pt.up.fe.mobile.ui.studentarea.MILLISECONDS";
@@ -93,6 +94,7 @@ public class ScheduleFragment extends BaseFragment implements
 	final public static int SCHEDULE_EMPLOYEE = 1;
 	final public static int SCHEDULE_ROOM = 2;
 	final public static int SCHEDULE_UC = 3;
+	final public static int SCHEDULE_CLASS = 4;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -666,7 +668,7 @@ public class ScheduleFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<List<ScheduleBlock>> onCreateLoader(int loaderId,
+	public Loader<Schedule> onCreateLoader(int loaderId,
 			Bundle options) {
 		final Time monday = new Time(DateUtils.TIME_REFERENCE);
 		monday.set(mondayMillis);
@@ -709,19 +711,19 @@ public class ScheduleFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<ScheduleBlock>> loader,
-			List<ScheduleBlock> schedule) {
+	public void onLoadFinished(Loader<Schedule> loader,
+			Schedule schedule) {
 		if (getActivity() == null || schedule == null)
 			return;
 		removeDialog(DIALOG);
-		this.schedule = schedule;
+		this.schedule = schedule.getBlocks();
 		displaySchedule();
 		setRefreshActionItemState(false);
 		showMainScreen();
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<ScheduleBlock>> arg0) {
+	public void onLoaderReset(Loader<Schedule> arg0) {
 	}
 
 }

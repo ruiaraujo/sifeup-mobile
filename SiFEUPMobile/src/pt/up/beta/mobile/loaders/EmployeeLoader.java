@@ -17,7 +17,6 @@
 package pt.up.beta.mobile.loaders;
 
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
@@ -27,6 +26,8 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -64,14 +65,16 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					return Employee.parseJSON(cursor.getString(cursor.getColumnIndex(SigarraContract.Profiles.CONTENT)));
-				} catch (JSONException e) {
+					Gson gson = new Gson();
+					return gson.fromJson(cursor.getString(cursor
+							.getColumnIndex(SigarraContract.Profiles.CONTENT)),
+							Employee.class);
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
 							new RuntimeException("Id:"
-									+ AccountUtils
-											.getActiveUserCode(null)
+									+ AccountUtils.getActiveUserCode(null)
 									+ "\n\n" + cursor.getString(0)));
 				}
 			}

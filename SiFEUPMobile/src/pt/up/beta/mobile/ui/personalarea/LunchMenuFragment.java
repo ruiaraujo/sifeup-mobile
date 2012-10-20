@@ -58,7 +58,7 @@ public class LunchMenuFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		View root = inflater.inflate(R.layout.menus_canteens,
+		View root = inflater.inflate(R.layout.fragment_view_pager,
 				getParentContainer(), true);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 
@@ -107,9 +107,6 @@ public class LunchMenuFragment extends BaseFragment implements
 
 		viewPager.setAdapter(pagerAdapter);
 		indicator.setViewPager(viewPager);
-
-		// Start at a custom position
-		indicator.setCurrentItem(0);
 	}
 
 	@Override

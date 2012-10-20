@@ -17,16 +17,22 @@
 package pt.up.beta.mobile.loaders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.datatypes.Subject;
+import pt.up.beta.mobile.datatypes.StudentCourse;
+import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -35,7 +41,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
+public class SubjectsLoader extends AsyncTaskLoader<StudentCourse[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -44,12 +50,12 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<Subject> subjects;
+	StudentCourse[] subjects;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<Subject> loadInBackground() {
+	public StudentCourse[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -62,7 +68,42 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 			}
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
-				return Subject.parseCursor(cursor);
+				//This is not one of my finest moments
+				final Gson gson = new Gson();
+				final HashMap<String, List<SubjectEntry>> entries = new HashMap<String, List<SubjectEntry>>();
+				final HashMap<String, String> courses = new HashMap<String, String>();
+				do {
+					final String courseId = cursor
+							.getString(cursor
+									.getColumnIndex(SigarraContract.SubjectsColumns.COURSE_ID));
+					if (entries.get(courseId) == null) {
+						entries.put(courseId, new ArrayList<SubjectEntry>());
+						courses.put(
+								courseId,
+								cursor.getString(cursor
+										.getColumnIndex(SigarraContract.SubjectsColumns.COURSE_NAME)));
+					}
+					final List<SubjectEntry> courseEntries = entries
+							.get(courseId);
+					courseEntries
+							.add(gson.fromJson(
+									cursor.getString(cursor
+											.getColumnIndex(SigarraContract.SubjectsColumns.COURSE_ENTRY)),
+									SubjectEntry.class));
+				} while (cursor.moveToNext());
+				cursor.close();
+				final List<StudentCourse> coursesList = new ArrayList<StudentCourse>();
+				Iterator<Entry<String, List<SubjectEntry>>> iterator = entries
+						.entrySet().iterator();
+				while (iterator.hasNext()) {
+					Entry<String, List<SubjectEntry>> entry = iterator.next();
+					coursesList.add(new StudentCourse(entry.getKey(), null,
+							null, courses.get(entry.getKey()), null, null,
+							null, null, null, null, null, null, null, null,
+							null, null, entry.getValue().toArray(
+									new SubjectEntry[0])));
+				}
+				return coursesList.toArray(new StudentCourse[0]);
 			} else {
 				final Cursor syncState = getContext()
 						.getContentResolver()
@@ -75,7 +116,7 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 					if (syncState.getLong(syncState
 							.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) != 0) {
 						syncState.close();
-						return new ArrayList<Subject>();
+						return new StudentCourse[0];
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -95,24 +136,19 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<Subject> subjects) {
+	public void deliverResult(StudentCourse[] subjects) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
 			if (subjects != null) {
-				subjects.clear();
+				subjects = null;
 			}
 			return;
 		}
-		final List<Subject> oldSubjects = this.subjects;
 		this.subjects = subjects;
 		if (isStarted()) {
 			super.deliverResult(subjects);
 		}
 
-		if (oldSubjects != null && oldSubjects != subjects
-				&& oldSubjects.size() != 0) {
-			oldSubjects.clear();
-		}
 	}
 
 	/**
@@ -170,9 +206,9 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 	}
 
 	@Override
-	public void onCanceled(List<Subject> subjects) {
+	public void onCanceled(StudentCourse[] subjects) {
 		if (subjects != null) {
-			subjects.clear();
+			subjects = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -190,8 +226,6 @@ public class SubjectsLoader extends AsyncTaskLoader<List<Subject>> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (subjects != null)
-			subjects.clear();
 		subjects = null;
 	}
 }

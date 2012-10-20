@@ -2,31 +2,40 @@ package pt.up.beta.mobile.datatypes;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 import android.content.res.Resources;
 import android.text.TextUtils;
 
 public abstract class Profile {
 	
 	/** Employee code - "419454" */
+	@SerializedName("codigo")
 	protected String code;
 	
 	/** Employee name - "Gil António Oliveira da Silva" */
+	@SerializedName("nome")
 	protected String name;
 
 	/** Employee email - "gils@fe.up.pt" */
+	@SerializedName("email")
 	private String email;
 
 	/** Employee alternative email. May be empty. */
+	@SerializedName("email_alt")
 	private String emailAlt;
 
 	/** Employee Phone - "22 557 4109" */
+	@SerializedName("telefone")
 	private String phone;
 	
 	/** Employee Mobile Phone - 913970682 */
+	@SerializedName("telemovel")
 	private String mobilePhone;
 
 
 	/** Web page. May be empty. */
+	@SerializedName("pagina_web")
 	private String webPage;
 
 	

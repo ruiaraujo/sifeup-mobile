@@ -17,6 +17,7 @@ package pt.up.beta.mobile.syncadapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,8 @@ import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SyncStates;
 import pt.up.beta.mobile.datatypes.Notification;
-import pt.up.beta.mobile.datatypes.Subject;
+import pt.up.beta.mobile.datatypes.StudentCourse;
+import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
@@ -55,20 +57,19 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	final static String SINGLE_REQUEST = "single_request";
 	final static String REQUEST_TYPE = "request_type";
 
-	final static String SUBJECT = "subject";
-	final static String SUBJECT_CODE = "subject_code";
-	final static String SUBJECT_YEAR = "subject_year";
-	final static String SUBJECT_PERIOD = "subject_period";
-
 	final static String PROFILE = "profile";
 	final static String PROFILE_CODE = "profile_code";
 	final static String PROFILE_TYPE = "profile_type";
 
+	final static String SUBJECT = "subject";
 	final static String EXAMS = "exams";
 	final static String CANTEENS = "canteens";
 	final static String TUITION = "tuition";
@@ -76,14 +77,13 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	final static String PRINTING_QUOTA = "printing_quota";
 	final static String NOTIFICATIONS = "notifications";
 	final static String PROFILE_PIC = "pic";
-	final static String USER_CODE = "code";
+	final static String CODE = "code";
 
 	final static String SCHEDULE = "schedule";
 	final static String SCHEDULE_CODE = "schedule_code";
 	final static String SCHEDULE_TYPE = "schedule_type";
 	final static String SCHEDULE_INITIAL = "initial";
 	final static String SCHEDULE_FINAL = "final";
-	final static String SCHEDULE_BASE_TIME = "schedule_time";
 
 	private final AccountManager mAccountManager;
 
@@ -107,9 +107,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (extras.getBoolean(SINGLE_REQUEST)) {
 				Log.d(getClass().getSimpleName(), "Fetching Sigarra");
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
-					getSubject(account, extras.getString(SUBJECT_CODE),
-							extras.getString(SUBJECT_YEAR),
-							extras.getString(SUBJECT_PERIOD), authToken,
+					getSubject(account, extras.getString(CODE), authToken,
 							syncResult);
 					return;
 				}
@@ -129,7 +127,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 					return;
 				}
 				if (PROFILE_PIC.equals(extras.getSerializable(REQUEST_TYPE))) {
-					syncProfilePic(extras.getString(USER_CODE), authToken,
+					syncProfilePic(extras.getString(CODE), authToken,
 							syncResult);
 					return;
 				}
@@ -154,7 +152,6 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 							extras.getString(SCHEDULE_TYPE),
 							extras.getString(SCHEDULE_INITIAL),
 							extras.getString(SCHEDULE_FINAL),
-							extras.getString(SCHEDULE_BASE_TIME),
 							SyncStates.PRUNE, authToken, syncResult);
 					return;
 				}
@@ -176,7 +173,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			syncResult.stats.numAuthExceptions++;
 			e.printStackTrace();
 		} catch (IOException e) {
-			syncResult.stats.numIoExceptions++;
+			// syncResult.stats.numIoExceptions++;
 			e.printStackTrace();
 		} catch (JSONException e) {
 			syncResult.stats.numParseExceptions++;
@@ -288,12 +285,12 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		monday.normalize(false);
 		String finalDay = monday.format("%Y%m%d");
 		getSchedule(mAccountManager.getUserData(account, Constants.USER_CODE),
-				type, initialDay, finalDay, Long.toString(mondayMillis),
+				type, initialDay, finalDay,
 				SyncStates.KEEP, authToken, syncResult);
 	}
 
 	private void getSchedule(String code, String type, String initialDay,
-			String finalDay, String baseTime, String state, String authToken,
+			String finalDay, String state, String authToken,
 			SyncResult syncResult) throws JSONException,
 			AuthenticationException, IOException {
 		final String page;
@@ -319,7 +316,6 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		values.put(SigarraContract.ScheduleColumns.CONTENT, page);
 		values.put(SigarraContract.ScheduleColumns.INITIAL_DAY, initialDay);
 		values.put(SigarraContract.ScheduleColumns.FINAL_DAY, finalDay);
-		values.put(SigarraContract.ScheduleColumns.BASE_TIME, baseTime);
 		values.put(BaseColumns.COLUMN_STATE, state);
 		getContext().getContentResolver().insert(
 				SigarraContract.Schedule.CONTENT_URI, values);
@@ -359,7 +355,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncAcademicPath(Account account, String authToken,
 			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String academicPath = SifeupAPI.getReply(SifeupAPI
-				.getStudentSubjectsUrl(mAccountManager.getUserData(account,
+				.getStudentAcademicPathUrl(mAccountManager.getUserData(account,
 						Constants.USER_CODE), null, null), authToken,
 				getContext());
 		final ContentValues values = new ContentValues();
@@ -528,9 +524,9 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		return f.getAbsolutePath();
 	}
 
-	private void getSubject(Account account, String code, String year,
-			String period, String authToken, SyncResult syncResult)
-			throws JSONException, AuthenticationException, IOException {
+	private void getSubject(Account account, String code, String authToken,
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
 		if (TextUtils.isEmpty(code)) {
 			syncSubjects(account, authToken, syncResult);
 			return;
@@ -540,10 +536,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final String subjectFiles = SifeupAPI.getReply(
 				SifeupAPI.getSubjectFilestUrl(code), authToken, getContext());
 		final ContentValues values = new ContentValues();
-		values.put(SigarraContract.SubjectsColumns.USER_NAME, "");
+		values.put(SigarraContract.SubjectsColumns.USER_NAME, account.name);
 		values.put(SigarraContract.SubjectsColumns.CODE, code);
-		values.put(SigarraContract.SubjectsColumns.YEAR, year);
-		values.put(SigarraContract.SubjectsColumns.PERIOD, period);
 		values.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
 		values.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.PRUNE);
@@ -561,46 +555,54 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				SigarraContract.Subjects.USER_SUBJECTS,
 				SigarraContract.Subjects
 						.getUserSubjectsSelectionArgs(account.name));
-		int secondYearInt = DateUtils.secondYearOfSchoolYear();
-		final String page = SifeupAPI.getReply(SifeupAPI.getStudentSubjectsUrl(
-				mAccountManager.getUserData(account, Constants.USER_CODE),
-				Integer.toString(secondYearInt - 1),
-				Integer.toString(secondYearInt)), authToken, getContext());
-		final List<Subject> subjects = Subject.parseSubjectList(page);
-		final int secondYear = DateUtils.secondYearOfSchoolYear();
-		final String year = Integer.toString(secondYear - 1) + "/"
-				+ Integer.toString(secondYear);
-		final ContentValues[] values = new ContentValues[subjects.size()];
-		int i = 0;
-		for (Subject subject : subjects) {
-			final String subjectContent = SifeupAPI.getReply(
-					SifeupAPI.getSubjectProfileUrl(subject.getCode()),
-					authToken, getContext());
-			final String subjectFiles = SifeupAPI.getReply(
-					SifeupAPI.getSubjectFilestUrl(subject.getCode()),
-					authToken, getContext());
-			final ContentValues value = new ContentValues();
-			value.put(SigarraContract.SubjectsColumns.USER_NAME, account.name);
-			value.put(SigarraContract.SubjectsColumns.CODE, subject.getCode());
-			value.put(SigarraContract.SubjectsColumns.YEAR, year);
-			value.put(SigarraContract.SubjectsColumns.PERIOD,
-					subject.getSemestre());
-			value.put(SigarraContract.SubjectsColumns.NAME_PT,
-					subject.getNamePt());
-			value.put(SigarraContract.SubjectsColumns.NAME_EN,
-					subject.getNameEn());
-			value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
-			value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
-			value.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
-			values[i++] = value;
+		final String subjectsPage = SifeupAPI
+				.getReply(SifeupAPI
+						.getStudentCurrentSubjectsUrl(mAccountManager
+								.getUserData(account, Constants.USER_CODE)),
+						authToken, getContext());
+		final Gson gson = new Gson();
+		Type listType = new TypeToken<StudentCourse[]>() {
+		}.getType();
+		final StudentCourse[] courses = gson.fromJson(subjectsPage, listType);
+		final List<ContentValues> values = new ArrayList<ContentValues>();
+		for (StudentCourse course : courses) {
+			for (SubjectEntry subject : course.getSubjectEntries()) {
+				final String subjectContent = SifeupAPI.getReply(
+						SifeupAPI.getSubjectProfileUrl(subject.getOcorrid()),
+						authToken, getContext());
+				final String subjectFiles = SifeupAPI.getReply(
+						SifeupAPI.getSubjectFilestUrl(subject.getOcorrid()),
+						authToken, getContext());
+				final ContentValues value = new ContentValues();
+				value.put(SigarraContract.SubjectsColumns.USER_NAME,
+						account.name);
+				value.put(SigarraContract.SubjectsColumns.CODE,
+						subject.getOcorrid());
+				value.put(SigarraContract.SubjectsColumns.NAME_PT,
+						subject.getUcurrnome());
+				value.put(SigarraContract.SubjectsColumns.NAME_EN,
+						subject.getUcurrname());
+				value.put(SigarraContract.SubjectsColumns.CONTENT,
+						subjectContent);
+				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
+				value.put(SigarraContract.SubjectsColumns.COURSE_ID,
+						course.getCourseId());
+				value.put(SigarraContract.SubjectsColumns.COURSE_NAME,
+						course.getCourseName());
+				value.put(SigarraContract.SubjectsColumns.COURSE_ENTRY,
+						gson.toJson(subject));
+				value.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
+				values.add(value);
+			}
 		}
-		if (values.length > 0)
+		if (values.size() > 0)
 			getContext().getContentResolver().bulkInsert(
-					SigarraContract.Subjects.CONTENT_URI, values);
+					SigarraContract.Subjects.CONTENT_URI,
+					values.toArray(new ContentValues[0]));
 		else
 			getContext().getContentResolver().notifyChange(
 					SigarraContract.Subjects.CONTENT_URI, null);
-		syncResult.stats.numEntries += subjects.size();
+		syncResult.stats.numEntries += values.size();
 	}
 
 }

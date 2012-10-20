@@ -16,7 +16,7 @@ public class AcademicPathTable implements BaseColumns {
     private static final String TABLE_CREATE = "CREATE TABLE "
             + TABLE + " (" + KEY_ID_USER
             + " TEXT PRIMARY KEY , " + KEY_CONTENT
-            + " TEXT NOT NULL, " + SQL_CREATE_STATE
+            + " TEXT DEFAULT NULL, " + SQL_CREATE_STATE
             + " );";
     
 	static void onCreate(SQLiteDatabase database) {

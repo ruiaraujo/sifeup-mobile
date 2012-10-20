@@ -1,12 +1,23 @@
 package pt.up.beta.mobile.ui.facilities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
-import external.com.google.android.apps.iosched.util.UIUtils;
-
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sifeup.FacilitiesUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand;
+import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import pt.up.beta.mobile.ui.utils.TouchImageView;
+import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -16,14 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.ZoomControls;
-
-import pt.up.beta.mobile.sifeup.FacilitiesUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
-import pt.up.beta.mobile.ui.utils.TouchImageView;
-import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
-import pt.up.beta.mobile.R;
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 /**
  * This interface is responsible for displaying information detailed of a
@@ -33,12 +37,10 @@ import pt.up.beta.mobile.R;
  * 
  */
 public class FeupFacilitiesFragment extends BaseFragment implements
-		ResponseCommand<Bitmap>, OnTapListener {
+		ResponseCommand<List<BuildingPicHotspot>>, OnTapListener {
 
 	private TouchImageView pic;
 	private List<BuildingPicHotspot> hotspots;
-	private HotspotBuilder hotspotBuilder = new HotspotBuilder();;
-	
 	static final String welcomeScreenShownPref = "welcomeScreenShown";
 
 	@Override
@@ -48,21 +50,55 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		final ViewGroup root = (ViewGroup) inflater.inflate(
 				R.layout.fragment_facility_pic, getParentContainer(), true);
 		pic = (TouchImageView) root.findViewById(R.id.facility_image);
-		final ZoomControls zoom =  (ZoomControls) root.findViewById(R.id.zoomControls);
-		if ( zoom != null) { //it will be null for Android 3.0+
-			zoom.setOnZoomInClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					pic.zoomIn();
+		final ZoomControls zoom = (ZoomControls) root
+				.findViewById(R.id.zoomControls);
+		new AsyncTask<Void, Void, Bitmap>() {
+
+			@Override
+			protected void onPostExecute(Bitmap result) {
+				pic.setImageBitmap(result);
+				pic.setMaxZoom(6);
+				pic.setOnTapListener(FeupFacilitiesFragment.this);
+				if (!getActivity().getPackageManager().hasSystemFeature(
+						PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT)
+						|| Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+					zoom.setOnZoomInClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							pic.zoomIn();
+						}
+					});
+					zoom.setOnZoomOutClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							pic.zoomOut();
+						}
+					});
+				} else
+					zoom.setVisibility(View.GONE);
+			}
+
+			@Override
+			protected Bitmap doInBackground(Void... params) {
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				final InputStream is = getResources()
+						.openRawResource(R.raw.map);
+				int nRead;
+				byte[] data = new byte[16384];
+				try {
+					while ((nRead = is.read(data, 0, data.length)) != -1) {
+						buffer.write(data, 0, nRead);
+					}
+
+					buffer.flush();
+
+					final byte[] baf = buffer.toByteArray();
+					return BitmapFactory.decodeByteArray(baf, 0, baf.length);
+				} catch (Exception e) {
 				}
-			});
-			zoom.setOnZoomOutClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					pic.zoomOut();
-				}
-			});
-		}
+				return null;
+			}
+		}.execute();
 		return getParentContainer();
 	}
 
@@ -70,46 +106,13 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		task = FacilitiesUtils.getBuildingsHotspot(getResources()
-				.openRawResource(R.raw.buildings_coordinates), hotspotBuilder);
-	}
-
-	public void onError(ERROR_TYPE error) {
-		if (getActivity() == null)
-			return;
-		if (error == ERROR_TYPE.NETWORK)
-			showRepeatTaskScreen(getString(R.string.toast_server_error));
-		else
-			showEmptyScreen(getString(R.string.general_error));
-	}
-
-	@Override
-	public void onResultReceived(Bitmap results) {
-		if (getActivity() == null)
-			return;
-		pic.setImageBitmap( results);
-		pic.setMaxZoom(6);
-		pic.setOnTapListener(this);
-		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
-
-		if (!welcomeScreenShown) {
-			Toast.makeText(getActivity(),
-					R.string.toast_first_map_view, Toast.LENGTH_LONG)
-					.show();
-			SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(welcomeScreenShownPref, true);
-			editor.commit();
-		}
-		showMainScreen();
+				.openRawResource(R.raw.buildings_coordinates), this);
 	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		if (hotspots == null)
-			task = FacilitiesUtils.getBuildingsHotspot(getResources()
-					.openRawResource(R.raw.buildings_coordinates), hotspotBuilder);
-		else
-			task = FacilitiesUtils.getBuildingPic("", "", "", this, getActivity());
+		task = FacilitiesUtils.getBuildingsHotspot(getResources()
+				.openRawResource(R.raw.buildings_coordinates), this);
 	}
 
 	@Override
@@ -153,24 +156,33 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		}
 		return true;
 	}
-	
-	private class HotspotBuilder implements ResponseCommand<List<BuildingPicHotspot>>{
 
-		@Override
-		public void onError(ERROR_TYPE error) {
-			if (getActivity() == null)
-				return;
-			if (error == ERROR_TYPE.NETWORK)
-				showRepeatTaskScreen(getString(R.string.toast_server_error));
-			else
-				showEmptyScreen(getString(R.string.general_error));
-		}
-
-		@Override
-		public void onResultReceived(List<BuildingPicHotspot> results) {
-			hotspots = results;
-			task = FacilitiesUtils.getBuildingPic("", "", "", FeupFacilitiesFragment.this, getActivity());			
-		}
-		
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		if (error == ERROR_TYPE.NETWORK)
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+		else
+			showEmptyScreen(getString(R.string.general_error));
 	}
+
+	@Override
+	public void onResultReceived(List<BuildingPicHotspot> results) {
+		hotspots = results;
+		SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		Boolean welcomeScreenShown = mPrefs.getBoolean(welcomeScreenShownPref,
+				false);
+
+		if (!welcomeScreenShown) {
+			Toast.makeText(getActivity(), R.string.toast_first_map_view,
+					Toast.LENGTH_LONG).show();
+			SharedPreferences.Editor editor = mPrefs.edit();
+			editor.putBoolean(welcomeScreenShownPref, true);
+			editor.commit();
+		}
+		showMainScreen();
+	}
+
 }

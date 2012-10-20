@@ -1,16 +1,13 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.content.res.Resources;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Class Employee
@@ -18,96 +15,55 @@ import android.content.res.Resources;
  * @author Ângela Igreja
  * 
  */
-@SuppressWarnings("serial")
-public class Employee extends Profile implements Serializable {
+public class Employee extends Profile {
 
 	/** Employee acronym - "GAOS" */
+	@SerializedName("sigla")
 	private String acronym;
 
 	/** Employee State - "A" */
+	@SerializedName("estado")
 	private String state;
 
 	/** Employee External Phone. May be empty. */
+	@SerializedName("ext_tel")
 	private String extPhone;
 
 	/** Employee Tele Alternative. May be empty. */
+	@SerializedName("tele_alt")
 	private String teleAlt;
 
 	/** Employee Voip Ext. - 3084 */
+	@SerializedName("voip_ext")
 	private Integer voipExt;
 
 	/** Employee Rooms - D109 */
+	@SerializedName("salas")
 	private List<Room> rooms;
 
-	public Employee() {
-		rooms = new ArrayList<Room>();
-	}
-
+	/** Employee Presentation. May be empty. */
+	@SerializedName("apresentacao")
+	private String presentation;
+	
+	/** Employee Presentation. May be empty. */
+	@SerializedName("apresentacao_uk")
+	private String presentationEn;
+	
 	/**
 	 * Class Room
 	 * 
 	 * @author Ângela Igreja
 	 * 
 	 */
-	private static class Room implements Serializable {
+	private static class Room{
 		/** Edi Code - "D" */
-		private String codEdi;
+		@SerializedName("sigla")
+		private String id;
 
 		/** Room Code - 109 */
-		private int codRoom;
+		@SerializedName("sigla")
+		private String acronym;
 
-	}
-
-	/**
-	 * Parses a JSON String containing Employee info.
-	 * 
-	 * @param page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-	public static Employee parseJSON(String page) throws JSONException {
-		JSONObject jObject = new JSONObject(page);
-		final Employee employee = new Employee();
-		if (jObject.has("codigo"))
-			employee.code = jObject.getString("codigo");
-		if (jObject.has("nome"))
-			employee.name = jObject.getString("nome");
-		if (jObject.has("pagina_web"))
-			employee.setWebPage(jObject.getString("pagina_web"));
-		if (jObject.has("sigla"))
-			employee.acronym = jObject.getString("sigla");
-		if (jObject.has("estado"))
-			employee.state = jObject.getString("estado");
-		if (jObject.has("email"))
-			employee.setEmail(jObject.getString("email"));
-		if (jObject.has("email_alt"))
-			employee.setEmailAlt(jObject.getString("email_alt"));
-		if (jObject.has("telefone"))
-			employee.setPhone(jObject.getString("telefone"));
-		if (jObject.has("ext_tel"))
-			employee.extPhone = jObject.getString("ext_tel");
-		if (jObject.has("voip_ext"))
-			employee.voipExt = jObject.getInt("voip_ext");
-		if (jObject.has("telemovel"))
-			employee.setMobilePhone(jObject.getString("telemovel"));
-
-		if (jObject.has("salas")) {
-			JSONArray jArray = jObject.getJSONArray("salas");
-
-			for (int i = 0; i < jArray.length(); i++) {
-				Room room = new Room();
-
-				JSONObject jRoom = jArray.getJSONObject(i);
-
-				if (jRoom.has("cod_edi"))
-					room.codEdi = jRoom.getString("cod_edi");
-				if (jRoom.has("cod_sala"))
-					room.codRoom = jRoom.getInt("cod_sala");
-
-				employee.rooms.add(room);
-			}
-		}
-		return employee;
 	}
 
 	public void setAcronym(String acronym) {
@@ -134,17 +90,18 @@ public class Employee extends Profile implements Serializable {
 		}
 		if (getEmail() != null && !getEmail().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_email), getEmail(), Type.EMAIL));
+					.getString(R.string.profile_title_email), getEmail(),
+					Type.EMAIL));
 		}
 		if (getEmailAlt() != null && !getEmailAlt().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_email_alt), getEmailAlt(),
-					Type.EMAIL));
+					.getString(R.string.profile_title_email_alt),
+					getEmailAlt(), Type.EMAIL));
 		}
 		if (getMobilePhone() != null && !getMobilePhone().equals("")) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_mobile), getMobilePhone(),
-					Type.MOBILE));
+					.getString(R.string.profile_title_mobile),
+					getMobilePhone(), Type.MOBILE));
 		}
 		if (getPhone() != null && !getPhone().equals("")) {
 			result.add(new ProfileDetail(res
@@ -172,16 +129,11 @@ public class Employee extends Profile implements Serializable {
 					Type.WEBPAGE));
 		}
 
-		StringBuilder roomCode = new StringBuilder();
 		for (Room r : rooms) {
 			// 3 is the regular ammount. This is loop only runs in the case
 			// of positive number under 100
-			for (int i = 0; i < 3 - Integer.toString(r.codRoom).length(); ++i)
-				roomCode.append('0');
-			roomCode.append(r.codRoom);
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_room), r.codEdi
-					+ roomCode.toString(), Type.ROOM));
+					.getString(R.string.profile_title_room), r.acronym, Type.ROOM));
 		}
 		return result;
 	}

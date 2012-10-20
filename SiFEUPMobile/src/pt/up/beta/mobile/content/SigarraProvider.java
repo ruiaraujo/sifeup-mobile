@@ -307,7 +307,6 @@ public class SigarraProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		final SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		final String orderBy;
 		final int uriType = sURIMatcher.match(uri);
 		final Cursor c;
 		switch (uriType) {
@@ -336,12 +335,8 @@ public class SigarraProvider extends ContentProvider {
 
 		case SUBJECTS:
 			qb.setTables(SubjectsTable.TABLE);
-			if (TextUtils.isEmpty(sortOrder))
-				orderBy = SigarraContract.Subjects.DEFAULT_SORT;
-			else
-				orderBy = sortOrder;
 			c = qb.query(getWritableDatabase(), projection, selection,
-					selectionArgs, null, null, orderBy);
+					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				final Cursor syncState = getContext()
 						.getContentResolver()
@@ -361,8 +356,7 @@ public class SigarraProvider extends ContentProvider {
 						if (selectionArgs.length == 3)
 							SigarraSyncAdapterUtils.syncSubject(AccountUtils
 									.getActiveUserName(getContext()),
-									selectionArgs[0], selectionArgs[2],
-									selectionArgs[1]);
+									selectionArgs[0]);
 						else
 							SigarraSyncAdapterUtils.syncSubjects(AccountUtils
 									.getActiveUserName(getContext()));
@@ -376,11 +370,9 @@ public class SigarraProvider extends ContentProvider {
 		case FRIENDS:
 			qb.setTables(FriendsTable.TABLE);
 			if (TextUtils.isEmpty(sortOrder))
-				orderBy = SigarraContract.Friends.DEFAULT_SORT;
-			else
-				orderBy = sortOrder;
+				sortOrder = SigarraContract.Friends.DEFAULT_SORT;
 			c = qb.query(getWritableDatabase(), projection, selection,
-					selectionArgs, null, null, orderBy);
+					selectionArgs, null, null, sortOrder);
 			break;
 		case PROFILES:
 			qb.setTables(ProfilesTable.TABLE);

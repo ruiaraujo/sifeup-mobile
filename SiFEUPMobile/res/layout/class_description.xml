@@ -55,6 +55,12 @@
             android:layout_gravity="left|center_vertical"
             android:paddingBottom="25dip"
             android:textSize="16.0sp" />
+        <LinearLayout
+            android:id="@+id/list_class"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
 
         <TextView
             android:id="@+id/class_start_time"

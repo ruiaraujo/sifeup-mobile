@@ -12,14 +12,14 @@ import android.os.Parcelable;
  * @author Rui Araújo
  * 
  */
-public class ScheduleTeacher implements Parcelable {
+public class ScheduleClass implements Parcelable {
 
-	@SerializedName("doc_codigo")
+	@SerializedName("turma_id")
 	private final String code;
-	@SerializedName("doc_nome")
+	@SerializedName("turma_sigla")
 	private final String name;
 
-	public ScheduleTeacher(String code, String name) {
+	public ScheduleClass(String code, String name) {
 		this.code = code;
 		this.name = name;
 	}
@@ -43,18 +43,18 @@ public class ScheduleTeacher implements Parcelable {
 		ParcelUtils.writeString(dest, name);
 	}
 
-	private ScheduleTeacher(Parcel in) {
+	private ScheduleClass(Parcel in) {
 		code = ParcelUtils.readString(in);
 		name = ParcelUtils.readString(in);
 	}
 
-	public static final Parcelable.Creator<ScheduleTeacher> CREATOR = new Parcelable.Creator<ScheduleTeacher>() {
-		public ScheduleTeacher createFromParcel(Parcel in) {
-			return new ScheduleTeacher(in);
+	public static final Parcelable.Creator<ScheduleClass> CREATOR = new Parcelable.Creator<ScheduleClass>() {
+		public ScheduleClass createFromParcel(Parcel in) {
+			return new ScheduleClass(in);
 		}
 
-		public ScheduleTeacher[] newArray(int size) {
-			return new ScheduleTeacher[size];
+		public ScheduleClass[] newArray(int size) {
+			return new ScheduleClass[size];
 		}
 	};
 

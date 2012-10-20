@@ -51,19 +51,14 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
 
-
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 public class SubjectDescriptionFragment extends BaseFragment implements
 		OnPageChangeListener, LoaderCallbacks<Subject> {
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE";
-	public final static String SUBJECT_YEAR = "pt.up.fe.mobile.ui.studentarea.SUBJECT_YEAR";
-	public final static String SUBJECT_PERIOD = "pt.up.fe.mobile.ui.studentarea.SUBJECT_PERIOD";
 
 	private String code;
-	private String year;
-	private String period;
 	private Subject subject;
 	private SubjectFiles subjectFiles;
 	/** */
@@ -143,7 +138,8 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncSubject(AccountUtils.getActiveUserName(getActivity()),code, year, period);
+			SigarraSyncAdapterUtils.syncSubject(
+					AccountUtils.getActiveUserName(getActivity()), code);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -157,7 +153,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	 */
 	class PagerSubjectAdapter extends PagerAdapter {
 		@Override
-	    public CharSequence getPageTitle(int position) {
+		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
 				return getString(R.string.objectives);
@@ -607,12 +603,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 	@Override
 	public Loader<Subject> onCreateLoader(int loaderId, Bundle args) {
 		return new SubjectLoader(getActivity(),
-				SigarraContract.Subjects.CONTENT_URI, new String[] {
-						SigarraContract.SubjectsColumns.CONTENT,
-						SigarraContract.SubjectsColumns.FILES },
+				SigarraContract.Subjects.CONTENT_ITEM_URI,
+				SigarraContract.Subjects.SUBJECT_COLUMNS,
 				SigarraContract.Subjects.SUBJECT_SELECTION,
-				SigarraContract.Subjects.getSubjectsSelectionArgs(code, year,
-						period), null);
+				SigarraContract.Subjects.getSubjectsSelectionArgs(code), null);
 	}
 
 	@Override

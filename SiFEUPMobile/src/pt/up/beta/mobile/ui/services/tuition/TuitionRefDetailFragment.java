@@ -56,16 +56,14 @@ public class TuitionRefDetailFragment extends Fragment {
 				.findViewById(R.id.tuition_ref_detail_date_start);
 		dataFim = (TextView) root
 				.findViewById(R.id.tuition_ref_detail_date_end);
-		String refStr = Long.toString(ref.getRef());
-		while (refStr.length() < 9)
-			refStr = "0" + refStr;
+		final String refStr = ref.getRef();
 		nome.setText(ref.getName());
-		entidade.setText(Long.toString(ref.getEntity()));
+		entidade.setText(ref.getEntity());
 		referencia.setText(refStr.substring(0, 3) + " "
 				+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
 		valor.setText(ref.getAmount() + "€");
-		dataIni.setText(ref.getStartDate().format3339(true));
-		dataFim.setText(ref.getEndDate().format3339(true));
+		dataIni.setText(ref.getStartDate());
+		dataFim.setText(ref.getEndDate());
 		return root;
 	}
 }

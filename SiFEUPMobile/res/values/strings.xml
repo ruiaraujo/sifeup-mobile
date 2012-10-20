@@ -131,6 +131,7 @@
     <string name="title_subjects">Subjects</string>
     <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
     <string name="lb_no_subjects">You have no subjects inscriptions</string>
+    <string name="lb_no_courses">You have no courses inscriptions</string>
 
     <!-- Subject Description -->
     <string name="objectives">Objectives</string>
@@ -262,6 +263,7 @@
     <string name="lb_print_ref_title">Generated Reference</string>
     <string name="print_ref_share_err">An error occurred when trying to share the reference.</string>
     <string name="print_ref_share_title">Share Reference</string>
+    <string name="toast_invalid_value">The inserted value is not supported.</string>
 
     <!-- Dynamic mail -->
     <string name="title_dynamic_mail_files">Dynamic Email Files</string>

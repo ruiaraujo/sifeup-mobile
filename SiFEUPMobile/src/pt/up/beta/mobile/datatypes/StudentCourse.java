@@ -1,35 +1,48 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
 
 public class StudentCourse {
+	@SerializedName("fest_id")
 	private final String courseId;
+	@SerializedName("fest_tipo")
 	private final String courseType;
+	@SerializedName("fest_tipo_descr")
 	private final String courseTypeDesc;
+	@SerializedName("cur_nome")
 	private final String courseName;
+	@SerializedName("fest_a_lect_1_insc")
 	private final String firstYear;
+	@SerializedName("fest_d_1_insc")
 	private final String firstDate;
+	@SerializedName("cur_id")
 	private final String degreeId;
+	@SerializedName("est_alectivo")
 	private final String currentYear;
+	@SerializedName("est_sig")
 	private final String state;
+	@SerializedName("est_nome")
 	private final String stateName;
+	@SerializedName("est_d_inicio")
 	private final String stateBegin;
+	@SerializedName("est_d_fim")
 	private final String stateEnd;
+	@SerializedName("inst_nome")
 	private final String placeName;
+	@SerializedName("inst_sigla")
 	private final String placeAcronym;
+	@SerializedName("ano_curricular")
 	private final String curriculumYear;
+	@SerializedName("media")
+	private final String average;
+	@SerializedName("inscricoes")
+	private final SubjectEntry[] subjectEntries;
 
 	public StudentCourse(String courseId, String courseType,
 			String courseTypeDesc, String courseName, String firstYear,
 			String firstDate, String degreeId, String currentYear,
 			String state, String stateName, String stateBegin, String stateEnd,
-			String placeName, String placeAcronym, String curriculumYear) {
-		super();
+			String placeName, String placeAcronym, String curriculumYear, String average, SubjectEntry[] subjectEntries) {
 		this.courseId = courseId;
 		this.courseType = courseType;
 		this.courseTypeDesc = courseTypeDesc;
@@ -45,6 +58,8 @@ public class StudentCourse {
 		this.placeName = placeName;
 		this.placeAcronym = placeAcronym;
 		this.curriculumYear = curriculumYear;
+		this.average = average;
+		this.subjectEntries = subjectEntries;
 	}
 
 	public String getCourseId() {
@@ -107,26 +122,38 @@ public class StudentCourse {
 		return curriculumYear;
 	}
 
-	public static List<StudentCourse> parseJSON(JSONArray array) throws JSONException {
-		final List<StudentCourse> arrayCourse = new ArrayList<StudentCourse>();
-		for (int i = 0; i < array.length(); ++i) {
-			JSONObject course = array.getJSONObject(i);
-			arrayCourse.add(new StudentCourse(course.getString("fest_id"),
-					course.getString("fest_tipo"), course
-							.getString("fest_tipo_descr"), course
-							.getString("cur_nome"), course
-							.getString("fest_a_lect_1_insc"), course
-							.getString("fest_d_1_insc"), course
-							.getString("cur_id"), course
-							.getString("est_alectivo"), course
-							.getString("est_sig"),
-					course.getString("est_nome"), course
-							.getString("est_d_inicio"), course
-							.getString("est_d_fim"), course
-							.getString("inst_nome"), course
-							.getString("inst_sigla"), course
-							.getString("ano_curricular")));
-		}
-		return arrayCourse;
+	public String getAverage() {
+		return average;
 	}
+	
+	public SubjectEntry[] getSubjectEntries() {
+		return subjectEntries;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((courseId == null) ? 0 : courseId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StudentCourse other = (StudentCourse) obj;
+		if (courseId == null) {
+			if (other.courseId != null)
+				return false;
+		} else if (!courseId.equals(other.courseId))
+			return false;
+		return true;
+	}
+
 }

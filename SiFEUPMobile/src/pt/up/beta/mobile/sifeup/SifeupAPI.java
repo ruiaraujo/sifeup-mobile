@@ -73,14 +73,11 @@ public class SifeupAPI {
 		String AUTHENTICATION = "mob_val_geral.";
 
 		// External Services
-		String FACILITIES_IMG = "img.";
 		String PEOPLE_PIC = "fotografias_service.";
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
 		String NOTIFICATION_SIGARRA = "wf_geral.";
 		String ROOM_FINDER = "salas_geral.";
-		String ACADEMIC_PATH_SIGARRA = "alunos_ficha.";
-
 	}
 
 	// MOB_EME_GERAL
@@ -90,11 +87,6 @@ public class SifeupAPI {
 	}
 
 	// MOB_FEST_GERAL
-
-	private interface StudentAverage {
-		String NAME = "media";
-		String COURSE_ID = "pv_fest_id";
-	}
 
 	private interface StudentProfile {
 		String NAME = "perfil";
@@ -113,11 +105,14 @@ public class SifeupAPI {
 		String CODE = "pv_codigo";
 	}
 
-	private interface StudentSubjects {
-		String NAME = "ucurr_inscricoes";
-		String COURSE_ID = "pv_fest_id";
-		String YEAR_MIN = "pv_ano_lectivo_min";
-		String YEAR_MAX = "pv_ano_lectivo_max";
+	private interface StudentCurrentSubjects {
+		String NAME = "ucurr_inscricoes_corrente";
+		String CODE = "pv_codigo";
+	}
+
+	private interface StudentAcademicPath {
+		String NAME = "percurso_academico";
+		String CODE = "pv_codigo";
 	}
 
 	// MOB_FUNC_GERAL
@@ -204,7 +199,7 @@ public class SifeupAPI {
 
 	// .GERAR_REFERENCIA_MB
 	private interface PrintingRef {
-		String NAME = "gerar_propinas_mb";
+		String NAME = "gerar_referencia_mb";
 		String CODE = "pv_codigo";
 		String VALUE = "pv_valor";
 	}
@@ -331,22 +326,19 @@ public class SifeupAPI {
 	}
 
 	private interface BuildingPic {
-		String NAME = "edi_img_grande";
-		String BUILDING = "p_edi";
-		String FLOOR = "p_piso";
-		String BLOCK = "p_bloco";
+		String NAME = "get_edificio_mapa";
+		String BUILDING = "pv_edificio_id";
+		String FLOOR = "pv_num_piso";
 	}
 
 	private interface RoomPic {
-		String NAME = "sala_img";
-		String BUILDING = "p_edi";
-		String ROOM = "p_sala";
+		String NAME = "get_espaco_mapa";
+		String CODE = "pv_id";
 	}
 
 	private interface RoomFinder {
 		String NAME = "click";
 		String BUILDING = "p_edi_cod_edi";
-		String BLOCK = "p_edi_cod_bloco";
 		String FLOOR = "p_piso";
 		String X = "x";
 		String Y = "y";
@@ -360,11 +352,6 @@ public class SifeupAPI {
 	private interface Exams {
 		String NAME = "exames";
 		String CODE = "pv_codigo";
-	}
-
-	private interface AcademicPathSigarra {
-		String NAME = "ficha";
-		String CODE = "p_cod";
 	}
 
 	private interface SubjectSigarraContent {
@@ -384,7 +371,7 @@ public class SifeupAPI {
 
 	public interface Errors {
 		int NULL_PAGE = 0;
-		int NO_AUTH = 1;
+		int ERROR = 1;
 		int NO_ERROR = 2;
 	}
 
@@ -392,7 +379,7 @@ public class SifeupAPI {
 	 * The student type returned by the authenticator
 	 */
 	public final static String STUDENT_TYPE = "A";
-	public final static String EMPLOYEE_TYPE = "E";
+	public final static String EMPLOYEE_TYPE = "F";
 
 	/**
 	 * Authentication Url for Web Service
@@ -489,26 +476,6 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.STUDENT + StudentProfile.NAME
 				+ WEBSERVICE_SEP + StudentProfile.CODE + EQUALS + code;
 	}
-	
-
-	/**
-	 * Academic Path Url for Web Service
-	 * 
-	 * @param code
-	 * @return url
-	 */
-	public static String getAcademicPathSigarraUrl(String code) {
-		return WEBSERVICE + WebServices.ACADEMIC_PATH_SIGARRA
-				+ AcademicPathSigarra.NAME + WEBSERVICE_SEP
-				+ AcademicPathSigarra.CODE + EQUALS + code;
-	}
-	
-
-	public static String getStudentAverageUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentAverage.NAME
-				+ WEBSERVICE_SEP + StudentAverage.COURSE_ID + EQUALS + code;
-	}
-
 
 	/**
 	 * Students Search Url for Web Service
@@ -522,7 +489,6 @@ public class SifeupAPI {
 				+ WEBSERVICE_SEP + StudentsSearch.STUDENT_NAME + EQUALS + query
 				+ LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
-
 
 	/**
 	 * Set Password Url for Web Service
@@ -599,6 +565,20 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.PRINTING + PrintingQuota.NAME
 				+ WEBSERVICE_SEP + PrintingQuota.CODE + EQUALS + code;
 	}
+	
+
+	/**
+	 * Printing MB Url for Web Service
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static String getPrintingRefUrl(String code, String value) {
+		return WEBSERVICE + WebServices.PRINTING + PrintingRef.NAME
+				+ WEBSERVICE_SEP + PrintingRef.CODE + EQUALS + code + LINK_SEP
+				+ PrintingRef.VALUE + EQUALS + value;
+	}
+
 
 	/**
 	 * Printing Url for Web Service
@@ -618,12 +598,21 @@ public class SifeupAPI {
 	 * @param code
 	 * @return
 	 */
-	public static String getStudentSubjectsUrl(String code, String minYear,
+	public static String getStudentAcademicPathUrl(String code, String minYear,
 			String maxYear) {
-		return WEBSERVICE + WebServices.STUDENT + StudentSubjects.NAME
-				+ WEBSERVICE_SEP + StudentSubjects.COURSE_ID + EQUALS + code
-				+ StudentSubjects.YEAR_MIN + EQUALS + minYear + LINK_SEP
-				+ StudentSubjects.YEAR_MAX + EQUALS + maxYear;
+		return WEBSERVICE + WebServices.STUDENT + StudentAcademicPath.NAME
+				+ WEBSERVICE_SEP + StudentAcademicPath.CODE + EQUALS + code;
+	}
+
+	/**
+	 * Get the current year's subjects
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static String getStudentCurrentSubjectsUrl(String code) {
+		return WEBSERVICE + WebServices.STUDENT + StudentCurrentSubjects.NAME
+				+ WEBSERVICE_SEP + StudentCurrentSubjects.CODE + EQUALS + code;
 	}
 
 	/**
@@ -638,7 +627,7 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SUBJECT + SubjectProfile.NAME
 				+ WEBSERVICE_SEP + SubjectProfile.CODE + EQUALS + code;
 	}
-	
+
 	public static String getSubjectOtherOccuencesUrl(String code) {
 		return WEBSERVICE + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
 				+ WEBSERVICE_SEP + SubjectOtherOccurrences.CODE + EQUALS + code;
@@ -711,18 +700,6 @@ public class SifeupAPI {
 	}
 
 	/**
-	 * Printing MB Url for Web Service
-	 * 
-	 * @param code
-	 * @return
-	 */
-	public static String getPrintingRefUrl(String code, String value) {
-		return WEBSERVICE + WebServices.PRINTING + PrintingRef.NAME
-				+ WEBSERVICE_SEP + PrintingRef.CODE + EQUALS + code + LINK_SEP
-				+ PrintingRef.VALUE + EQUALS + value;
-	}
-
-	/**
 	 * Canteens Url for Web Service
 	 * 
 	 * @return
@@ -749,12 +726,10 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String getBuildingPicUrl(String building, String block,
-			String floor) {
-		return WEBSERVICE + WebServices.FACILITIES_IMG + BuildingPic.NAME
+	public static String getBuildingPicUrl(String building, int floor) {
+		return WEBSERVICE + WebServices.FACILITIES + BuildingPic.NAME
 				+ WEBSERVICE_SEP + BuildingPic.BUILDING + EQUALS + building
-				+ LINK_SEP + BuildingPic.BLOCK + EQUALS + block + LINK_SEP
-				+ BuildingPic.FLOOR + EQUALS + floor;
+				+ LINK_SEP + BuildingPic.FLOOR + EQUALS + floor;
 	}
 
 	/**
@@ -765,10 +740,9 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String getRoomPicUrl(String building, String room) {
-		return WEBSERVICE + WebServices.FACILITIES_IMG + RoomPic.NAME
-				+ WEBSERVICE_SEP + RoomPic.BUILDING + EQUALS + building
-				+ LINK_SEP + RoomPic.ROOM + EQUALS + room;
+	public static String getRoomPicUrl(String code) {
+		return WEBSERVICE + WebServices.FACILITIES + RoomPic.NAME
+				+ WEBSERVICE_SEP + RoomPic.CODE + EQUALS + code;
 	}
 
 	/**
@@ -779,15 +753,13 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String[] getRoomPostFinderUrl(String building, String block,
+	public static String[] getRoomPostFinderUrl(String building,
 			String floor, int x, int y) {
 		final String[] urls = new String[2];
 		urls[0] = WEBSERVICE + WebServices.ROOM_FINDER + RoomFinder.NAME;
 		try {
 			urls[1] = RoomFinder.BUILDING + EQUALS
 					+ URLEncoder.encode(building, "UTF-8") + LINK_SEP
-					+ RoomFinder.BLOCK + EQUALS
-					+ URLEncoder.encode(block, "UTF-8") + LINK_SEP
 					+ RoomFinder.FLOOR + EQUALS
 					+ URLEncoder.encode(floor, "UTF-8") + LINK_SEP
 					+ RoomFinder.X + EQUALS
@@ -939,7 +911,7 @@ public class SifeupAPI {
 
 			final HttpURLConnection connection = (HttpURLConnection) new URL(
 					url).openConnection();
-			//connection.setSSLSocketFactory(sslCtx.getSocketFactory());
+			// connection.setSSLSocketFactory(sslCtx.getSocketFactory());
 			connection.setRequestProperty("connection", "close");
 			return connection;
 		} catch (IOException e) {
@@ -999,8 +971,8 @@ public class SifeupAPI {
 				throw new IOException("Null page");
 		} while (page.equals(""));
 		try {
-			if (JSONError(page) == Errors.NO_AUTH)
-				throw new AuthenticationException("No authentication");
+			if (JSONError(page) == Errors.ERROR) //crash with a bang
+				throw new RuntimeException("page " + strUrl + "\n"+ page);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1030,7 +1002,7 @@ public class SifeupAPI {
 		} while (page.equals(""));
 		if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
 			try {
-				if (JSONError(page) == Errors.NO_AUTH)
+				if (JSONError(page) == Errors.ERROR)
 					throw new AuthenticationException("No authentication");
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -1190,10 +1162,12 @@ public class SifeupAPI {
 	 * @throws JSONException
 	 */
 	public static int JSONError(String page) throws JSONException {
-		if (page == null) {
+		if (TextUtils.isEmpty(page)) {
 			Log.d("JSON", "null page");
 			return Errors.NULL_PAGE;
 		}
+		if (page.trim().startsWith("["))
+			return Errors.NO_ERROR;
 		JSONObject jObject = new JSONObject(page);
 		String erro = null;
 		String erro_msg = null;
@@ -1205,7 +1179,7 @@ public class SifeupAPI {
 				erro_msg = jObject.getString("erro_msg");
 				Log.d("JSON", erro_msg);
 			}
-			return Errors.NO_AUTH;
+			return Errors.ERROR;
 		}
 
 		return Errors.NO_ERROR;

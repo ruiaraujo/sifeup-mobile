@@ -1,15 +1,13 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.content.res.Resources;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Class that represents the Object Student
@@ -17,7 +15,9 @@ import android.content.res.Resources;
  * @author Ângela Igreja
  * 
  */
-public class Student extends Profile implements Serializable {
+public class Student extends Profile {
+
+	@SerializedName("cursos")
 	private List<StudentCourse> courses;
 
 	public interface Type {
@@ -54,29 +54,6 @@ public class Student extends Profile implements Serializable {
 
 		return result;
 
-	}
-
-	/**
-	 * Parses a JSON String containing Employee info.
-	 * 
-	 * @param page
-	 * @return boolean
-	 * @throws JSONException
-	 */
-	public static Student parseJSON(String page) throws JSONException {
-		final Student me = new Student();
-		final JSONObject jObject = new JSONObject(page);
-		me.setCode(jObject.getString("codigo"));
-		me.setName(jObject.getString("nome"));
-		me.setEmail(jObject.getString("email"));
-		if (jObject.has("email_alternativo"))
-			me.setEmailAlt(jObject.getString("email_alternativo"));
-		if (jObject.has("telemovel"))
-			me.setMobilePhone(jObject.getString("telemovel"));
-		if (jObject.has("telefone"))
-			me.setPhone(jObject.getString("telefone"));
-		me.setCourses(StudentCourse.parseJSON(jObject.getJSONArray("cursos")));
-		return me;
 	}
 
 	@Override

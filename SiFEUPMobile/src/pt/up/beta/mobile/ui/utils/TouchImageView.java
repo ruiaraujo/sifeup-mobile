@@ -8,6 +8,7 @@
 
 package pt.up.beta.mobile.ui.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -22,6 +23,21 @@ import android.view.View;
 import android.widget.ImageView;
 
 public class TouchImageView extends ImageView {
+
+	public TouchImageView(Context context) {
+		super(context);
+		sharedConstructing(context);
+	}
+
+	public TouchImageView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		sharedConstructing(context);
+	}
+	
+	public TouchImageView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		sharedConstructing(context);
+	}
 
 	Matrix matrix = new Matrix();
 
@@ -50,15 +66,6 @@ public class TouchImageView extends ImageView {
 	OnTouchListener touchListener;
 	Context context;
 
-	public TouchImageView(Context context) {
-		super(context);
-		sharedConstructing(context);
-	}
-
-	public TouchImageView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		sharedConstructing(context);
-	}
 
 	private void sharedConstructing(Context context) {
 		super.setClickable(true);
@@ -74,6 +81,7 @@ public class TouchImageView extends ImageView {
 
 		setOnTouchListener(touchListener = new OnTouchListener() {
 
+			@TargetApi(8)
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (mScaleDetector != null)
@@ -227,6 +235,7 @@ public class TouchImageView extends ImageView {
 		}
 	}
 
+	@TargetApi(8)
 	private class ScaleListener extends
 			ScaleGestureDetector.SimpleOnScaleGestureListener {
 		@Override
