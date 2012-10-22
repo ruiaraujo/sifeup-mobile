@@ -2,9 +2,10 @@
 package pt.up.beta.mobile.ui.search;
 
 
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseMultiPaneActivity;
 import pt.up.beta.mobile.ui.BaseSinglePaneActivity;
-import pt.up.beta.mobile.R;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,6 @@ import android.support.v4.app.Fragment;
 public class SearchActivity extends BaseSinglePaneActivity {
 
     private String mQuery;
-    private StudentsSearchFragment studentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,12 @@ public class SearchActivity extends BaseSinglePaneActivity {
 
 	@Override
 	protected Fragment onCreatePane() {
-		return studentsFragment = new StudentsSearchFragment();
+		return new SearchFragment();
 	}
 
 	
 	protected void onNewIntent( Intent query) {
+		AnalyticsUtils.getInstance(this).trackPageView("/Search");
 		mQuery = query.getStringExtra(SearchManager.QUERY).trim();
 		final CharSequence title = getString(R.string.title_search_query, mQuery);
 		actionbar.setTitle(title);
@@ -58,10 +59,10 @@ public class SearchActivity extends BaseSinglePaneActivity {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
                 SearchSuggestionHistory.AUTHORITY, SearchSuggestionHistory.MODE);
         suggestions.saveRecentQuery(mQuery, null);
-	    studentsFragment = new StudentsSearchFragment();
-	    studentsFragment.setArguments(intentToFragmentArguments(query));
+	    final SearchFragment searchFragment = new SearchFragment();
+	    searchFragment.setArguments(intentToFragmentArguments(query));
 	    getSupportFragmentManager().beginTransaction()
-	        .replace(R.id.root_container, studentsFragment)
+	        .replace(R.id.root_container, searchFragment)
 	        .commit();
 	}
 	

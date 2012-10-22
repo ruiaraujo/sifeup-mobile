@@ -18,10 +18,10 @@ public class ScheduleTeacher implements Parcelable {
 	private final String code;
 	@SerializedName("doc_nome")
 	private final String name;
-
-	public ScheduleTeacher(String code, String name) {
-		this.code = code;
-		this.name = name;
+	
+	private ScheduleTeacher(Parcel in) {
+		code = ParcelUtils.readString(in);
+		name = ParcelUtils.readString(in);
 	}
 
 	public String getName() {
@@ -41,11 +41,6 @@ public class ScheduleTeacher implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		ParcelUtils.writeString(dest, code);
 		ParcelUtils.writeString(dest, name);
-	}
-
-	private ScheduleTeacher(Parcel in) {
-		code = ParcelUtils.readString(in);
-		name = ParcelUtils.readString(in);
 	}
 
 	public static final Parcelable.Creator<ScheduleTeacher> CREATOR = new Parcelable.Creator<ScheduleTeacher>() {

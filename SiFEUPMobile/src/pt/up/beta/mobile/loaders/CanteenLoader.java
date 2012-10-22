@@ -16,20 +16,18 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.util.List;
-
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -38,7 +36,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
+public class CanteenLoader extends AsyncTaskLoader<Canteen[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -47,12 +45,12 @@ public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<Canteen> canteens;
+	Canteen[] canteens;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<Canteen> loadInBackground() {
+	public Canteen[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -68,8 +66,8 @@ public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
 				final String page = cursor.getString(cursor
 						.getColumnIndex(SigarraContract.Canteens.CONTENT));
 				try {
-					return Canteen.parseListJSON(page);
-				} catch (JSONException e) {
+					return new Gson().fromJson(page, Canteen[].class);
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
@@ -93,23 +91,26 @@ public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<Canteen> canteens) {
+	public void deliverResult(Canteen[] canteens) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
 			if (canteens != null) {
-				canteens.clear();
+				for (int i = 0; i < canteens.length; ++i)
+					canteens[i] = null;
+				canteens = null;
 			}
 			return;
 		}
-		final List<Canteen> oldCanteens = this.canteens;
+		final Canteen[] oldCanteens = this.canteens;
 		this.canteens = canteens;
 		if (isStarted()) {
 			super.deliverResult(canteens);
 		}
 
 		if (oldCanteens != null && oldCanteens != canteens
-				&& oldCanteens.size() != 0) {
-			oldCanteens.clear();
+				&& oldCanteens.length != 0) {
+			for (int i = 0; i < oldCanteens.length; ++i)
+				oldCanteens[i] = null;
 		}
 	}
 
@@ -168,9 +169,11 @@ public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
 	}
 
 	@Override
-	public void onCanceled(List<Canteen> canteens) {
+	public void onCanceled(Canteen[] canteens) {
 		if (canteens != null) {
-			canteens.clear();
+			for (int i = 0; i < canteens.length; ++i)
+				canteens[i] = null;
+			canteens = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -188,8 +191,10 @@ public class CanteenLoader extends AsyncTaskLoader<List<Canteen>> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (canteens != null)
-			canteens.clear();
+		if (canteens != null) {
+			for (int i = 0; i < canteens.length; ++i)
+				canteens[i] = null;
+		}
 		canteens = null;
 	}
 }

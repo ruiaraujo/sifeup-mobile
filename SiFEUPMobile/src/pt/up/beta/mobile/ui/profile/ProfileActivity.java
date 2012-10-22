@@ -17,7 +17,7 @@ public class ProfileActivity extends BaseSinglePaneActivity {
 
 	public final static String PROFILE_STUDENT = "pt.up.fe.mobile.ui.profile.STUDENT";
 	public final static String PROFILE_EMPLOYEE = "pt.up.fe.mobile.ui.profile.EMPLOYEE";
-	
+	public final static String PROFILE_ROOM = "pt.up.fe.mobile.ui.profile.ROOM";
 	@Override
 	protected Fragment onCreatePane() 
     {
@@ -28,6 +28,8 @@ public class ProfileActivity extends BaseSinglePaneActivity {
     		return new StudentProfileFragment();
         if ( type.equals(PROFILE_EMPLOYEE))
       		return new EmployeeProfileFragment();
+        if ( type.equals(PROFILE_ROOM))
+      		return new RoomProfileFragment();
 		return new Fragment();
     	
     }

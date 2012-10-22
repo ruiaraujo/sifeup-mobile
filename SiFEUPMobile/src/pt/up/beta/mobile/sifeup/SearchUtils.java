@@ -6,46 +6,143 @@ import java.net.URLEncoder;
 
 import org.acra.ACRA;
 import org.apache.http.auth.AuthenticationException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import pt.up.beta.mobile.datatypes.EmployeeSearchResult;
 import pt.up.beta.mobile.datatypes.ResultsPage;
-import pt.up.beta.mobile.datatypes.Student;
+import pt.up.beta.mobile.datatypes.RoomSearchResult;
+import pt.up.beta.mobile.datatypes.StudentSearchResult;
+import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 public class SearchUtils {
 	private SearchUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
-			String query, int page, ResponseCommand<ResultsPage> command,
+	public static AsyncTask<String, Void, ERROR_TYPE> getSubjectsSearchByNameReply(
+			String name,
+			ResponseCommand<ResultsPage<SubjectSearchResult>> command,
 			Context context) {
-		return new FetcherTask<ResultsPage>(command,
+		return new FetcherTask<ResultsPage<SubjectSearchResult>>(command,
+				new SubjectsSearchParser(), context).execute(SifeupAPI
+				.getSubjectsSearchUrl(null, encode(name), null, null, 1));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomsSearchByNameReply(
+			String name,
+			ResponseCommand<ResultsPage<RoomSearchResult>> command,
+			Context context) {
+		return new FetcherTask<ResultsPage<RoomSearchResult>>(command,
+				new RoomsSearchParser(), context).execute(SifeupAPI
+				.getRoomSearchUrl(encode(name), 1));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchByNameReply(
+			String name,
+			ResponseCommand<ResultsPage<StudentSearchResult>> command,
+			Context context) {
+		return new FetcherTask<ResultsPage<StudentSearchResult>>(command,
 				new StudentsSearchParser(), context).execute(SifeupAPI
-				.getStudentsSearchUrl(encode(query), page));
+				.getStudentsSearchUrl(null, encode(name), null, null, null, 1));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getSingleStudentSearchReply(
-			String code, ResponseCommand<ResultsPage> command, Context context) {
-		return new FetcherTask<Student>(new SingleStudentCom(command),
-				new SingleStudentSearchParser(), context).execute(SifeupAPI
-				.getStudenProfiletUrl(code));
-	}
-
-	public static ResultsPage getStudentsSearchReply(String query, int page,
+	public static AsyncTask<String, Void, ERROR_TYPE> getStudentSearchByCodeReply(
+			String code,
+			ResponseCommand<ResultsPage<StudentSearchResult>> command,
 			Context context) {
-		String res;
+		return new FetcherTask<ResultsPage<StudentSearchResult>>(command,
+				new StudentsSearchParser(), context).execute(SifeupAPI
+				.getStudentsSearchUrl(code, null, null, null, null, 1));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeesSearchByNameReply(
+			String name,
+			ResponseCommand<ResultsPage<EmployeeSearchResult>> command,
+			Context context) {
+		return new FetcherTask<ResultsPage<EmployeeSearchResult>>(command,
+				new EmployeesSearchParser(), context).execute(SifeupAPI
+				.getEmployeeSearchUrl(null, encode(name), null, null, null, 1));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeSearchByCodeReply(
+			String code,
+			ResponseCommand<ResultsPage<EmployeeSearchResult>> command,
+			Context context) {
+		return new FetcherTask<ResultsPage<EmployeeSearchResult>>(command,
+				new EmployeesSearchParser(), context).execute(SifeupAPI
+				.getEmployeeSearchUrl(code, null, null, null, null, 1));
+	}
+
+	public static ResultsPage<SubjectSearchResult> getSubjectsSearchByNameReply(
+			String query, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getSubjectsSearchUrl(null, encode(query),
+						null, null, page), context),
+				new TypeToken<ResultsPage<SubjectSearchResult>>() {
+				}.getType());
+	}
+
+	public static ResultsPage<RoomSearchResult> getRoomsSearchByNameReply(
+			String query, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getRoomSearchUrl(encode(query), page),
+						context),
+				new TypeToken<ResultsPage<RoomSearchResult>>() {
+				}.getType());
+	}
+
+	public static ResultsPage<StudentSearchResult> getStudentsSearchByNameReply(
+			String query, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getStudentsSearchUrl(null, encode(query),
+						null, null, null, page), context),
+				new TypeToken<ResultsPage<StudentSearchResult>>() {
+				}.getType());
+	}
+
+	public static ResultsPage<StudentSearchResult> getStudentsSearchByCodeReply(
+			String code, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getStudentsSearchUrl(encode(code), null,
+						null, null, null, page), context),
+				new TypeToken<ResultsPage<StudentSearchResult>>() {
+				}.getType());
+	}
+
+	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchByNameReply(
+			String query, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getEmployeeSearchUrl(null, encode(query),
+						null, null, null, page), context),
+				new TypeToken<ResultsPage<EmployeeSearchResult>>() {
+				}.getType());
+	}
+
+	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchByCodeReply(
+			String code, int page, Context context) {
+		final Gson gson = new Gson();
+		return gson.fromJson(
+				getJson(SifeupAPI.getEmployeeSearchUrl(encode(code), null,
+						null, null, null, page), context),
+				new TypeToken<ResultsPage<EmployeeSearchResult>>() {
+				}.getType());
+	}
+
+	private static String getJson(String url, Context context) {
 		try {
-			res = SifeupAPI.getReply(
-					SifeupAPI.getStudentsSearchUrl(encode(query), page),
-					AccountUtils.getAuthToken(context), context);
-			StudentsSearchParser parser = new StudentsSearchParser();
-			return (ResultsPage) parser.parse(res);
+			return SifeupAPI.getReply(url, AccountUtils.getAuthToken(context),
+					context);
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		} catch (OperationCanceledException e) {
@@ -73,44 +170,15 @@ public class SearchUtils {
 	 */
 
 	private static class StudentsSearchParser implements
-			ParserCommand<ResultsPage> {
+			ParserCommand<ResultsPage<StudentSearchResult>> {
 
-		public ResultsPage parse(String page) {
+		public ResultsPage<StudentSearchResult> parse(String page) {
 			try {
-				ResultsPage resultsPage = new ResultsPage();
-				JSONObject jObject = new JSONObject(page);
-				if (jObject.has("alunos")) {
-					// new results page
-					if (jObject.has("total"))
-						resultsPage.setSearchSize(jObject.getInt("total"));
-					if (jObject.has("primeiro"))
-						resultsPage.setPage(jObject.getInt("primeiro"));
-					if (jObject.has("tam_pagina"))
-						resultsPage
-								.setPageResults(jObject.getInt("tam_pagina"));
-					if (resultsPage.getSearchSize() - resultsPage.getPage() < 15)
-						resultsPage.setPageResults(resultsPage.getSearchSize()
-								- resultsPage.getPage());
-					JSONArray jArray = jObject.getJSONArray("alunos");
-
-					// iterate over jArray
-					for (int i = 0; i < jArray.length(); i++) {
-						// new JSONObject
-						JSONObject jStudent = jArray.getJSONObject(i);
-						// new Block
-						Student student = new Student();
-
-						if (jStudent.has("codigo"))
-							student.setCode("" + jStudent.getString("codigo"));
-						if (jStudent.has("nome"))
-							student.setName(jStudent.getString("nome"));
-
-						// add student to the page results
-						resultsPage.getStudents().add(student);
-					}
-				}
-				return resultsPage;
-			} catch (JSONException e) {
+				final Gson gson = new Gson();
+				return gson.fromJson(page,
+						new TypeToken<ResultsPage<StudentSearchResult>>() {
+						}.getType());
+			} catch (Exception e) {
 				e.printStackTrace();
 				ACRA.getErrorReporter().handleSilentException(e);
 				ACRA.getErrorReporter().handleSilentException(
@@ -123,56 +191,75 @@ public class SearchUtils {
 		}
 	}
 
-	private static class SingleStudentSearchParser implements
-			ParserCommand<Student> {
+	/**
+	 * Parses a JSON String containing Exams info, Stores that info at
+	 * Collection exams.
+	 */
 
-		@Override
-		public Student parse(String page) {
+	private static class EmployeesSearchParser implements
+			ParserCommand<ResultsPage<EmployeeSearchResult>> {
+
+		public ResultsPage<EmployeeSearchResult> parse(String page) {
 			try {
-				Student me = new Student();
-				JSONObject jObject = new JSONObject(page);
-				if (jObject.has("codigo"))
-					me.setCode(jObject.getString("codigo"));
-				if (jObject.has("nome"))
-					me.setName(jObject.getString("nome"));
-				if (jObject.has("email"))
-					me.setEmail(jObject.getString("email"));
-				if (jObject.has("email_alternativo"))
-					me.setEmailAlt(jObject.getString("email_alternativo"));
-				if (jObject.has("telemovel"))
-					me.setMobilePhone(jObject.getString("telemovel"));
-				if (jObject.has("telefone"))
-					me.setPhone(jObject.getString("telefone"));
-				return me;
-			} catch (JSONException e) {
+				final Gson gson = new Gson();
+				return gson.fromJson(page,
+						new TypeToken<ResultsPage<EmployeeSearchResult>>() {
+						}.getType());
+			} catch (Exception e) {
 				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
+
 			}
 			return null;
 		}
 	}
 
-	private static class SingleStudentCom implements ResponseCommand<Student> {
-		private final ResponseCommand<ResultsPage> com;
+	private static class RoomsSearchParser implements
+			ParserCommand<ResultsPage<RoomSearchResult>> {
 
-		public SingleStudentCom(final ResponseCommand<ResultsPage> com) {
-			this.com = com;
+		public ResultsPage<RoomSearchResult> parse(String page) {
+			try {
+				final Gson gson = new Gson();
+				return gson.fromJson(page,
+						new TypeToken<ResultsPage<RoomSearchResult>>() {
+						}.getType());
+			} catch (Exception e) {
+				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
+
+			}
+			return null;
 		}
-
-		public void onError(ERROR_TYPE error) {
-			if (error == ERROR_TYPE.NETWORK)
-				com.onResultReceived(null);
-			else
-				com.onError(error);
-		}
-
-		public void onResultReceived(Student student) {
-			ResultsPage resultsPage = new ResultsPage();
-			resultsPage.setSearchSize(1);
-			resultsPage.setPage(1);
-			resultsPage.setPageResults(1);
-			resultsPage.getStudents().add(student);
-			com.onResultReceived(resultsPage);
-		}
-
 	}
+
+	private static class SubjectsSearchParser implements
+			ParserCommand<ResultsPage<SubjectSearchResult>> {
+
+		public ResultsPage<SubjectSearchResult> parse(String page) {
+			try {
+				final Gson gson = new Gson();
+				return gson.fromJson(page,
+						new TypeToken<ResultsPage<SubjectSearchResult>>() {
+						}.getType());
+			} catch (Exception e) {
+				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
+
+			}
+			return null;
+		}
+	}
+
 }

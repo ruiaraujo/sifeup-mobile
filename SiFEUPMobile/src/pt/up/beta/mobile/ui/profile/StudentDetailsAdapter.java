@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class StudentDetailsAdapter extends BaseAdapter {
 
 	private final List<ProfileDetail> details;
-	private final List<StudentCourse> courses;
+	private final StudentCourse[] courses;
 	private final LayoutInflater mInflater;
 
 	public StudentDetailsAdapter(Student student, Context mContext) {
@@ -27,7 +27,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return details.size() + courses.size() * 5; // 5 fields per course are
+		return details.size() + courses.length * 5; // 5 fields per course are
 													// used
 	}
 
@@ -42,13 +42,13 @@ public class StudentDetailsAdapter extends BaseAdapter {
 		}
 		switch (position % 5) {
 		case 1:
-			return courses.get(position / 5).getCourseName();
+			return courses[position / 5].getCourseName();
 		case 2:
-			return courses.get(position / 5).getStateName();
+			return courses[position / 5].getStateName();
 		case 3:
-			return courses.get(position / 5).getCurriculumYear();
+			return courses[position / 5].getCurriculumYear();
 		case 4:
-			return courses.get(position / 5).getPlaceName();
+			return courses[position / 5].getPlaceName();
 		}
 		return null;
 	}
@@ -103,19 +103,19 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			switch (position % 5) {
 			case 1:
 				title.setText(R.string.profile_title_programme);
-				content.setText(courses.get(position / 5).getCourseName());
+				content.setText(courses[position / 5].getCourseName());
 				break;
 			case 2:
 				title.setText(R.string.profile_title_status);
-				content.setText(courses.get(position / 5).getStateName());
+				content.setText(courses[position / 5].getStateName());
 				break;
 			case 3:
 				title.setText(R.string.profile_title_year);
-				content.setText(courses.get(position / 5).getCurriculumYear());
+				content.setText(courses[position / 5].getCurriculumYear());
 				break;
 			case 4:
 				title.setText(R.string.profile_title_faculty);
-				content.setText(courses.get(position / 5).getPlaceName());
+				content.setText(courses[position / 5].getPlaceName());
 				break;
 			}
 		}

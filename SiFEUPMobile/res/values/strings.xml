@@ -77,10 +77,15 @@
     <!-- SEARCH -->
     <string name="description_search">Search</string>
     <string name="search_label">FEUP Mobile</string>
-    <string name="search_hint">Search Students</string>
+    <string name="search_hint">Search in SiGARRA</string>
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="toast_search_error">There were no results for your search.</string>
+    <string name="label_room_desc"><xliff:g id="building">%1$s</xliff:g> <strong>Floor:</strong><xliff:g id="floor">%2$s</xliff:g></string>
+    <string name="title_search_students">Students</string>
+    <string name="title_search_employees">Employees</string>
+    <string name="title_search_rooms">Room</string>
+    <string name="title_search_subjects">Subjects</string>
 
     <!-- *************************************************************************************** -->
     <!-- ABOUT -->
@@ -129,7 +134,7 @@
     <!-- Subjects -->
     <string name="btn_subjects">Subjects</string>
     <string name="title_subjects">Subjects</string>
-    <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - Semester  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="subjects_year">Year <xliff:g id="year">%1$s</xliff:g> - <xliff:g id="semester">%2$s</xliff:g></string>
     <string name="lb_no_subjects">You have no subjects inscriptions</string>
     <string name="lb_no_courses">You have no courses inscriptions</string>
 
@@ -180,6 +185,7 @@
     <string name="profile_title_faculty">Faculty</string>
     <string name="profile_title_course">Programme</string>
     <string name="profile_title_room">Room</string>
+    <string name="profile_title_interests">Interests</string>
     <string name="profile_choose_email_app">Choose the email application:</string>
 
     <!-- Lunch Menu -->

@@ -9,13 +9,15 @@ import pt.up.beta.mobile.utils.StringUtils;
 
 public class Friend implements Comparable<Friend> {
 
-	final String code;
-	final String name;
-	final String course;
+	private final String code;
+	private final String name;
+	private final String type;
+	private final String course;
 
-	public Friend(String code, String name, String course) {
+	public Friend(String code, String name, String type, String course) {
 		this.code = code;
 		this.name = name;
+		this.type = type;
 		this.course = course;
 	}
 
@@ -29,6 +31,10 @@ public class Friend implements Comparable<Friend> {
 
 	public String getCourse() {
 		return course;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	@Override
@@ -61,7 +67,9 @@ public class Friend implements Comparable<Friend> {
 							mCursor.getString(mCursor
 									.getColumnIndex(SigarraContract.FriendsColumns.NAME_FRIEND)),
 							mCursor.getString(mCursor
-									.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND))));
+									.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND)),
+							mCursor.getString(mCursor
+									.getColumnIndex(SigarraContract.FriendsColumns.COURSE_FRIEND))));
 				} while (mCursor.moveToNext());
 				mCursor.close();
 			}

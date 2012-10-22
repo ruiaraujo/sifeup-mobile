@@ -38,49 +38,7 @@ public class SubjectEntry  implements Parcelable {
 	private final String regra_eq;
 	private final String devedor;
 	private final String incumpridor;
-	public SubjectEntry(String ucurr_id, String ucurr_codigo,
-			String ucurr_sigla, String ucurr_nome, String ucurr_name,
-			String ucurr_tipo, String ucurr_duracao_tipo, String id,
-			String ocorr_id, String inst_id, String comp_id, String a_lectivo,
-			int ano, String per_id, String per_codigo, String per_nome,
-			String tipo, String estado, String frequencia, String avaliacao,
-			String resultado_melhor, String resultado_ects,
-			String aval_a_lectivo, String resultado_insc, String creditos_ucn,
-			String creditos_ects, String n_ucurrs, String tipo_ucurrs,
-			String obr_opt, String regra_eq, String devedor, String incumpridor) {
-		this.ucurr_id = ucurr_id;
-		this.ucurr_codigo = ucurr_codigo;
-		this.ucurr_sigla = ucurr_sigla;
-		this.ucurr_nome = ucurr_nome;
-		this.ucurr_name = ucurr_name;
-		this.ucurr_tipo = ucurr_tipo;
-		this.ucurr_duracao_tipo = ucurr_duracao_tipo;
-		this.id = id;
-		this.ocorr_id = ocorr_id;
-		this.inst_id = inst_id;
-		this.comp_id = comp_id;
-		this.a_lectivo = a_lectivo;
-		this.ano = ano;
-		this.per_id = per_id;
-		this.per_codigo = per_codigo;
-		this.per_nome = per_nome;
-		this.tipo = tipo;
-		this.estado = estado;
-		this.frequencia = frequencia;
-		this.avaliacao = avaliacao;
-		this.resultado_melhor = resultado_melhor;
-		this.resultado_ects = resultado_ects;
-		this.aval_a_lectivo = aval_a_lectivo;
-		this.resultado_insc = resultado_insc;
-		this.creditos_ucn = creditos_ucn;
-		this.creditos_ects = creditos_ects;
-		this.n_ucurrs = n_ucurrs;
-		this.tipo_ucurrs = tipo_ucurrs;
-		this.obr_opt = obr_opt;
-		this.regra_eq = regra_eq;
-		this.devedor = devedor;
-		this.incumpridor = incumpridor;
-	}
+	
 	public String getUcurrid() {
 		return ucurr_id;
 	}

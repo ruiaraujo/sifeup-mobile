@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.ResultsPage;
-import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.datatypes.StudentSearchResult;
+import pt.up.beta.mobile.datatypes.RoomSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SearchUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
@@ -36,18 +35,17 @@ import com.commonsware.cwac.endless.EndlessAdapter;
  * @author Ângela Igreja
  * 
  */
-public class StudentsSearchFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand<ResultsPage<StudentSearchResult>> {
+public class RoomsSearchFragment extends BaseFragment implements
+		OnItemClickListener, ResponseCommand<ResultsPage<RoomSearchResult>> {
 
 	// query is in SearchActivity, sent to here in the arguments
-	private ArrayList<StudentSearchResult> results = new ArrayList<StudentSearchResult>();
-	private ResultsPage<StudentSearchResult> resultPage;
+	private ArrayList<RoomSearchResult> results = new ArrayList<RoomSearchResult>();
+	private ResultsPage<RoomSearchResult> resultPage;
 	private ListAdapter adapter;
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
-	private final static String REGEX_CODE = "^[0-9]*$";
-//TODO: implement the rest of the lifecycle
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -60,12 +58,8 @@ public class StudentsSearchFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		query = getArguments().getString(SearchManager.QUERY);
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		task = SearchUtils
+				.getRoomsSearchByNameReply(query, this, getActivity());
 	}
 
 	private boolean hasMoreResults() {
@@ -94,7 +88,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(ResultsPage<StudentSearchResult> results) {
+	public void onResultReceived(ResultsPage<RoomSearchResult> results) {
 		if (getActivity() == null)
 			return;
 
@@ -103,21 +97,22 @@ public class StudentsSearchFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.toast_search_error));
 			return;
 		}
-		for (StudentSearchResult s : resultPage.getResults())
+		for (RoomSearchResult s : resultPage.getResults())
 			this.results.add(s);
 
 		if (hasMoreResults()) {
-			adapter = new EndlessSearchAdapter(getActivity(),
+			adapter = new EndlessSearchAdapter(
+					getActivity(),
 					new SearchCustomAdapter(getActivity(),
-							R.layout.list_item_search, new Student[0]),
+							R.layout.list_item_search, new RoomSearchResult[0]),
 					R.layout.list_item_loading);
 		} else {
 			adapter = new SearchCustomAdapter(getActivity(),
-					R.layout.list_item_friend, new Student[0]);
+					R.layout.list_item_friend, new RoomSearchResult[0]);
 
 		}
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(StudentsSearchFragment.this);
+		list.setOnItemClickListener(RoomsSearchFragment.this);
 		list.setSelection(0);
 		showMainScreen();
 	}
@@ -137,10 +132,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 		Intent i = new Intent(getActivity(), ProfileActivity.class);
 		// assumed only one page of results
-		StudentSearchResult profile = results.get(position);
-		i.putExtra(Intent.EXTRA_TITLE, profile.getName());
+		RoomSearchResult profile = results.get(position);
+		i.putExtra(Intent.EXTRA_TITLE, profile.getFullName());
 		i.putExtra(ProfileActivity.PROFILE_TYPE,
-				ProfileActivity.PROFILE_STUDENT);
+				ProfileActivity.PROFILE_ROOM);
 		i.putExtra(ProfileActivity.PROFILE_CODE, profile.getCode());
 		startActivity(i);
 	}
@@ -154,18 +149,14 @@ public class StudentsSearchFragment extends BaseFragment implements
 
 		@Override
 		protected boolean cacheInBackground() throws Exception {
-			final ResultsPage<StudentSearchResult> page;
-			if (query.matches(REGEX_CODE))
-				page = SearchUtils.getStudentsSearchByCodeReply(query,
-						++currentPage, getActivity());
-			else
-				page = SearchUtils.getStudentsSearchByNameReply(query,
-						++currentPage, getActivity());
+			final ResultsPage<RoomSearchResult> page;
+			page = SearchUtils.getRoomsSearchByNameReply(query, ++currentPage,
+					getActivity());
 			if (page == null)
 				return false;
-			for (StudentSearchResult s : page.getResults())
+			for (RoomSearchResult s : page.getResults())
 				results.add(s);
-			if ( !hasMoreResults() || page.getResults().length == 0)
+			if (!hasMoreResults() || page.getResults().length == 0)
 				return false;
 			else
 				return true;
@@ -178,10 +169,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public class SearchCustomAdapter extends ArrayAdapter<Student> {
+	public class SearchCustomAdapter extends ArrayAdapter<RoomSearchResult> {
 
 		public SearchCustomAdapter(Context context, int textViewResourceId,
-				Student[] objects) {
+				RoomSearchResult[] objects) {
 			super(context, textViewResourceId, objects);
 		}
 
@@ -195,9 +186,14 @@ public class StudentsSearchFragment extends BaseFragment implements
 						.inflate(R.layout.list_item_search, parent, false);
 			}
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
-			name.setText(results.get(position).getName());
+			name.setText(results.get(position).getFullName());
 			TextView course = (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position).getCourse());
+			if (results.get(position).getDescription() != null)
+				course.setText(results.get(position).getDescription());
+			else
+				course.setText(getString(R.string.label_room_desc,
+						results.get(position).getBuildingName(),
+						results.get(position).getFloor()));
 			return row;
 		}
 
@@ -206,15 +202,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-
 	protected void onRepeat() {
 		showLoadingScreen();
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		task = SearchUtils
+				.getRoomsSearchByNameReply(query, this, getActivity());
 	}
 
 }

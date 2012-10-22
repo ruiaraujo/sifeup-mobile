@@ -3,9 +3,9 @@ package pt.up.beta.mobile.ui.search;
 import java.util.ArrayList;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.datatypes.Employee;
+import pt.up.beta.mobile.datatypes.EmployeeSearchResult;
 import pt.up.beta.mobile.datatypes.ResultsPage;
-import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.datatypes.StudentSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SearchUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
@@ -36,18 +36,18 @@ import com.commonsware.cwac.endless.EndlessAdapter;
  * @author Ângela Igreja
  * 
  */
-public class StudentsSearchFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand<ResultsPage<StudentSearchResult>> {
+public class EmployeesSearchFragment extends BaseFragment implements
+		OnItemClickListener, ResponseCommand<ResultsPage<EmployeeSearchResult>> {
 
 	// query is in SearchActivity, sent to here in the arguments
-	private ArrayList<StudentSearchResult> results = new ArrayList<StudentSearchResult>();
-	private ResultsPage<StudentSearchResult> resultPage;
+	private ArrayList<EmployeeSearchResult> results = new ArrayList<EmployeeSearchResult>();
+	private ResultsPage<EmployeeSearchResult> resultPage;
 	private ListAdapter adapter;
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
 	private final static String REGEX_CODE = "^[0-9]*$";
-//TODO: implement the rest of the lifecycle
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -61,10 +61,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		super.onActivityCreated(savedInstanceState);
 		query = getArguments().getString(SearchManager.QUERY);
 		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
+			task = SearchUtils.getEmployeeSearchByCodeReply(query, this,
 					getActivity());
 		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
+			task = SearchUtils.getEmployeesSearchByNameReply(query, this,
 					getActivity());
 	}
 
@@ -94,7 +94,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(ResultsPage<StudentSearchResult> results) {
+	public void onResultReceived(ResultsPage<EmployeeSearchResult> results) {
 		if (getActivity() == null)
 			return;
 
@@ -103,21 +103,21 @@ public class StudentsSearchFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.toast_search_error));
 			return;
 		}
-		for (StudentSearchResult s : resultPage.getResults())
+		for (EmployeeSearchResult s : resultPage.getResults())
 			this.results.add(s);
 
 		if (hasMoreResults()) {
 			adapter = new EndlessSearchAdapter(getActivity(),
 					new SearchCustomAdapter(getActivity(),
-							R.layout.list_item_search, new Student[0]),
+							R.layout.list_item_search, new Employee[0]),
 					R.layout.list_item_loading);
 		} else {
 			adapter = new SearchCustomAdapter(getActivity(),
-					R.layout.list_item_friend, new Student[0]);
+					R.layout.list_item_friend, new Employee[0]);
 
 		}
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(StudentsSearchFragment.this);
+		list.setOnItemClickListener(EmployeesSearchFragment.this);
 		list.setSelection(0);
 		showMainScreen();
 	}
@@ -137,10 +137,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 		Intent i = new Intent(getActivity(), ProfileActivity.class);
 		// assumed only one page of results
-		StudentSearchResult profile = results.get(position);
+		EmployeeSearchResult profile = results.get(position);
 		i.putExtra(Intent.EXTRA_TITLE, profile.getName());
 		i.putExtra(ProfileActivity.PROFILE_TYPE,
-				ProfileActivity.PROFILE_STUDENT);
+				ProfileActivity.PROFILE_EMPLOYEE);
 		i.putExtra(ProfileActivity.PROFILE_CODE, profile.getCode());
 		startActivity(i);
 	}
@@ -154,16 +154,16 @@ public class StudentsSearchFragment extends BaseFragment implements
 
 		@Override
 		protected boolean cacheInBackground() throws Exception {
-			final ResultsPage<StudentSearchResult> page;
+			final ResultsPage<EmployeeSearchResult> page;
 			if (query.matches(REGEX_CODE))
-				page = SearchUtils.getStudentsSearchByCodeReply(query,
+				page = SearchUtils.getEmployeesSearchByCodeReply(query,
 						++currentPage, getActivity());
 			else
-				page = SearchUtils.getStudentsSearchByNameReply(query,
+				page = SearchUtils.getEmployeesSearchByNameReply(query,
 						++currentPage, getActivity());
 			if (page == null)
 				return false;
-			for (StudentSearchResult s : page.getResults())
+			for (EmployeeSearchResult s : page.getResults())
 				results.add(s);
 			if ( !hasMoreResults() || page.getResults().length == 0)
 				return false;
@@ -178,10 +178,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public class SearchCustomAdapter extends ArrayAdapter<Student> {
+	public class SearchCustomAdapter extends ArrayAdapter<Employee> {
 
 		public SearchCustomAdapter(Context context, int textViewResourceId,
-				Student[] objects) {
+				Employee[] objects) {
 			super(context, textViewResourceId, objects);
 		}
 
@@ -197,7 +197,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 			TextView name = (TextView) row.findViewById(R.id.friend_name);
 			name.setText(results.get(position).getName());
 			TextView course = (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position).getCourse());
+			course.setText(results.get(position).getDepartment());
 			return row;
 		}
 
@@ -210,10 +210,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 	protected void onRepeat() {
 		showLoadingScreen();
 		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
+			task = SearchUtils.getEmployeeSearchByCodeReply(query, this,
 					getActivity());
 		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
+			task = SearchUtils.getEmployeesSearchByNameReply(query, this,
 					getActivity());
 	}
 

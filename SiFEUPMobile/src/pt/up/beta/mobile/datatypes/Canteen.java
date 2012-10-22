@@ -1,17 +1,10 @@
 package pt.up.beta.mobile.datatypes;
 
+import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
+import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 /**
  * Class this. Save the name and menus of the this.
@@ -22,162 +15,68 @@ import android.util.Log;
 
 public class Canteen implements Parcelable {
 
-    private int code;
-    private String description;
-    private String timetable;
-    private Menu[] menus;
-    
+	@SerializedName("codigo")
+	private final int code;
+	
+	@SerializedName("descricao")
+	private final String description;
+	
+	@SerializedName("horario")
+	private final String timetable;
+	
+	@SerializedName("ementas")
+	private final Menu[] menus;
 
-    public Canteen() {
-    }
+	private Canteen(Parcel in) {
+		code = in.readInt();
+		description = ParcelUtils.readString(in);
+		timetable = ParcelUtils.readString(in);
+		this.menus = (Menu[]) in.readParcelableArray(Menu.class.getClassLoader());
+	}
 
+	public Menu[] getMenus() {
+		return menus;
+	}
 
-    public void setMenus(Menu[] menus) {
-        this.menus = menus;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Menu[] getMenus() {
-        return menus;
-    }
-    
-    public static List<Canteen> parseListJSON(String page) throws JSONException{
-    	List<Canteen> canteens = new ArrayList<Canteen>();
-		JSONObject jObject = new JSONObject(page);
+	public String getDate(int groupPosition) {
+		return menus[groupPosition].getDate();
+	}
 
-		if (jObject.has("cantinas")) {
-			Log.d("JSON", "founded cantinas");
-			JSONArray jArray = jObject.getJSONArray("cantinas");
+	public int getMenuCount() {
+		return menus.length;
+	}
 
-			for (int i = 0; i < jArray.length(); i++) {
+	public Dish getDish(int groupPosition, int childPosition) {
+		return menus[groupPosition].getDishes()[childPosition];
+	}
 
-				JSONObject jBlock = jArray.getJSONObject(i);
+	public int getDishesCount(int groupPosition) {
+		return menus[groupPosition].getDishes().length;
+	}
 
-				Canteen canteen = new Canteen();
+	public int describeContents() {
+		return 0;
+	}
 
-				canteen.parseJson(jBlock);
-				if (canteen.getMenus().length > 0)
-					// add canteen to canteens
-					canteens.add(canteen);
-			}
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeInt(code);
+		ParcelUtils.writeString(out, description);
+		ParcelUtils.writeString(out, timetable);
+		out.writeParcelableArray(menus, flags);
+	}
+
+	public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {
+		public Canteen createFromParcel(Parcel in) {
+			return new Canteen(in);
 		}
-		return canteens;
-    }
 
-    public void parseJson(JSONObject jBlock) throws JSONException {
-        if (jBlock.has("codigo"))
-            this.code = jBlock.getInt("codigo");
-
-        if (jBlock.has("descricao"))
-            this.setDescription(jBlock.getString("descricao"));
-
-        if (jBlock.has("horario"))
-            this.timetable = jBlock.getString("horario");
-
-        if (jBlock.has("ementas")) {
-            JSONArray jArrayMenus = jBlock.getJSONArray("ementas");
-            this.menus = new Menu[jArrayMenus.length()];
-            for (int j = 0; j < jArrayMenus.length(); j++) {
-                JSONObject jMenu = jArrayMenus.getJSONObject(j);
-
-                Menu menu = new Menu();
-
-                if (jMenu.has("estado"))
-                    menu.setState(jMenu.getString("estado"));
-
-                if (jMenu.has("data"))
-                    menu.setDate(jMenu.getString("data"));
-
-                if (jMenu.has("pratos")) {
-                    JSONArray jArrayDishs = jMenu.getJSONArray("pratos");
-                    final Dish[] dishes = new Dish[jArrayDishs.length()];
-                    for (int k = 0; k < jArrayDishs.length(); k++) {
-                        JSONObject jDish = jArrayDishs.getJSONObject(k);
-
-                        Dish dish = new Dish();
-
-                        if (jDish.has("estado"))
-                            dish.setState(jDish.getString("estado"));
-
-                        if (jDish.has("descricao"))
-                            dish.setDescription(jDish.getString("descricao"));
-
-                        if (jDish.has("tipo"))
-                            dish.setType(jDish.getInt("tipo"));
-
-                        if (jDish.has("tipo_descr"))
-                            dish.setDescriptionType(jDish
-                                    .getString("tipo_descr"));
-                        dishes[k] = dish;
-                    }
-                    menu.setDishes(dishes);
-
-                }
-                this.menus[j] = menu;
-            }
-
-        }
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDate(int groupPosition) {
-        return menus[groupPosition].getDate();
-    }
-
-    public int getMenuCount() {
-        return menus.length;
-    }
-
-    public Dish getDish(int groupPosition, int childPosition) {
-        return menus[groupPosition].getDishes()[childPosition];
-    }
-
-    public int getDishesCount(int groupPosition) {
-        return menus[groupPosition].getDishes().length;
-    }
-
-    public int describeContents() {
-        return 0;
-    }
-
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(code);
-        out.writeInt(description!=null?1:0);
-        if ( description != null )
-        	out.writeString(description);
-        out.writeInt(timetable!=null?1:0);
-        if ( timetable != null )
-        	out.writeString(timetable);
-        out.writeInt(menus!=null?menus.length:0);
-        if ( menus != null && menus.length > 0)
-        	out.writeTypedArray(menus, flags);
-    }
-
-    public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {
-        public Canteen createFromParcel(Parcel in) {
-            return new Canteen(in);
-        }
-
-        public Canteen[] newArray(int size) {
-            return new Canteen[size];
-        }
-    };
-
-    private Canteen(Parcel in) {
-        code = in.readInt();
-        if ( in.readInt() == 1 )
-        	description = in.readString();
-        if ( in.readInt() == 1 )
-        	timetable = in.readString();
-    	this.menus = new Menu[in.readInt()];
-        if ( menus.length > 0)
-        	in.readTypedArray(menus, Menu.CREATOR);
-    }
+		public Canteen[] newArray(int size) {
+			return new Canteen[size];
+		}
+	};
 
 }

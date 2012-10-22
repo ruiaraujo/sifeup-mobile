@@ -1,42 +1,70 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * 
- * Holds a Search page
- * With pageResults number
- * of students
- *
+ * Holds a Search page With pageResults number of students
+ * 
  */
-public class ResultsPage{
-	private int searchSize; // "total" : 583
-	private int page; // "primeiro" : 1
-	private int pageResults; // "tam_pagina" : 15
-	private List<Student> students = new ArrayList<Student>();
+public class ResultsPage<T extends Parcelable> implements Parcelable {
+	@SerializedName("total")
+	private final int searchSize; // "total" : 583
+	@SerializedName("pagina")
+	private final int page; // "primeiro" : 1
+	@SerializedName("tam_pagina")
+	private final int pageResults; // "tam_pagina" : 15
+	@SerializedName("resultados")
+	private final T[] results;
+
+	@SuppressWarnings("unchecked")
+	private ResultsPage(Parcel in) {
+		searchSize = in.readInt();
+		page = in.readInt();
+		pageResults = in.readInt();
+		Class<T> c = null;
+		try {
+			c = (Class<T>) Class.forName(in.readString());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (c != null)
+			results = (T[]) in.readParcelableArray(c.getClassLoader());
+		else
+			results = null;
+
+	}
+
 	public int getSearchSize() {
 		return searchSize;
 	}
-	public void setSearchSize(int searchSize) {
-		this.searchSize = searchSize;
-	}
+
 	public int getPage() {
 		return page;
 	}
-	public void setPage(int page) {
-		this.page = page;
-	}
+
 	public int getPageResults() {
 		return pageResults;
 	}
-	public void setPageResults(int pageResults) {
-		this.pageResults = pageResults;
+
+	public T[] getResults() {
+		return results;
 	}
-	public List<Student> getStudents() {
-		return students;
+
+	@Override
+	public int describeContents() {
+		return 0;
 	}
-	public void setStudents(List<Student> students) {
-		this.students = students;
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(searchSize);
+		dest.writeInt(page);
+		dest.writeInt(pageResults);
+		dest.writeString(results.getClass().getName());
+		dest.writeParcelableArray(results, flags);
 	}
 }

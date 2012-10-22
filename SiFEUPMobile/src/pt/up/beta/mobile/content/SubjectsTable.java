@@ -3,10 +3,10 @@ package pt.up.beta.mobile.content;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-class SubjectsTable implements BaseColumns {
+public class SubjectsTable implements BaseColumns {
 
 	// Database table
-	static final String TABLE = "subjects";
+	public static final String TABLE = "subjects";
 
 	static final String COLUMN_USER_NAME = "_id";
 	static final String COLUMN_CODE = "code";

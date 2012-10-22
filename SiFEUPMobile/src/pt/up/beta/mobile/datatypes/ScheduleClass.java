@@ -19,9 +19,9 @@ public class ScheduleClass implements Parcelable {
 	@SerializedName("turma_sigla")
 	private final String name;
 
-	public ScheduleClass(String code, String name) {
-		this.code = code;
-		this.name = name;
+	private ScheduleClass(Parcel in) {
+		code = ParcelUtils.readString(in);
+		name = ParcelUtils.readString(in);
 	}
 
 	public String getName() {
@@ -43,10 +43,6 @@ public class ScheduleClass implements Parcelable {
 		ParcelUtils.writeString(dest, name);
 	}
 
-	private ScheduleClass(Parcel in) {
-		code = ParcelUtils.readString(in);
-		name = ParcelUtils.readString(in);
-	}
 
 	public static final Parcelable.Creator<ScheduleClass> CREATOR = new Parcelable.Creator<ScheduleClass>() {
 		public ScheduleClass createFromParcel(Parcel in) {

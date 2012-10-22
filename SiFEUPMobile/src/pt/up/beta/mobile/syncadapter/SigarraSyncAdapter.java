@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.content.SigarraProvider;
+import pt.up.beta.mobile.content.SubjectsTable;
 import pt.up.beta.mobile.content.SyncStates;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.datatypes.StudentCourse;
@@ -542,7 +544,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		values.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.PRUNE);
 		getContext().getContentResolver().insert(
-				SigarraContract.Subjects.CONTENT_URI, values);
+				SigarraContract.Subjects.CONTENT_ITEM_URI, values);
 		syncResult.stats.numEntries += 1;
 	}
 
@@ -599,9 +601,11 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			getContext().getContentResolver().bulkInsert(
 					SigarraContract.Subjects.CONTENT_URI,
 					values.toArray(new ContentValues[0]));
-		else
+		else {
+			SigarraProvider.updateLastSyncState(getContext(), SubjectsTable.TABLE);
 			getContext().getContentResolver().notifyChange(
 					SigarraContract.Subjects.CONTENT_URI, null);
+		}
 		syncResult.stats.numEntries += values.size();
 	}
 

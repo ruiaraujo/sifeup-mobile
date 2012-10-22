@@ -95,7 +95,11 @@ public class SifeupAPI {
 
 	private interface StudentsSearch {
 		String NAME = "pesquisa";
+		String STUDENT_CODE = "pv_n_estudante";
 		String STUDENT_NAME = "pv_nome";
+		String STUDENT_EMAIL = "pv_email";
+		String STUDENT_STATE = "pv_estado";
+		String STUDENT_FIRST_YEAR = "pv_1_inscricao_em";
 		String PAGE = "pv_pag";
 		// TODO:ANGEL:COLOCAR OS RESTANTES CAMPOS.
 	}
@@ -134,8 +138,11 @@ public class SifeupAPI {
 	private interface EmployeeSearch {
 		String NAME = "pesquisa";
 		String EMPLOYEE_NAME = "pv_nome";
+		String EMPLOYEE_EMAIL = "pv_email";
+		String EMPLOYEE_CODE = "pv_codigo";
+		String EMPLOYEE_ACRONYM = "pv_sigla";
+		String EMPLOYEE_STATE = "pv_estado";
 		String PAGE = "pv_pag";
-		// TODO:ANGEL:COLOCAR OS RESTANTES CAMPOS.
 	}
 
 	// MOB_HOR_GERAL
@@ -258,6 +265,16 @@ public class SifeupAPI {
 		String NAME = "perfil";
 		String CODE = "pv_ocorrencia_id";
 	}
+	
+	// MOB_UCURR_GERAL.PESQUISA
+	private interface SubjectSearch {
+		String NAME = "pesquisa";
+		String SUBJECT_CODE = "pv_uc_codigo";
+		String SUBJECT_NAME = "pv_uc_nome";
+		String SUBJECT_ACRONYM = "pv_uc_sigla";
+		String SUBJECT_YEAR = "pv_ano_lectivo";
+		String PAGE = "pv_pag";
+	}
 
 	// MOB_UCURR_GERAL.SUMARIO
 	private interface SubjectSummary {
@@ -326,14 +343,10 @@ public class SifeupAPI {
 	}
 
 	private interface BuildingPic {
-		String NAME = "get_edificio_mapa";
+		String NAME = "get_mapa";
+		String SPACE = "pv_espaco_id";
 		String BUILDING = "pv_edificio_id";
 		String FLOOR = "pv_num_piso";
-	}
-
-	private interface RoomPic {
-		String NAME = "get_espaco_mapa";
-		String CODE = "pv_id";
 	}
 
 	private interface RoomFinder {
@@ -480,13 +493,26 @@ public class SifeupAPI {
 	/**
 	 * Students Search Url for Web Service
 	 * 
-	 * @param query
+	 * @param name
 	 * @param numPage
 	 * @return
 	 */
-	public static String getStudentsSearchUrl(String query, Integer numPage) {
+	public static String getStudentsSearchUrl(String code, String name,
+			String email, String state, String firstYear, Integer numPage) {
+		if (code == null)
+			code = "";
+		if (name == null)
+			name = "";
+		if (email == null)
+			email = "";
+		if (firstYear == null)
+			firstYear = "";
 		return WEBSERVICE + WebServices.STUDENT + StudentsSearch.NAME
-				+ WEBSERVICE_SEP + StudentsSearch.STUDENT_NAME + EQUALS + query
+				+ WEBSERVICE_SEP + StudentsSearch.STUDENT_NAME + EQUALS + name
+				+ LINK_SEP + StudentsSearch.STUDENT_CODE + EQUALS + code
+				+ LINK_SEP + StudentsSearch.STUDENT_EMAIL + EQUALS + email
+				+ LINK_SEP + StudentsSearch.STUDENT_FIRST_YEAR + EQUALS + firstYear
+				+ (state!=null?(LINK_SEP + StudentsSearch.STUDENT_STATE + EQUALS + state):"")
 				+ LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
 	}
 
@@ -538,10 +564,23 @@ public class SifeupAPI {
 	 * @param numPage
 	 * @return
 	 */
-	public static String getEmployeeSearchUrl(String query, Integer numPage) {
+	public static String getEmployeeSearchUrl(String code, String name,
+			String email, String state, String acronym, Integer numPage) {
+		if (code == null)
+			code = "";
+		if (name == null)
+			name = "";
+		if (email == null)
+			email = "";
+		if (acronym == null)
+			acronym = "";
 		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeSearch.NAME
-				+ WEBSERVICE_SEP + EmployeeSearch.EMPLOYEE_NAME + EQUALS
-				+ query + LINK_SEP + EmployeeSearch.PAGE + EQUALS + numPage;
+				+ WEBSERVICE_SEP + EmployeeSearch.EMPLOYEE_NAME + EQUALS + name
+				+ LINK_SEP + EmployeeSearch.EMPLOYEE_CODE + EQUALS + code
+				+ LINK_SEP + EmployeeSearch.EMPLOYEE_EMAIL + EQUALS + email
+				+ LINK_SEP + EmployeeSearch.EMPLOYEE_ACRONYM + EQUALS + acronym
+				+ (state!=null?(LINK_SEP + EmployeeSearch.EMPLOYEE_STATE + EQUALS + state):"")
+				+ LINK_SEP + EmployeeSearch.PAGE + EQUALS + numPage;
 	}
 
 	/**
@@ -565,7 +604,6 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.PRINTING + PrintingQuota.NAME
 				+ WEBSERVICE_SEP + PrintingQuota.CODE + EQUALS + code;
 	}
-	
 
 	/**
 	 * Printing MB Url for Web Service
@@ -578,7 +616,6 @@ public class SifeupAPI {
 				+ WEBSERVICE_SEP + PrintingRef.CODE + EQUALS + code + LINK_SEP
 				+ PrintingRef.VALUE + EQUALS + value;
 	}
-
 
 	/**
 	 * Printing Url for Web Service
@@ -628,6 +665,30 @@ public class SifeupAPI {
 				+ WEBSERVICE_SEP + SubjectProfile.CODE + EQUALS + code;
 	}
 
+	/**
+	 * Subjects Search Url for Web Service
+	 * 
+	 * @param name
+	 * @param numPage
+	 * @return
+	 */
+	public static String getSubjectsSearchUrl(String code, String name,
+			String acronym, String year, Integer numPage) {
+		if (code == null)
+			code = "";
+		if (name == null)
+			name = "";
+		if (acronym == null)
+			acronym = "";
+		return WEBSERVICE + WebServices.SUBJECT + SubjectSearch.NAME
+				+ WEBSERVICE_SEP + SubjectSearch.SUBJECT_NAME + EQUALS + name
+				+ LINK_SEP + SubjectSearch.SUBJECT_CODE + EQUALS + code
+				+ LINK_SEP + SubjectSearch.SUBJECT_ACRONYM + EQUALS + acronym
+				+ (year!=null?(LINK_SEP + SubjectSearch.SUBJECT_YEAR + EQUALS + year):"")
+				+ LINK_SEP + SubjectSearch.PAGE + EQUALS + numPage;
+	}
+
+	
 	public static String getSubjectOtherOccuencesUrl(String code) {
 		return WEBSERVICE + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
 				+ WEBSERVICE_SEP + SubjectOtherOccurrences.CODE + EQUALS + code;
@@ -741,8 +802,8 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getRoomPicUrl(String code) {
-		return WEBSERVICE + WebServices.FACILITIES + RoomPic.NAME
-				+ WEBSERVICE_SEP + RoomPic.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.FACILITIES + BuildingPic.NAME
+				+ WEBSERVICE_SEP + BuildingPic.SPACE + EQUALS + code;
 	}
 
 	/**
@@ -753,8 +814,8 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String[] getRoomPostFinderUrl(String building,
-			String floor, int x, int y) {
+	public static String[] getRoomPostFinderUrl(String building, String floor,
+			int x, int y) {
 		final String[] urls = new String[2];
 		urls[0] = WEBSERVICE + WebServices.ROOM_FINDER + RoomFinder.NAME;
 		try {
@@ -835,7 +896,7 @@ public class SifeupAPI {
 				+ LINK_SEP + ClassSchedule.WEEK_END + EQUALS + end;
 	}
 
-	public static String getRoomProfileUrl(String code, String begin, String end) {
+	public static String getRoomProfileUrl(String code) {
 		return WEBSERVICE + WebServices.FACILITIES + RoomProfile.NAME
 				+ WEBSERVICE_SEP + RoomProfile.CODE + EQUALS + code;
 	}
@@ -971,8 +1032,8 @@ public class SifeupAPI {
 				throw new IOException("Null page");
 		} while (page.equals(""));
 		try {
-			if (JSONError(page) == Errors.ERROR) //crash with a bang
-				throw new RuntimeException("page " + strUrl + "\n"+ page);
+			if (JSONError(page) == Errors.ERROR) // crash with a bang
+				throw new RuntimeException("page " + strUrl + "\n" + page);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1179,7 +1240,7 @@ public class SifeupAPI {
 				erro_msg = jObject.getString("erro_msg");
 				Log.d("JSON", erro_msg);
 			}
-			return Errors.ERROR;
+			throw new JSONException(page);
 		}
 
 		return Errors.NO_ERROR;

@@ -7,6 +7,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Friend;
 import pt.up.beta.mobile.loaders.FriendsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
@@ -81,7 +82,7 @@ public class FriendsListFragment extends BaseFragment implements
 
 	public void onResume() {
 		super.onResume();
-	    getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+		getActivity().getSupportLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -105,12 +106,13 @@ public class FriendsListFragment extends BaseFragment implements
 				return true;
 			Intent i = new Intent(getActivity(), ScheduleActivity.class);
 			i.putExtra(ScheduleFragment.SCHEDULE_CODE, loginCode);
-			if (friends.get(info.position).getCourse() == null)
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-						ScheduleFragment.SCHEDULE_EMPLOYEE);
-			else
+			if (friends.get(info.position).getType()
+					.equals(SifeupAPI.STUDENT_TYPE))
 				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
 						ScheduleFragment.SCHEDULE_STUDENT);
+			else
+				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+						ScheduleFragment.SCHEDULE_EMPLOYEE);
 			startActivity(i);
 		}
 		return false;
@@ -154,7 +156,8 @@ public class FriendsListFragment extends BaseFragment implements
 
 		// fill in the grid_item layout
 		list.setAdapter(new FriendAdapter(friends, getActivity()
-				.getLayoutInflater(),getActivity(), getActivity().getSupportLoaderManager()));
+				.getLayoutInflater(), getActivity(), getActivity()
+				.getSupportLoaderManager()));
 		list.setOnItemClickListener(this);
 		showMainScreen();
 		Log.i(TAG, "list loaded successfully");

@@ -66,8 +66,9 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 			if (cursor.moveToFirst()) {
 				try {
 					Gson gson = new Gson();
-					return gson.fromJson(cursor.getString(cursor
-							.getColumnIndex(SigarraContract.Profiles.CONTENT)),
+					final String content = cursor.getString(cursor
+							.getColumnIndex(SigarraContract.Profiles.CONTENT));
+					return gson.fromJson(content,
 							Employee.class);
 				} catch (Exception e) {
 					e.printStackTrace();

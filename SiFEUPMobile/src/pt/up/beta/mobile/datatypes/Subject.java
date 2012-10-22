@@ -1,280 +1,245 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import pt.up.beta.mobile.utils.ParcelUtils;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Rui Araújo
  * 
  */
-public class Subject {
+public class Subject implements Parcelable {
 	/** Subject code - EIC0083 */
-	private String code;
+	@SerializedName("codigo")
+	private final String code;
 
 	/** Subject Portuguese name - Arquitectura e Organização de Computadores */
-	private String namePt;
+	@SerializedName("nome")
+	private final String namePt;
 
 	/** Subject English name - */
-	private String nameEn;
+	@SerializedName("name")
+	private final String nameEn;
 
 	/** Subject acronym - */
-	private String acronym;
+	@SerializedName("sigla")
+	private final String acronym;
 
-	/** */
-	private String unitName;
+	@SerializedName("unidade_nome")
+	private final String unitName;
 
-	/** */
-	private String unitCode;
+	@SerializedName("unidade_id")
+	private final String unitCode;
 
-	/** */
-	private String year;
+	@SerializedName("pagina_web")
+	private final String webPage;
 
-	/** */
-	private String semestre;
+	@SerializedName("pagina_elearning")
+	private final String eLearningPage;
 
-	/** */
-	private List<Book> bibliography;
+	@SerializedName("lingua")
+	private final String language;
 
-	/** */
-	private List<Workload> workload;
+	@SerializedName("estado")
+	private final String state;
 
-	/** */
-	private String content;
+	@SerializedName("ano_lectivo")
+	private final String year;
 
-	/** */
-	private String objectives;
+	@SerializedName("conteudo")
+	private final String content;
 
-	/** */
-	private String metodology;
+	@SerializedName("objectivos")
+	private final String objectives;
 
-	/** */
-	private List<EvaluationComponent> evaluation;
+	@SerializedName("metodologia")
+	private final String metodology;
 
-	/** */
-	private String evaluationFormula;
+	@SerializedName("for_avaliacao")
+	private final String evaluationFormula;
 
-	/** */
-	private String frequenceCond;
+	@SerializedName("cond_frequencia")
+	private final String frequenceCond;
 
-	/** */
-	private String observations;
+	@SerializedName("observacoes")
+	private final String observations;
 
-	/** */
-	private String evaluationProc;
+	@SerializedName("forma_avaliacao")
+	private final String evaluationProc;
 
-	/** */
-	private String improvementProc;
+	@SerializedName("forma_melhoria")
+	private final String improvementProc;
 
-	/** */
-	private String evaluationExams;
+	@SerializedName("provas_avaliacao")
+	private final String evaluationExams;
 
-	/** */
-	private List<Responsible> responsibles;
+	@SerializedName("software_desc")
+	private final String softwareDesc;
 
-	/** */
-	private List<WorloadDesc> worloadDesc;
+	@SerializedName("comp_avaliacao_desc")
+	private final String evalutionDesc;
 
-	/** */
-	private List<Software> software;
-	
+	@SerializedName("bibliografia")
+	private final Book[] bibliography;
+
+	@SerializedName("carga_horaria")
+	private final Workload[] workload;
+
+	@SerializedName("comp_avaliacao")
+	private final EvaluationComponent[] evaluation;
+
+	@SerializedName("responsabilidades")
+	private final Responsible[] responsibles;
+
+	@SerializedName("ds")
+	private final WorkloadDesc[] worloadDesc;
+
+	@SerializedName("software")
+	private final Software[] software;
+
+	@SerializedName("keywords")
+	private final Keyword[] keywords;
+
+	@SerializedName("areas")
+	private final Area[] areas;
+
+	//added later
 	private SubjectFiles files;
 
-    public Subject() {
-            responsibles = new ArrayList<Responsible>();
-            workload = new ArrayList<Workload>();
-            worloadDesc = new ArrayList<WorloadDesc>();
-            evaluation = new ArrayList<EvaluationComponent>();
-            bibliography = new ArrayList<Book>();
-            software = new ArrayList<Software>();
-    }
+	private Subject(Parcel in) {
+		code = ParcelUtils.readString(in);
+		namePt = ParcelUtils.readString(in);
+		nameEn = ParcelUtils.readString(in);
+		acronym = ParcelUtils.readString(in);
+		unitName = ParcelUtils.readString(in);
+		unitCode = ParcelUtils.readString(in);
+		webPage = ParcelUtils.readString(in);
+		eLearningPage = ParcelUtils.readString(in);
+		language = ParcelUtils.readString(in);
+		state = ParcelUtils.readString(in);
+		year = ParcelUtils.readString(in);
+		content = ParcelUtils.readString(in);
+		objectives = ParcelUtils.readString(in);
+		metodology = ParcelUtils.readString(in);
+		evaluationFormula = ParcelUtils.readString(in);
+		frequenceCond = ParcelUtils.readString(in);
+		observations = ParcelUtils.readString(in);
+		evaluationProc = ParcelUtils.readString(in);
+		improvementProc = ParcelUtils.readString(in);
+		evaluationExams = ParcelUtils.readString(in);
+		softwareDesc = ParcelUtils.readString(in);
+		evalutionDesc = ParcelUtils.readString(in);
+		bibliography = (Book[]) in.readParcelableArray(Book.class
+				.getClassLoader());
+		workload = (Workload[]) in.readParcelableArray(Workload.class
+				.getClassLoader());
+		evaluation = (EvaluationComponent[]) in
+				.readParcelableArray(EvaluationComponent.class.getClassLoader());
+		responsibles = (Responsible[]) in.readParcelableArray(Responsible.class
+				.getClassLoader());
+		worloadDesc = (WorkloadDesc[]) in.readParcelableArray(WorkloadDesc.class
+				.getClassLoader());
+		software = (Software[]) in.readParcelableArray(Software.class
+				.getClassLoader());
+		keywords = (Keyword[]) in.readParcelableArray(Keyword.class
+				.getClassLoader());
+		areas = (Area[]) in.readParcelableArray(Area.class
+				.getClassLoader());
+		files = in.readParcelable(SubjectFiles.class.getClassLoader());
+
+	}
 
 	public String getCode() {
 		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getNamePt() {
 		return namePt;
 	}
 
-	public void setNamePt(String namePt) {
-		this.namePt = namePt;
-	}
-
 	public String getNameEn() {
 		return nameEn;
-	}
-
-	public void setNameEn(String nameEn) {
-		this.nameEn = nameEn;
 	}
 
 	public String getAcronym() {
 		return acronym;
 	}
 
-	public void setAcronym(String acronym) {
-		this.acronym = acronym;
-	}
-
 	public String getUnitName() {
 		return unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
 	}
 
 	public String getUnitCode() {
 		return unitCode;
 	}
 
-	public void setUnitCode(String unitCode) {
-		this.unitCode = unitCode;
-	}
-
 	public String getYear() {
 		return year;
 	}
 
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public String getSemestre() {
-		return semestre;
-	}
-
-	public void setSemester(String semestre) {
-		this.semestre = semestre;
-	}
-
-	public List<Book> getBibliography() {
+	public Book[] getBibliography() {
 		return bibliography;
 	}
 
-	public void setBibliography(List<Book> bibliography) {
-		this.bibliography = bibliography;
-	}
-
-	public List<Workload> getWorkload() {
+	public Workload[] getWorkload() {
 		return workload;
-	}
-
-	public void setWorkload(List<Workload> workload) {
-		this.workload = workload;
 	}
 
 	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
-	}
-
 	public String getObjectives() {
 		return objectives;
-	}
-
-	public void setObjectives(String objectives) {
-		this.objectives = objectives;
 	}
 
 	public String getMetodology() {
 		return metodology;
 	}
 
-	public void setMetodology(String metodology) {
-		this.metodology = metodology;
-	}
-
-	public List<EvaluationComponent> getEvaluation() {
+	public EvaluationComponent[] getEvaluation() {
 		return evaluation;
-	}
-
-	public void setEvaluation(List<EvaluationComponent> evaluation) {
-		this.evaluation = evaluation;
 	}
 
 	public String getEvaluationFormula() {
 		return evaluationFormula;
 	}
 
-	public void setEvaluationFormula(String evaluationFormula) {
-		this.evaluationFormula = evaluationFormula;
-	}
-
 	public String getFrequenceCond() {
 		return frequenceCond;
-	}
-
-	public void setFrequenceCond(String frequenceCond) {
-		this.frequenceCond = frequenceCond;
 	}
 
 	public String getObservations() {
 		return observations;
 	}
 
-	public void setObservations(String observations) {
-		this.observations = observations;
-	}
-
 	public String getEvaluationProc() {
 		return evaluationProc;
-	}
-
-	public void setEvaluationProc(String evaluationProc) {
-		this.evaluationProc = evaluationProc;
 	}
 
 	public String getImprovementProc() {
 		return improvementProc;
 	}
 
-	public void setImprovementProc(String improvementProc) {
-		this.improvementProc = improvementProc;
-	}
-
 	public String getEvaluationExams() {
 		return evaluationExams;
 	}
 
-	public void setEvaluationExams(String evaluationExams) {
-		this.evaluationExams = evaluationExams;
-	}
-
-	public List<Responsible> getResponsibles() {
+	public Responsible[] getResponsibles() {
 		return responsibles;
 	}
 
-	public void setResponsibles(List<Responsible> responsibles) {
-		this.responsibles = responsibles;
-	}
-
-	public List<WorloadDesc> getWorloadDesc() {
+	public WorkloadDesc[] getWorloadDesc() {
 		return worloadDesc;
 	}
 
-	public void setWorloadDesc(List<WorloadDesc> worloadDesc) {
-		this.worloadDesc = worloadDesc;
-	}
-
-	public List<Software> getSoftware() {
+	public Software[] getSoftware() {
 		return software;
-	}
-
-	public void setSoftware(List<Software> software) {
-		this.software = software;
 	}
 
 	public SubjectFiles getFiles() {
@@ -285,233 +250,355 @@ public class Subject {
 		this.files = files;
 	}
 
-	/** */
-	public static class Book implements Serializable {
+	public static class Book implements Parcelable {
+		@SerializedName("tipo")
+		private final String type;
 
-		/** */
-		private String type;
+		@SerializedName("tipo_descr")
+		private final String typeDescription;
 
-		/** */
-		private String typeDescription;
+		@SerializedName("autores")
+		private final String authors;
 
-		/** */
-		private String authors;
+		@SerializedName("titulo")
+		private final String title;
 
-		/** */
-		private String title;
+		@SerializedName("link")
+		private final String link;
 
-		/** */
-		private String link;
+		@SerializedName("isbn")
+		private final String isbn;
 
-		/** */
-		private String isbn;
+		@SerializedName("editor")
+		private final String editor;
+
+		@SerializedName("obs")
+		private final String observations;
+
+		@SerializedName("ano")
+		private final String year;
+
+		private Book(Parcel in) {
+			type = ParcelUtils.readString(in);
+			typeDescription = ParcelUtils.readString(in);
+			authors = ParcelUtils.readString(in);
+			title = ParcelUtils.readString(in);
+			link = ParcelUtils.readString(in);
+			isbn = ParcelUtils.readString(in);
+			editor = ParcelUtils.readString(in);
+			observations = ParcelUtils.readString(in);
+			year = ParcelUtils.readString(in);
+		}
+		
+
+		public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+			public Book createFromParcel(Parcel in) {
+				return new Book(in);
+			}
+
+			public Book[] newArray(int size) {
+				return new Book[size];
+			}
+		};
 
 		public String getType() {
 			return type;
 		}
 
-		public void setType(String type) {
-			this.type = type;
+		public String getEditor() {
+			return editor;
+		}
+
+		public String getObservations() {
+			return observations;
+		}
+
+		public String getYear() {
+			return year;
 		}
 
 		public String getTypeDescription() {
 			return typeDescription;
 		}
 
-		public void setTypeDescription(String typeDescription) {
-			this.typeDescription = typeDescription;
-		}
-
 		public String getAuthors() {
 			return authors;
-		}
-
-		public void setAuthors(String authors) {
-			this.authors = authors;
 		}
 
 		public String getTitle() {
 			return title;
 		}
 
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
 		public String getLink() {
 			return link;
-		}
-
-		public void setLink(String link) {
-			this.link = link;
 		}
 
 		public String getIsbn() {
 			return isbn;
 		}
 
-		public void setIsbn(String isbn) {
-			this.isbn = isbn;
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, type);
+			ParcelUtils.writeString(dest, typeDescription);
+			ParcelUtils.writeString(dest, authors);
+			ParcelUtils.writeString(dest, title);
+			ParcelUtils.writeString(dest, link);
+			ParcelUtils.writeString(dest, isbn);
+			ParcelUtils.writeString(dest, editor);
+			ParcelUtils.writeString(dest, observations);
+			ParcelUtils.writeString(dest, year);
 		}
 	}
 
-	/** */
-	private static class Workload implements Serializable {
+	public static class Workload implements Parcelable {
 
-		/** */
-		private String type;
+		@SerializedName("tipo")
+		private final String type;
 
-		/** */
-		private String description;
+		@SerializedName("descricao")
+		private final String description;
 
-		/** */
-		private String lenght;
+		@SerializedName("horas")
+		private final String lenght;
+
+		private Workload(Parcel in) {
+			type = ParcelUtils.readString(in);
+			description = ParcelUtils.readString(in);
+			lenght = ParcelUtils.readString(in);
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, type);
+			ParcelUtils.writeString(dest, description);
+			ParcelUtils.writeString(dest, lenght);
+		}
+		
+
+		public static final Parcelable.Creator<Workload> CREATOR = new Parcelable.Creator<Workload>() {
+			public Workload createFromParcel(Parcel in) {
+				return new Workload(in);
+			}
+
+			public Workload[] newArray(int size) {
+				return new Workload[size];
+			}
+		};
 	}
 
-	/** */
-	public static class EvaluationComponent implements Serializable {
+	public static class EvaluationComponent implements Parcelable {
+		@SerializedName("descricao")
+		private final String description;
 
-		/** */
-		private String description;
+		@SerializedName("peso")
+		private final String weight;
 
-		/** */
-		private String descriptionEn;
+		@SerializedName("tipo")
+		private final String type;
 
-		/** */
-		private String type;
+		@SerializedName("tipo_descr")
+		private final String typeDesc;
 
-		/** */
-		private String typeDesc;
+		@SerializedName("duracao")
+		private final String length;
 
-		/** */
-		private String length;
+		@SerializedName("data_conclusao")
+		private final String conclusionDate;
 
-		/** */
-		private String conclusionDate;
+		private EvaluationComponent(Parcel in) {
+			description = ParcelUtils.readString(in);
+			weight = ParcelUtils.readString(in);
+			type = ParcelUtils.readString(in);
+			typeDesc = ParcelUtils.readString(in);
+			length = ParcelUtils.readString(in);
+			conclusionDate = ParcelUtils.readString(in);
+		}
 
 		public String getDescription() {
 			return description;
 		}
 
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
 		public String getDescriptionEn() {
-			return descriptionEn;
-		}
-
-		public void setDescriptionEn(String descriptionEn) {
-			this.descriptionEn = descriptionEn;
+			return weight;
 		}
 
 		public String getType() {
 			return type;
 		}
 
-		public void setType(String type) {
-			this.type = type;
-		}
-
 		public String getTypeDesc() {
 			return typeDesc;
-		}
-
-		public void setTypeDesc(String typeDesc) {
-			this.typeDesc = typeDesc;
 		}
 
 		public String getLength() {
 			return length;
 		}
 
-		public void setLength(String length) {
-			this.length = length;
-		}
-
 		public String getConclusionDate() {
 			return conclusionDate;
 		}
 
-		public void setConclusionDate(String conclusionDate) {
-			this.conclusionDate = conclusionDate;
-		}
-	}
-
-	/** */
-	private static class Responsible{
-
-		/** */
-		private String code;
-
-		/** */
-		private String name;
-
-		/** */
-		private String job;
-	}
-
-	/** */
-	private static class WorloadDesc {
-
-		/** */
-		private String type;
-
-		/** */
-		private String typeDesc;
-
-		/** */
-		private String numClasses;
-
-		/** */
-		private String numHours;
-
-		/** */
-		private List<Teacher> teachers;
-
-		private WorloadDesc() {
-			teachers = new ArrayList<Teacher>();
+		@Override
+		public int describeContents() {
+			return 0;
 		}
 
-		public List<Teacher> getTeachers() {
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, description);
+			ParcelUtils.writeString(dest, weight);
+			ParcelUtils.writeString(dest, type);
+			ParcelUtils.writeString(dest, typeDesc);
+			ParcelUtils.writeString(dest, length);
+			ParcelUtils.writeString(dest, conclusionDate);
+		}
+
+		public static final Parcelable.Creator<EvaluationComponent> CREATOR = new Parcelable.Creator<EvaluationComponent>() {
+			public EvaluationComponent createFromParcel(Parcel in) {
+				return new EvaluationComponent(in);
+			}
+
+			public EvaluationComponent[] newArray(int size) {
+				return new EvaluationComponent[size];
+			}
+		};
+	}
+
+	public static class Responsible implements Parcelable {
+
+		@SerializedName("codigo")
+		private final String code;
+
+		@SerializedName("nome")
+		private final String name;
+
+		@SerializedName("papel")
+		private final String job;
+
+		private Responsible(Parcel in) {
+			code = ParcelUtils.readString(in);
+			name = ParcelUtils.readString(in);
+			job = ParcelUtils.readString(in);
+
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, code);
+			ParcelUtils.writeString(dest, name);
+			ParcelUtils.writeString(dest, job);
+
+		}
+
+		public static final Parcelable.Creator<Responsible> CREATOR = new Parcelable.Creator<Responsible>() {
+			public Responsible createFromParcel(Parcel in) {
+				return new Responsible(in);
+			}
+
+			public Responsible[] newArray(int size) {
+				return new Responsible[size];
+			}
+		};
+	}
+
+	public static class WorkloadDesc implements Parcelable {
+		@SerializedName("tipo")
+		private final String type;
+
+		@SerializedName("tipo_descricao")
+		private final String typeDesc;
+
+		@SerializedName("num_turmas")
+		private final String numClasses;
+
+		@SerializedName("num_horas")
+		private final String numHours;
+
+		@SerializedName("docentes")
+		private final Teacher[] teachers;
+
+		private WorkloadDesc(Parcel in) {
+			type = ParcelUtils.readString(in);
+			typeDesc = ParcelUtils.readString(in);
+			numClasses = ParcelUtils.readString(in);
+			numHours = ParcelUtils.readString(in);
+			teachers = (Teacher[]) in.readParcelableArray(Teacher.class
+					.getClassLoader());
+		}
+
+		public Teacher[] getTeachers() {
 			return teachers;
 		}
 
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+
+			ParcelUtils.writeString(dest, type);
+			ParcelUtils.writeString(dest, typeDesc);
+			ParcelUtils.writeString(dest, numClasses);
+			ParcelUtils.writeString(dest, numHours);
+			dest.writeParcelableArray(teachers, flags);
+		}
+
+		public static final Parcelable.Creator<WorkloadDesc> CREATOR = new Parcelable.Creator<WorkloadDesc>() {
+			public WorkloadDesc createFromParcel(Parcel in) {
+				return new WorkloadDesc(in);
+			}
+
+			public WorkloadDesc[] newArray(int size) {
+				return new WorkloadDesc[size];
+			}
+		};
 	}
 
-	public static class Teacher implements Serializable {
+	public static class Teacher implements Parcelable {
 
-		/** */
-		private String code;
+		@SerializedName("doc_codigo")
+		private final String code;
 
-		/** */
-		private String name;
+		@SerializedName("nome")
+		private final String name;
 
-		/** */
-		private String time;
+		@SerializedName("horas")
+		private final String time;
+
+		private Teacher(Parcel in) {
+			code = ParcelUtils.readString(in);
+			name = ParcelUtils.readString(in);
+			time = ParcelUtils.readString(in);
+		}
 
 		public String getCode() {
 			return code;
-		}
-
-		public void setCode(String code) {
-			this.code = code;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
-			this.name = name;
-		}
-
 		public String getTime() {
 			return time;
-		}
-
-		public void setTime(String time) {
-			this.time = time;
 		}
 
 		public boolean equals(Object t) {
@@ -520,210 +607,209 @@ public class Subject {
 			}
 			return false;
 		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, code);
+			ParcelUtils.writeString(dest, name);
+			ParcelUtils.writeString(dest, time);
+		}
+		public static final Parcelable.Creator<Teacher> CREATOR = new Parcelable.Creator<Teacher>() {
+			public Teacher createFromParcel(Parcel in) {
+				return new Teacher(in);
+			}
+
+			public Teacher[] newArray(int size) {
+				return new Teacher[size];
+			}
+		};
 	}
 
-	public static class Software  {
+	public static class Software implements Parcelable {
 
-		/** */
-		private String description;
+		@SerializedName("descricao")
+		private final String description;
 
-		/** */
-		private String name;
+		@SerializedName("nome")
+		private final String name;
+
+		private Software(Parcel in) {
+			description = ParcelUtils.readString(in);
+			name = ParcelUtils.readString(in);
+		}
 
 		public String getDescription() {
 			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		@Override
+		public int describeContents() {
+			return 0;
 		}
 
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, description);
+			ParcelUtils.writeString(dest, name);
+		}
+
+		public static final Parcelable.Creator<Software> CREATOR = new Parcelable.Creator<Software>() {
+			public Software createFromParcel(Parcel in) {
+				return new Software(in);
+			}
+
+			public Software[] newArray(int size) {
+				return new Software[size];
+			}
+		};
 	}
 
-	/**
-	 * Subject Description Parser Stores Description of Subject in
-	 * 
-	 * @link{SubjectDescriptionFragment Returns true in case of correct parsing.
-	 * 
-	 * @param page
-	 * @return Subject
-	 * @throws JSONException
-	 */
-	public Subject JSONSubject(String page) throws JSONException {
-		JSONObject jObject = new JSONObject(page);
+	public static class Area implements Parcelable {
 
-		if (jObject.has("codigo"))
-			this.code = jObject.getString("codigo");
-		if (jObject.has("nome"))
-			this.namePt = jObject.getString("nome");
-		if (jObject.has("name"))
-			this.nameEn = jObject.getString("name");
-		if (jObject.has("sigla"))
-			this.acronym = jObject.getString("sigla");
-		if (jObject.has("ano_lectivo"))
-			this.year = jObject.getString("ano_lectivo");
-		if (jObject.has("periodo"))
-			this.semestre = jObject.getString("periodo");
-		if (jObject.has("unidade_codigo"))
-			this.unitCode = jObject.getString("unidade_codigo");
-		if (jObject.has("unidade_nome"))
-			this.unitName = jObject.getString("unidade_nome");
+		@SerializedName("name")
+		private final String nameEn;
 
-		if (jObject.has("carga_horaria")) {
-			JSONArray jArray = jObject.getJSONArray("carga_horaria");
-			for (int i = 0; i < jArray.length(); i++) {
-				Workload work = new Workload();
-				JSONObject jWork = jArray.getJSONObject(i);
-				if (jWork.has("tipo"))
-					work.type = jWork.getString("tipo");
-				if (jWork.has("descricao"))
-					work.description = jWork.getString("descricao");
-				if (jWork.has("horas"))
-					work.lenght = jWork.getString("horas");
-				this.workload.add(work);
-			}
-		}
-		if (jObject.has("ds")) {
-			JSONArray jArray = jObject.getJSONArray("ds");
-			for (int i = 0; i < jArray.length(); i++) {
-				WorloadDesc work = new WorloadDesc();
-				JSONObject jWork = jArray.getJSONObject(i);
-				if (jWork.has("tipo"))
-					work.type = jWork.getString("tipo");
-				if (jWork.has("tipo_descricao"))
-					work.typeDesc = jWork.getString("tipo_descricao");
-				if (jWork.has("num_turmas"))
-					work.numClasses = jWork.getString("num_turmas");
-				if (jWork.has("num_horas"))
-					work.numHours = jWork.getString("num_horas");
-				if (jWork.has("docentes")) {
-					JSONArray jTeachers = jWork.getJSONArray("docentes");
-					for (int j = 0; j < jTeachers.length(); j++) {
-						Teacher teacher = new Teacher();
-						JSONObject jTeacher = jTeachers.getJSONObject(j);
-						if (jTeacher.has("doc_codigo"))
-							teacher.code = jTeacher.getString("doc_codigo");
-						if (jTeacher.has("nome"))
-							teacher.name = jTeacher.getString("nome");
-						if (jTeacher.has("horas"))
-							teacher.time = jTeacher.getString("horas");
-						work.teachers.add(teacher);
-					}
-				}
-				this.worloadDesc.add(work);
-			}
-		}
-		if (jObject.has("responsabilidades")) {
-			JSONArray jArray = jObject.getJSONArray("responsabilidades");
-			for (int i = 0; i < jArray.length(); i++) {
-				Responsible resp = new Responsible();
-				JSONObject jResp = jArray.getJSONObject(i);
-				if (jResp.has("codigo"))
-					resp.code = jResp.getString("codigo");
-				if (jResp.has("nome"))
-					resp.name = jResp.getString("nome");
-				if (jResp.has("papel"))
-					resp.job = jResp.getString("papel");
-				this.responsibles.add(resp);
-			}
-		}
-		if (jObject.has("objectivos"))
-			this.objectives = jObject.getString("objectivos");
-		if (jObject.has("conteudo"))
-			this.content = jObject.getString("conteudo");
-		if (jObject.has("bibliografia")) {
-			JSONArray jArray = jObject.getJSONArray("bibliografia");
-			for (int i = 0; i < jArray.length(); i++) {
-				Book book = new Book();
-				JSONObject jBook = jArray.getJSONObject(i);
-				if (jBook.has("tipo"))
-					book.type = jBook.getString("tipo");
-				if (jBook.has("tipo_descr"))
-					book.typeDescription = jBook.getString("tipo_descr");
-				if (jBook.has("autores"))
-					book.authors = jBook.getString("autores");
-				if (jBook.has("titulo"))
-					book.title = jBook.getString("titulo");
-				if (jBook.has("link"))
-					book.link = jBook.getString("link");
-				if (jBook.has("isbn"))
-					book.isbn = jBook.getString("isbn");
-				this.bibliography.add(book);
-			}
+		@SerializedName("nome")
+		private final String name;
+
+		private Area(Parcel in) {
+			nameEn = ParcelUtils.readString(in);
+			name = ParcelUtils.readString(in);
 		}
 
-		if (jObject.has("metodologia"))
-			this.metodology = jObject.getString("metodologia");
-		if (jObject.has("software")) {
-			JSONArray jArray = jObject.getJSONArray("software");
-			for (int i = 0; i < jArray.length(); i++) {
-				Software soft = new Software();
-				JSONObject jSoft = jArray.getJSONObject(i);
-				if (jSoft.has("descricao"))
-					soft.description = jSoft.getString("descricao");
-				if (jSoft.has("nome"))
-					soft.name = jSoft.getString("nome");
-				this.software.add(soft);
-			}
+		public String getNameEn() {
+			return nameEn;
 		}
-		// comp_avalicao might be present though empty
-		if (jObject.has("comp_avaliacao")) {
-			JSONArray jArray = jObject.optJSONArray("comp_avaliacao");
-			if (jArray != null) {
-				for (int i = 0; i < jArray.length(); i++) {
-					EvaluationComponent eval = new EvaluationComponent();
-					JSONObject jEval = jArray.getJSONObject(i);
-					if (jEval.has("descricao"))
-						eval.description = jEval.getString("descricao");
-					if (jEval.has("descricao_ing"))
-						eval.descriptionEn = jEval.getString("descricao_ing");
-					if (jEval.has("tipo"))
-						eval.type = jEval.getString("tipo");
-					if (jEval.has("tipo_descr"))
-						eval.typeDesc = jEval.getString("tipo_descr");
-					if (jEval.has("duracao"))
-						eval.length = jEval.getString("duracao");
-					if (jEval.has("data_conclusao"))
-						eval.conclusionDate = jEval.getString("data_conclusao");
-					this.evaluation.add(eval);
-				}
-			}
-		}
-		if (jObject.has("cond_frequencia"))
-			this.frequenceCond = jObject.getString("cond_frequencia");
-		if (jObject.has("for_avaliacao"))
-			this.evaluationFormula = jObject.getString("for_avaliacao");
-		if (jObject.has("provas_avaliacao"))
-			this.evaluationExams = jObject.getString("provas_avaliacao");
-		if (jObject.has("forma_avaliacao"))
-			this.evaluationProc = jObject.getString("forma_avaliacao");
-		if (jObject.has("forma_melhoria"))
-			this.improvementProc = jObject.getString("forma_melhoria");
-		if (jObject.has("observacoes"))
-			this.observations = jObject.getString("observacoes");
 
-		return this;
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, nameEn);
+			ParcelUtils.writeString(dest, name);
+		}
+
+		public static final Parcelable.Creator<Area> CREATOR = new Parcelable.Creator<Area>() {
+			public Area createFromParcel(Parcel in) {
+				return new Area(in);
+			}
+
+			public Area[] newArray(int size) {
+				return new Area[size];
+			}
+		};
+	}
+	
+
+
+	public static class Keyword implements Parcelable {
+
+		@SerializedName("descricao")
+		private final String description;
+
+		private Keyword(Parcel in) {
+			description = ParcelUtils.readString(in);
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, description);
+		}
+
+		public static final Parcelable.Creator<Keyword> CREATOR = new Parcelable.Creator<Keyword>() {
+			public Keyword createFromParcel(Parcel in) {
+				return new Keyword(in);
+			}
+
+			public Keyword[] newArray(int size) {
+				return new Keyword[size];
+			}
+		};
 	}
 
-	public List<Teacher> getTeachers() {
+	public Teacher[] getTeachers() {
 		List<Teacher> res = new ArrayList<Teacher>();
-
-		for (WorloadDesc wd : this.worloadDesc) {
+		for (WorkloadDesc wd : this.worloadDesc) {
 			for (Teacher t : wd.teachers)
 				if (!res.contains(t))
 					res.add(t);
 		}
 
-		return res;
+		return res.toArray(new Teacher[0]);
 	}
 
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtils.writeString(dest, code);
+		ParcelUtils.writeString(dest, namePt);
+		ParcelUtils.writeString(dest, nameEn);
+		ParcelUtils.writeString(dest, acronym);
+		ParcelUtils.writeString(dest, unitName);
+		ParcelUtils.writeString(dest, unitCode);
+		ParcelUtils.writeString(dest, webPage);
+		ParcelUtils.writeString(dest, eLearningPage);
+		ParcelUtils.writeString(dest, language);
+		ParcelUtils.writeString(dest, state);
+		ParcelUtils.writeString(dest, year);
+		ParcelUtils.writeString(dest, content);
+		ParcelUtils.writeString(dest, objectives);
+		ParcelUtils.writeString(dest, metodology);
+		ParcelUtils.writeString(dest, evaluationFormula);
+		ParcelUtils.writeString(dest, frequenceCond);
+		ParcelUtils.writeString(dest, observations);
+		ParcelUtils.writeString(dest, evaluationProc);
+		ParcelUtils.writeString(dest, improvementProc);
+		ParcelUtils.writeString(dest, evaluationExams);
+		ParcelUtils.writeString(dest, softwareDesc);
+		ParcelUtils.writeString(dest, evalutionDesc);
+		dest.writeParcelableArray(bibliography, flags);
+		dest.writeParcelableArray(workload, flags);
+		dest.writeParcelableArray(evaluation, flags);
+		dest.writeParcelableArray(responsibles, flags);
+		dest.writeParcelableArray(worloadDesc, flags);
+		dest.writeParcelableArray(software, flags);
+		dest.writeParcelableArray(keywords, flags);
+		dest.writeParcelableArray(areas, flags);
+		dest.writeParcelable(files, flags);
+	}
+
+	public static final Parcelable.Creator<Subject> CREATOR = new Parcelable.Creator<Subject>() {
+		public Subject createFromParcel(Parcel in) {
+			return new Subject(in);
+		}
+
+		public Subject[] newArray(int size) {
+			return new Subject[size];
+		}
+	};
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -15,10 +18,10 @@ import com.google.gson.annotations.SerializedName;
  * @author Ângela Igreja
  * 
  */
-public class Student extends Profile {
+public class Student extends Profile implements Parcelable {
 
 	@SerializedName("cursos")
-	private List<StudentCourse> courses;
+	private final StudentCourse[] courses;
 
 	public interface Type {
 		String EMAIL = "email";
@@ -27,9 +30,9 @@ public class Student extends Profile {
 
 	public List<ProfileDetail> getProfileContents(Resources res) {
 		List<ProfileDetail> result = new ArrayList<ProfileDetail>();
-		if (code != null && !code.equals("")) {
+		if (!TextUtils.isEmpty(getCode())) {
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_code), code, null));
+					.getString(R.string.profile_title_code), getCode(), null));
 		}
 		if (getEmail() != null) {
 			result.add(new ProfileDetail(res
@@ -61,25 +64,48 @@ public class Student extends Profile {
 		return SifeupAPI.STUDENT_TYPE;
 	}
 
-	public List<StudentCourse> getCourses() {
+	public StudentCourse[] getCourses() {
 		return courses;
 	}
 
-	public void setCourses(List<StudentCourse> courses) {
-		this.courses = courses;
-	}
-
-	public CharSequence getProgrammeNames() {
-		if (courses.size() == 0)
+	public String getProgrammeNames() {
+		if (courses.length == 0)
 			return "";
-		if (courses.size() == 1)
-			return courses.get(0).getCourseName();
+		if (courses.length == 1)
+			return courses[0].getCourseName();
 		final StringBuilder st = new StringBuilder();
-		for (int i = 0; i < courses.size(); ++i) {
+		for (int i = 0; i < courses.length; ++i) {
 			if (i != 0)
 				st.append(" ,");
-			st.append(courses.get(i).getCourseName());
+			st.append(courses[i].getCourseName());
 		}
 		return st.toString();
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeParcelableArray(courses, flags);
+	}
+
+	private Student(Parcel in) {
+		super(in);
+		courses = (StudentCourse[]) in.readParcelableArray(StudentCourse.class
+				.getClassLoader());
+	}
+
+	public static final Parcelable.Creator<Student> CREATOR = new Parcelable.Creator<Student>() {
+		public Student createFromParcel(Parcel in) {
+			return new Student(in);
+		}
+
+		public Student[] newArray(int size) {
+			return new Student[size];
+		}
+	};
 }

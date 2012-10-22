@@ -7,6 +7,7 @@ import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -20,6 +21,7 @@ public class SigarraProvider extends ContentProvider {
 	// Used for the UriMacher
 	private static final int LAST_SYNC = 0;
 	private static final int SUBJECTS = 10;
+	private static final int SUBJECT = 11;
 	private static final int FRIENDS = 20;
 	private static final int PROFILES = 30;
 	private static final int PROFILES_PIC = 31;
@@ -38,6 +40,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_LAST_SYNC, LAST_SYNC);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_SUBJECTS, SUBJECTS);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_SUBJECT, SUBJECT);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_FRIENDS, FRIENDS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
@@ -83,6 +87,7 @@ public class SigarraProvider extends ContentProvider {
 		case LAST_SYNC:
 			table = LastSyncTable.TABLE;
 			break;
+		case SUBJECT:
 		case SUBJECTS:
 			table = SubjectsTable.TABLE;
 			break;
@@ -131,6 +136,8 @@ public class SigarraProvider extends ContentProvider {
 		switch (uriType) {
 		case LAST_SYNC:
 			return SigarraContract.LastSync.CONTENT_TYPE;
+		case SUBJECT:
+			return SigarraContract.Subjects.CONTENT_ITEM_TYPE;
 		case SUBJECTS:
 			return SigarraContract.Subjects.CONTENT_TYPE;
 		case FRIENDS:
@@ -168,6 +175,7 @@ public class SigarraProvider extends ContentProvider {
 			table = LastSyncTable.TABLE;
 			nullHack = null;
 			break;
+		case SUBJECT:
 		case SUBJECTS:
 			table = SubjectsTable.TABLE;
 			nullHack = null;
@@ -228,7 +236,7 @@ public class SigarraProvider extends ContentProvider {
 
 		if (uriType != LAST_SYNC && uriType != FRIENDS) {
 			if (values.length > 0)
-				updateLastSyncState(table);
+				updateLastSyncState(getContext(),table);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return values.length;
@@ -244,6 +252,7 @@ public class SigarraProvider extends ContentProvider {
 			table = LastSyncTable.TABLE;
 			nullHack = null;
 			break;
+		case SUBJECT:
 		case SUBJECTS:
 			table = SubjectsTable.TABLE;
 			nullHack = null;
@@ -294,7 +303,7 @@ public class SigarraProvider extends ContentProvider {
 		long rowID = getWritableDatabase().replace(table, nullHack, values);
 		if (rowID > 0) {
 			if (uriType != LAST_SYNC && uriType != FRIENDS)
-				updateLastSyncState(table);
+				updateLastSyncState(getContext(),table);
 			final Uri url = ContentUris.withAppendedId(uri, rowID);
 			getContext().getContentResolver().notifyChange(url, null);
 			getContext().getContentResolver().notifyChange(uri, null);
@@ -332,7 +341,16 @@ public class SigarraProvider extends ContentProvider {
 						sortOrder);
 			}
 			break;
-
+		case SUBJECT:
+			qb.setTables(SubjectsTable.TABLE);
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				SigarraSyncAdapterUtils.syncSubject(
+						AccountUtils.getActiveUserName(getContext()),
+						selectionArgs[0]);
+			}
+			break;
 		case SUBJECTS:
 			qb.setTables(SubjectsTable.TABLE);
 			c = qb.query(getWritableDatabase(), projection, selection,
@@ -347,20 +365,9 @@ public class SigarraProvider extends ContentProvider {
 										.getActiveUserName(getContext())), null);
 				if (syncState.moveToFirst()) {
 					if (syncState.getLong(syncState
-							.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) == 0
-							|| selectionArgs.length == 3) {
-
-						/*
-						 * This means we re getting single subject
-						 */
-						if (selectionArgs.length == 3)
-							SigarraSyncAdapterUtils.syncSubject(AccountUtils
-									.getActiveUserName(getContext()),
-									selectionArgs[0]);
-						else
-							SigarraSyncAdapterUtils.syncSubjects(AccountUtils
-									.getActiveUserName(getContext()));
-
+							.getColumnIndex(SigarraContract.LastSync.SUBJECTS)) == 0) {
+						SigarraSyncAdapterUtils.syncSubjects(AccountUtils
+								.getActiveUserName(getContext()));
 					}
 				} else
 					throw new RuntimeException("It should always have a result");
@@ -535,7 +542,6 @@ public class SigarraProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
-
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
@@ -550,6 +556,7 @@ public class SigarraProvider extends ContentProvider {
 		case LAST_SYNC:
 			table = LastSyncTable.TABLE;
 			break;
+		case SUBJECT:
 		case SUBJECTS:
 			table = SubjectsTable.TABLE;
 			break;
@@ -585,19 +592,19 @@ public class SigarraProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 		if (uriType != LAST_SYNC && uriType != FRIENDS)
-			updateLastSyncState(table);
+			updateLastSyncState(getContext(),table);
 		count = getWritableDatabase().update(table, values, selection,
 				selectionArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
 
-	void updateLastSyncState(final String column) {
+	public static void updateLastSyncState(final Context context, final String column) {
 		final ContentValues values = new ContentValues();
 		values.put(column, Long.toString(System.currentTimeMillis()));
-		update(SigarraContract.LastSync.CONTENT_URI, values,
+		context.getContentResolver().update(SigarraContract.LastSync.CONTENT_URI, values,
 				SigarraContract.LastSync.PROFILE,
 				SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
-						.getActiveUserName(getContext())));
+						.getActiveUserName(context)));
 	}
 }

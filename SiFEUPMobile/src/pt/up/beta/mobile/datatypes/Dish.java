@@ -1,5 +1,8 @@
 package pt.up.beta.mobile.datatypes;
 
+import com.google.gson.annotations.SerializedName;
+
+import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,84 +13,60 @@ import android.os.Parcelable;
  * 
  */
 public class Dish implements Parcelable {
-    private String state;
-    private String description;
-    private int type;
-    private String descriptionType;
 
-    public Dish() {
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	@SerializedName("estado")
+	private final String state;
+	@SerializedName("descricao")
+	private final String description;
+	@SerializedName("tipo")
+	private final int type;
+	@SerializedName("tipo_descr")
+	private final String descriptionType;
 
-    public String getDescription() {
-        return description;
-    }
+	private Dish(Parcel in) {
+		state = ParcelUtils.readString(in);
+		description = ParcelUtils.readString(in);
+		descriptionType = ParcelUtils.readString(in);
+		type = in.readInt();
+	}
 
-    public void setDescriptionType(String descriptionType) {
-        this.descriptionType = descriptionType;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getDescriptionType() {
-        return descriptionType;
-    }
+	public String getDescriptionType() {
+		return descriptionType;
+	}
 
-    public String getState() {
-        return state;
-    }
+	public String getState() {
+		return state;
+	}
 
-    public void setState(String state) {
-        this.state = state;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public int getType() {
-        return type;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtils.writeString(dest, state);
+		ParcelUtils.writeString(dest, description);
+		ParcelUtils.writeString(dest, descriptionType);
+		dest.writeInt(type);
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
+		public Dish createFromParcel(Parcel in) {
+			return new Dish(in);
+		}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    	dest.writeInt(state!=null?1:0);
-    	if ( state != null )
-    		dest.writeString(state);
-    	dest.writeInt(description!=null?1:0);
-    	if ( description != null )
-    		dest.writeString(description);
-        dest.writeInt(type);
-    	dest.writeInt(descriptionType!=null?1:0);
-    	if ( descriptionType != null )
-    		dest.writeString(descriptionType);
-    }
-
-    public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
-        public Dish createFromParcel(Parcel in) {
-            return new Dish(in);
-        }
-
-        public Dish[] newArray(int size) {
-            return new Dish[size];
-        }
-    };
-
-    private Dish(Parcel in) {
-    	if ( in.readInt() == 1 )
-    		state = in.readString();
-        if ( in.readInt() == 1 )
-        	description = in.readString();
-        type = in.readInt();
-        if ( in.readInt() == 1 )
-        	descriptionType = in.readString();
-    }
-
+		public Dish[] newArray(int size) {
+			return new Dish[size];
+		}
+	};
 
 }

@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import pt.up.beta.mobile.datatypes.RoomProfile;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import android.accounts.AuthenticatorException;
@@ -20,44 +21,57 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+
 public class FacilitiesUtils {
 	private FacilitiesUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getBuildingPic(
-			String building, int floor, ResponseCommand<Bitmap> command, Context context) {
-		return new BuildingsTask(command, context).execute(SifeupAPI.getBuildingPicUrl(
-				building, floor));
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomProfile(
+			String room, ResponseCommand<RoomProfile> command, Context context) {
+		return new FetcherTask<RoomProfile>(command, new RoomProfileParser(),
+				context).execute(SifeupAPI.getRoomProfileUrl(room));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(String room, ResponseCommand<Bitmap> command, Context context) {
-		return new BuildingsTask(command,context ).execute(SifeupAPI.getRoomPicUrl(room));
+	public static AsyncTask<String, Void, ERROR_TYPE> getBuildingPic(
+			String building, int floor, ResponseCommand<Bitmap> command,
+			Context context) {
+		return new BuildingsTask(command, context).execute(SifeupAPI
+				.getBuildingPicUrl(building, floor));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomPic(String room,
+			ResponseCommand<Bitmap> command, Context context) {
+		return new BuildingsTask(command, context).execute(SifeupAPI
+				.getRoomPicUrl(room));
 	}
 
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingsHotspot(
 			InputStream file, ResponseCommand<List<BuildingPicHotspot>> command) {
 		return new BuildingsHotspotTask(command, null).execute(file);
 	}
-	
+
 	public static AsyncTask<InputStream, Void, ERROR_TYPE> getBuildingHotspot(
-			InputStream file, String buildingCode, ResponseCommand<List<BuildingPicHotspot>> command) {
-		return new BuildingsHotspotTask(command,buildingCode ).execute(file);
-	}
-	
-	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
-			String building,String floor, int x , int y, ResponseCommand<String> command) {
-		return new RoomFinderTask(command).execute(SifeupAPI.getRoomPostFinderUrl(building, floor, x, y));
+			InputStream file, String buildingCode,
+			ResponseCommand<List<BuildingPicHotspot>> command) {
+		return new BuildingsHotspotTask(command, buildingCode).execute(file);
 	}
 
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
+			String building, String floor, int x, int y,
+			ResponseCommand<String> command) {
+		return new RoomFinderTask(command).execute(SifeupAPI
+				.getRoomPostFinderUrl(building, floor, x, y));
+	}
 
 	private static class RoomFinderTask extends
 			AsyncTask<String, Void, ERROR_TYPE> {
 		private final ResponseCommand<String> command;
 		private String response;
+
 		public RoomFinderTask(ResponseCommand<String> command) {
 			this.command = command;
 		}
-		
 
 		@Override
 		// Once the image is downloaded, associates it to the imageView
@@ -76,24 +90,39 @@ public class FacilitiesUtils {
 			HttpResponse page = SifeupAPI.post(params[0], params[1]);
 			if (page == null)
 				return ERROR_TYPE.NETWORK;
-			if ( !page.containsHeader("Location") )
+			if (!page.containsHeader("Location"))
 				return ERROR_TYPE.GENERAL;
 			String url = page.getFirstHeader("Location").getValue();
-			String [] urlParam = url.substring(url.indexOf("?")).split("&");
-			response = urlParam[0].substring(urlParam[0].indexOf("=")+1).trim()
-						+ urlParam[1].substring(urlParam[1].indexOf("=")+1).trim();
+			String[] urlParam = url.substring(url.indexOf("?")).split("&");
+			response = urlParam[0].substring(urlParam[0].indexOf("=") + 1)
+					.trim()
+					+ urlParam[1].substring(urlParam[1].indexOf("=") + 1)
+							.trim();
 			return null;
 		}
 
 	}
-	
-	
+
+	private static class RoomProfileParser implements
+			ParserCommand<RoomProfile> {
+
+		@Override
+		public RoomProfile parse(String page) {
+			final Gson gson = new Gson();
+			return gson.fromJson(page, RoomProfile.class);
+		}
+
+	}
+
 	private static class BuildingsHotspotTask extends
 			AsyncTask<InputStream, Void, ERROR_TYPE> {
 		private List<BuildingPicHotspot> hotspots;
 		private final ResponseCommand<List<BuildingPicHotspot>> command;
 		private final String buildingCode;
-		public BuildingsHotspotTask(ResponseCommand<List<BuildingPicHotspot>> command, String buildingCode) {
+
+		public BuildingsHotspotTask(
+				ResponseCommand<List<BuildingPicHotspot>> command,
+				String buildingCode) {
 			this.command = command;
 			this.buildingCode = buildingCode;
 		}
@@ -104,16 +133,12 @@ public class FacilitiesUtils {
 			if (isCancelled()) {
 				return;
 			}
-			if (error == null)
-			{
-				if ( buildingCode == null )
+			if (error == null) {
+				if (buildingCode == null)
 					command.onResultReceived(hotspots);
-				else
-				{
-					for ( BuildingPicHotspot hot : hotspots )
-					{
-						if (buildingCode.equals(hot.getBuildingCode()) )
-						{
+				else {
+					for (BuildingPicHotspot hot : hotspots) {
+						if (buildingCode.equals(hot.getBuildingCode())) {
 							List<BuildingPicHotspot> hotspot = new ArrayList<BuildingPicHotspot>();
 							hotspot.add(hot);
 							command.onResultReceived(hotspot);
@@ -121,11 +146,9 @@ public class FacilitiesUtils {
 						}
 					}
 				}
-			}
-			else
+			} else
 				command.onError(error);
 		}
-
 
 		@Override
 		protected ERROR_TYPE doInBackground(InputStream... params) {
@@ -134,8 +157,7 @@ public class FacilitiesUtils {
 				page = SifeupAPI.getPage(params[0], "UTF-8");
 				if (page == null)
 					return ERROR_TYPE.GENERAL;
-				hotspots = new BuldingHotSpotParser()
-						.parse(page);
+				hotspots = new BuldingHotSpotParser().parse(page);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -149,7 +171,8 @@ public class FacilitiesUtils {
 	 * Collection exams.
 	 */
 
-	private static class BuldingHotSpotParser implements ParserCommand<List<BuildingPicHotspot>> {
+	private static class BuldingHotSpotParser implements
+			ParserCommand<List<BuildingPicHotspot>> {
 
 		public List<BuildingPicHotspot> parse(String page) {
 			try {
@@ -189,7 +212,8 @@ public class FacilitiesUtils {
 				ACRA.getErrorReporter().handleSilentException(e);
 				ACRA.getErrorReporter().handleSilentException(
 						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n" + page));
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
 			}
 			return null;
 		}
@@ -212,7 +236,8 @@ public class FacilitiesUtils {
 		protected ERROR_TYPE doInBackground(String... params) {
 			// params comes from the execute() call: params[0] is the url.
 			try {
-				bitmap = SifeupAPI.downloadBitmap(params[0], AccountUtils.getAuthToken(context), context);
+				bitmap = SifeupAPI.downloadBitmap(params[0],
+						AccountUtils.getAuthToken(context), context);
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
 				return ERROR_TYPE.AUTHENTICATION;

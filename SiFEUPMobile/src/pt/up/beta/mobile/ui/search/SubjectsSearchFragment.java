@@ -4,16 +4,17 @@ import java.util.ArrayList;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.ResultsPage;
-import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.datatypes.StudentSearchResult;
+import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SearchUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.profile.ProfileActivity;
+import pt.up.beta.mobile.ui.personalarea.SubjectDescriptionActivity;
+import pt.up.beta.mobile.ui.personalarea.SubjectDescriptionFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 
 import com.commonsware.cwac.endless.EndlessAdapter;
 
+import external.com.google.android.apps.iosched.util.UIUtils;
+
 /**
  * This interface is responsible for fetching the results of research to the
  * server and shows them a list. When loading a list item launches the activity
@@ -36,18 +39,17 @@ import com.commonsware.cwac.endless.EndlessAdapter;
  * @author Ângela Igreja
  * 
  */
-public class StudentsSearchFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand<ResultsPage<StudentSearchResult>> {
+public class SubjectsSearchFragment extends BaseFragment implements
+		OnItemClickListener, ResponseCommand<ResultsPage<SubjectSearchResult>> {
 
 	// query is in SearchActivity, sent to here in the arguments
-	private ArrayList<StudentSearchResult> results = new ArrayList<StudentSearchResult>();
-	private ResultsPage<StudentSearchResult> resultPage;
+	private ArrayList<SubjectSearchResult> results = new ArrayList<SubjectSearchResult>();
+	private ResultsPage<SubjectSearchResult> resultPage;
 	private ListAdapter adapter;
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
-	private final static String REGEX_CODE = "^[0-9]*$";
-//TODO: implement the rest of the lifecycle
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -60,12 +62,8 @@ public class StudentsSearchFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		query = getArguments().getString(SearchManager.QUERY);
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		task = SearchUtils.getSubjectsSearchByNameReply(query, this,
+				getActivity());
 	}
 
 	private boolean hasMoreResults() {
@@ -94,7 +92,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(ResultsPage<StudentSearchResult> results) {
+	public void onResultReceived(ResultsPage<SubjectSearchResult> results) {
 		if (getActivity() == null)
 			return;
 
@@ -103,21 +101,22 @@ public class StudentsSearchFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.toast_search_error));
 			return;
 		}
-		for (StudentSearchResult s : resultPage.getResults())
+		for (SubjectSearchResult s : resultPage.getResults())
 			this.results.add(s);
 
 		if (hasMoreResults()) {
 			adapter = new EndlessSearchAdapter(getActivity(),
 					new SearchCustomAdapter(getActivity(),
-							R.layout.list_item_search, new Student[0]),
+							R.layout.list_item_search,
+							new SubjectSearchResult[0]),
 					R.layout.list_item_loading);
 		} else {
 			adapter = new SearchCustomAdapter(getActivity(),
-					R.layout.list_item_friend, new Student[0]);
+					R.layout.list_item_friend, new SubjectSearchResult[0]);
 
 		}
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(StudentsSearchFragment.this);
+		list.setOnItemClickListener(SubjectsSearchFragment.this);
 		list.setSelection(0);
 		showMainScreen();
 	}
@@ -135,13 +134,15 @@ public class StudentsSearchFragment extends BaseFragment implements
 			if (a.getItemViewType(position) == Adapter.IGNORE_ITEM_VIEW_TYPE)
 				return;
 		}
-		Intent i = new Intent(getActivity(), ProfileActivity.class);
+		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
 		// assumed only one page of results
-		StudentSearchResult profile = results.get(position);
-		i.putExtra(Intent.EXTRA_TITLE, profile.getName());
-		i.putExtra(ProfileActivity.PROFILE_TYPE,
-				ProfileActivity.PROFILE_STUDENT);
-		i.putExtra(ProfileActivity.PROFILE_CODE, profile.getCode());
+		SubjectSearchResult subject = results.get(position);
+		String title = subject.getName();
+		if (!UIUtils.isLocalePortuguese()
+				&& !TextUtils.isEmpty(subject.getNameEn()))
+			title = subject.getNameEn();
+		i.putExtra(Intent.EXTRA_TITLE, title);
+		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE, subject.getId());
 		startActivity(i);
 	}
 
@@ -154,18 +155,14 @@ public class StudentsSearchFragment extends BaseFragment implements
 
 		@Override
 		protected boolean cacheInBackground() throws Exception {
-			final ResultsPage<StudentSearchResult> page;
-			if (query.matches(REGEX_CODE))
-				page = SearchUtils.getStudentsSearchByCodeReply(query,
-						++currentPage, getActivity());
-			else
-				page = SearchUtils.getStudentsSearchByNameReply(query,
-						++currentPage, getActivity());
+			final ResultsPage<SubjectSearchResult> page;
+			page = SearchUtils.getSubjectsSearchByNameReply(query,
+					++currentPage, getActivity());
 			if (page == null)
 				return false;
-			for (StudentSearchResult s : page.getResults())
+			for (SubjectSearchResult s : page.getResults())
 				results.add(s);
-			if ( !hasMoreResults() || page.getResults().length == 0)
+			if (!hasMoreResults() || page.getResults().length == 0)
 				return false;
 			else
 				return true;
@@ -178,10 +175,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-	public class SearchCustomAdapter extends ArrayAdapter<Student> {
+	public class SearchCustomAdapter extends ArrayAdapter<SubjectSearchResult> {
 
 		public SearchCustomAdapter(Context context, int textViewResourceId,
-				Student[] objects) {
+				SubjectSearchResult[] objects) {
 			super(context, textViewResourceId, objects);
 		}
 
@@ -194,10 +191,18 @@ public class StudentsSearchFragment extends BaseFragment implements
 				row = inflater
 						.inflate(R.layout.list_item_search, parent, false);
 			}
-			TextView name = (TextView) row.findViewById(R.id.friend_name);
-			name.setText(results.get(position).getName());
-			TextView course = (TextView) row.findViewById(R.id.friend_course);
-			course.setText(results.get(position).getCourse());
+			final TextView name = (TextView) row.findViewById(R.id.friend_name);
+			String title = results.get(position).getName();
+			if (!UIUtils.isLocalePortuguese()
+					&& !TextUtils.isEmpty(results.get(position).getNameEn()))
+				title = results.get(position).getNameEn();
+			name.setText(title);
+			final TextView course = (TextView) row
+					.findViewById(R.id.friend_course);
+			course.setText(results.get(position).getCode()
+					+ " "
+					+ getString(R.string.subjects_year, results.get(position)
+							.getYear(), results.get(position).getPeriod()));
 			return row;
 		}
 
@@ -206,15 +211,10 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-
 	protected void onRepeat() {
 		showLoadingScreen();
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		task = SearchUtils.getSubjectsSearchByNameReply(query, this,
+				getActivity());
 	}
 
 }

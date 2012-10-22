@@ -1,28 +1,29 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
+import pt.up.beta.mobile.utils.ParcelUtils;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Ângela Igreja
  * 
  */
-@SuppressWarnings("serial")
-public class SubjectFiles implements Serializable {
+public class SubjectFiles implements Parcelable {
 
 	public SubjectFiles() {
-		root = new Folder();
-		root.level = 0;
-		current = root;
+		current = root = new Folder(0);
 	}
 
-	/** Current Folder */
-	private Folder root;
+	/** Root Folder */
+	private final Folder root;
 
 	/** Current Folder */
 	private Folder current;
@@ -38,18 +39,21 @@ public class SubjectFiles implements Serializable {
 	}
 
 	/** Class Folder */
-	public class Folder implements Serializable {
-		/** */
-		private int code;
+	public static class Folder implements Parcelable {
+		@SerializedName("codigo")
+		private final int code;
 
-		/** */
-		private String name;
+		@SerializedName("nome")
+		private final String name;
 
-		/** */
-		private int level;
+		@SerializedName("name")
+		private final String nameEn;
 
-		/** */
-		private List<File> files = new ArrayList<File>();
+		@SerializedName("nivel")
+		private final int level;
+
+		@SerializedName("ficheiros")
+		private final File[] files;
 
 		/** List of folders */
 		private List<Folder> folders = new ArrayList<Folder>();
@@ -57,36 +61,43 @@ public class SubjectFiles implements Serializable {
 		/** Parent Folder */
 		private Folder parent;
 
-		public int getCode() {
-			return code;
+		private Folder(int level) {
+			this.level = level;
+			name = null;
+			nameEn = null;
+			files = new File[0];
+			code = 0;
 		}
 
-		public void setCode(int code) {
-			this.code = code;
+		private Folder(Parcel in) {
+			code = in.readInt();
+			name = ParcelUtils.readString(in);
+			nameEn = ParcelUtils.readString(in);
+			level = in.readInt();
+			files = (File[]) in
+					.readParcelableArray(File.class.getClassLoader());
+			in.readTypedList(folders, CREATOR);
+			parent = in.readParcelable(Folder.class.getClassLoader());
+		}
+
+		public int getCode() {
+			return code;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		public String getNameEn() {
+			return nameEn;
 		}
 
 		public int getLevel() {
 			return level;
 		}
 
-		public void setLevel(int level) {
-			this.level = level;
-		}
-
-		public List<File> getFiles() {
+		public File[] getFiles() {
 			return files;
-		}
-
-		public void setFiles(List<File> files) {
-			this.files = files;
 		}
 
 		public void setParent(Folder parent) {
@@ -100,109 +111,138 @@ public class SubjectFiles implements Serializable {
 		public List<Folder> getFolders() {
 			return folders;
 		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(code);
+			ParcelUtils.writeString(dest, name);
+			ParcelUtils.writeString(dest, nameEn);
+			dest.writeInt(level);
+			dest.writeParcelableArray(files, flags);
+			dest.writeTypedList(folders);
+			dest.writeParcelable(parent, flags);
+		}
+
+		public static final Parcelable.Creator<Folder> CREATOR = new Parcelable.Creator<Folder>() {
+			public Folder createFromParcel(Parcel in) {
+				return new Folder(in);
+			}
+
+			public Folder[] newArray(int size) {
+				return new Folder[size];
+			}
+		};
 	}
 
 	/** Class File */
-	public class File implements Serializable {
+	public static class File implements Parcelable {
+		@SerializedName("codigo")
+		private final int code;
+		
+		@SerializedName("nome")
+		private final String name;
 
-		/** */
-		private int code;
+		@SerializedName("tipo")
+		private final String type;
 
-		/** */
-		private String name;
+		@SerializedName("url")
+		private final String url;
 
-		/** */
-		private String type;
+		@SerializedName("filename")
+		private final String filename;
 
-		/** */
-		private String url;
+		@SerializedName("tamanho")
+		private final long size;
 
-		/** */
-		private String filename;
+		@SerializedName("data_actualizacao")
+		private final String updateDate;
 
-		/** */
-		private long size;
+		@SerializedName("comentario")
+		private final String comment;
 
-		/** */
-		private String updateDate;
+		@SerializedName("descricao")
+		private final String description;
 
-		/** */
-		private String comment;
-
-		/** */
-		private String description;
-
-		public void setCode(int code) {
-			this.code = code;
+		private File(Parcel in) {
+			name = ParcelUtils.readString(in);
+			type = ParcelUtils.readString(in);
+			url = ParcelUtils.readString(in);
+			filename = ParcelUtils.readString(in);
+			updateDate = ParcelUtils.readString(in);
+			comment = ParcelUtils.readString(in);
+			description = ParcelUtils.readString(in);
+			code = in.readInt();
+			size = in.readLong();
 		}
 
 		public int getCode() {
 			return code;
 		}
 
-		public void setName(String name) {
-			this.name = name;
-		}
-
 		public String getName() {
 			return name;
-		}
-
-		public void setType(String type) {
-			this.type = type;
 		}
 
 		public String getType() {
 			return type;
 		}
 
-		public void setUrl(String url) {
-			this.url = url;
-		}
-
 		public String getUrl() {
 			return url;
-		}
-
-		public void setFilename(String filename) {
-			this.filename = filename;
 		}
 
 		public String getFilename() {
 			return filename;
 		}
 
-		public void setSize(long size) {
-			this.size = size;
-		}
-
 		public long getSize() {
 			return size;
-		}
-
-		public void setUpdateDate(String updateDate) {
-			this.updateDate = updateDate;
 		}
 
 		public String getUpdateDate() {
 			return updateDate;
 		}
 
-		public void setComment(String comment) {
-			this.comment = comment;
-		}
-
 		public String getComment() {
 			return comment;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
 		}
 
 		public String getDescription() {
 			return description;
 		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, name);
+			ParcelUtils.writeString(dest, type);
+			ParcelUtils.writeString(dest, url);
+			ParcelUtils.writeString(dest, filename);
+			ParcelUtils.writeString(dest, updateDate);
+			ParcelUtils.writeString(dest, comment);
+			ParcelUtils.writeString(dest, description);
+			dest.writeInt(code);
+			dest.writeLong(size);
+		}
+
+		public static final Parcelable.Creator<File> CREATOR = new Parcelable.Creator<File>() {
+			public File createFromParcel(Parcel in) {
+				return new File(in);
+			}
+
+			public File[] newArray(int size) {
+				return new File[size];
+			}
+		};
 
 	}
 
@@ -211,84 +251,70 @@ public class SubjectFiles implements Serializable {
 	 * 
 	 * @param page
 	 * @return Subject
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
-	public SubjectFiles JSONSubjectContent(String page) throws JSONException {
-		JSONObject jObject = new JSONObject(page);
-
-		if (jObject.has("pastas")) {
-			JSONArray jFolders = jObject.getJSONArray("pastas");
-			for (int i = 0; i < jFolders.length(); i++) {
-				Folder folder = new Folder();
-				JSONObject jFolder = jFolders.getJSONObject(i);
-				if (jFolder.has("codigo"))
-					folder.code = jFolder.getInt("codigo");
-				if (jFolder.has("nome"))
-					folder.name = jFolder.getString("nome");
-				if (jFolder.has("nivel"))
-					folder.level = jFolder.getInt("nivel");
-
-				if (jFolder.has("ficheiros")) {
-					JSONArray jFiles = jFolder.getJSONArray("ficheiros");
-
-					for (int j = 0; j < jFiles.length(); j++) {
-						File file = new File();
-						JSONObject jFile = jFiles.getJSONObject(j);
-						if (jFile.has("codigo"))
-							file.setCode(jFile.getInt("codigo"));
-						if (jFile.has("nome"))
-							file.setName(jFile.getString("nome"));
-						if (jFile.has("tipo"))
-							file.setType(jFile.getString("tipo"));
-						if (jFile.has("url"))
-							file.setUrl(jFile.getString("url"));
-						if (jFile.has("filename"))
-							file.setFilename(jFile.getString("filename"));
-						if (jFile.has("tamanho"))
-							file.setSize(jFile.getLong("tamanho"));
-						if (jFile.has("data_actualizacao"))
-							file.setUpdateDate(jFile
-									.getString("data_actualizacao"));
-						if (jFile.has("comentario"))
-							file.setComment(jFile.getString("comentario"));
-						if (jFile.has("descricao"))
-							file.setDescription(jFile.getString("descricao"));
-
-						folder.files.add(file);
-					}
-				}
-				folder.parent = root;
-				if (root.folders.isEmpty()) {
-					root.folders.add(folder);
-					continue; // first folder
-				}
-				Folder lastFolder = root.folders.get(root.folders.size() - 1);
-				if (lastFolder.level == folder.level)
-					root.folders.add(folder); // first level
-				else {
-					while (folder.level != lastFolder.level + 1) { // if it is
-																	// empty, we
-																	// cannot go
-																	// any
-																	// further
-																	// so we
-																	// stop here
-						// otherwise you continue until the level difference is
-						// one.
-						if (!lastFolder.folders.isEmpty())
-							lastFolder = lastFolder.folders
-									.get(lastFolder.folders.size() - 1);
-						else
-							break;
-					}
-					folder.parent = lastFolder;
-					lastFolder.folders.add(folder);
-				}
-
+	public static SubjectFiles JSONSubjectContent(String page) {
+		final SubjectFiles subjectFiles = new SubjectFiles();
+		final Gson gson = new Gson();
+		Folder[] folders = gson.fromJson(page, Folder[].class);
+		for (Folder folder : folders) {
+			folder.parent = subjectFiles.root;
+			folder.folders = new ArrayList<SubjectFiles.Folder>();
+			if (subjectFiles.root.folders.isEmpty()) {
+				subjectFiles.root.folders.add(folder);
+				continue; // first folder
 			}
-		}
+			Folder lastFolder = subjectFiles.root.folders
+					.get(subjectFiles.root.folders.size() - 1);
+			if (lastFolder.level == folder.level)
+				subjectFiles.root.folders.add(folder); // first level
+			else {
+				while (folder.level != lastFolder.level + 1) { // if it is
+																// empty, we
+																// cannot go
+																// any
+																// further
+																// so we
+																// stop here
+					// otherwise you continue until the level difference is
+					// one.
+					if (!lastFolder.folders.isEmpty())
+						lastFolder = lastFolder.folders.get(lastFolder.folders
+								.size() - 1);
+					else
+						break;
+				}
+				folder.parent = lastFolder;
+				lastFolder.folders.add(folder);
+			}
 
-		return this;
+		}
+		return subjectFiles;
 	}
 
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(root, flags);
+		dest.writeParcelable(current, flags);
+	}
+
+	private SubjectFiles(Parcel in) {
+		root = in.readParcelable(Folder.class.getClassLoader());
+		current = in.readParcelable(Folder.class.getClassLoader());
+	}
+
+	public static final Parcelable.Creator<SubjectFiles> CREATOR = new Parcelable.Creator<SubjectFiles>() {
+		public SubjectFiles createFromParcel(Parcel in) {
+			return new SubjectFiles(in);
+		}
+
+		public SubjectFiles[] newArray(int size) {
+			return new SubjectFiles[size];
+		}
+	};
 }

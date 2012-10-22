@@ -1,8 +1,12 @@
 package pt.up.beta.mobile.datatypes;
 
+import pt.up.beta.mobile.utils.ParcelUtils;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class StudentCourse {
+public class StudentCourse implements Parcelable {
 	@SerializedName("fest_id")
 	private final String courseId;
 	@SerializedName("fest_tipo")
@@ -42,7 +46,8 @@ public class StudentCourse {
 			String courseTypeDesc, String courseName, String firstYear,
 			String firstDate, String degreeId, String currentYear,
 			String state, String stateName, String stateBegin, String stateEnd,
-			String placeName, String placeAcronym, String curriculumYear, String average, SubjectEntry[] subjectEntries) {
+			String placeName, String placeAcronym, String curriculumYear,
+			String average, SubjectEntry[] subjectEntries) {
 		this.courseId = courseId;
 		this.courseType = courseType;
 		this.courseTypeDesc = courseTypeDesc;
@@ -125,7 +130,7 @@ public class StudentCourse {
 	public String getAverage() {
 		return average;
 	}
-	
+
 	public SubjectEntry[] getSubjectEntries() {
 		return subjectEntries;
 	}
@@ -155,5 +160,63 @@ public class StudentCourse {
 			return false;
 		return true;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtils.writeString(dest, courseId);
+		ParcelUtils.writeString(dest, courseType);
+		ParcelUtils.writeString(dest, courseTypeDesc);
+		ParcelUtils.writeString(dest, courseName);
+		ParcelUtils.writeString(dest, firstYear);
+		ParcelUtils.writeString(dest, firstDate);
+		ParcelUtils.writeString(dest, degreeId);
+		ParcelUtils.writeString(dest, currentYear);
+		ParcelUtils.writeString(dest, state);
+		ParcelUtils.writeString(dest, stateName);
+		ParcelUtils.writeString(dest, stateBegin);
+		ParcelUtils.writeString(dest, stateEnd);
+		ParcelUtils.writeString(dest, placeName);
+		ParcelUtils.writeString(dest, placeAcronym);
+		ParcelUtils.writeString(dest, curriculumYear);
+		ParcelUtils.writeString(dest, average);
+		dest.writeParcelableArray(subjectEntries, flags);
+	}
+
+	private StudentCourse(Parcel in) {
+		courseId = ParcelUtils.readString(in);
+		courseType = ParcelUtils.readString(in);
+		courseTypeDesc = ParcelUtils.readString(in);
+		courseName = ParcelUtils.readString(in);
+		firstYear = ParcelUtils.readString(in);
+		firstDate = ParcelUtils.readString(in);
+		degreeId = ParcelUtils.readString(in);
+		currentYear = ParcelUtils.readString(in);
+		state = ParcelUtils.readString(in);
+		stateName = ParcelUtils.readString(in);
+		stateBegin = ParcelUtils.readString(in);
+		stateEnd = ParcelUtils.readString(in);
+		placeName = ParcelUtils.readString(in);
+		placeAcronym = ParcelUtils.readString(in);
+		curriculumYear = ParcelUtils.readString(in);
+		average = ParcelUtils.readString(in);
+		subjectEntries = (SubjectEntry[]) in
+				.readParcelableArray(SubjectEntry.class.getClassLoader());
+	}
+
+	
+	public static final Parcelable.Creator<StudentCourse> CREATOR = new Parcelable.Creator<StudentCourse>() {
+		public StudentCourse createFromParcel(Parcel in) {
+			return new StudentCourse(in);
+		}
+
+		public StudentCourse[] newArray(int size) {
+			return new StudentCourse[size];
+		}
+	};
 
 }

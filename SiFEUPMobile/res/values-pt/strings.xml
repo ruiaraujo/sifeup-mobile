@@ -75,10 +75,15 @@
     <!-- SEARCH -->
     <string name="description_search">Procurar</string>
     <string name="search_label">FEUP Mobile</string>
-    <string name="search_hint">Procurar Estudantes</string>
+    <string name="search_hint">Pesquisar no SiGARRAs</string>
     <string name="title_search">Procurar</string>
     <string name="title_search_query">Procurar por \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="toast_search_error">Não houve resultados para a sua pesquisa.</string>
+    <string name="label_room_desc"><xliff:g id="building">%1$s</xliff:g> <strong>Piso:</strong><xliff:g id="floor">%2$s</xliff:g></string>
+    <string name="title_search_students">Estudantes</string>
+    <string name="title_search_employees">Pessoal</string>
+    <string name="title_search_rooms">Salas</string>
+    <string name="title_search_subjects">Unidades Curriculares</string>
 
     <!-- *************************************************************************************** -->
     <!-- ABOUT -->
@@ -127,7 +132,7 @@
     <!-- Subjects -->
     <string name="btn_subjects">Unidades Curriculares</string>
     <string name="title_subjects">Unidades Curriculares</string>
-    <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - Semestre  <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - <xliff:g id="semester">%2$s</xliff:g></string>
     <string name="lb_no_subjects">Não tem inscrições em Unidades Curricalares</string>
     <string name="lb_no_courses">Não tem inscrições em Cursos</string>
 
@@ -176,6 +181,7 @@
     <string name="profile_title_faculty">Faculdade</string>
     <string name="profile_title_course">Curso</string>
     <string name="profile_title_room">Sala</string>
+    <string name="profile_title_interests">Interesses</string>
     <string name="profile_choose_email_app">Escolha a aplicação de email:</string>
 
     <!-- Lunch Menu -->

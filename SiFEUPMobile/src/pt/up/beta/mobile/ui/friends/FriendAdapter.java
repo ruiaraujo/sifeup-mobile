@@ -70,14 +70,11 @@ public class FriendAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.name.setText(friends.get(position).getName());
-		if (friends.get(position).getCourse() != null)
-			holder.course.setText(friends.get(position).getCourse());
-		else
-			holder.course.setText("");
-		holder.pic.setImageDrawable(new LoaderDrawable(loaderManager, holder.pic, friends.get(
-				position).getCode(), context, ((BitmapDrawable) holder.pic
-				.getResources().getDrawable(R.drawable.speaker_image_empty))
-				.getBitmap()));
+		holder.course.setText(friends.get(position).getCourse());
+		holder.pic.setImageDrawable(new LoaderDrawable(loaderManager,
+				holder.pic, friends.get(position).getCode(), context,
+				((BitmapDrawable) holder.pic.getResources().getDrawable(
+						R.drawable.speaker_image_empty)).getBitmap()));
 		return convertView;
 	}
 

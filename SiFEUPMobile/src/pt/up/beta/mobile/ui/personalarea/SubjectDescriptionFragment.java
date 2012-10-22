@@ -227,7 +227,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			}
 			case 2: {
 				if (subject.getTeachers() != null
-						&& subject.getTeachers().size() != 0) {
+						&& subject.getTeachers().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView list = (ListView) root
@@ -251,7 +251,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 						public void onItemClick(AdapterView<?> arg0, View arg1,
 								int pos, long id) {
-							Teacher b = subject.getTeachers().get(pos);
+							Teacher b = subject.getTeachers()[pos];
 							Intent i = new Intent(getActivity(),
 									ProfileActivity.class);
 							i.putExtra(ProfileActivity.PROFILE_CODE,
@@ -270,7 +270,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			}
 			case 3: {
 				if (subject.getBibliography() != null
-						&& subject.getBibliography().size() != 0) {
+						&& subject.getBibliography().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listBooks = (ListView) root
@@ -300,7 +300,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 						public void onItemClick(AdapterView<?> arg0, View arg1,
 								int pos, long id) {
-							Book b = subject.getBibliography().get(pos);
+							Book b = subject.getBibliography()[pos];
 							if (b.getLink() == null)
 								return;
 							Intent i = new Intent(Intent.ACTION_VIEW);
@@ -316,7 +316,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			}
 			case 4: {
 				if (subject.getSoftware() != null
-						&& subject.getSoftware().size() != 0) {
+						&& subject.getSoftware().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listSoftware = (ListView) root
@@ -357,7 +357,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			}
 			case 6: {
 				if (subject.getSoftware() != null
-						&& subject.getSoftware().size() != 0) {
+						&& subject.getSoftware().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					final ListView listEvaluation = (ListView) root
@@ -446,7 +446,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			case 12: {
 				if (subjectFiles != null
 						&& (subjectFiles.getCurrentFolder().getFolders().size() != 0 || subjectFiles
-								.getCurrentFolder().getFiles().size() != 0)) {
+								.getCurrentFolder().getFiles().length != 0)) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					root.setTag(getString(R.string.subject_content));
@@ -464,10 +464,10 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 								File toDownload = subjectFiles
 										.getCurrentFolder()
 										.getFiles()
-										.get(position
+										[position
 												- subjectFiles
 														.getCurrentFolder()
-														.getFolders().size());
+														.getFolders().size()];
 								if (toDownload.getUrl() == null
 										|| toDownload.getUrl().trim().length() == 0) {
 									try {
@@ -615,7 +615,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			subject = cursor;
 			String title = subject.getNamePt();
 			if (!UIUtils.isLocalePortuguese()
-					&& !TextUtils.isEmpty(subject.getNameEn().trim()))
+					&& !TextUtils.isEmpty(subject.getNameEn()))
 				title = subject.getNameEn();
 			getSherlockActivity().getSupportActionBar().setTitle(title);
 			subjectFiles = subject.getFiles();

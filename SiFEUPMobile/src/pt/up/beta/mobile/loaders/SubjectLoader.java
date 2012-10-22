@@ -17,7 +17,6 @@
 package pt.up.beta.mobile.loaders;
 
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
@@ -28,6 +27,8 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -65,13 +66,16 @@ public class SubjectLoader extends AsyncTaskLoader<Subject> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					final Subject subject = new Subject()
-							.JSONSubject(cursor.getString(cursor
-									.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)));
-					subject.setFiles(new SubjectFiles().JSONSubjectContent(cursor.getString(cursor
+					final Gson gson = new Gson();
+					final Subject subject = gson
+							.fromJson(
+									cursor.getString(cursor
+											.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT)),
+									Subject.class);
+					subject.setFiles(SubjectFiles.JSONSubjectContent(cursor.getString(cursor
 							.getColumnIndex(SigarraContract.SubjectsColumns.FILES))));
 					return subject;
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter()

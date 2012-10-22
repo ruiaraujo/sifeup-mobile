@@ -28,6 +28,7 @@ public final class SigarraContract {
 		String CODE_FRIEND = FriendsTable.KEY_CODE_FRIEND;
 		String NAME_FRIEND = FriendsTable.KEY_NAME_FRIEND;
 		String TYPE_FRIEND = FriendsTable.KEY_TYPE_FRIEND;
+		String COURSE_FRIEND = FriendsTable.KEY_COURSE_FRIEND;
 	}
 
 	public interface ExamsColumns {
@@ -89,7 +90,7 @@ public final class SigarraContract {
 			+ CONTENT_AUTHORITY);
 
 	static final String PATH_SUBJECTS = "subjects";
-	static final String PATH_SUBJECT = "subjects";
+	static final String PATH_SUBJECT = "subject";
 	static final String PATH_FRIENDS = "friends";
 	static final String PATH_PROFILES = "profiles";
 	static final String PATH_PROFILES_PIC = "profiles_pic";

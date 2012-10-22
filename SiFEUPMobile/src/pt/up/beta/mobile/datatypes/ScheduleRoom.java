@@ -12,11 +12,12 @@ public class ScheduleRoom implements Parcelable {
 	@SerializedName("espaco_nome")
 	private final String roomName; // B002
 	
-	public ScheduleRoom(String blockCode, String roomCode) {
-		this.roomCode = roomCode;
-		this.roomName = blockCode;
+	private ScheduleRoom(Parcel in){
+		roomCode = ParcelUtils.readString(in);
+		roomName = ParcelUtils.readString(in);
 	}
-
+	
+	
 	public String getRoomCode() {
 		return roomCode;
 	}
@@ -36,11 +37,6 @@ public class ScheduleRoom implements Parcelable {
 		ParcelUtils.writeString(dest, roomName);
 	}
 
-	private ScheduleRoom(Parcel in){
-		roomCode = ParcelUtils.readString(in);
-		roomName = ParcelUtils.readString(in);
-	}
-	
     public static final Parcelable.Creator<ScheduleRoom> CREATOR = new Parcelable.Creator<ScheduleRoom>() {
         public ScheduleRoom createFromParcel(Parcel in) {
             return new ScheduleRoom(in);

@@ -2,90 +2,66 @@ package pt.up.beta.mobile.datatypes;
 
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
-
+import pt.up.beta.mobile.utils.ParcelUtils;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
-public abstract class Profile {
+import com.google.gson.annotations.SerializedName;
+
+public abstract class Profile implements Parcelable{
 	
 	/** Employee code - "419454" */
 	@SerializedName("codigo")
-	protected String code;
+	private final String code;
 	
 	/** Employee name - "Gil António Oliveira da Silva" */
 	@SerializedName("nome")
-	protected String name;
+	private final String name;
 
 	/** Employee email - "gils@fe.up.pt" */
 	@SerializedName("email")
-	private String email;
+	private final String email;
 
 	/** Employee alternative email. May be empty. */
 	@SerializedName("email_alt")
-	private String emailAlt;
+	private final String emailAlt;
 
 	/** Employee Phone - "22 557 4109" */
 	@SerializedName("telefone")
-	private String phone;
+	private final String phone;
 	
 	/** Employee Mobile Phone - 913970682 */
 	@SerializedName("telemovel")
-	private String mobilePhone;
-
+	private final String mobilePhone;
 
 	/** Web page. May be empty. */
 	@SerializedName("pagina_web")
-	private String webPage;
+	private final String webPage;
 
-	
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+	}	
 
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getEmailAlt() {
 		return emailAlt;
 	}
 
-	public void setEmailAlt(String emailAlt) {
-		this.emailAlt = emailAlt;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
+	
 	public String getMobilePhone() {
 		return mobilePhone;
-	}
-
-	public void setMobilePhone(String mobilePhone) {
-		this.mobilePhone = mobilePhone;
 	}
 
 	public String getFirstName() {
@@ -125,10 +101,6 @@ public abstract class Profile {
 		return webPage;
 	}
 
-	public void setWebPage(String webPage) {
-		this.webPage = webPage;
-	}
-
 	public interface Type {
 		String EMAIL = "email";
 		String MOBILE = "mobile"; 
@@ -155,5 +127,32 @@ public abstract class Profile {
 	abstract public List<ProfileDetail> getProfileContents( Resources res );
 
 	abstract public String getType();
+	
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtils.writeString(dest, code);
+		ParcelUtils.writeString(dest, name);
+		ParcelUtils.writeString(dest, email);
+		ParcelUtils.writeString(dest, emailAlt);
+		ParcelUtils.writeString(dest, phone);
+		ParcelUtils.writeString(dest, mobilePhone);
+		ParcelUtils.writeString(dest, webPage);
+	}
+
+	protected Profile(Parcel in) {
+		code = ParcelUtils.readString(in);
+		name = ParcelUtils.readString(in);
+		email = ParcelUtils.readString(in);
+		emailAlt = ParcelUtils.readString(in);
+		phone = ParcelUtils.readString(in);
+		mobilePhone = ParcelUtils.readString(in);
+		webPage = ParcelUtils.readString(in);
+	}
 
 }

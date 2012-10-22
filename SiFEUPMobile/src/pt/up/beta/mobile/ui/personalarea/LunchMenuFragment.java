@@ -38,7 +38,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  * 
  */
 public class LunchMenuFragment extends BaseFragment implements
-		LoaderCallbacks<List<Canteen>> {
+		LoaderCallbacks<Canteen[]> {
 	private final static String CANTEEN_KEY = "pt.up.fe.mobile.ui.studentarea.CANTEENS";
 
 	private PagerMenuAdapter pagerAdapter;
@@ -124,10 +124,10 @@ public class LunchMenuFragment extends BaseFragment implements
 	 */
 	class PagerMenuAdapter extends PagerAdapter {
 
-	    @Override
-	    public CharSequence getPageTitle(int position) {
+		@Override
+		public CharSequence getPageTitle(int position) {
 			return canteens.get(position).getDescription();
-	    }
+		}
 
 		public void destroyItem(View collection, int position, Object view) {
 			((ViewPager) collection).removeView((View) view);
@@ -240,18 +240,21 @@ public class LunchMenuFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<List<Canteen>> onCreateLoader(int loaderId, Bundle options) {
+	public Loader<Canteen[]> onCreateLoader(int loaderId, Bundle options) {
 		return new CanteenLoader(getActivity(),
 				SigarraContract.Canteens.CONTENT_URI, null, null, null, null);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Canteen>> loader,
-			List<Canteen> canteens) {
+	public void onLoadFinished(Loader<Canteen[]> loader, Canteen[] canteens) {
 		if (getActivity() == null || canteens == null)
 			return;
-		this.canteens = canteens;
-		if (canteens.isEmpty()) {
+		this.canteens = new ArrayList<Canteen>();
+		for (Canteen canteen : canteens) {
+			if (canteen.getMenus().length > 0)
+				this.canteens.add(canteen);
+		}
+		if (this.canteens.isEmpty()) {
 			showEmptyScreen(getString(R.string.lb_no_menu));
 			return;
 		}
@@ -261,7 +264,7 @@ public class LunchMenuFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Canteen>> loader) {
+	public void onLoaderReset(Loader<Canteen[]> loader) {
 	}
 
 }
