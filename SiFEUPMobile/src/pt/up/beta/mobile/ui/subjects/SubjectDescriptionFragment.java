@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.personalarea;
+package pt.up.beta.mobile.ui.subjects;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
+import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
@@ -127,6 +129,12 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 					getString(R.string.title_schedule_arg,
 							subject != null ? subject.getNamePt() : code));
 			startActivity(i);
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_other_occurrences) {
+			startActivity(new Intent(getActivity(),
+					OtherOccurrencesActivity.class).putExtra(
+					OtherOccurrencesFragment.UCURR_CODE, subject.getUcurrId()));
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
@@ -462,12 +470,9 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 									.getFolders().size()) {
 								// launch download;
 								File toDownload = subjectFiles
-										.getCurrentFolder()
-										.getFiles()
-										[position
-												- subjectFiles
-														.getCurrentFolder()
-														.getFolders().size()];
+										.getCurrentFolder().getFiles()[position
+										- subjectFiles.getCurrentFolder()
+												.getFolders().size()];
 								if (toDownload.getUrl() == null
 										|| toDownload.getUrl().trim().length() == 0) {
 									try {

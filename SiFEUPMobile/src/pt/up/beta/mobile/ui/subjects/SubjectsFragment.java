@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.personalarea;
+package pt.up.beta.mobile.ui.subjects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,10 +86,8 @@ public class SubjectsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
-		if (getActivity() == null)
-			return;
 		Intent i = new Intent(getActivity(), SubjectDescriptionActivity.class);
 		final SubjectEntry subject = studentCourses[viewPager.getCurrentItem()]
 				.getSubjectEntries()[position];

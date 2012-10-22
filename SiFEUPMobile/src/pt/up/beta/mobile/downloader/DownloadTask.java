@@ -217,6 +217,8 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+					dis.close();
+					fos.close();
 					return null;
 				}
 				if (filesize != 0)

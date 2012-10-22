@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.personalarea;
+package pt.up.beta.mobile.ui.subjects;
 
 import pt.up.beta.mobile.ui.BaseSinglePaneActivity;
 import android.support.v4.app.Fragment;

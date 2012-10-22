@@ -151,6 +151,10 @@
     <string name="comments">Observações</string>
     <string name="subject_content">Conteúdos</string>
     <string name="no_data">Sem dados</string>
+    
+    <!-- Other Occurrences -->
+    <string name="title_other_occurrences">Outras Ocorrências</string>
+    <string name="lb_no_other_occurrences">Não há outras ocorrências.</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>

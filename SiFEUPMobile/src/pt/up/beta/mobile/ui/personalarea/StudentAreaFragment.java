@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
+import pt.up.beta.mobile.ui.subjects.SubjectsActivity;
 import pt.up.beta.mobile.R;
 
 import android.content.Intent;

@@ -17,6 +17,9 @@ public class Subject implements Parcelable {
 	/** Subject code - EIC0083 */
 	@SerializedName("codigo")
 	private final String code;
+	
+	@SerializedName("ucurr_id")
+	private final String ucurrId;
 
 	/** Subject Portuguese name - Arquitectura e Organização de Computadores */
 	@SerializedName("nome")
@@ -113,6 +116,7 @@ public class Subject implements Parcelable {
 
 	private Subject(Parcel in) {
 		code = ParcelUtils.readString(in);
+		ucurrId = ParcelUtils.readString(in);
 		namePt = ParcelUtils.readString(in);
 		nameEn = ParcelUtils.readString(in);
 		acronym = ParcelUtils.readString(in);
@@ -240,6 +244,42 @@ public class Subject implements Parcelable {
 
 	public Software[] getSoftware() {
 		return software;
+	}
+
+	public String getUcurrId() {
+		return ucurrId;
+	}
+
+	public String getWebPage() {
+		return webPage;
+	}
+
+	public String geteLearningPage() {
+		return eLearningPage;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public String getSoftwareDesc() {
+		return softwareDesc;
+	}
+
+	public String getEvalutionDesc() {
+		return evalutionDesc;
+	}
+
+	public Keyword[] getKeywords() {
+		return keywords;
+	}
+
+	public Area[] getAreas() {
+		return areas;
 	}
 
 	public SubjectFiles getFiles() {
@@ -771,6 +811,7 @@ public class Subject implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		ParcelUtils.writeString(dest, code);
+		ParcelUtils.writeString(dest, ucurrId);
 		ParcelUtils.writeString(dest, namePt);
 		ParcelUtils.writeString(dest, nameEn);
 		ParcelUtils.writeString(dest, acronym);

@@ -91,8 +91,8 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
             currentFloor = building.getFloors()[0];
         else
             currentFloor = Integer
-                    .parseInt(room.getRoomCode().charAt(0) == '-' ? room
-                            .getRoomCode().substring(0, 2) : room.getRoomCode()
+                    .parseInt(room.getRoomName().charAt(0) == '-' ? room
+                            .getRoomName().substring(0, 2) : room.getRoomName()
                             .substring(0, 1));
         final String name;
         if (UIUtils.isLocalePortuguese())
@@ -184,9 +184,9 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
         currentFloor = newFloor;
         if (room != null) {
             int roomFloor = Integer
-                    .parseInt(room.getRoomCode().charAt(0) == '-' ? room
-                            .getRoomCode().substring(0, 2) : room.getRoomCode()
-                            .substring(0, 1));
+                    .parseInt(room.getRoomCode().charAt(1) == '-' ? room
+                            .getRoomCode().substring(1, 3) : room.getRoomCode()
+                            .substring(1, 2));
             if (roomFloor == currentFloor) {
                 task = FacilitiesUtils.getRoomPic(room.getRoomCode(), this ,getActivity());
                 return true;

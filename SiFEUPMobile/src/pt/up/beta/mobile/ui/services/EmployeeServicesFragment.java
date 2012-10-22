@@ -1,10 +1,9 @@
 package pt.up.beta.mobile.ui.services;
 
 
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
-import pt.up.beta.mobile.ui.webclient.WebviewFragment;
-import pt.up.beta.mobile.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.TextView;
 
 public class EmployeeServicesFragment extends Fragment
 {
@@ -50,8 +49,7 @@ public class EmployeeServicesFragment extends Fragment
 		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 			    	case 2:
-				   		 startActivity(new Intent(getActivity(),WebviewActivity.class)
-				   		                     .putExtra(WebviewFragment.URL_INTENT, "https://sigarra.up.pt/feup/mail_dinamico.ficheiros"));
+				   		 startActivity(new Intent(getActivity(),WebviewActivity.class));
 		                 getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 				   		 break;
 		    	}

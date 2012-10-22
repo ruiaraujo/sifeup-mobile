@@ -5,9 +5,13 @@
         android:title="@string/description_schedule"
         android:orderInCategory="1"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_other_occurrences"
+        android:title="@string/title_other_occurrences"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/menu_go_to_subject_sigarra"
         android:icon="@drawable/ic_title_export"
         android:title="@string/description_browser"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:showAsAction="ifRoom" />
 </menu>

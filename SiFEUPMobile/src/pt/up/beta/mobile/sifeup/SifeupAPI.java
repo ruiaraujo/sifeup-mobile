@@ -73,6 +73,7 @@ public class SifeupAPI {
 		String AUTHENTICATION = "mob_val_geral.";
 
 		// External Services
+		String DYNAMIC_MAIL_FILES = "mail_dinamico.";
 		String PEOPLE_PIC = "fotografias_service.";
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
@@ -101,7 +102,6 @@ public class SifeupAPI {
 		String STUDENT_STATE = "pv_estado";
 		String STUDENT_FIRST_YEAR = "pv_1_inscricao_em";
 		String PAGE = "pv_pag";
-		// TODO:ANGEL:COLOCAR OS RESTANTES CAMPOS.
 	}
 
 	private interface StudentTuiton {
@@ -148,58 +148,43 @@ public class SifeupAPI {
 	// MOB_HOR_GERAL
 
 	// .DOCENTE
-	@SuppressWarnings("unused")
 	private interface TeacherSchedule {
 		String NAME = "docente";
 		String CODE = "pv_codigo";
 		String WEEK_END = "pv_semana_fim";
 		String WEEK_BEGIN = "pv_semana_ini";
-		String YEAR = "pv_ano_lectivo";
-		String PERIODS = "pv_periodos";
 	}
 
 	// .ESTUDANTE
-	@SuppressWarnings("unused")
 	private interface StudentSchedule {
 		String NAME = "estudante";
 		String CODE = "pv_codigo";
 		String WEEK_END = "pv_semana_fim";
 		String WEEK_BEGIN = "pv_semana_ini";
-		String YEAR = "pv_ano_lectivo";
-		String PERIODS = "pv_periodos";
 	}
 
 	// .SALA
-	@SuppressWarnings("unused")
 	private interface RoomSchedule {
 		String NAME = "sala";
 		String CODE = "pv_espaco_id";
 		String WEEK_END = "pv_semana_fim";
 		String WEEK_BEGIN = "pv_semana_ini";
-		String YEAR = "pv_ano_lectivo";
-		String PERIODS = "pv_periodos";
 	}
 
 	// .TURMA
-	@SuppressWarnings("unused")
 	private interface ClassSchedule {
 		String NAME = "turma";
 		String CODE = "pv_turma_id";
 		String WEEK_END = "pv_semana_fim";
 		String WEEK_BEGIN = "pv_semana_ini";
-		String YEAR = "pv_ano_lectivo";
-		String PERIODS = "pv_periodos";
 	}
 
 	// .UCURR
-	@SuppressWarnings("unused")
 	private interface SubjectSchedule {
 		String NAME = "ucurr";
 		String CODE = "pv_ocorrencia_id";
 		String WEEK_END = "pv_semana_fim";
 		String WEEK_BEGIN = "pv_semana_ini";
-		String YEAR = "pv_ano_lectivo";
-		String PERIODS = "pv_periodos";
 	}
 
 	// MOB_IMP_GERAL
@@ -238,6 +223,12 @@ public class SifeupAPI {
 	private interface MailFiles {
 		String NAME = "ficheiros";
 		String CODE = "pv_codigo";
+	}
+	
+
+	private interface DownloadMailFiles {
+		String NAME = "download_file";
+		String CODE = "p_name";
 	}
 
 	// MOB_PAR_GERAL
@@ -778,6 +769,12 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.MAIL + MailFiles.NAME + WEBSERVICE_SEP
 				+ MailFiles.CODE + EQUALS + code;
 	}
+	
+
+	public static String getDownloadMailFilesUrl(String code) {
+		return WEBSERVICE + WebServices.DYNAMIC_MAIL_FILES + DownloadMailFiles.NAME + WEBSERVICE_SEP
+				+ DownloadMailFiles.CODE + EQUALS + code;
+	}
 
 	/**
 	 * Building pics Url for Web Service
@@ -1036,6 +1033,7 @@ public class SifeupAPI {
 				throw new RuntimeException("page " + strUrl + "\n" + page);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			throw new RuntimeException("page " + strUrl + "\n" + page);
 		}
 		return page;
 	}
@@ -1067,6 +1065,7 @@ public class SifeupAPI {
 					throw new AuthenticationException("No authentication");
 			} catch (JSONException e) {
 				e.printStackTrace();
+				throw new RuntimeException(page);
 			}
 			// Saving cookie for later using throughout the program
 			String cookie = "";
@@ -1240,7 +1239,7 @@ public class SifeupAPI {
 				erro_msg = jObject.getString("erro_msg");
 				Log.d("JSON", erro_msg);
 			}
-			throw new JSONException(page);
+			return Errors.ERROR;
 		}
 
 		return Errors.NO_ERROR;

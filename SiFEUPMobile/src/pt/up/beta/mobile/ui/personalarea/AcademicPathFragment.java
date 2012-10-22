@@ -9,6 +9,8 @@ import pt.up.beta.mobile.loaders.AcademicPathLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.subjects.SubjectDescriptionActivity;
+import pt.up.beta.mobile.ui.subjects.SubjectDescriptionFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;

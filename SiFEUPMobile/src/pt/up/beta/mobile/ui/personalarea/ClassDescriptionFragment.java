@@ -11,6 +11,8 @@ import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
+import pt.up.beta.mobile.ui.subjects.SubjectDescriptionActivity;
+import pt.up.beta.mobile.ui.subjects.SubjectDescriptionFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;

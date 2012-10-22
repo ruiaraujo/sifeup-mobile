@@ -153,7 +153,11 @@
     <string name="comments">Comments</string>
     <string name="subject_content">Subject Content</string>
     <string name="no_data">No data</string>
-
+    
+    <!-- Other Occurrences -->
+    <string name="title_other_occurrences">Other Occurrences</string>
+    <string name="lb_no_other_occurrences">There are no other occurrences.</string>
+    
     <!-- Academic Path -->
     <string name="title_academic_path">Academic Path</string>
     <string name="btn_academic_path">Academic Path</string>
@@ -274,6 +278,7 @@
     <!-- Dynamic mail -->
     <string name="title_dynamic_mail_files">Dynamic Email Files</string>
     <string name="btn_dynamic_mail_files">Dynamic Email Files</string>
+    <string name="label_no_files">You have no available files.</string>
 
     <!-- *************************************************************************************** -->
     <!-- FRIENDS -->
