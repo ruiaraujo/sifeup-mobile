@@ -134,6 +134,7 @@ public class PrintRefFragment extends BaseFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
 	public void onError(ERROR_TYPE error) {
 		if (getActivity() == null)
 			return;

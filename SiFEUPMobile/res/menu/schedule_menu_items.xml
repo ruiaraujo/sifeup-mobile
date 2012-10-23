@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_export_calendar"
-        android:icon="@drawable/ic_title_export"
-        android:title="@string/description_export_schedule"
-        android:orderInCategory="2"
-        android:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_now"
+    <item android:id="@+id/menu_schedule"
         android:icon="@drawable/ic_title_today"
-        android:title="@string/description_now"
+        android:title="@string/description_schedule"
         android:orderInCategory="1"
         android:showAsAction="ifRoom" />
 </menu>

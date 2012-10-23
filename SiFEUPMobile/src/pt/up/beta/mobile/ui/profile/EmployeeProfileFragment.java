@@ -7,6 +7,7 @@ import java.util.List;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
+import pt.up.beta.mobile.datatypes.Employee.Room;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.loaders.EmployeeLoader;
@@ -177,15 +178,18 @@ public class EmployeeProfileFragment extends BaseFragment implements
 					Uri.parse(contents.get(position).content));
 			startActivity(browserIntent);
 		} else if (contents.get(position).type == Profile.Type.ROOM) {
-			final Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-					ScheduleFragment.SCHEDULE_ROOM);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE,
-					contents.get(position).content);
-			i.putExtra(
-					Intent.EXTRA_TITLE,
-					getString(R.string.title_schedule_arg,
-							contents.get(position).content));
+			final Intent i = new Intent(getActivity(), ProfileActivity.class);
+			i.putExtra(ProfileActivity.PROFILE_TYPE,
+					ProfileActivity.PROFILE_ROOM);
+			final String roomName = contents.get(position).content;
+			for (Room room : me.getRooms()) {
+				if (room.getAcronym().equals(roomName)){
+					i.putExtra(ProfileActivity.PROFILE_CODE, room.getId())
+							.putExtra(Intent.EXTRA_TITLE,
+									contents.get(position).content);
+					break;
+				}
+			}
 			startActivity(i);
 		} else if (contents.get(position).type == Profile.Type.EMAIL) {
 			final Intent i = new Intent(Intent.ACTION_SEND);

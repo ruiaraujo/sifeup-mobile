@@ -18,6 +18,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,9 @@ public class AcademicPathFragment extends BaseFragment implements
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
 			else {
-				displayData();
+				viewPager.setAdapter(new PagerCourseAdapter());
+				indicator.setViewPager(viewPager);
+				setRefreshActionItemState(false);
 				showMainScreen();
 			}
 		} else {
@@ -111,9 +114,6 @@ public class AcademicPathFragment extends BaseFragment implements
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void displayData() {
 	}
 
 	private class AcademicPathAdapter extends BaseExpandableListAdapter {
@@ -204,7 +204,7 @@ public class AcademicPathFragment extends BaseFragment implements
 				convertView = mInflater.inflate(
 						R.layout.list_item_grade_marker, null);
 			((TextView) convertView)
-					.setText((CharSequence) getGroup(groupPosition));
+					.setText(Html.fromHtml(getGroup(groupPosition).toString()));
 			return convertView;
 		}
 
@@ -298,9 +298,9 @@ public class AcademicPathFragment extends BaseFragment implements
 				averageStr = getString(R.string.no_data);
 			else
 				averageStr = academicPaths[position].getAverage();
-			average.setText(getString(R.string.path_average, averageStr));
-			year.setText(getString(R.string.path_year,
-					academicPaths[position].getCourseYears()));
+			average.setText(Html.fromHtml(getString(R.string.path_average, averageStr)));
+			year.setText(Html.fromHtml(getString(R.string.path_year,
+					academicPaths[position].getCourseYears())));
 			grades.setAdapter(new AcademicPathAdapter());
 			grades.setOnChildClickListener(AcademicPathFragment.this);
 			((ViewPager) collection).addView(root, 0);

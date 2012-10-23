@@ -51,11 +51,11 @@ public class Employee extends Profile implements Parcelable {
 
 	/** Employee Rooms - D109 */
 	@SerializedName("salas")
-	private Room[] rooms;
-	
+	private final Room[] rooms;
+
 	/** Employee Interests */
 	@SerializedName("interesses")
-	private Interest[] interests;
+	private final Interest[] interests;
 
 	public String getAcronym() {
 		return acronym;
@@ -119,17 +119,17 @@ public class Employee extends Profile implements Parcelable {
 					.getString(R.string.profile_title_room), r.acronym,
 					Type.ROOM));
 		}
-		
+
 		final StringBuilder st = new StringBuilder();
-		for ( Interest interest : interests ){
-			if ( st.length() > 0 )
+		for (Interest interest : interests) {
+			if (st.length() > 0)
 				st.append(", ");
 			st.append(interest.name);
 		}
-		if ( st.length() > 0 )
+		if (st.length() > 0)
 			result.add(new ProfileDetail(res
-					.getString(R.string.profile_title_interests), st.toString(),
-					null));
+					.getString(R.string.profile_title_interests),
+					st.toString(), null));
 		return result;
 	}
 
@@ -167,7 +167,8 @@ public class Employee extends Profile implements Parcelable {
 		presentation = ParcelUtils.readString(in);
 		presentationEn = ParcelUtils.readString(in);
 		rooms = (Room[]) in.readParcelableArray(Room.class.getClassLoader());
-		interests = (Interest[]) in.readParcelableArray(Interest.class.getClassLoader());
+		interests = (Interest[]) in.readParcelableArray(Interest.class
+				.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Employee> CREATOR = new Parcelable.Creator<Employee>() {
@@ -200,6 +201,14 @@ public class Employee extends Profile implements Parcelable {
 			this.acronym = ParcelUtils.readString(in);
 		}
 
+		public String getId() {
+			return id;
+		}
+
+		public String getAcronym() {
+			return acronym;
+		}
+
 		@Override
 		public int describeContents() {
 			return 0;
@@ -221,7 +230,7 @@ public class Employee extends Profile implements Parcelable {
 			}
 		};
 	}
-	
+
 	/**
 	 * Class Room
 	 * 
@@ -256,4 +265,33 @@ public class Employee extends Profile implements Parcelable {
 			}
 		};
 	}
+
+	public String getExtPhone() {
+		return extPhone;
+	}
+
+	public String getTeleAlt() {
+		return teleAlt;
+	}
+
+	public String getVoipExt() {
+		return voipExt;
+	}
+
+	public String getPresentation() {
+		return presentation;
+	}
+
+	public String getPresentationEn() {
+		return presentationEn;
+	}
+
+	public Room[] getRooms() {
+		return rooms;
+	}
+
+	public Interest[] getInterests() {
+		return interests;
+	}
+
 }

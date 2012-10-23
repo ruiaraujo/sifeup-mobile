@@ -3,40 +3,20 @@ package pt.up.beta.mobile.sifeup;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthenticationException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.RedirectHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,7 +58,6 @@ public class SifeupAPI {
 		String SUBJECT_CONTENTS = "conteudos_service.";
 		String SUBJECT_SIGARA_LINK = "disciplinas_geral.";
 		String NOTIFICATION_SIGARRA = "wf_geral.";
-		String ROOM_FINDER = "salas_geral.";
 	}
 
 	// MOB_EME_GERAL
@@ -224,7 +203,6 @@ public class SifeupAPI {
 		String NAME = "ficheiros";
 		String CODE = "pv_codigo";
 	}
-	
 
 	private interface DownloadMailFiles {
 		String NAME = "download_file";
@@ -256,7 +234,7 @@ public class SifeupAPI {
 		String NAME = "perfil";
 		String CODE = "pv_ocorrencia_id";
 	}
-	
+
 	// MOB_UCURR_GERAL.PESQUISA
 	private interface SubjectSearch {
 		String NAME = "pesquisa";
@@ -341,11 +319,11 @@ public class SifeupAPI {
 	}
 
 	private interface RoomFinder {
-		String NAME = "click";
-		String BUILDING = "p_edi_cod_edi";
-		String FLOOR = "p_piso";
-		String X = "x";
-		String Y = "y";
+		String NAME = "room_finder";
+		String BUILDING = "pv_edificio_id";
+		String FLOOR = "pv_num_piso";
+		String X = "pv_x";
+		String Y = "pv_y";
 	}
 
 	private interface PersonPic {
@@ -498,13 +476,28 @@ public class SifeupAPI {
 			email = "";
 		if (firstYear == null)
 			firstYear = "";
-		return WEBSERVICE + WebServices.STUDENT + StudentsSearch.NAME
-				+ WEBSERVICE_SEP + StudentsSearch.STUDENT_NAME + EQUALS + name
-				+ LINK_SEP + StudentsSearch.STUDENT_CODE + EQUALS + code
-				+ LINK_SEP + StudentsSearch.STUDENT_EMAIL + EQUALS + email
-				+ LINK_SEP + StudentsSearch.STUDENT_FIRST_YEAR + EQUALS + firstYear
-				+ (state!=null?(LINK_SEP + StudentsSearch.STUDENT_STATE + EQUALS + state):"")
-				+ LINK_SEP + StudentsSearch.PAGE + EQUALS + numPage;
+		return WEBSERVICE
+				+ WebServices.STUDENT
+				+ StudentsSearch.NAME
+				+ WEBSERVICE_SEP
+				+ StudentsSearch.STUDENT_NAME
+				+ EQUALS
+				+ name
+				+ LINK_SEP
+				+ StudentsSearch.STUDENT_CODE
+				+ EQUALS
+				+ code
+				+ LINK_SEP
+				+ StudentsSearch.STUDENT_EMAIL
+				+ EQUALS
+				+ email
+				+ LINK_SEP
+				+ StudentsSearch.STUDENT_FIRST_YEAR
+				+ EQUALS
+				+ firstYear
+				+ (state != null ? (LINK_SEP + StudentsSearch.STUDENT_STATE
+						+ EQUALS + state) : "") + LINK_SEP
+				+ StudentsSearch.PAGE + EQUALS + numPage;
 	}
 
 	/**
@@ -565,13 +558,28 @@ public class SifeupAPI {
 			email = "";
 		if (acronym == null)
 			acronym = "";
-		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeSearch.NAME
-				+ WEBSERVICE_SEP + EmployeeSearch.EMPLOYEE_NAME + EQUALS + name
-				+ LINK_SEP + EmployeeSearch.EMPLOYEE_CODE + EQUALS + code
-				+ LINK_SEP + EmployeeSearch.EMPLOYEE_EMAIL + EQUALS + email
-				+ LINK_SEP + EmployeeSearch.EMPLOYEE_ACRONYM + EQUALS + acronym
-				+ (state!=null?(LINK_SEP + EmployeeSearch.EMPLOYEE_STATE + EQUALS + state):"")
-				+ LINK_SEP + EmployeeSearch.PAGE + EQUALS + numPage;
+		return WEBSERVICE
+				+ WebServices.EMPLOYEE
+				+ EmployeeSearch.NAME
+				+ WEBSERVICE_SEP
+				+ EmployeeSearch.EMPLOYEE_NAME
+				+ EQUALS
+				+ name
+				+ LINK_SEP
+				+ EmployeeSearch.EMPLOYEE_CODE
+				+ EQUALS
+				+ code
+				+ LINK_SEP
+				+ EmployeeSearch.EMPLOYEE_EMAIL
+				+ EQUALS
+				+ email
+				+ LINK_SEP
+				+ EmployeeSearch.EMPLOYEE_ACRONYM
+				+ EQUALS
+				+ acronym
+				+ (state != null ? (LINK_SEP + EmployeeSearch.EMPLOYEE_STATE
+						+ EQUALS + state) : "") + LINK_SEP
+				+ EmployeeSearch.PAGE + EQUALS + numPage;
 	}
 
 	/**
@@ -671,15 +679,26 @@ public class SifeupAPI {
 			name = "";
 		if (acronym == null)
 			acronym = "";
-		return WEBSERVICE + WebServices.SUBJECT + SubjectSearch.NAME
-				+ WEBSERVICE_SEP + SubjectSearch.SUBJECT_NAME + EQUALS + name
-				+ LINK_SEP + SubjectSearch.SUBJECT_CODE + EQUALS + code
-				+ LINK_SEP + SubjectSearch.SUBJECT_ACRONYM + EQUALS + acronym
-				+ (year!=null?(LINK_SEP + SubjectSearch.SUBJECT_YEAR + EQUALS + year):"")
-				+ LINK_SEP + SubjectSearch.PAGE + EQUALS + numPage;
+		return WEBSERVICE
+				+ WebServices.SUBJECT
+				+ SubjectSearch.NAME
+				+ WEBSERVICE_SEP
+				+ SubjectSearch.SUBJECT_NAME
+				+ EQUALS
+				+ name
+				+ LINK_SEP
+				+ SubjectSearch.SUBJECT_CODE
+				+ EQUALS
+				+ code
+				+ LINK_SEP
+				+ SubjectSearch.SUBJECT_ACRONYM
+				+ EQUALS
+				+ acronym
+				+ (year != null ? (LINK_SEP + SubjectSearch.SUBJECT_YEAR
+						+ EQUALS + year) : "") + LINK_SEP + SubjectSearch.PAGE
+				+ EQUALS + numPage;
 	}
 
-	
 	public static String getSubjectOtherOccuencesUrl(String code) {
 		return WEBSERVICE + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
 				+ WEBSERVICE_SEP + SubjectOtherOccurrences.CODE + EQUALS + code;
@@ -769,10 +788,10 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.MAIL + MailFiles.NAME + WEBSERVICE_SEP
 				+ MailFiles.CODE + EQUALS + code;
 	}
-	
 
 	public static String getDownloadMailFilesUrl(String code) {
-		return WEBSERVICE + WebServices.DYNAMIC_MAIL_FILES + DownloadMailFiles.NAME + WEBSERVICE_SEP
+		return WEBSERVICE + WebServices.DYNAMIC_MAIL_FILES
+				+ DownloadMailFiles.NAME + WEBSERVICE_SEP
 				+ DownloadMailFiles.CODE + EQUALS + code;
 	}
 
@@ -811,23 +830,14 @@ public class SifeupAPI {
 	 * 
 	 * @return
 	 */
-	public static String[] getRoomPostFinderUrl(String building, String floor,
+	public static String getRoomPostFinderUrl(String building, int floor,
 			int x, int y) {
-		final String[] urls = new String[2];
-		urls[0] = WEBSERVICE + WebServices.ROOM_FINDER + RoomFinder.NAME;
-		try {
-			urls[1] = RoomFinder.BUILDING + EQUALS
-					+ URLEncoder.encode(building, "UTF-8") + LINK_SEP
-					+ RoomFinder.FLOOR + EQUALS
-					+ URLEncoder.encode(floor, "UTF-8") + LINK_SEP
-					+ RoomFinder.X + EQUALS
-					+ URLEncoder.encode(Integer.toString(x), "UTF-8")
-					+ LINK_SEP + RoomFinder.Y + EQUALS
-					+ URLEncoder.encode(Integer.toString(y), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return urls;
+		return WEBSERVICE + WebServices.FACILITIES + RoomFinder.NAME
+				+ WEBSERVICE_SEP + RoomFinder.BUILDING + EQUALS + building
+				+ LINK_SEP + RoomFinder.FLOOR + EQUALS + floor + LINK_SEP
+				+ RoomFinder.X + EQUALS + x + LINK_SEP + RoomFinder.Y + EQUALS
+				+ y;
+
 	}
 
 	/**
@@ -911,8 +921,6 @@ public class SifeupAPI {
 				+ RoomSearch.PAGE + EQUALS + numPage;
 	}
 
-	private static DefaultHttpClient httpclient;
-
 	private static SSLContext sslCtx;
 
 	public static void initSSLContext(Context context) {
@@ -936,26 +944,11 @@ public class SifeupAPI {
 			sslCtx = SSLContext.getInstance("TLS");
 			sslCtx.init(null, tmf.getTrustManagers(), null);
 
-			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), 80));
-			SSLSocketFactory sslSocketFactory = new SSLSocketFactory(
-					localTrustStore);
-			sslSocketFactory
-					.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
-
-			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-			HttpParams params = new BasicHttpParams();
-			ClientConnectionManager cm = new ThreadSafeClientConnManager(
-					params, schemeRegistry);
-			httpclient = new DefaultHttpClient(cm, params);
 		} catch (KeyStoreException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (UnrecoverableKeyException e) {
 			e.printStackTrace();
 		} catch (CertificateException e) {
 			e.printStackTrace();
@@ -1135,41 +1128,6 @@ public class SifeupAPI {
 
 	}
 
-	/**
-	 * Student query Reply from web service
-	 * 
-	 * @param url
-	 * @return page
-	 */
-	public static HttpResponse post(String url, String urlParameters) {
-		try {
-			HttpPost httppost = new HttpPost(url);
-			httpclient.setRedirectHandler(new RedirectHandler() {
-				@Override
-				public boolean isRedirectRequested(HttpResponse response,
-						HttpContext context) {
-					return false;
-				}
-
-				@Override
-				public URI getLocationURI(HttpResponse response,
-						HttpContext context) throws ProtocolException {
-					return null;
-				}
-			});
-			StringEntity tmp = new StringEntity(urlParameters, "UTF-8");
-			httppost.setEntity(tmp);
-			// Execute HTTP Post Request
-			HttpResponse response = httpclient.execute(httppost);
-			tmp.consumeContent();
-			return response;
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 	public static String getContentCharSet(final String contentType) {
 		String[] values = contentType.split(";"); // The values.length must be

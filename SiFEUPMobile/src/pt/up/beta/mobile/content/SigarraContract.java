@@ -152,7 +152,7 @@ public final class SigarraContract {
 		}
 
 		public static final String[] FRIENDS_COLUMNS = { CODE_FRIEND,
-				NAME_FRIEND, TYPE_FRIEND };
+				NAME_FRIEND, TYPE_FRIEND , COURSE_FRIEND};
 
 		public static final String FRIEND_SELECTION = USER_CODE + "=? AND "
 				+ CODE_FRIEND + "=?";

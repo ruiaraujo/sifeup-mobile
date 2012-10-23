@@ -21,6 +21,8 @@ public class RoomProfile implements Parcelable {
 	private final String usage;
 	@SerializedName("area")
 	private final String area;
+	@SerializedName("piso")
+	private final int floor;
 	@SerializedName("atributos")
 	private final Attributes[] atributes;
 	@SerializedName("responsaveis")
@@ -64,6 +66,10 @@ public class RoomProfile implements Parcelable {
 		return area;
 	}
 
+	public int getFloor() {
+		return floor;
+	}
+
 	public Attributes[] getAtributes() {
 		return atributes;
 	}
@@ -84,18 +90,27 @@ public class RoomProfile implements Parcelable {
 		buildingName = ParcelUtils.readString(in);
 		buildingAcronym = ParcelUtils.readString(in);
 		buildingId = ParcelUtils.readString(in);
-		atributes = (Attributes[]) in.readParcelableArray(Attributes.class
-				.getClassLoader());
-		responsible = (People[]) in.readParcelableArray(People.class
-				.getClassLoader());
-		occupiers = (People[]) in.readParcelableArray(People.class
-				.getClassLoader());
+		floor = in.readInt();
+		atributes = new Attributes[in.readInt()];
+		in.readTypedArray(atributes, Attributes.CREATOR);
+		responsible = new People[in.readInt()];
+		in.readTypedArray(responsible, People.CREATOR);
+		occupiers = new People[in.readInt()];
+		in.readTypedArray(occupiers, People.CREATOR);
 
 	}
 
 	public static class Attributes implements Parcelable {
 		@SerializedName("nome")
 		private final String name;
+		public String getName() {
+			return name;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
 		@SerializedName("conteudo")
 		private final String content;
 
@@ -160,6 +175,24 @@ public class RoomProfile implements Parcelable {
 				return new People[size];
 			}
 		};
+
+		public String getType() {
+			return type;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public boolean isPerson() {
+			return type.equals(EMPLOYEE_TYPE);
+		}
+		
+		private final static String EMPLOYEE_TYPE = "funcionario";
 	}
 
 	@Override
@@ -176,9 +209,13 @@ public class RoomProfile implements Parcelable {
 		ParcelUtils.writeString(dest, buildingName);
 		ParcelUtils.writeString(dest, buildingAcronym);
 		ParcelUtils.writeString(dest, buildingId);
-		dest.writeParcelableArray(atributes, flags);
-		dest.writeParcelableArray(responsible, flags);
-		dest.writeParcelableArray(occupiers, flags);
+		dest.writeInt(floor);
+		dest.writeInt(atributes.length);
+		dest.writeTypedArray(atributes, flags);
+		dest.writeInt(responsible.length);
+		dest.writeTypedArray(responsible, flags);
+		dest.writeInt(occupiers.length);
+		dest.writeTypedArray(occupiers, flags);
 	}
 
 	public static final Parcelable.Creator<RoomProfile> CREATOR = new Parcelable.Creator<RoomProfile>() {

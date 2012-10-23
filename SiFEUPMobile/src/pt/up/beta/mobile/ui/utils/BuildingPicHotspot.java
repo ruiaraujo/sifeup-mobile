@@ -10,7 +10,7 @@ public class BuildingPicHotspot implements Parcelable {
 	private final String namePt;
 	@SerializedName("nameEn")
 	private final String nameEn;
-	@SerializedName("floors")
+	@SerializedName("code")
 	private final String buildingCode;
 	@SerializedName("polyX")
 	private final int[] polyX;

@@ -1,0 +1,84 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="30dip" >
+
+        <TextView
+            android:id="@+id/room_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip"
+            android:textSize="16.0sp" />
+
+        <TextView
+            android:id="@+id/building_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingBottom="10dip"
+            android:textSize="16.0sp" />
+        
+        <TextView
+            android:id="@+id/room_usage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingBottom="10dip"
+            android:textSize="16.0sp" />
+        
+        <TextView
+            android:id="@+id/room_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingBottom="10dip"	
+            android:textSize="16.0sp" />
+        
+        <LinearLayout
+            android:id="@+id/list_attributes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
+
+        <TextView
+            android:id="@+id/room_responsible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:textSize="16.0sp"
+            android:text="@string/room_responsible" />
+
+        <LinearLayout
+            android:id="@+id/list_responsible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
+
+        <TextView
+            android:id="@+id/room_occupiers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingBottom="25dip"
+            android:textSize="16.0sp"
+            android:text="@string/room_occupiers"  />
+        <LinearLayout
+            android:id="@+id/list_occupiers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        	android:orientation="vertical" 
+            android:paddingBottom="25dip"/>
+
+    </LinearLayout>
+
+</ScrollView>

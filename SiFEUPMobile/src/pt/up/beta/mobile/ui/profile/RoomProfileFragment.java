@@ -1,42 +1,28 @@
 package pt.up.beta.mobile.ui.profile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.datatypes.Employee;
-import pt.up.beta.mobile.datatypes.Profile;
-import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.datatypes.RoomProfile;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.datatypes.RoomProfile.Attributes;
+import pt.up.beta.mobile.datatypes.RoomProfile.People;
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SifeupAPI;
-import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
+import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
-import pt.up.beta.mobile.ui.utils.LoaderDrawable;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -49,51 +35,28 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Ângela Igreja
  */
 public class RoomProfileFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand<RoomProfile> {
-	private TextView name;
-	private ImageView pic;
-	private ListView details;
+		ResponseCommand<RoomProfile> {
+	private ViewGroup root;
+	private LayoutInflater mInflater;
 	private String code;
 
-	/** User Info */
-	private RoomProfile me;
-	private List<ProfileDetail> contents;
+	private RoomProfile room;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/Employee Profile");
+		AnalyticsUtils.getInstance(getActivity())
+				.trackPageView("/Room Profile");
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile,
+		mInflater = inflater;
+		root = (ViewGroup) inflater.inflate(R.layout.room_profile,
 				getParentContainer(), true);
-		name = ((TextView) root.findViewById(R.id.profile_name));
-		pic = (ImageView) root.findViewById(R.id.profile_pic);
-		details = ((ListView) root.findViewById(R.id.profile_details));
-		
-		((Button) root.findViewById(R.id.profile_link_schedule))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Intent i = new Intent(getActivity(),
-								ScheduleActivity.class);
-						i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-								ScheduleFragment.SCHEDULE_ROOM);
-						i.putExtra(ScheduleFragment.SCHEDULE_CODE, me.getCode());
-						i.putExtra(
-								Intent.EXTRA_TITLE,
-								getString(R.string.title_schedule_arg,
-										me.getFullName()));
-						startActivity(i);
-					}
-				});
 		return getParentContainer();
 	}
 
@@ -105,100 +68,140 @@ public class RoomProfileFragment extends BaseFragment implements
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.refresh_menu_items, menu);
+		inflater.inflate(R.menu.schedule_menu_items, menu);
+		inflater.inflate(R.menu.map_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncProfile(
-					AccountUtils.getActiveUserName(getActivity()), code,
-					SifeupAPI.EMPLOYEE_TYPE);
-
+		if (item.getItemId() == R.id.menu_schedule) {
+			final Intent intent = new Intent(getActivity(),
+					ScheduleActivity.class);
+			intent.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+					ScheduleFragment.SCHEDULE_ROOM);
+			intent.putExtra(ScheduleFragment.SCHEDULE_CODE, room.getCode());
+			intent.putExtra(Intent.EXTRA_TITLE,
+					getString(R.string.title_schedule_arg, room.getFullName()));
+			startActivity(intent);
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_map) {
+			final Intent intent = new Intent(getActivity(),
+					FeupFacilitiesDetailsActivity.class);
+			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapter, View arg1, int position,
-			long id) {
-		if (contents.get(position).type == Profile.Type.WEBPAGE) {
-			final Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-					Uri.parse(contents.get(position).content));
-			startActivity(browserIntent);
-		} else if (contents.get(position).type == Profile.Type.ROOM) {
-			final Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-					ScheduleFragment.SCHEDULE_ROOM);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE,
-					contents.get(position).content);
-			i.putExtra(
-					Intent.EXTRA_TITLE,
-					getString(R.string.title_schedule_arg,
-							contents.get(position).content));
-			startActivity(i);
-		} else if (contents.get(position).type == Profile.Type.EMAIL) {
-			final Intent i = new Intent(Intent.ACTION_SEND);
-			i.setType("message/rfc822");
-			i.putExtra(Intent.EXTRA_EMAIL,
-					new String[] { contents.get(position).content });
-			startActivity(Intent.createChooser(i,
-					getString(R.string.profile_choose_email_app)));
-		} else if (contents.get(position).type == Profile.Type.MOBILE) {
-			Intent callIntent = new Intent(Intent.ACTION_CALL);
-			callIntent.setData(Uri.parse("tel:"
-					+ contents.get(position).content));
-			startActivity(callIntent);
-		}
-	}
-
-	public void onLoadFinished(Loader<Employee> loader, RoomProfile employee) {
-		if (getActivity() == null || employee == null)
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
 			return;
-		me = employee;
-		pic.setImageDrawable(new LoaderDrawable(getActivity()
-				.getSupportLoaderManager(), pic, me.getCode(), getActivity(),
-				((BitmapDrawable) getResources().getDrawable(
-						R.drawable.speaker_image_empty)).getBitmap()));
-		((SherlockFragmentActivity) getActivity()).getSupportActionBar()
-				.setTitle(me.getName());
-		name.setText(me.getName());
-		String[] from = new String[] { "title", "content" };
-		int[] to = new int[] { R.id.profile_item_title,
-				R.id.profile_item_content };
-		// prepare the list of all records
-		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		for (ProfileDetail s : contents) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(from[0], s.title);
-			map.put(from[1], s.content);
-			fillMaps.add(map);
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
 		}
-
-		// fill in the grid_item layout
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
-				R.layout.list_item_profile, from, to);
-		details.setAdapter(adapter);
-		details.setOnItemClickListener(this);
-		details.setSelection(0);
-		setRefreshActionItemState(false);
-		showMainScreen();
-
-	}
-
-	@Override
-	public void onError(
-			pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE error) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onResultReceived(RoomProfile results) {
-		// TODO Auto-generated method stub
-		
-	}
+		if (getActivity() == null)
+			return;
+		room = results;
+		getSherlockActivity().getSupportActionBar()
+				.setTitle(room.getFullName());
+		TextView roomName = (TextView) root.findViewById(R.id.room_name);
+		roomName.setText(Html.fromHtml(getString(R.string.room_name,
+				room.getFullName())));
+		TextView buildingName = (TextView) root
+				.findViewById(R.id.building_name);
+		buildingName.setText(Html.fromHtml(getString(R.string.room_building,
+				room.getBuildingName())));
+		TextView area = (TextView) root.findViewById(R.id.room_area);
+		area.setText(Html.fromHtml(getString(R.string.room_area, room.getArea())));
+		TextView usage = (TextView) root.findViewById(R.id.room_usage);
+		usage.setText(Html.fromHtml(getString(R.string.room_usage,
+				room.getUsage())));
 
+		if (room.getAtributes().length > 0) {
+			LinearLayout attributesContainer = (LinearLayout) root
+					.findViewById(R.id.list_attributes);
+			for (Attributes attr : room.getAtributes()) {
+				TextView llItem = (TextView) mInflater.inflate(
+						R.layout.simple_list_item1, null);
+				llItem.setText(Html.fromHtml("<b>"+attr.getName() + ":</b> " + attr.getContent()));
+				attributesContainer.addView(llItem);
+			}
+		} else {
+			root.findViewById(R.id.list_attributes).setVisibility(View.GONE);
+		}
+
+		final OnClickListener personClick = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final People person = (People) v.getTag();
+				final Intent i = new Intent(getActivity(),
+						ProfileActivity.class);
+				i.putExtra(ProfileActivity.PROFILE_CODE, person.getCode());
+				i.putExtra(ProfileActivity.PROFILE_TYPE,
+						ProfileActivity.PROFILE_EMPLOYEE);
+				i.putExtra(Intent.EXTRA_TITLE, person.getName());
+				startActivity(i);
+			}
+		};
+		if (room.getResponsible().length > 0) {
+			LinearLayout responsibleContainer = (LinearLayout) root
+					.findViewById(R.id.list_responsible);
+			for (People person : room.getResponsible()) {
+				TextView llItem = (TextView) mInflater.inflate(
+						R.layout.simple_list_item1, null);
+				llItem.setText(person.getName());
+				// To know wich item has been clicked
+				if (person.isPerson()) {
+					llItem.setTag(person);
+					// In the onClickListener just get the id using getTag() on
+					// the view
+					llItem.setOnClickListener(personClick);
+				}
+				responsibleContainer.addView(llItem);
+			}
+		} else {
+			root.findViewById(R.id.list_responsible).setVisibility(View.GONE);
+			root.findViewById(R.id.room_responsible).setVisibility(View.GONE);
+		}
+
+		if (room.getOccupiers().length > 0) {
+			LinearLayout occupiersContainer = (LinearLayout) root
+					.findViewById(R.id.list_occupiers);
+			for (People person : room.getOccupiers()) {
+				TextView llItem = (TextView) mInflater.inflate(
+						R.layout.simple_list_item1, null);
+				llItem.setText(person.getName());
+				// To know wich item has been clicked
+				if (person.isPerson()) {
+					llItem.setTag(person);
+					// In the onClickListener just get the id using getTag() on
+					// the view
+					llItem.setOnClickListener(personClick);
+				}
+				occupiersContainer.addView(llItem);
+			}
+		} else {
+			root.findViewById(R.id.list_occupiers).setVisibility(View.GONE);
+			root.findViewById(R.id.room_occupiers).setVisibility(View.GONE);
+		}
+		showMainScreen();
+
+	}
 }

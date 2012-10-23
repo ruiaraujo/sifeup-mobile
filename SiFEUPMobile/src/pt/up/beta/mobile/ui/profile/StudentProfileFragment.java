@@ -176,17 +176,6 @@ public class StudentProfileFragment extends BaseFragment implements
 			final Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 					Uri.parse(contents.get(position).content));
 			startActivity(browserIntent);
-		} else if (contents.get(position).type == Profile.Type.ROOM) {
-			final Intent i = new Intent(getActivity(), ScheduleActivity.class);
-			i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-					ScheduleFragment.SCHEDULE_ROOM);
-			i.putExtra(ScheduleFragment.SCHEDULE_CODE,
-					contents.get(position).content);
-			i.putExtra(
-					Intent.EXTRA_TITLE,
-					getString(R.string.title_schedule_arg,
-							contents.get(position).content));
-			startActivity(i);
 		} else if (contents.get(position).type == Profile.Type.EMAIL) {
 			final Intent i = new Intent(Intent.ACTION_SEND);
 			i.setType("message/rfc822");

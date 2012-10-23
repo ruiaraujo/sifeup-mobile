@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,49 +57,11 @@ public class FacilitiesUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomCode(
-			String building, String floor, int x, int y,
-			ResponseCommand<String> command) {
-		return new RoomFinderTask(command).execute(SifeupAPI
-				.getRoomPostFinderUrl(building, floor, x, y));
-	}
-
-	private static class RoomFinderTask extends
-			AsyncTask<String, Void, ERROR_TYPE> {
-		private final ResponseCommand<String> command;
-		private String response;
-
-		public RoomFinderTask(ResponseCommand<String> command) {
-			this.command = command;
-		}
-
-		@Override
-		// Once the image is downloaded, associates it to the imageView
-		protected void onPostExecute(ERROR_TYPE error) {
-			if (isCancelled()) {
-				return;
-			}
-			if (error == null)
-				command.onResultReceived(response);
-			else
-				command.onError(error);
-		}
-
-		@Override
-		protected ERROR_TYPE doInBackground(String... params) {
-			HttpResponse page = SifeupAPI.post(params[0], params[1]);
-			if (page == null)
-				return ERROR_TYPE.NETWORK;
-			if (!page.containsHeader("Location"))
-				return ERROR_TYPE.GENERAL;
-			String url = page.getFirstHeader("Location").getValue();
-			String[] urlParam = url.substring(url.indexOf("?")).split("&");
-			response = urlParam[0].substring(urlParam[0].indexOf("=") + 1)
-					.trim()
-					+ urlParam[1].substring(urlParam[1].indexOf("=") + 1)
-							.trim();
-			return null;
-		}
-
+			String building, int floor, int x, int y,
+			ResponseCommand<RoomProfile> command, Context context) {
+		return new FetcherTask<RoomProfile>(command, new RoomProfileParser(),
+				context).execute(SifeupAPI.getRoomPostFinderUrl(building,
+				floor, x, y));
 	}
 
 	private static class RoomProfileParser implements

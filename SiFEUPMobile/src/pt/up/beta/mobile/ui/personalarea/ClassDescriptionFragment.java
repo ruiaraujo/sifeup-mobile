@@ -8,23 +8,18 @@ import pt.up.beta.mobile.datatypes.ScheduleClass;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
-import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.subjects.SubjectDescriptionActivity;
 import pt.up.beta.mobile.ui.subjects.SubjectDescriptionFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Class Description Fragment
@@ -42,7 +37,6 @@ public class ClassDescriptionFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 		block = (ScheduleBlock) getArguments().getParcelable(BLOCK);
 		if ( block == null && savedInstanceState != null )
 			block = savedInstanceState.getParcelable(BLOCK);
@@ -63,8 +57,8 @@ public class ClassDescriptionFragment extends BaseFragment {
 		// Subject
 		TextView subject = (TextView) root.findViewById(R.id.class_subject);
 
-		subject.setText(getString(R.string.class_subject,
-				block.getLectureAcronym()));
+		subject.setText(Html.fromHtml(getString(R.string.class_subject,
+				block.getLectureAcronym())));
 		subject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -101,7 +95,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		List<ScheduleTeacher> teachers = block.getTeachers();
 		for ( ScheduleTeacher teacher : teachers )
 		{
-		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    TextView llItem = (TextView) inflater.inflate(R.layout.simple_list_item1, null);
 		    llItem.setText(teacher.toString());
 		    // To know wich item has been clicked
 		    llItem.setTag(teacher);
@@ -118,13 +112,11 @@ public class ClassDescriptionFragment extends BaseFragment {
 			public void onClick(View v) {
 				final ScheduleRoom room = (ScheduleRoom) v.getTag();
 				Intent i = new Intent(getActivity(), ScheduleActivity.class);
-				i.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-						ScheduleFragment.SCHEDULE_ROOM);
-				i.putExtra(ScheduleFragment.SCHEDULE_CODE,room.getRoomCode());
+				i.putExtra(ProfileActivity.PROFILE_TYPE,
+						ProfileActivity.PROFILE_ROOM);
+				i.putExtra(ProfileActivity.PROFILE_CODE,room.getRoomCode());
 				i.putExtra(
-						Intent.EXTRA_TITLE,
-						getString(R.string.title_schedule_arg,
-								room.toString()));
+						Intent.EXTRA_TITLE,room.toString());
 
 				startActivity(i);				
 			}
@@ -132,7 +124,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		List<ScheduleRoom> rooms = block.getRooms();
 		for ( ScheduleRoom room : rooms )
 		{
-		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    TextView llItem = (TextView) inflater.inflate(R.layout.simple_list_item1, null);
 		    llItem.setText(room.toString());
 		    // To know wich item has been clicked
 		    llItem.setTag(room);
@@ -147,7 +139,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		//only show if the class is a composition
 		TextView team = (TextView) root.findViewById(R.id.class_team);
 		if ( classes.size() > 1 )
-			team.setText(getString(R.string.class_team, block.getClassAcronym()));
+			team.setText(Html.fromHtml(getString(R.string.class_team, block.getClassAcronym())));
 		else
 			team.setVisibility(View.GONE);
 
@@ -171,7 +163,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 		};
 		for ( ScheduleClass clas : classes )
 		{
-		    TextView llItem = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+		    TextView llItem = (TextView) inflater.inflate(R.layout.simple_list_item1, null);
 		    llItem.setText(clas.getName());
 		    // To know wich item has been clicked
 		    llItem.setTag(clas);
@@ -191,7 +183,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 			start.append("0");
 		start.append((startTime % 3600) / 60);
 		TextView startT = (TextView) root.findViewById(R.id.class_start_time);
-		startT.setText(getString(R.string.class_start_time, start.toString()));
+		startT.setText(Html.fromHtml(getString(R.string.class_start_time, start.toString())));
 
 		// End Time
 		int endTime = (int) (block.getStartTime() + block.getLectureDuration() * 3600);
@@ -204,29 +196,11 @@ public class ClassDescriptionFragment extends BaseFragment {
 			end.append("0");
 		end.append((endTime % 3600) / 60);
 		TextView endT = (TextView) root.findViewById(R.id.class_end_time);
-		endT.setText(getString(R.string.class_end_time, end.toString()));
+		endT.setText(Html.fromHtml(getString(R.string.class_end_time, end.toString())));
 
 		showMainScreen();
 
 		return getParentContainer();// mandatory
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.map_menu_items, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		final ScheduleRoom room = block.getRooms().get(0);
-		if (item.getItemId() == R.id.menu_map) {
-			final Intent intent = new Intent(getActivity(),
-					FeupFacilitiesDetailsActivity.class);
-			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
-			startActivity(intent);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
 
     <!-- APPLICATION -->
     <string name="app_name">FEUP Mobile</string>
@@ -12,8 +12,8 @@
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
-    <string name="msg_downloading">Transferindo <xliff:g id="file">%1$s</xliff:g></string>
-    <string name="msg_download_finished">Transferência terminada:\n <xliff:g id="file">%1$s</xliff:g></string>
+    <string name="msg_downloading">Transferindo %1$s</string>
+    <string name="msg_download_finished">Transferência terminada:\n %1$s</string>
     <string name="toast_download_no_memory">Erro: Sem memória</string>
     <string name="toast_download_no_memory_card">Erro: Sem cartão de memória disponível.</string>
     <string name="toast_download_error_file">Erro ao escrever no ficheiro</string>
@@ -77,9 +77,9 @@
     <string name="search_label">FEUP Mobile</string>
     <string name="search_hint">Pesquisar no SiGARRAs</string>
     <string name="title_search">Procurar</string>
-    <string name="title_search_query">Procurar por \'<xliff:g id="query">%1$s</xliff:g>\'</string>
+    <string name="title_search_query">Procurar por \'%1$s\'</string>
     <string name="toast_search_error">Não houve resultados para a sua pesquisa.</string>
-    <string name="label_room_desc"><xliff:g id="building">%1$s</xliff:g> <strong>Piso:</strong><xliff:g id="floor">%2$s</xliff:g></string>
+    <string name="label_room_desc">%1$s <strong>Piso:</strong>%2$s</string>
     <string name="title_search_students">Estudantes</string>
     <string name="title_search_employees">Pessoal</string>
     <string name="title_search_rooms">Salas</string>
@@ -106,7 +106,7 @@
 
     <!-- Schedule -->
     <string name="title_schedule">Horário</string>
-    <string name="title_schedule_arg">Horário de <xliff:g id="code">%1$s</xliff:g></string>
+    <string name="title_schedule_arg">Horário de %1$s</string>
     <string name="btn_schedule">Horário</string>
     <string name="description_export_schedule">Exportar horário</string>
     <string name="toast_export_calendar_error">Não foi encontrado o Google Calendar no seu dispositivo.</string>
@@ -116,12 +116,12 @@
     <string name="description_schedule">Ver o Horário</string>
 
     <!-- Class Description -->
-    <string name="class_subject"><b>Subject:</b><xliff:g id="subject"> %1$s</xliff:g></string>
-    <string name="class_teacher"><b>Professores</b></string>
+    <string name="class_subject">&lt;b>Subject:&lt;/b>%1$s</string>
+    <string name="class_teacher">&lt;b>Professores&lt;/b></string>
     <string name="class_room"><b>Salas</b></string>
-    <string name="class_team"><b>Turma:</b><xliff:g id="team">%1$s</xliff:g></string>
-    <string name="class_start_time"><b>Hora de início:</b><xliff:g id="start_time">%1$s</xliff:g></string>
-    <string name="class_end_time"><b>Hora de fim:</b><xliff:g id="end time">%1$s</xliff:g></string>
+    <string name="class_team">&lt;b>Turma:&lt;/b>%1$s</string>
+    <string name="class_start_time">&lt;b>Hora de início:&lt;/b>%1$s</string>
+    <string name="class_end_time">&lt;b>Hora de fim:&lt;/b>%1$s</string>
     <string name="toast_too_many_rooms">Há mais que uma sala para mapear.</string>
 
     <!-- Exams -->
@@ -132,7 +132,7 @@
     <!-- Subjects -->
     <string name="btn_subjects">Unidades Curriculares</string>
     <string name="title_subjects">Unidades Curriculares</string>
-    <string name="subjects_year">Ano <xliff:g id="year">%1$s</xliff:g> - <xliff:g id="semester">%2$s</xliff:g></string>
+    <string name="subjects_year">Ano %1$s - %2$s</string>
     <string name="lb_no_subjects">Não tem inscrições em Unidades Curricalares</string>
     <string name="lb_no_courses">Não tem inscrições em Cursos</string>
 
@@ -151,7 +151,7 @@
     <string name="comments">Observações</string>
     <string name="subject_content">Conteúdos</string>
     <string name="no_data">Sem dados</string>
-    
+
     <!-- Other Occurrences -->
     <string name="title_other_occurrences">Outras Ocorrências</string>
     <string name="lb_no_other_occurrences">Não há outras ocorrências.</string>
@@ -159,14 +159,13 @@
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>
     <string name="btn_academic_path">Percurso Académico</string>
-    <string name="path_year"><b>Ano:</b><xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_semestre"><b>Semestre:</b><xliff:g id="year">%1$s</xliff:g></string>
-    <string name="path_average"><b>Média:</b><xliff:g id="average">%1$s</xliff:g></string>
-    <string name="path_entries"><b>Número de Inscrições:</b><xliff:g id="entries">%1$s</xliff:g></string>
-    <string name="path_grade">Nota: <xliff:g id="entries">%1$s</xliff:g></string>
+    <string name="path_year">&lt;b>Ano: &lt;/b> %1$s</string>
+    <string name="path_semestre">Semestre: %1$s</string>
+    <string name="path_average">&lt;b>Média: &lt;/b> %1$s</string>
+    <string name="path_grade">Nota: %1$s</string>
     <string name="path_link_sifeup"><u>Página Web Sigarra</u></string>
 
-    <!-- Profile -->
+    <!-- People Profile -->
     <string name="btn_profile">Perfil</string>
     <string name="title_profile">Perfil</string>
     <string name="profile_title_email">Email</string>
@@ -188,6 +187,15 @@
     <string name="profile_title_interests">Interesses</string>
     <string name="profile_choose_email_app">Escolha a aplicação de email:</string>
 
+    <!-- Room Profile -->
+    <string name="room_name">&lt;b>Sala:&lt;/b> %1$s</string>
+    <string name="room_building">&lt;b>Building:&lt;/b> %1$s</string>
+    <string name="room_area"> &lt;b>Área:&lt;/b> %1$s m&lt;sup>&lt;small>2&lt;/small>&lt;/sup></string>
+    <string name="room_usage">&lt;b>Utilização:&lt;/b> %1$s</string>
+    <string name="room_attributes"><b>Atributos:</b></string>
+    <string name="room_responsible"><b>Responsáveis:</b></string>
+    <string name="room_occupiers"><b>Ocupantes:</b></string>
+
     <!-- Lunch Menu -->
     <string name="title_lunch_menu">Ementas</string>
     <string name="btn_lunch_menu">Ementas</string>
@@ -199,7 +207,7 @@
     <string name="label_student_park">P2 - Alunos</string>
     <string name="label_personnel_per_park">P1 - Pessoal Permanente</string>
     <string name="label_personnel_not_per_park">P4 - Pessoal Não Permanente</string>
-    <string name="label_free_spots">Lugares livres: <xliff:g id="pages">%1$s</xliff:g></string>
+    <string name="label_free_spots">Lugares livres: %1$s</string>
 
     <!-- *************************************************************************************** -->
     <!-- SERVICES -->
@@ -237,7 +245,7 @@
     <string name="set_password_message">Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:<ul><li>Conter obrigatoriamente entre 8 e 32 caracteres.</li><li>Não ser igual às 5 palavras-passe anteriores.</li><li>Conter um misto de letras e números;</li></ul></string>
     <string name="lb_username">Utilizador:</string>
     <string name="hint_username">Utilizador</string>
-    <string name="new_password_security">Força da senha: \n<xliff:g id="quota">%1$s</xliff:g></string>
+    <string name="new_password_security">Força da senha: \n%1$s</string>
     <string name="new_password_too_short">Muito curta</string>
     <string name="new_password_too_weak">Senha muito fraca.</string>
     <string name="new_password_common_word">Palavra comun</string>
@@ -257,8 +265,8 @@
     <string name="title_printing">Saldo de Impressão</string>
     <string name="btn_printing">Saldo de Impressão</string>
     <string name="lb_data_fetching">Extraindo dados&#8230;</string>
-    <string name="print_balance">Saldo: <xliff:g id="quota">%1$s</xliff:g> €</string>
-    <string name="print_can_print_a4_black">Pode imprimir até <xliff:g id="pages">%1$s</xliff:g> páginas A4 pretas.</string>
+    <string name="print_balance">Saldo: %1$s €</string>
+    <string name="print_can_print_a4_black">Pode imprimir até %1$s páginas A4 pretas.</string>
     <string name="print_reference_title">Aumentar Saldo</string>
     <string name="lb_print_increase">Valor (>1€):</string>
     <string name="btn_print_reference">Gerar Referência</string>
@@ -294,7 +302,7 @@
     <string name="description_map">Instalações</string>
     <string name="title_map">Instalações</string>
     <string name="btn_map">Instalações</string>
-    <string name="floor_spinner">Piso <xliff:g id="floor">%1$s</xliff:g></string>
+    <string name="floor_spinner">Piso %1$s</string>
     <string name="toast_first_map_view">Clique para ver o nome do edifício.\n\nDuplo clique para ver a vista detalhada.</string>
     <string name="toast_no_detailed_view">Este edifício não tem disponível uma vista detalhada</string>
 
@@ -327,14 +335,14 @@
     <!-- SAMBA UPLOADER -->
     <string name="title_samba_uploader">Samba FEUP</string>
     <string name="notification_uploader_title">FEUP Mobile</string>
-    <string name="notification_uploader_content">Enviando\n<xliff:g id="file">%1$s</xliff:g></string>
-    <string name="notification_uploader_finished">Terminado o envio de \n<xliff:g id="file">%1$s</xliff:g></string>
+    <string name="notification_uploader_content">Enviando\n%1$s</string>
+    <string name="notification_uploader_finished">Terminado o envio de \n%1$s</string>
     <string name="notification_uploader_error_credential_title">Credencias incorretas</string>
     <string name="notification_uploader_error_credential">Por favor, autentique-se no FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Erro ao conectar</string>
     <string name="notification_uploader_error_host">Por favor, esteja na rede da FEUP ou ligado através de VPN.</string>
     <string name="notification_error_title">Erro</string>
-    <string name="notification_uploader_error">Erro ao enviar\n<xliff:g id="file">%1$s</xliff:g></string>
+    <string name="notification_uploader_error">Erro ao enviar\n%1$s</string>
     <string name="notification_unsupported">Operação não suportada</string>
 
     <!-- *************************************************************************************** -->
