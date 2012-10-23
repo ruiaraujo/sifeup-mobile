@@ -154,5 +154,10 @@ public abstract class Profile implements Parcelable{
 		mobilePhone = ParcelUtils.readString(in);
 		webPage = ParcelUtils.readString(in);
 	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
 
 }

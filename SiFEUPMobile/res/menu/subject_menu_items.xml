@@ -9,6 +9,10 @@
         android:title="@string/title_other_occurrences"
         android:orderInCategory="2"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_enrolled_students"
+        android:title="@string/title_enrolled_students"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/menu_go_to_subject_sigarra"
         android:icon="@drawable/ic_title_export"
         android:title="@string/description_browser"

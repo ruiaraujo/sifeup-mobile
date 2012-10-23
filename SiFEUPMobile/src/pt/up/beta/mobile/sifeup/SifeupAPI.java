@@ -693,7 +693,7 @@ public class SifeupAPI {
 				+ WEBSERVICE_SEP + SubjectClasses.CODE + EQUALS + code;
 	}
 
-	public static String getSubjectRegisteredStudentsUrl(String code) {
+	public static String getSubjectEnrolledStudentsUrl(String code) {
 		return WEBSERVICE + WebServices.SUBJECT
 				+ SubjectRegisteredStudents.NAME + WEBSERVICE_SEP
 				+ SubjectRegisteredStudents.CODE + EQUALS + code;

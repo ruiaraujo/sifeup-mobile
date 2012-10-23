@@ -169,6 +169,10 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_other_occurrences" />
         <activity
+            android:name=".ui.subjects.EnrolledStudentsActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_enrolled_students" />
+        <activity
             android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_academic_path" />

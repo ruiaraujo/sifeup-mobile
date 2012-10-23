@@ -137,6 +137,12 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 					OtherOccurrencesFragment.UCURR_CODE, subject.getUcurrId()));
 			return true;
 		}
+		if (item.getItemId() == R.id.menu_enrolled_students) {
+			startActivity(new Intent(getActivity(),
+					EnrolledStudentsActivity.class).putExtra(
+					EnrolledStudentsFragment.OCORR_CODE, code));
+			return true;
+		}
 		if (item.getItemId() == R.id.menu_go_to_subject_sigarra) {
 			Intent i = new Intent(getActivity(), WebviewActivity.class);
 			i.putExtra(WebviewFragment.URL_INTENT,

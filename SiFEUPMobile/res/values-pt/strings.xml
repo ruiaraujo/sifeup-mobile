@@ -156,6 +156,10 @@
     <!-- Other Occurrences -->
     <string name="title_other_occurrences">Outras Ocorrências</string>
     <string name="lb_no_other_occurrences">Não há outras ocorrências.</string>
+    
+    <!-- Enrolled Students -->
+    <string name="title_enrolled_students">Estudantes Inscritos</string>
+    <string name="lb_no_enrolled_students">Não há estudantes inscritos.</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>

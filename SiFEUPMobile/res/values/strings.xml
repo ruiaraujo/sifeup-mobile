@@ -158,6 +158,10 @@
     <!-- Other Occurrences -->
     <string name="title_other_occurrences">Other Occurrences</string>
     <string name="lb_no_other_occurrences">There are no other occurrences.</string>
+    
+    <!-- Enrolled Students -->
+    <string name="title_enrolled_students">Enrolled Students</string>
+    <string name="lb_no_enrolled_students">There are no enrolled students.</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Academic Path</string>
