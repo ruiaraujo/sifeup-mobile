@@ -379,22 +379,6 @@ public class SifeupAPI {
 	}
 
 	/**
-	 * Schedule Url for Web Service
-	 * 
-	 * @param code
-	 * @param begin
-	 * @param end
-	 * @return Schedule Url
-	 */
-	public static String getStudentScheduleUrl(String code, String begin,
-			String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME
-				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
-				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end;
-	}
-
-	/**
 	 * Notifications Url for Web Service
 	 * 
 	 * @return Notifications Url
@@ -839,6 +823,24 @@ public class SifeupAPI {
 				+ y;
 
 	}
+	
+
+	/**
+	 * Schedule Url for Web Service
+	 * 
+	 * @param code
+	 * @param begin
+	 * @param end
+	 * @return Schedule Url
+	 */
+	public static String getStudentScheduleUrl(String code, String begin,
+			String end) {
+		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME
+				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
+				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
+				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+	}
+
 
 	/**
 	 * UC Schedule Url for Web Service
@@ -852,7 +854,7 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + SubjectSchedule.NAME
 				+ WEBSERVICE_SEP + SubjectSchedule.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end;
+				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -868,7 +870,7 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + TeacherSchedule.CODE + EQUALS + code
 				+ LINK_SEP + TeacherSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end;
+				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -884,7 +886,7 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code + LINK_SEP
 				+ RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
-				+ RoomSchedule.WEEK_END + EQUALS + end;
+				+ RoomSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
