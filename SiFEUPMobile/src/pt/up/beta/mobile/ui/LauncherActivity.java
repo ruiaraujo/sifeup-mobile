@@ -6,6 +6,7 @@ import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
 import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
@@ -172,7 +173,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 
 	private void launchNextActivity() {
 		final Intent intent = getIntent();
-		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+		if (intent.getAction() != null
+				&& intent.getAction().equals(Intent.ACTION_VIEW)) {
 			final Uri uri = intent.getData();
 			new AsyncTask<Void, Void, String[]>() {
 				@Override
@@ -188,8 +190,8 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 										ProfileActivity.PROFILE_TYPE,
 										SifeupAPI.STUDENT_TYPE
 												.equals(profileDetails[2]) ? ProfileActivity.PROFILE_STUDENT
-												: ProfileActivity.PROFILE_EMPLOYEE).putExtra(
-														Intent.EXTRA_TITLE,profileDetails[3]);
+												: ProfileActivity.PROFILE_EMPLOYEE)
+								.putExtra(Intent.EXTRA_TITLE, profileDetails[3]);
 					else
 						intent = new Intent(getApplicationContext(),
 								ScheduleActivity.class)
@@ -199,14 +201,16 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 										ScheduleFragment.SCHEDULE_TYPE,
 										SifeupAPI.STUDENT_TYPE
 												.equals(profileDetails[2]) ? ScheduleFragment.SCHEDULE_STUDENT
-												: ScheduleFragment.SCHEDULE_EMPLOYEE).putExtra(
-														Intent.EXTRA_TITLE,
-														getString(R.string.title_schedule_arg,
-																profileDetails[3]));;
+												: ScheduleFragment.SCHEDULE_EMPLOYEE)
+								.putExtra(
+										Intent.EXTRA_TITLE,
+										getString(R.string.title_schedule_arg,
+												profileDetails[3]));
+					;
 					startActivity(intent);
 					finish();
-					overridePendingTransition(R.anim.slide_right_in,
-							R.anim.slide_right_out);
+					overridePendingTransition(R.anim.fade_in,
+							android.R.anim.fade_out);
 				}
 
 				@Override
@@ -223,9 +227,9 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			return;
 
 		}
-		startActivity(new Intent(this, HomeActivity.class));
+		startActivity(new Intent(this, PersonalAreaActivity.class));
 		finish();
-		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 
 	}
 }

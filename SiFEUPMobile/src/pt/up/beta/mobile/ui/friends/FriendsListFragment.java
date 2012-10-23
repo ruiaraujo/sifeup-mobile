@@ -129,9 +129,7 @@ public class FriendsListFragment extends BaseFragment implements
 					ProfileActivity.PROFILE_EMPLOYEE);
 		i.putExtra(ProfileActivity.PROFILE_CODE, f.getCode());
 		i.putExtra(Intent.EXTRA_TITLE, f.getName());
-		startActivity(i);
-		getActivity().overridePendingTransition(R.anim.slide_right_in,
-				R.anim.slide_right_out);
+		getBaseActivity().openActivityOrFragment(i);
 	}
 
 	@Override

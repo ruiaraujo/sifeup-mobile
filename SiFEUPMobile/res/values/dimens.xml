@@ -11,6 +11,9 @@
     <dimen name="tab_side_padding">2dp</dimen>
     <dimen name="track_icon_width">40dp</dimen>
     <dimen name="track_icon_padding">4dp</dimen>
+    <dimen name="actionbar_home_width">60dp</dimen>
+    <dimen name="list_padding">10dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
 
     <!-- body content -->
     <dimen name="body_padding_medium">10dp</dimen>

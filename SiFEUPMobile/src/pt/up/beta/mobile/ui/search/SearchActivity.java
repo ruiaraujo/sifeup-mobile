@@ -26,7 +26,7 @@ public class SearchActivity extends BaseSinglePaneActivity {
     private String mQuery;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();        
