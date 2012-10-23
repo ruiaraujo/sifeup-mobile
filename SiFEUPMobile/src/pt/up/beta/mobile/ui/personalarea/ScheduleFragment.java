@@ -424,10 +424,7 @@ public class ScheduleFragment extends BaseFragment implements
 			return;
 		}
 		// Plus one because mDays.at(0) is a day of the previous week
-		Day day = mDays.get(dayIndex + 1);
-		final String blockId = block.getLectureAcronym()
-				+ block.getLectureType() + block.getRoomCod()
-				+ block.getStartTime();
+		Day day = mDays.get(dayIndex - 1);
 		final String title = block.getLectureAcronym() + " ("
 				+ block.getLectureType() + ")" + "\n" + block.getRoomCod();
 		final long start = block.getStartTime() * 1000 + day.timeStart;
@@ -437,7 +434,7 @@ public class ScheduleFragment extends BaseFragment implements
 		int column = 0;
 		if (block.getLectureType().equals("T"))
 			column = 1;
-		final BlockView blockView = new BlockView(getActivity(), blockId,
+		final BlockView blockView = new BlockView(getActivity(), block.getBlockId(),
 				title, start, end, containsStarred, column);
 		blockView.setOnClickListener(this);
 		day.blocksView.addBlock(blockView);
@@ -490,13 +487,16 @@ public class ScheduleFragment extends BaseFragment implements
 							// iterate over schedule and add them to schedule
 							for (ScheduleBlock b : schedule) {
 								// new event
-								ScheduleTeacher teacher = b.getTeachers()
-										.get(0);
 								String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
 								String eventLocation = b.getRoomCod();
-								String description = "Professor: "
-										+ teacher.getName();
+								StringBuilder description = new StringBuilder();
+								for (ScheduleTeacher teacher : b.getTeachers() ){
+									description.append("Professor: ");
+									description.append(teacher.getName());
+									description.append('\n');
+								}
+								 
 								long date = pt.up.beta.mobile.utils.DateUtils
 										.moveDayofWeek(mondayMillis,
 												b.getWeekDay())
@@ -505,7 +505,7 @@ public class ScheduleFragment extends BaseFragment implements
 								Event event = new Event(
 										title,
 										eventLocation,
-										description,
+										description.toString(),
 										date,
 										(long) (date + b.getLectureDuration() * 3600000));
 								final Uri newEvent = calendarHelper
@@ -602,15 +602,16 @@ public class ScheduleFragment extends BaseFragment implements
 				return;
 			Intent i = new Intent(getActivity(), ClassDescriptionActivity.class);
 			i.putExtra(ClassDescriptionFragment.BLOCK, block);
+			final String title= block.getLectureAcronym() + " ("
+					+ block.getLectureType() + ")";
+			i.putExtra(Intent.EXTRA_TITLE, title);
 			startActivity(i);
 		}
 	}
 
 	private ScheduleBlock findBlock(String blockId) {
 		for (ScheduleBlock block : schedule) {
-			String id = block.getLectureAcronym() + block.getLectureType()
-					+ block.getRoomCod() + block.getStartTime();
-			if (id.equals(blockId))
+			if (block.getBlockId().equals(blockId))
 				return block;
 		}
 		return null;
@@ -698,6 +699,11 @@ public class ScheduleFragment extends BaseFragment implements
 		case SCHEDULE_UC:
 			selectionArgs = SigarraContract.Schedule
 					.getUCScheduleSelectionArgs(scheduleCode, initialDay,
+							finalDay, mondayMillis);
+			break;
+		case SCHEDULE_CLASS:
+			selectionArgs = SigarraContract.Schedule
+					.getClassScheduleSelectionArgs(scheduleCode, initialDay,
 							finalDay, mondayMillis);
 			break;
 		default:

@@ -1,8 +1,5 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -19,13 +16,14 @@ public class ScheduleBlock implements Parcelable {
 	private final int weekDay; // [0 ... 6]
 	@SerializedName("hora_inicio")
 	private final int startTime; // seconds from midnight
-
 	@SerializedName("ocorrencia_id")
 	private final String lectureCode; // EIC0036
 	@SerializedName("ucurr_sigla")
 	private final String lectureAcronym; // ex: SDIS
 	@SerializedName("tipo")
 	private final String lectureType; // T|TP|P
+	@SerializedName("aula_id")
+	private final String blockId; // T|TP|P
 	@SerializedName("aula_duracao")
 	private final double lectureDuration; // 2; 1,5 (in hours)
 	@SerializedName("turma_sigla")
@@ -38,13 +36,13 @@ public class ScheduleBlock implements Parcelable {
 										// string nice to show.
 
 	@SerializedName("docentes")
-	private final List<ScheduleTeacher> teachers;
+	private final ScheduleTeacher[] teachers;
 
 	@SerializedName("salas")
-	private final List<ScheduleRoom> rooms;
+	private final ScheduleRoom[] rooms;
 
 	@SerializedName("turmas")
-	private final List<ScheduleClass> classes;
+	private final ScheduleClass[] classes;
 
 	@SerializedName("periodo")
 	private int semester; // 2S
@@ -53,19 +51,20 @@ public class ScheduleBlock implements Parcelable {
 		weekDay = in.readInt();
 		startTime = in.readInt();
 		semester = in.readInt();
+		lectureDuration = in.readDouble();
 		lectureCode = ParcelUtils.readString(in);
 		lectureAcronym = ParcelUtils.readString(in);
 		lectureType = ParcelUtils.readString(in);
-		lectureDuration = in.readDouble();
+		blockId = ParcelUtils.readString(in);
 		classAcronym = ParcelUtils.readString(in);
 		roomCod = ParcelUtils.readString(in);
 		docAcronym = ParcelUtils.readString(in);
-		teachers = new ArrayList<ScheduleTeacher>();
-		in.readTypedList(teachers, ScheduleTeacher.CREATOR);
-		rooms = new ArrayList<ScheduleRoom>();
-		in.readTypedList(rooms, ScheduleRoom.CREATOR);
-		classes = new ArrayList<ScheduleClass>();
-		in.readTypedList(classes, ScheduleClass.CREATOR);
+		teachers = new ScheduleTeacher[in.readInt()];
+		in.readTypedArray(teachers, ScheduleTeacher.CREATOR);
+		rooms = new ScheduleRoom[in.readInt()];
+		in.readTypedArray(rooms, ScheduleRoom.CREATOR);
+		classes = new ScheduleClass[in.readInt()];
+		in.readTypedArray(classes, ScheduleClass.CREATOR);
 	}
 
 	public int getWeekDay() {
@@ -100,27 +99,31 @@ public class ScheduleBlock implements Parcelable {
 		return semester;
 	}
 
+	public String getBlockId() {
+		return blockId;
+	}
+
+	public String getDocAcronym() {
+		return docAcronym;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+
 	public String getRoomCod() {
 		return roomCod;
 	}
 
-	public void addTeacher(ScheduleTeacher teacher) {
-		teachers.add(teacher);
-	}
-
-	public List<ScheduleTeacher> getTeachers() {
+	public ScheduleTeacher[] getTeachers() {
 		return teachers;
 	}
 
-	public void addRoom(ScheduleRoom room) {
-		rooms.add(room);
-	}
-
-	public List<ScheduleRoom> getRooms() {
+	public ScheduleRoom[] getRooms() {
 		return rooms;
 	}
 
-	public List<ScheduleClass> getClasses() {
+	public ScheduleClass[] getClasses() {
 		return classes;
 	}
 
@@ -132,15 +135,20 @@ public class ScheduleBlock implements Parcelable {
 		dest.writeInt(weekDay);
 		dest.writeInt(startTime);
 		dest.writeInt(semester);
+		dest.writeDouble(lectureDuration);
 		ParcelUtils.writeString(dest, lectureCode);
 		ParcelUtils.writeString(dest, lectureAcronym);
 		ParcelUtils.writeString(dest, lectureType);
+		ParcelUtils.writeString(dest, blockId);
 		ParcelUtils.writeString(dest, classAcronym);
 		ParcelUtils.writeString(dest, roomCod);
 		ParcelUtils.writeString(dest, docAcronym);
-		dest.writeTypedList(teachers);
-		dest.writeTypedList(rooms);
-		dest.writeTypedList(classes);
+		dest.writeInt(teachers.length);
+		dest.writeTypedArray(teachers,flags);
+		dest.writeInt(rooms.length);
+		dest.writeTypedArray(rooms,flags);
+		dest.writeInt(classes.length);
+		dest.writeTypedArray(classes,flags);
 	}
 
 	public static final Parcelable.Creator<ScheduleBlock> CREATOR = new Parcelable.Creator<ScheduleBlock>() {

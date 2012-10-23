@@ -1,20 +1,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="25dip"
-        android:paddingLeft="30dip" >
+        android:paddingLeft="30dip"
+        android:paddingRight="30dip" >
 
         <TextView
             android:id="@+id/class_subject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:paddingBottom="25dip"
+            android:paddingBottom="15dip"
             android:paddingTop="30dip"
             android:textSize="16.0sp" />
 
@@ -23,51 +23,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:textSize="16.0sp"
-            android:text="@string/class_teacher" />
+            android:text="@string/class_teacher"
+            android:textSize="16.0sp" />
 
         <LinearLayout
             android:id="@+id/list_teachers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        	android:orientation="vertical" 
-            android:paddingBottom="25dip"/>
+            android:orientation="vertical"
+            android:paddingBottom="5dip" />
 
         <TextView
             android:id="@+id/class_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:textSize="16.0sp"
-            android:text="@string/class_room" />
+            android:text="@string/class_room"
+            android:textSize="16.0sp" />
 
         <LinearLayout
             android:id="@+id/list_rooms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        	android:orientation="vertical" 
-            android:paddingBottom="25dip"/>
+            android:orientation="vertical"
+            android:paddingBottom="5dip" />
 
         <TextView
             android:id="@+id/class_team"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:paddingBottom="25dip"
+            android:paddingBottom="10dip"
             android:textSize="16.0sp" />
+
+        <TextView
+            android:id="@+id/class_classes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:text="@string/class_classes"
+            android:textSize="16.0sp" />
+
         <LinearLayout
             android:id="@+id/list_class"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        	android:orientation="vertical" 
-            android:paddingBottom="25dip"/>
+            android:orientation="vertical"
+            android:paddingBottom="5dip" />
 
         <TextView
             android:id="@+id/class_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:paddingBottom="25dip"
+            android:paddingBottom="10dip"
             android:textSize="16.0sp" />
 
         <TextView

@@ -152,7 +152,7 @@ public final class SigarraContract {
 		}
 
 		public static final String[] FRIENDS_COLUMNS = { CODE_FRIEND,
-				NAME_FRIEND, TYPE_FRIEND , COURSE_FRIEND};
+				NAME_FRIEND, TYPE_FRIEND, COURSE_FRIEND };
 
 		public static final String FRIEND_SELECTION = USER_CODE + "=? AND "
 				+ CODE_FRIEND + "=?";
@@ -292,6 +292,12 @@ public final class SigarraContract {
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
 					ScheduleTable.TYPE.UC, Long.toString(mondayMillis) };
+		}
+
+		public static final String[] getClassScheduleSelectionArgs(String code,
+				String initialDay, String finalDay, long mondayMillis) {
+			return new String[] { code, initialDay, finalDay,
+					ScheduleTable.TYPE.CLASS, Long.toString(mondayMillis) };
 		}
 
 		public static final String[] COLUMNS = { CONTENT };

@@ -308,10 +308,16 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			page = SifeupAPI.getReply(
 					SifeupAPI.getRoomScheduleUrl(code, initialDay, finalDay),
 					authToken, getContext());
-		} else
+		} else if (SigarraContract.Schedule.UC.equals(type)) {
 			page = SifeupAPI.getReply(
 					SifeupAPI.getUcScheduleUrl(code, initialDay, finalDay),
 					authToken, getContext());
+		} else if (SigarraContract.Schedule.CLASS.equals(type)) {
+			page = SifeupAPI.getReply(
+					SifeupAPI.getClassScheduleUrl(code, initialDay, finalDay),
+					authToken, getContext());
+		} else
+			throw new RuntimeException("Unknown schedule type "+ type);
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ScheduleColumns.CODE, code);
 		values.put(SigarraContract.ScheduleColumns.TYPE, type);

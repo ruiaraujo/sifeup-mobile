@@ -16,6 +16,7 @@ public class ScheduleTable implements BaseColumns {
 		String ROOM = "room";
 		String STUDENT = "student";
 		String EMPLOYEE = "employee";
+		String CLASS = "class";
 		String UC = "uc";
 	}
 

@@ -117,8 +117,9 @@
 
     <!-- Class Description -->
     <string name="class_subject">&lt;b>Subject:&lt;/b>%1$s</string>
-    <string name="class_teacher">&lt;b>Professores&lt;/b></string>
+    <string name="class_teacher"><b>Professores</b></string>
     <string name="class_room"><b>Salas</b></string>
+    <string name="class_classes"><b>Turmas</b></string>
     <string name="class_team">&lt;b>Turma:&lt;/b>%1$s</string>
     <string name="class_start_time">&lt;b>Hora de início:&lt;/b>%1$s</string>
     <string name="class_end_time">&lt;b>Hora de fim:&lt;/b>%1$s</string>
