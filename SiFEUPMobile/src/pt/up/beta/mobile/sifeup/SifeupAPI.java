@@ -44,7 +44,7 @@ public class SifeupAPI {
 		String EMPLOYEE = "mob_func_geral.";
 		String PRINTING = "mob_imp_geral.";
 		String NOTIFICATIONS = "mob_wf_geral.";
-		String SCHEDULE = "mobc_hor_geral.";
+		String SCHEDULE = "mob_hor_geral.";
 		String CANTEENS = "mob_eme_geral.";
 		String FACILITIES = "mob_instal_geral.";
 		String MAIL = "mob_mail_geral.";
