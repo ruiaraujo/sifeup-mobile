@@ -4,6 +4,7 @@ import org.acra.ACRA;
 
 import pt.up.beta.mobile.datatypes.OtherSubjectOccurrences;
 import pt.up.beta.mobile.datatypes.Student;
+import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -27,6 +28,14 @@ public class SubjectUtils {
 		return new FetcherTask<Student[]>(command,
 				new EnrolledStudentsParser(), context).execute(SifeupAPI
 				.getSubjectEnrolledStudentsUrl(occorrId));
+	}
+
+	public static AsyncTask<String, Void, ERROR_TYPE> getTeachingService(
+			String code, ResponseCommand<TeachingService> command,
+			Context context) {
+		return new FetcherTask<TeachingService>(command,
+				new TeachingServiceParser(), context).execute(SifeupAPI
+				.getTeachingServiceUrl(code, null));
 	}
 
 	/**
@@ -75,6 +84,23 @@ public class SubjectUtils {
 			}
 			return null;
 		}
+	}
 
+	private static class TeachingServiceParser implements
+			ParserCommand<TeachingService> {
+
+		public TeachingService parse(String page) {
+			try {
+				return new Gson().fromJson(page, TeachingService.class);
+			} catch (Exception e) {
+				e.printStackTrace();
+				ACRA.getErrorReporter().handleSilentException(e);
+				ACRA.getErrorReporter().handleSilentException(
+						new RuntimeException("Id:"
+								+ AccountUtils.getActiveUserCode(null) + "\n\n"
+								+ page));
+			}
+			return null;
+		}
 	}
 }

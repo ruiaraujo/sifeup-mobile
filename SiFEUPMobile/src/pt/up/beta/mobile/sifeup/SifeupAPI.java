@@ -101,7 +101,7 @@ public class SifeupAPI {
 	// MOB_FUNC_GERAL
 
 	// .DS_DOCENTE
-	private interface TeacherSubjects {
+	private interface TeachingService {
 		String NAME = "ds_docente";
 		String CODE = "pv_codigo";
 		String YEAR = "pv_ano_lectivo";
@@ -513,15 +513,15 @@ public class SifeupAPI {
 				+ WEBSERVICE_SEP + EmployeeProfile.CODE + EQUALS + code;
 	}
 
-	public static String getTeacherSubjectsUrl(String code, String year) {
+	public static String getTeachingServiceUrl(String code, String year) {
 		return WEBSERVICE
 				+ WebServices.EMPLOYEE
-				+ TeacherSubjects.NAME
+				+ TeachingService.NAME
 				+ WEBSERVICE_SEP
-				+ TeacherSubjects.CODE
+				+ TeachingService.CODE
 				+ EQUALS
 				+ code
-				+ (year == null ? "" : (LINK_SEP + TeacherSubjects.YEAR
+				+ (year == null ? "" : (LINK_SEP + TeachingService.YEAR
 						+ EQUALS + year));
 	}
 
@@ -613,13 +613,11 @@ public class SifeupAPI {
 	}
 
 	/**
-	 * TODO: check parameters Subjects Url for Web Service
 	 * 
 	 * @param code
 	 * @return
 	 */
-	public static String getStudentAcademicPathUrl(String code, String minYear,
-			String maxYear) {
+	public static String getStudentAcademicPathUrl(String code) {
 		return WEBSERVICE + WebServices.STUDENT + StudentAcademicPath.NAME
 				+ WEBSERVICE_SEP + StudentAcademicPath.CODE + EQUALS + code;
 	}

@@ -364,7 +364,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String academicPath = SifeupAPI.getReply(SifeupAPI
 				.getStudentAcademicPathUrl(mAccountManager.getUserData(account,
-						Constants.USER_CODE), null, null), authToken,
+						Constants.USER_CODE)), authToken,
 				getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.AcademicPathColumns.ID, account.name);
