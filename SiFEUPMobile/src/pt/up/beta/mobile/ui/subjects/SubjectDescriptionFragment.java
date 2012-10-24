@@ -240,8 +240,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 2: {
-				if (subject.getTeachers() != null
-						&& subject.getTeachers().length != 0) {
+				if (subject.getTeachers().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView list = (ListView) root
@@ -283,8 +282,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 3: {
-				if (subject.getBibliography() != null
-						&& subject.getBibliography().length != 0) {
+				if (subject.getBibliography().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listBooks = (ListView) root
@@ -329,8 +327,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 4: {
-				if (subject.getSoftware() != null
-						&& subject.getSoftware().length != 0) {
+				if (subject.getSoftware().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listSoftware = (ListView) root
@@ -343,9 +340,11 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 					for (Software s : subject.getSoftware()) {
 						HashMap<String, String> map = new HashMap<String, String>();
-
-						map.put(fromSoftware[0], s.getName());
-						map.put(fromSoftware[1], s.getDescription());
+						if (s.getName() != null) {
+							map.put(fromSoftware[0], s.getName());
+							map.put(fromSoftware[1], s.getDescription());
+						} else
+							map.put(fromSoftware[0], s.getDescription());
 						fillMapsSoftware.add(map);
 					}
 					SimpleAdapter adapterSoftware = new SimpleAdapter(
@@ -370,8 +369,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 6: {
-				if (subject.getSoftware() != null
-						&& subject.getSoftware().length != 0) {
+				if (subject.getEvaluation().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					final ListView listEvaluation = (ListView) root
@@ -386,9 +384,11 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 
 					for (EvaluationComponent e : subject.getEvaluation()) {
 						final HashMap<String, String> map = new HashMap<String, String>();
-
-						map.put(from[0], e.getDescription());
-						map.put(from[0], e.getTypeDesc());
+						if (e.getDescription() != null) {
+							map.put(from[0], e.getDescription());
+							map.put(from[1], e.getTypeDesc());
+						} else
+							map.put(from[0], e.getTypeDesc());
 						fillMapsEvaluation.add(map);
 
 					}
