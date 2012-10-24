@@ -8,6 +8,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
+import pt.up.beta.mobile.ui.subjects.TeachingServiceActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -36,6 +37,10 @@ public class EmployeeAreaFragment extends ListFragment {
 		schedule.put(from[0], getString(R.string.btn_schedule));
 		fillMaps.add(schedule);
 
+		HashMap<String, String> teaching = new HashMap<String, String>();
+		teaching.put(from[0], getString(R.string.title_teaching_service));
+		fillMaps.add(teaching);
+		
 		HashMap<String, String> food = new HashMap<String, String>();
 		food.put(from[0], getString(R.string.btn_lunch_menu));
 		fillMaps.add(food);
@@ -76,9 +81,13 @@ public class EmployeeAreaFragment extends ListFragment {
 			return;
 		case 2:
 			activity.openActivityOrFragment(new Intent(getActivity(),
-					LunchMenuActivity.class));
+					TeachingServiceActivity.class));
 			return;
 		case 3:
+			activity.openActivityOrFragment(new Intent(getActivity(),
+					LunchMenuActivity.class));
+			return;
+		case 4:
 			activity.openActivityOrFragment(new Intent(getActivity(),
 					ParkOccupationActivity.class));
 			return;

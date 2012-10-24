@@ -173,6 +173,10 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_enrolled_students" />
         <activity
+            android:name=".ui.subjects.TeachingServiceActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_teaching_service" />
+        <activity
             android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_academic_path" />

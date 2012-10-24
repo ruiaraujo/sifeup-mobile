@@ -162,6 +162,10 @@
     <!-- Enrolled Students -->
     <string name="title_enrolled_students">Enrolled Students</string>
     <string name="lb_no_enrolled_students">There are no enrolled students.</string>
+    
+    <!-- Teaching Service -->
+    <string name="title_teaching_service">Teaching Service</string>
+    <string name="lb_no_teaching_service">You have no teaching service.</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Academic Path</string>

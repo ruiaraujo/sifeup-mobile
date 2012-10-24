@@ -160,6 +160,10 @@
     <!-- Enrolled Students -->
     <string name="title_enrolled_students">Estudantes Inscritos</string>
     <string name="lb_no_enrolled_students">Não há estudantes inscritos.</string>
+    
+    <!-- Teaching Service -->
+    <string name="title_teaching_service">Distribuição de Serviço</string>
+    <string name="lb_no_teaching_service">Não tem serviço docente.</string>
 
     <!-- Academic Path -->
     <string name="title_academic_path">Percurso Académico</string>
