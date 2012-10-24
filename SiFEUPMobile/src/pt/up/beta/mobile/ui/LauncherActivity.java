@@ -5,6 +5,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
 import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
@@ -110,6 +111,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			for (Account account : accounts) {
 				accountNames[i++] = account.name;
 				if (account.name.equals(activeUser) && !logOut) {
+					AccountUtils.init(getApplicationContext());
 					launchNextActivity();
 					return;
 				}
@@ -143,6 +145,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			new Thread(new Runnable() {
 				public void run() {
 					editor.commit();
+					AccountUtils.init(getApplicationContext());
 				}
 			}).start();
 			launchNextActivity();
@@ -166,6 +169,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		new Thread(new Runnable() {
 			public void run() {
 				editor.commit();
+				AccountUtils.init(getApplicationContext());
 			}
 		}).start();
 		launchNextActivity();
