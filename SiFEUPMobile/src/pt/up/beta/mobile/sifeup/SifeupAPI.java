@@ -32,7 +32,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
-	final private static String WEBSERVICE = "http://sigarradevp.up.pt/dev/mob/";
+	public final static String SIGARRA_HOST = "http://sigarradevp.up.pt/dev/";
+	final private static String WEBSERVICE = SIGARRA_HOST + "mob/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
@@ -207,6 +208,7 @@ public class SifeupAPI {
 	private interface DownloadMailFiles {
 		String NAME = "download_file";
 		String CODE = "p_name";
+		String FILENAME = "p_cod";
 	}
 
 	// MOB_PAR_GERAL
@@ -771,9 +773,11 @@ public class SifeupAPI {
 				+ MailFiles.CODE + EQUALS + code;
 	}
 
-	public static String getDownloadMailFilesUrl(String code) {
-		return WEBSERVICE + WebServices.DYNAMIC_MAIL_FILES
+	// TODO: check this again when server code is in production
+	public static String getDownloadMailFilesUrl(String code, String name) {
+		return SIGARRA_HOST + "feup/pt/" + WebServices.DYNAMIC_MAIL_FILES
 				+ DownloadMailFiles.NAME + WEBSERVICE_SEP
+				+ DownloadMailFiles.FILENAME + EQUALS + name + LINK_SEP
 				+ DownloadMailFiles.CODE + EQUALS + code;
 	}
 
@@ -821,7 +825,6 @@ public class SifeupAPI {
 				+ y;
 
 	}
-	
 
 	/**
 	 * Schedule Url for Web Service
@@ -836,9 +839,9 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME
 				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
 				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
-
 
 	/**
 	 * UC Schedule Url for Web Service
@@ -852,7 +855,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + SubjectSchedule.NAME
 				+ WEBSERVICE_SEP + SubjectSchedule.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -868,7 +872,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + TeacherSchedule.CODE + EQUALS + code
 				+ LINK_SEP + TeacherSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -884,7 +889,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code + LINK_SEP
 				+ RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
-				+ RoomSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ RoomSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -1127,7 +1133,6 @@ public class SifeupAPI {
 		}
 
 	}
-
 
 	public static String getContentCharSet(final String contentType) {
 		String[] values = contentType.split(";"); // The values.length must be
