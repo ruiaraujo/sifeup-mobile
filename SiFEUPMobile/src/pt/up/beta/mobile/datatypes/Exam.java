@@ -1,53 +1,30 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /** Stores info about a exam */
 public class Exam implements Parcelable {
-	private final String type; // tipo de exame
-	private final String courseAcronym; // codigo da cadeira
-	private final String courseName; // nome da cadeira
-	private final String weekDay; // [1 ... 6]
-	private final String date; // data do exame
-	private final String startTime; // hora de in�cio
-	private final String endTime; // hora de fim
-	private final String rooms; // salas
-
-	public Exam(String type, String courseAcronym, String courseName,
-			String weekDay, String date, String startTime, String endTime,
-			String rooms) {
-		this.type = type;
-		this.courseAcronym = courseAcronym;
-		this.courseName = courseName;
-		this.weekDay = weekDay;
-		this.date = date;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.rooms = rooms;
+	private final String ocorrId;
+	private final String ocorrName;
+	private final String date;
+	private final String startTime;
+	private final String endTime;
+	private final String duration;
+	private final String examId;
+	private final String funcId;
+	private final String type;
+	private final String typeDesc;
+	private final String season;
+	private final Room [] rooms;
+	
+	public String getOcorrId() {
+		return ocorrId;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public String getCourseAcronym() {
-		return courseAcronym;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public String getWeekDay() {
-		return weekDay;
+	public String getOcorrName() {
+		return ocorrName;
 	}
 
 	public String getDate() {
@@ -62,39 +39,63 @@ public class Exam implements Parcelable {
 		return endTime;
 	}
 
-	public String getRooms() {
+	public String getDuration() {
+		return duration;
+	}
+
+	public String getExamId() {
+		return examId;
+	}
+
+	public String getFuncId() {
+		return funcId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getTypeDesc() {
+		return typeDesc;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public Room[] getRooms() {
 		return rooms;
 	}
+	
+	public String getRoomsString() {
+		StringBuilder st = new StringBuilder();
+		for ( Room r : rooms ){
+			if ( st.length() > 0 )
+				st.append(", ");
+			st.append(r.name);
+		}
+		return st.toString();
+	}
+
 
 	public int describeContents() {
 		return 0;
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(type != null ? 1 : 0);
-		if (type != null)
-			dest.writeString(type);
-		dest.writeInt(courseAcronym != null ? 1 : 0);
-		if (courseAcronym != null)
-			dest.writeString(courseAcronym);
-		dest.writeInt(courseName != null ? 1 : 0);
-		if (courseName != null)
-			dest.writeString(courseName);
-		dest.writeInt(weekDay != null ? 1 : 0);
-		if (weekDay != null)
-			dest.writeString(weekDay);
-		dest.writeInt(date != null ? 1 : 0);
-		if (date != null)
-			dest.writeString(date);
-		dest.writeInt(startTime != null ? 1 : 0);
-		if (startTime != null)
-			dest.writeString(startTime);
-		dest.writeInt(endTime != null ? 1 : 0);
-		if (endTime != null)
-			dest.writeString(endTime);
-		dest.writeInt(rooms != null ? 1 : 0);
-		if (rooms != null)
-			dest.writeString(rooms);
+		ParcelUtils.writeString(dest, ocorrId);
+		ParcelUtils.writeString(dest, ocorrName);
+		ParcelUtils.writeString(dest, date);
+		ParcelUtils.writeString(dest, startTime);
+		ParcelUtils.writeString(dest, endTime);
+		ParcelUtils.writeString(dest, duration);
+		ParcelUtils.writeString(dest, examId);
+		ParcelUtils.writeString(dest, funcId);
+		ParcelUtils.writeString(dest, type);
+		ParcelUtils.writeString(dest, typeDesc);
+		ParcelUtils.writeString(dest, season);
+		dest.writeInt(rooms.length);
+		dest.writeTypedArray(rooms, flags);
 	}
 
 	public static final Parcelable.Creator<Exam> CREATOR = new Parcelable.Creator<Exam>() {
@@ -108,66 +109,64 @@ public class Exam implements Parcelable {
 	};
 
 	private Exam(Parcel in) {
-		if (in.readInt() == 1)
-			this.type = in.readString();
-		else
-			this.type = null;
-		if (in.readInt() == 1)
-			this.courseAcronym = in.readString();
-		else
-			this.courseAcronym = null;
-		if (in.readInt() == 1)
-			this.courseName = in.readString();
-		else
-			this.courseName = null;
-		if (in.readInt() == 1)
-			this.weekDay = in.readString();
-		else
-			this.weekDay = null;
-		if (in.readInt() == 1)
-			this.date = in.readString();
-		else
-			this.date = null;
-		if (in.readInt() == 1)
-			this.startTime = in.readString();
-		else
-			this.startTime = null;
-		if (in.readInt() == 1)
-			this.endTime = in.readString();
-		else
-			this.endTime = null;
-		if (in.readInt() == 1)
-			this.rooms = in.readString();
-		else
-			this.rooms = null;
-
+		ocorrId = ParcelUtils.readString(in);
+		ocorrName = ParcelUtils.readString(in);
+		date = ParcelUtils.readString(in);
+		startTime = ParcelUtils.readString(in);
+		endTime = ParcelUtils.readString(in);
+		duration = ParcelUtils.readString(in);
+		examId = ParcelUtils.readString(in);
+		funcId = ParcelUtils.readString(in);
+		type = ParcelUtils.readString(in);
+		typeDesc = ParcelUtils.readString(in);
+		season = ParcelUtils.readString(in);
+		rooms = new Room[in.readInt()];
+		in.readTypedArray(rooms, Room.CREATOR);
 	}
 
-	public static List<Exam> parseJSON(String page) throws JSONException {
-		JSONObject jObject = new JSONObject(page);
-		final List<Exam> exams = new ArrayList<Exam>();
+	
+	public static class Room implements Parcelable{
+		private final String id;
 
-		if (jObject.has("exames")) {
-			// iterate over exams
-			JSONArray jArray = jObject.getJSONArray("exames");
-			for (int i = 0; i < jArray.length(); i++) {
-				// new JSONObject
-				JSONObject jExam = jArray.getJSONObject(i);
-				// new Exam
-				final String type = jExam.optString("tipo");
-				final String courseAcronym = jExam.optString("uc");
-				final String courseName = jExam.optString("uc_nome");
-				final String weekDay = jExam.optString("dia");
-				final String date = jExam.optString("data");
-				final String startTime = jExam.optString("hora_inicio");
-				final String endTime = jExam.optString("hora_fim");
-				final String rooms = jExam.optString("salas");
-				// add exam
-				exams.add(new Exam(type, courseAcronym, courseName, weekDay,
-						date, startTime, endTime, rooms));
-			}
+		private final String name;
+		
+
+		public String getId() {
+			return id;
 		}
-		return exams;
+
+		public String getName() {
+			return name;
+		}
+		
+		private Room(Parcel in){
+			id = ParcelUtils.readString(in);
+			name = ParcelUtils.readString(in);
+			
+		}
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			ParcelUtils.writeString(dest, id);
+			ParcelUtils.writeString(dest, name);
+			
+		}
+
+		public static final Parcelable.Creator<Room> CREATOR = new Parcelable.Creator<Room>() {
+			public Room createFromParcel(Parcel in) {
+				return new Room(in);
+			}
+
+			public Room[] newArray(int size) {
+				return new Room[size];
+			}
+		};
+		
 	}
 
 }

@@ -16,20 +16,18 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.util.List;
-
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -38,7 +36,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
+public class ExamsLoader extends AsyncTaskLoader<Exam[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -47,12 +45,12 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<Exam> exams;
+	Exam[] exams;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<Exam> loadInBackground() {
+	public Exam[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -66,13 +64,18 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 				try {
-					return Exam.parseJSON(cursor.getString(cursor.getColumnIndex(SigarraContract.ExamsColumns.CONTENT)));
-				} catch (JSONException e) {
+					return new Gson()
+							.fromJson(
+									cursor.getString(cursor
+											.getColumnIndex(SigarraContract.ExamsColumns.CONTENT)),
+									Exam[].class);
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
 							new RuntimeException("Id:"
-									+ AccountUtils.getActiveUserCode(null) + "\n\n"));
+									+ AccountUtils.getActiveUserCode(null)
+									+ "\n\n"));
 				}
 			}
 		}
@@ -89,23 +92,26 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<Exam> exams) {
+	public void deliverResult(Exam[] exams) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
 			if (exams != null) {
-				exams.clear();
+				for (int i = 0; i < exams.length; ++i)
+					exams[i] = null;
+				exams = null;
 			}
 			return;
 		}
-		final List<Exam> oldExams = this.exams;
+		final Exam[] oldExams = this.exams;
 		this.exams = exams;
 		if (isStarted()) {
 			super.deliverResult(exams);
 		}
 
-        if (oldExams != null && oldExams != exams && oldExams.size() != 0) {
-        	oldExams.clear();
-        }
+		if (oldExams != null && oldExams != exams && oldExams.length != 0) {
+			for (int i = 0; i < oldExams.length; ++i)
+				oldExams[i] = null;
+		}
 	}
 
 	/**
@@ -163,9 +169,11 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 	}
 
 	@Override
-	public void onCanceled(List<Exam> exams) {
+	public void onCanceled(Exam[] exams) {
 		if (exams != null) {
-			exams.clear();
+			for (int i = 0; i < exams.length; ++i)
+				exams[i] = null;
+			exams = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -183,8 +191,10 @@ public class ExamsLoader extends AsyncTaskLoader<List<Exam>> {
 			mCursor.close();
 		}
 		mCursor = null;
-	if (exams != null)
-			exams.clear();
-		exams = null;
+		if (exams != null) {
+			for (int i = 0; i < exams.length; ++i)
+				exams[i] = null;
+			exams = null;
+		}
 	}
 }
