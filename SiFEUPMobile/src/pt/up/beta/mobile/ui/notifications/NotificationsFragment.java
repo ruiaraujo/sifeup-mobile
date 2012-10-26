@@ -36,11 +36,11 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class NotificationsFragment extends BaseFragment implements
 		OnItemClickListener,
-		LoaderCallbacks<List<Notification>> {
+		LoaderCallbacks<Notification[]> {
 
 	private ListView list;
 
-	private List<Notification> notifications;
+	private Notification[] notifications;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,13 +80,13 @@ public class NotificationsFragment extends BaseFragment implements
 			long id) {
 		Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
 		i.putExtra(NotificationsDescActivity.NOTIFICATION,
-				notifications.get(position));
+				notifications[position]);
 		startActivity(i);
 
 	}
 
 	@Override
-	public Loader<List<Notification>> onCreateLoader(int arg0, Bundle arg1) {
+	public Loader<Notification[]> onCreateLoader(int arg0, Bundle arg1) {
 		return new NotificationsLoader(getActivity(),
 				SigarraContract.Notifcations.CONTENT_URI,
 				SigarraContract.Notifcations.COLUMNS,
@@ -98,13 +98,13 @@ public class NotificationsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Notification>> loader,
-			List<Notification> notifications) {
+	public void onLoadFinished(Loader<Notification[]> loader,
+			Notification[] notifications) {
 		if (getActivity() == null || notifications == null)
 			return;
 
 		this.notifications = notifications;
-		if (notifications.isEmpty()) {
+		if (notifications.length == 0) {
 			showEmptyScreen(getString(R.string.lb_no_notification));
 			setRefreshActionItemState(false);
 			return;
@@ -125,7 +125,7 @@ public class NotificationsFragment extends BaseFragment implements
 			map.put("subject", " " + n.getSubject());
 			map.put("date", " " + n.getDate());
 			map.put("designation", " " + n.getDesignation());
-			map.put("priority", " " + n.getPriorityString());
+			map.put("priority", " " + n.getPriority());
 			fillMaps.add(map);
 		}
 
@@ -138,7 +138,7 @@ public class NotificationsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Notification>> arg0) {
+	public void onLoaderReset(Loader<Notification[]> arg0) {
 
 	}
 }

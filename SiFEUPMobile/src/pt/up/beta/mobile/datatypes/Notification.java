@@ -1,189 +1,110 @@
 package pt.up.beta.mobile.datatypes;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import pt.up.beta.mobile.utils.ParcelUtils;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import org.acra.ACRA;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import pt.up.beta.mobile.sifeup.AccountUtils;
-       
-import android.util.Log;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Class Notification 
+ * Class Notification
  * 
  * @author �ngela Igreja
- *
+ * 
  */
-@SuppressWarnings("serial")
-public class Notification  implements Serializable {
-	
+public class Notification implements Parcelable {
+
 	/** Notification Code */
-	private int code;
+	@SerializedName("code")
+	private final String code;
 
 	/** Notification Link */
-	private String link;
-	
-	/** Designation. Ex: Avisos  */
-	private String designation;
-	
+	@SerializedName("link")
+	private final String link;
+
+	/** Designation. Ex: Avisos */
+	@SerializedName("designacao")
+	private final String designation;
+
 	/** Subject English name - */
-	private String description;
-	
+	@SerializedName("descricao")
+	private final String description;
+
 	/** Subject acronym - */
-	private String beneficiary;
-	
+	@SerializedName("beneficiario")
+	private final String beneficiary;
+
 	/** */
-	private int priority;
-	
+	@SerializedName("prioridade")
+	private final int priority;
+
 	/** */
-	private String date;
-	
+	@SerializedName("data")
+	private final String date;
+
 	/** */
-	private String subject;
-	
+	@SerializedName("assunto")
+	private final String subject;
+
 	/** */
-	private String message;
-	
+	@SerializedName("mensagem")
+	private final String message;
+
 	/** */
-	private String obs;
-	
+	@SerializedName("obs")
+	private final String obs;
+
+	@SerializedName("lida")
 	private boolean read;
-	
-	/** 
-	 * Notifications Parser
-	 * Returns true in case of correct parsing.
-	 * @param jObject 
-	 * @return itself
-	 */
-    public static Notification parseJSON(JSONObject jObject){
-	
-    	try {
-    		Notification not = new Notification();
-    		if(jObject.has("codigo")) not.code = jObject.getInt("codigo");
-			if(jObject.has("link")) not.link = jObject.getString("link");
-			if(jObject.has("designacao")) not.setDesignation(jObject.getString("designacao"));
-			if(jObject.has("descricao")) not.setDescription(jObject.getString("descricao"));
-			if(jObject.has("beneficiario")) not.setBeneficiary(jObject.getString("beneficiario"));
-			if(jObject.has("prioridade")) not.setPriority(jObject.getInt("prioridade"));
-			if(jObject.has("data")) not.setDate(jObject.getString("data"));
-			if(jObject.has("assunto")) not.setSubject(jObject.getString("assunto"));
-			if(jObject.has("mensagem")) not.setMessage(jObject.getString("mensagem"));
-			if(jObject.has("obs")) not.setObs(jObject.getString("obs"));
-			not.setRead(false);
-			return not;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			ACRA.getErrorReporter().handleSilentException(e);
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(null) + "\n\n"));
-		}
-		
-    	Log.d("JSON", "Notification not found");
-    	return null;
-    }
-    public static List<Notification> parseListJSON(String page) throws JSONException{
-    	List<Notification> notifications = new ArrayList<Notification>();
-		JSONObject jObject = new JSONObject(page);
-		if (jObject.has("notificacoes")) {
-			JSONArray jArray = jObject.getJSONArray("notificacoes");
-			for (int i = 0; i < jArray.length(); i++) {
-				notifications.add(Notification
-						.parseJSON(jArray.getJSONObject(i)));
-			}
-		}
-		return notifications;
-    }
 
-    	
-
-	public void setLink(String link) {
-		this.link = link;
+	private Notification(Parcel in) {
+		code = ParcelUtils.readString(in);
+		priority = in.readInt();
+		link = ParcelUtils.readString(in);
+		designation = ParcelUtils.readString(in);
+		description = ParcelUtils.readString(in);
+		beneficiary = ParcelUtils.readString(in);
+		date = ParcelUtils.readString(in);
+		subject = ParcelUtils.readString(in);
+		message = ParcelUtils.readString(in);
+		obs = ParcelUtils.readString(in);
+		read = false;
 	}
 
 	public String getLink() {
 		return link;
 	}
 
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
-
 	public String getDesignation() {
 		return designation;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setBeneficiary(String beneficiary) {
-		this.beneficiary = beneficiary;
-	}
-
 	public String getBeneficiary() {
 		return beneficiary;
-	}
-
-	public void setPriority(int priority) {
-		this.priority = priority;
 	}
 
 	public int getPriority() {
 		return priority;
 	}
-	
-	public String getPriorityString() {
-		return Integer.toString(priority);
-	}
 
-	public int getCode() {
+	public String getCode() {
 		return code;
-	}
-
-	public void setCode(int code) {
-		this.code = code;
-	}
-	
-	public String getCodeString() {
-		return Integer.toString(code);
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	public String getDate() {
 		return date;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
 	public String getSubject() {
 		return subject;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public String getMessage() {
 		return message;
-	}
-
-	public void setObs(String obs) {
-		this.obs = obs;
 	}
 
 	public String getObs() {
@@ -199,25 +120,30 @@ public class Notification  implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + code;
-		return result;
+	public int describeContents() {
+		return 0;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Notification other = (Notification) obj;
-		if (code != other.code)
-			return false;
-		return true;
+	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtils.writeString(dest, code);
+		dest.writeInt(priority);
+		ParcelUtils.writeString(dest, link);
+		ParcelUtils.writeString(dest, designation);
+		ParcelUtils.writeString(dest, description);
+		ParcelUtils.writeString(dest, beneficiary);
+		ParcelUtils.writeString(dest, date);
+		ParcelUtils.writeString(dest, subject);
+		ParcelUtils.writeString(dest, message);
+		ParcelUtils.writeString(dest, obs);
 	}
+	public static final Parcelable.Creator<Notification> CREATOR = new Parcelable.Creator<Notification>() {
+		public Notification createFromParcel(Parcel in) {
+			return new Notification(in);
+		}
 
+		public Notification[] newArray(int size) {
+			return new Notification[size];
+		}
+	};
 }

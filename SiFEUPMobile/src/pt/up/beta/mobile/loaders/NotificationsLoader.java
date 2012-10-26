@@ -16,21 +16,16 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -39,7 +34,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
+public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -48,12 +43,12 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<Notification> notifications;
+	Notification[] notifications;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<Notification> loadInBackground() {
+	public Notification[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -66,22 +61,17 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 			}
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
-				try {
-					List<Notification> notifications = new ArrayList<Notification>();
+					Notification[] notifications = new Notification[cursor.getCount()];
+					final Gson gson = new Gson();
+					int i = 0;
 					do {
-						Notification not;
-						not = Notification
-								.parseJSON(new JSONObject(
-										cursor.getString(cursor
-												.getColumnIndex(SigarraContract.Notifcations.CONTENT))));
-						not.setRead(SigarraContract.Notifcations.SEEN.equals(cursor.getString(cursor
+						notifications[i] = gson.fromJson(cursor.getString(cursor
+												.getColumnIndex(SigarraContract.Notifcations.CONTENT)), Notification.class);
+						notifications[i].setRead(SigarraContract.Notifcations.SEEN.equals(cursor.getString(cursor
 								.getColumnIndex(SigarraContract.Notifcations.STATE))));
-						notifications.add(not);
+						++i;
 					} while (cursor.moveToNext());
 					return notifications;
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
 			} else {
 				final Cursor syncState = getContext().getContentResolver().query(
 						SigarraContract.LastSync.CONTENT_URI,
@@ -94,7 +84,7 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 				if ( syncState.moveToFirst() ){
 					if ( syncState.getLong(syncState.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) != 0 ){
 						syncState.close();
-						return new ArrayList<Notification>();
+						return new Notification[0];
 					}
 				}
 				else
@@ -116,23 +106,26 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<Notification> notifications) {
+	public void deliverResult(Notification[] notifications) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
 			if (notifications != null) {
-				notifications.clear();
+				for ( int i = 0; i < notifications.length;++i )
+					notifications[i] = null;
+				notifications = null;
 			}
 			return;
 		}
-		final List<Notification> oldNotifications = this.notifications;
+		final Notification[] oldNotifications = this.notifications;
 		this.notifications = notifications;
 		if (isStarted()) {
 			super.deliverResult(notifications);
 		}
 
 		if (oldNotifications != null && oldNotifications != notifications
-				&& oldNotifications.size() != 0) {
-			oldNotifications.clear();
+				&& oldNotifications.length != 0) {
+			for ( int i = 0; i < oldNotifications.length;++i )
+				oldNotifications[i] = null;
 		}
 	}
 
@@ -191,9 +184,11 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 	}
 
 	@Override
-	public void onCanceled(List<Notification> notifications) {
+	public void onCanceled(Notification[] notifications) {
 		if (notifications != null) {
-			notifications.clear();
+			for ( int i = 0; i < notifications.length;++i )
+				notifications[i] = null;
+			notifications = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -211,8 +206,10 @@ public class NotificationsLoader extends AsyncTaskLoader<List<Notification>> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (notifications != null)
-			notifications.clear();
+		if (notifications != null){
+			for ( int i = 0; i < notifications.length;++i )
+				notifications[i] = null;
+		}
 		notifications = null;
 	}
 }
