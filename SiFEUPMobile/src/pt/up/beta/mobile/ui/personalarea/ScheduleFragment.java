@@ -11,9 +11,10 @@ import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleTeacher;
 import pt.up.beta.mobile.loaders.ScheduleLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
@@ -59,7 +60,7 @@ import external.com.google.android.apps.iosched.util.MotionEventUtils;
  * @author Ângela Igreja
  * 
  */
-public class ScheduleFragment extends BaseFragment implements
+public class ScheduleFragment extends BaseLoaderFragment implements
 		ObservableScrollView.OnScrollListener, OnPageChangeListener,
 		OnClickListener, LoaderCallbacks<Schedule> {
 
@@ -216,39 +217,67 @@ public class ScheduleFragment extends BaseFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			final Time monday = new Time(DateUtils.TIME_REFERENCE);
-			monday.set(mondayMillis);
-			monday.normalize(false);
-			final String initialDay = monday.format("%Y%m%d");
-			// Friday
-			monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
-			monday.normalize(false);
-			final String finalDay = monday.format("%Y%m%d");
-			final String type;
-			switch (scheduleType) {
-			case SCHEDULE_STUDENT:
-				type = SigarraContract.Schedule.STUDENT;
-				break;
-			case SCHEDULE_EMPLOYEE:
-				type = SigarraContract.Schedule.EMPLOYEE;
-				break;
-			case SCHEDULE_ROOM:
-				type = SigarraContract.Schedule.ROOM;
-				break;
-			case SCHEDULE_UC:
-				type = SigarraContract.Schedule.UC;
-				break;
-			default:
-				throw new RuntimeException("Invalid schedule type");
-			}
-			SigarraSyncAdapterUtils.syncSchedule(
-					AccountUtils.getActiveUserName(getActivity()),
-					scheduleCode, initialDay, finalDay, type,
-					Long.toString(mondayMillis));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
+			ProgressDialogFragment.newInstance(true).show(
+					getFragmentManager(), DIALOG);
+		} else
+			showLoadingScreen();
+		setRefreshActionItemState(true);
+		final Time monday = new Time(DateUtils.TIME_REFERENCE);
+		monday.set(mondayMillis);
+		monday.normalize(false);
+		final String initialDay = monday.format("%Y%m%d");
+		// Friday
+		monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
+		monday.normalize(false);
+		final String finalDay = monday.format("%Y%m%d");
+		final String type;
+		switch (scheduleType) {
+		case SCHEDULE_STUDENT:
+			type = SigarraContract.Schedule.STUDENT;
+			break;
+		case SCHEDULE_EMPLOYEE:
+			type = SigarraContract.Schedule.EMPLOYEE;
+			break;
+		case SCHEDULE_ROOM:
+			type = SigarraContract.Schedule.ROOM;
+			break;
+		case SCHEDULE_UC:
+			type = SigarraContract.Schedule.UC;
+			break;
+		default:
+			throw new RuntimeException("Invalid schedule type");
+		}
+		SigarraSyncAdapterUtils.syncSchedule(
+				AccountUtils.getActiveUserName(getActivity()), scheduleCode,
+				initialDay, finalDay, type, Long.toString(mondayMillis));
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
 	}
 
 	private void increaseDay() {
@@ -434,8 +463,8 @@ public class ScheduleFragment extends BaseFragment implements
 		int column = 0;
 		if (block.getLectureType().equals("T"))
 			column = 1;
-		final BlockView blockView = new BlockView(getActivity(), block.getBlockId(),
-				title, start, end, containsStarred, column);
+		final BlockView blockView = new BlockView(getActivity(),
+				block.getBlockId(), title, start, end, containsStarred, column);
 		blockView.setOnClickListener(this);
 		day.blocksView.addBlock(blockView);
 
@@ -491,12 +520,12 @@ public class ScheduleFragment extends BaseFragment implements
 										+ b.getLectureType() + ")";
 								String eventLocation = b.getRoomCod();
 								StringBuilder description = new StringBuilder();
-								for (ScheduleTeacher teacher : b.getTeachers() ){
+								for (ScheduleTeacher teacher : b.getTeachers()) {
 									description.append("Professor: ");
 									description.append(teacher.getName());
 									description.append('\n');
 								}
-								 
+
 								long date = pt.up.beta.mobile.utils.DateUtils
 										.moveDayofWeek(mondayMillis,
 												b.getWeekDay())
@@ -602,7 +631,7 @@ public class ScheduleFragment extends BaseFragment implements
 				return;
 			Intent i = new Intent(getActivity(), ClassDescriptionActivity.class);
 			i.putExtra(ClassDescriptionFragment.BLOCK, block);
-			final String title= block.getLectureAcronym() + " ("
+			final String title = block.getLectureAcronym() + " ("
 					+ block.getLectureType() + ")";
 			i.putExtra(Intent.EXTRA_TITLE, title);
 			startActivity(i);
@@ -655,22 +684,12 @@ public class ScheduleFragment extends BaseFragment implements
 			ProgressDialogFragment.newInstance(false).show(
 					getFragmentManager(), DIALOG);
 		}
-		getActivity().getSupportLoaderManager().restartLoader(scheduleType, null,
-				this);
-	}
-
-	protected void onRepeat() {
-		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-			ProgressDialogFragment.newInstance(false).show(
-					getFragmentManager(), DIALOG);
-		} else
-			showLoadingScreen();
-		updateSchedule();
+		getActivity().getSupportLoaderManager().restartLoader(scheduleType,
+				null, this);
 	}
 
 	@Override
-	public Loader<Schedule> onCreateLoader(int loaderId,
-			Bundle options) {
+	public Loader<Schedule> onCreateLoader(int loaderId, Bundle options) {
 		final Time monday = new Time(DateUtils.TIME_REFERENCE);
 		monday.set(mondayMillis);
 		monday.normalize(false);
@@ -717,8 +736,7 @@ public class ScheduleFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Schedule> loader,
-			Schedule schedule) {
+	public void onLoadFinished(Loader<Schedule> loader, Schedule schedule) {
 		if (getActivity() == null || schedule == null)
 			return;
 		removeDialog(DIALOG);

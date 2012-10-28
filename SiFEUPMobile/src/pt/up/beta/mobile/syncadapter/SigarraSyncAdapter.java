@@ -49,11 +49,13 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -86,11 +88,20 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	final static String SCHEDULE_INITIAL = "initial";
 	final static String SCHEDULE_FINAL = "final";
 
+	public final static String NETWORK_ERROR = "pt.up.beta.mobile.syncadapter.NETWORK_ERROR";
+	public final static String CANCELLED_ERROR = "pt.up.beta.mobile.syncadapter.CANCELLED_ERROR";
+	public final static String GENERAL_ERROR = "pt.up.beta.mobile.syncadapter.GENERAL_ERROR";
+	public final static String AUTHENTICATION_ERROR = "pt.up.beta.mobile.syncadapter.AUTHENTICATION_ERROR";
+	public final static String SIGARRASYNCADAPTER_STATUS = "pt.up.beta.mobile.syncadapter.SIGARRASYNCADAPTER_STATUS";
+
 	private final AccountManager mAccountManager;
+	private LocalBroadcastManager broadcastManager;
 
 	public SigarraSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
-		mAccountManager = AccountManager.get(context);
+		mAccountManager = AccountManager.get(context.getApplicationContext());
+		broadcastManager = LocalBroadcastManager.getInstance(context
+				.getApplicationContext());
 	}
 
 	@TargetApi(8)
@@ -98,6 +109,10 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		String authToken = null;
+
+		broadcastManager
+				.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+						.putExtra(SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));
 		try {
 			// brand new cookie
 			authToken = mAccountManager.blockingGetAuthToken(account,
@@ -170,17 +185,32 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
+			broadcastManager
+			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+					.putExtra(SIGARRASYNCADAPTER_STATUS, CANCELLED_ERROR));
 		} catch (AuthenticatorException e) {
 			syncResult.stats.numAuthExceptions++;
 			e.printStackTrace();
+			broadcastManager
+			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+					.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 		} catch (IOException e) {
 			// syncResult.stats.numIoExceptions++;
+			broadcastManager
+					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+							.putExtra(SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));
 			e.printStackTrace();
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, null);
-			syncResult.stats.numIoExceptions++;
+			syncResult.stats.numAuthExceptions++;
+			broadcastManager
+			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+					.putExtra(SIGARRASYNCADAPTER_STATUS, AUTHENTICATION_ERROR));
 		} catch (Exception e) {
+			broadcastManager
+			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+					.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
@@ -203,14 +233,14 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private void syncNotifications(Account account, String authToken,
-			SyncResult syncResult) throws 
-			AuthenticationException, IOException {
+			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String notificationReply = SifeupAPI.getReply(SifeupAPI
 				.getNotificationsUrl(mAccountManager.getUserData(account,
 						Constants.USER_CODE)), authToken, getContext());
 		final Gson gson = new Gson();
-		final Notification [] notifications = gson.fromJson(notificationReply, Notification[].class);
-		if ( notifications == null ){
+		final Notification[] notifications = gson.fromJson(notificationReply,
+				Notification[].class);
+		if (notifications == null) {
 			syncResult.stats.numParseExceptions++;
 			ACRA.getErrorReporter().handleSilentException(
 					new RuntimeException("Id:"

@@ -170,7 +170,7 @@ public class PrintRefFragment extends BaseFragment implements
 	}
 
 	protected void onRepeat() {
-		showLoadingScreen();
+		super.onRepeat();
 		task = PrinterUtils.getPrintRefReply(
 				getArguments().getString(CODE_KEY),
 				getArguments().getString(PRINT_REF_KEY), this, getActivity());

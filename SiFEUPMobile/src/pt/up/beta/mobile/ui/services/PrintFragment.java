@@ -3,8 +3,9 @@ package pt.up.beta.mobile.ui.services;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Ângela Igreja
  * 
  */
-public class PrintFragment extends BaseFragment implements
+public class PrintFragment extends BaseLoaderFragment implements
 		LoaderCallbacks<Cursor> {
 
 	private final static String PRINTERS_KEY = "pt.up.fe.mobile.ui.studentservices.PRINTING_QUOTA";
@@ -65,8 +66,9 @@ public class PrintFragment extends BaseFragment implements
 					public void onClick(View v) {
 						String newValue = value.getText().toString().trim();
 						try {
-							if ( Double.valueOf(newValue) < 1.0) {
-								Toast.makeText(getActivity(),
+							if (Double.valueOf(newValue) < 1.0) {
+								Toast.makeText(
+										getActivity(),
 										getString(R.string.toast_invalid_value),
 										Toast.LENGTH_LONG).show();
 								value.requestFocus();
@@ -116,12 +118,38 @@ public class PrintFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncPrintingQuota(AccountUtils
-					.getActiveUserName(getActivity()));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncPrintingQuota(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
 	}
 
 	@Override
