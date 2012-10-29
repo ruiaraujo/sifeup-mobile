@@ -43,22 +43,15 @@ public class SearchUtils {
 				.getRoomSearchUrl(encode(name), 1));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchByNameReply(
-			String name,
+	public static AsyncTask<String, Void, ERROR_TYPE> getStudentsSearchReply(
+			String code, String name, String email, String state,
+			String firstYear,
 			ResponseCommand<ResultsPage<StudentSearchResult>> command,
 			Context context) {
 		return new FetcherTask<ResultsPage<StudentSearchResult>>(command,
 				new StudentsSearchParser(), context).execute(SifeupAPI
-				.getStudentsSearchUrl(null, encode(name), null, null, null, 1));
-	}
-
-	public static AsyncTask<String, Void, ERROR_TYPE> getStudentSearchByCodeReply(
-			String code,
-			ResponseCommand<ResultsPage<StudentSearchResult>> command,
-			Context context) {
-		return new FetcherTask<ResultsPage<StudentSearchResult>>(command,
-				new StudentsSearchParser(), context).execute(SifeupAPI
-				.getStudentsSearchUrl(code, null, null, null, null, 1));
+				.getStudentsSearchUrl(encode(code), encode(name),
+						encode(email), encode(state), encode(firstYear), 1));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeesSearchByNameReply(
@@ -99,22 +92,13 @@ public class SearchUtils {
 				}.getType());
 	}
 
-	public static ResultsPage<StudentSearchResult> getStudentsSearchByNameReply(
-			String query, int page, Context context) {
+	public static ResultsPage<StudentSearchResult> getStudentsSearchReply(
+			String code, String name,
+			String email, String state, String firstYear, int page, Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(
-				getJson(SifeupAPI.getStudentsSearchUrl(null, encode(query),
-						null, null, null, page), context),
-				new TypeToken<ResultsPage<StudentSearchResult>>() {
-				}.getType());
-	}
-
-	public static ResultsPage<StudentSearchResult> getStudentsSearchByCodeReply(
-			String code, int page, Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
-				getJson(SifeupAPI.getStudentsSearchUrl(encode(code), null,
-						null, null, null, page), context),
+				getJson(SifeupAPI.getStudentsSearchUrl(encode(code), encode(name),
+						encode(email), encode(state), encode(firstYear), page), context),
 				new TypeToken<ResultsPage<StudentSearchResult>>() {
 				}.getType());
 	}
@@ -156,6 +140,8 @@ public class SearchUtils {
 	}
 
 	private static String encode(String s) {
+		if (s == null)
+			return null;
 		try {
 			return URLEncoder.encode(s.trim(), "UTF-8");
 		} catch (UnsupportedEncodingException e) {

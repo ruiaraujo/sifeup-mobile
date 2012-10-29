@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import com.viewpagerindicator.TitlePageIndicator;
 
 /**
- * Lunch Menu Fragment
  * 
- * @author Ângela Igreja
+ * @author Angela Igreja
  * 
  */
 public class SearchFragment extends BaseFragment {
@@ -48,7 +47,7 @@ public class SearchFragment extends BaseFragment {
 	/**
 	 * Pager Menu Adapter
 	 * 
-	 * @author Ângela Igreja
+	 * @author Angela Igreja
 	 * 
 	 */
 	class PagerMenuAdapter extends FragmentStatePagerAdapter {
