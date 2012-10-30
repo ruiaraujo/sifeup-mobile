@@ -61,8 +61,8 @@ public class AcademicPath implements Parcelable {
 		return academicPath;
 	}
 	
-	public String getCourseName() {
-		return course.getCourseName();
+	public String getCourseAcronym() {
+		return course.getCourseAcronym();
 	}
 
 
@@ -79,11 +79,12 @@ public class AcademicPath implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(course, flags);
 		dest.writeTypedList(ucs);
 	}
 
 	private AcademicPath(Parcel in) {
-		course = null;
+		course = in.readParcelable(StudentCourse.class.getClassLoader());
 		ucs = new ArrayList<AcademicYear>();
 		in.readTypedList(ucs, AcademicYear.CREATOR);
 
