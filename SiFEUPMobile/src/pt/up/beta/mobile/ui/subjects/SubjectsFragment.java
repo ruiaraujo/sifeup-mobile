@@ -170,7 +170,7 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return studentCourses[position].getCourseName();
+			return studentCourses[position].getCourseAcronym();
 		}
 
 		public void destroyItem(View collection, int position, Object view) {

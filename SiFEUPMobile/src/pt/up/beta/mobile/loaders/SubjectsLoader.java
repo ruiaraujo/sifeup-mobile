@@ -68,7 +68,7 @@ public class SubjectsLoader extends AsyncTaskLoader<StudentCourse[]> {
 			}
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
-				//This is not one of my finest moments
+				// This is not one of my finest moments
 				final Gson gson = new Gson();
 				final HashMap<String, List<SubjectEntry>> entries = new HashMap<String, List<SubjectEntry>>();
 				final HashMap<String, String> courses = new HashMap<String, String>();
@@ -81,7 +81,7 @@ public class SubjectsLoader extends AsyncTaskLoader<StudentCourse[]> {
 						courses.put(
 								courseId,
 								cursor.getString(cursor
-										.getColumnIndex(SigarraContract.SubjectsColumns.COURSE_NAME)));
+										.getColumnIndex(SigarraContract.SubjectsColumns.COURSE_ACRONYM)));
 					}
 					final List<SubjectEntry> courseEntries = entries
 							.get(courseId);
@@ -97,11 +97,9 @@ public class SubjectsLoader extends AsyncTaskLoader<StudentCourse[]> {
 						.entrySet().iterator();
 				while (iterator.hasNext()) {
 					Entry<String, List<SubjectEntry>> entry = iterator.next();
-					coursesList.add(new StudentCourse(entry.getKey(), null,
-							null, courses.get(entry.getKey()), null, null,
-							null, null, null, null, null, null, null, null,
-							null, null, entry.getValue().toArray(
-									new SubjectEntry[0])));
+					coursesList.add(new StudentCourse(entry.getKey(), courses
+							.get(entry.getKey()), entry.getValue().toArray(
+							new SubjectEntry[0])));
 				}
 				return coursesList.toArray(new StudentCourse[0]);
 			} else {

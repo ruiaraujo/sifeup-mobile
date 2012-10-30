@@ -197,9 +197,17 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 					.findViewById(R.id.grade_subject_name);
 			TextView gradeNumber = (TextView) root
 					.findViewById(R.id.grade_number);
-			gradeName.setText(uc.getUcurrnome());
-			gradeNumber.setText(getString(R.string.path_grade,
-					uc.getResultadomelhor()));
+			if (UIUtils.isLocalePortuguese()
+					|| TextUtils.isEmpty(uc.getUcurrnome()))
+				gradeName.setText(uc.getUcurrnome());
+			else {
+				gradeName.setText(uc.getUcurrname());
+			}
+			if (uc.getResultadomelhor() == null)
+				gradeNumber.setText(null);
+			else
+				gradeNumber.setText(getString(R.string.path_grade,
+						uc.getResultadomelhor()));
 			return root;
 		}
 
@@ -300,7 +308,7 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return academicPaths[position].getCourseName();
+			return academicPaths[position].getCourseAcronym();
 		}
 
 		public void destroyItem(View collection, int position, Object view) {
