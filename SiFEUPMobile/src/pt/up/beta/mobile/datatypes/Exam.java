@@ -1,24 +1,38 @@
 package pt.up.beta.mobile.datatypes;
 
+import com.google.gson.annotations.SerializedName;
+
 import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /** Stores info about a exam */
 public class Exam implements Parcelable {
+	@SerializedName("ocorr_id")
 	private final String ocorrId;
+	@SerializedName("ocorr_nome")
 	private final String ocorrName;
+	@SerializedName("data")
 	private final String date;
+	@SerializedName("hora_inicio")
 	private final String startTime;
+	@SerializedName("hora_fim")
 	private final String endTime;
+	@SerializedName("duracao")
 	private final String duration;
+	@SerializedName("id")
 	private final String examId;
+	@SerializedName("pfunc_id")
 	private final String funcId;
+	@SerializedName("tipo")
 	private final String type;
+	@SerializedName("tipo_descricao")
 	private final String typeDesc;
+	@SerializedName("epoca")
 	private final String season;
-	private final Room [] rooms;
-	
+	@SerializedName("salas")
+	private final Room[] rooms;
+
 	public String getOcorrId() {
 		return ocorrId;
 	}
@@ -66,17 +80,16 @@ public class Exam implements Parcelable {
 	public Room[] getRooms() {
 		return rooms;
 	}
-	
+
 	public String getRoomsString() {
 		StringBuilder st = new StringBuilder();
-		for ( Room r : rooms ){
-			if ( st.length() > 0 )
+		for (Room r : rooms) {
+			if (st.length() > 0)
 				st.append(", ");
 			st.append(r.name);
 		}
 		return st.toString();
 	}
-
 
 	public int describeContents() {
 		return 0;
@@ -124,12 +137,10 @@ public class Exam implements Parcelable {
 		in.readTypedArray(rooms, Room.CREATOR);
 	}
 
-	
-	public static class Room implements Parcelable{
+	public static class Room implements Parcelable {
 		private final String id;
 
 		private final String name;
-		
 
 		public String getId() {
 			return id;
@@ -138,13 +149,13 @@ public class Exam implements Parcelable {
 		public String getName() {
 			return name;
 		}
-		
-		private Room(Parcel in){
+
+		private Room(Parcel in) {
 			id = ParcelUtils.readString(in);
 			name = ParcelUtils.readString(in);
-			
+
 		}
-		
+
 		@Override
 		public int describeContents() {
 			return 0;
@@ -154,7 +165,7 @@ public class Exam implements Parcelable {
 		public void writeToParcel(Parcel dest, int flags) {
 			ParcelUtils.writeString(dest, id);
 			ParcelUtils.writeString(dest, name);
-			
+
 		}
 
 		public static final Parcelable.Creator<Room> CREATOR = new Parcelable.Creator<Room>() {
@@ -166,7 +177,7 @@ public class Exam implements Parcelable {
 				return new Room[size];
 			}
 		};
-		
+
 	}
 
 }
