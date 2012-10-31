@@ -1,12 +1,13 @@
 package pt.up.beta.mobile.sifeup;
 
 import org.acra.ACRA;
-import org.json.JSONException;
 
 import pt.up.beta.mobile.datatypes.Park;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.google.gson.Gson;
 
 public class ParkUtils {
 	private ParkUtils() {
@@ -27,8 +28,8 @@ public class ParkUtils {
 
 		public Park parse(String page) {
 			try {
-				return new Park().JSONParkOccupation(page);
-			} catch (JSONException e) {
+				return new Gson().fromJson(page, Park.class);
+			} catch (Exception e) {
 				e.printStackTrace();
 				ACRA.getErrorReporter().handleSilentException(e);
 				ACRA.getErrorReporter().handleSilentException(
