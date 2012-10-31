@@ -52,6 +52,35 @@ public class AccountUtils {
 		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, authToken);
 		return getAuthToken(context);
 	}
+	
+
+	public static String renewAuthToken(final Context context, final Account account)
+			throws OperationCanceledException, AuthenticatorException,
+			IOException {
+		if (needsInit()) {
+			if ( !init(context) ) 
+				return null;
+		}
+		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, getAuthToken(context, account));
+		return getAuthToken(context);
+	}
+	
+
+	public static String getAuthToken(final Context context, final Account account)
+			throws OperationCanceledException, AuthenticatorException,
+			IOException {
+		if (needsInit()) {
+			if ( !init(context) ) 
+				return null;
+		}
+		final String authToken = mAccountManager.peekAuthToken(account,
+				Constants.ACCOUNT_TYPE);
+		if (authToken == null)
+			return mAccountManager.blockingGetAuthToken(account,
+					Constants.AUTHTOKEN_TYPE, false);
+		return authToken;
+	}
+	
 
 	public static String getAuthToken(final Context context)
 			throws OperationCanceledException, AuthenticatorException,

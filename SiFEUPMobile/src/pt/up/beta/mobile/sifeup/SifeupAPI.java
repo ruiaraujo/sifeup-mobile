@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.up.beta.mobile.R;
+import android.accounts.Account;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
@@ -41,7 +42,7 @@ public class SifeupAPI {
 
 	// TODO
 	private interface WebServices {
-		String CURRENTACCOUNT = "mob_ccorrent_geral.";
+		String CURRENTACCOUNT = "mob_ccorrente_geral.";
 		String STUDENT = "mob_fest_geral.";
 		String EMPLOYEE = "mob_func_geral.";
 		String PRINTING = "mob_imp_geral.";
@@ -131,7 +132,6 @@ public class SifeupAPI {
 		String NAME = "marcacoes";
 		String CODE = "pv_codigo";
 	}
-	
 
 	// .PERFIL
 	private interface EmployeeExams {
@@ -433,8 +433,8 @@ public class SifeupAPI {
 	 * @return Exams Url
 	 */
 	public static String getStudentExamsUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentExams.NAME + WEBSERVICE_SEP
-				+ StudentExams.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.STUDENT + StudentExams.NAME
+				+ WEBSERVICE_SEP + StudentExams.CODE + EQUALS + code;
 	}
 
 	/**
@@ -535,8 +535,8 @@ public class SifeupAPI {
 	}
 
 	public static String getEmployeeExamsUrl(String code) {
-		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeExams.NAME + WEBSERVICE_SEP
-				+ EmployeeExams.CODE + EQUALS + code;
+		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeExams.NAME
+				+ WEBSERVICE_SEP + EmployeeExams.CODE + EQUALS + code;
 	}
 
 	public static String getTeachingServiceUrl(String code, String year) {
@@ -1021,6 +1021,27 @@ public class SifeupAPI {
 		throw new AuthenticationException();
 	}
 
+	public static String getReply(String strUrl, Account account,
+			Context context) throws IOException, AuthenticationException {
+		try {
+			try {
+				initSSLContext(context);
+				return getReply(strUrl,
+						AccountUtils.getAuthToken(context, account));
+			} catch (AuthenticationException e) {
+				e.printStackTrace();
+				return getReply(strUrl,
+						AccountUtils.renewAuthToken(context, account));
+			}
+
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		}
+		throw new AuthenticationException();
+	}
+
 	/**
 	 * Student query Reply from web service
 	 * 
@@ -1035,13 +1056,13 @@ public class SifeupAPI {
 		do {
 			final HttpURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
+				throw new AuthenticationException();
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
 			if (charset == null) {
 				charset = HTTP.DEFAULT_CONTENT_CHARSET;
 			}
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
-				throw new AuthenticationException();
 			page = getPage(pageContent, charset);
 			pageContent.close();
 			InputStream errStream = connection.getErrorStream();
@@ -1114,6 +1135,27 @@ public class SifeupAPI {
 				e.printStackTrace();
 				return downloadBitmap(strUrl,
 						AccountUtils.renewAuthToken(context, cookie));
+			}
+
+		} catch (OperationCanceledException e) {
+			e.printStackTrace();
+		} catch (AuthenticatorException e) {
+			e.printStackTrace();
+		}
+		throw new AuthenticationException();
+	}
+
+	public static Bitmap downloadBitmap(String strUrl, Account account,
+			Context context) throws IOException, AuthenticationException {
+		try {
+			try {
+				initSSLContext(context);
+				return downloadBitmap(strUrl,
+						AccountUtils.getAuthToken(context, account));
+			} catch (AuthenticationException e) {
+				e.printStackTrace();
+				return downloadBitmap(strUrl,
+						AccountUtils.renewAuthToken(context, account));
 			}
 
 		} catch (OperationCanceledException e) {
