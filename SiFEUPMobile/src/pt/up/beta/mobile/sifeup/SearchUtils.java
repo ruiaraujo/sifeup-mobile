@@ -25,13 +25,14 @@ public class SearchUtils {
 	private SearchUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getSubjectsSearchByNameReply(
-			String name,
+	public static AsyncTask<String, Void, ERROR_TYPE> getSubjectsSearchReply(
+			String name, String code, String acronym, String year,
 			ResponseCommand<ResultsPage<SubjectSearchResult>> command,
 			Context context) {
 		return new FetcherTask<ResultsPage<SubjectSearchResult>>(command,
 				new SubjectsSearchParser(), context).execute(SifeupAPI
-				.getSubjectsSearchUrl(null, encode(name), null, null, 1));
+				.getSubjectsSearchUrl(encode(code), encode(name),
+						encode(acronym), encode(year), 1));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getRoomsSearchByNameReply(
@@ -54,30 +55,25 @@ public class SearchUtils {
 						encode(email), encode(state), encode(firstYear), 1));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeesSearchByNameReply(
-			String name,
+	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeesSearchReply(
+			String code, String name, String email, String state,
+			String acronym,
 			ResponseCommand<ResultsPage<EmployeeSearchResult>> command,
 			Context context) {
 		return new FetcherTask<ResultsPage<EmployeeSearchResult>>(command,
 				new EmployeesSearchParser(), context).execute(SifeupAPI
-				.getEmployeeSearchUrl(null, encode(name), null, null, null, 1));
+				.getEmployeeSearchUrl(encode(code), encode(name),
+						encode(email), encode(state), encode(acronym), 1));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeSearchByCodeReply(
-			String code,
-			ResponseCommand<ResultsPage<EmployeeSearchResult>> command,
-			Context context) {
-		return new FetcherTask<ResultsPage<EmployeeSearchResult>>(command,
-				new EmployeesSearchParser(), context).execute(SifeupAPI
-				.getEmployeeSearchUrl(code, null, null, null, null, 1));
-	}
-
-	public static ResultsPage<SubjectSearchResult> getSubjectsSearchByNameReply(
-			String query, int page, Context context) {
+	/* Get ResultsPage */
+	public static ResultsPage<SubjectSearchResult> getSubjectsSearchReply(
+			String code, String name,
+			String acronym, String year, int page, Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(
-				getJson(SifeupAPI.getSubjectsSearchUrl(null, encode(query),
-						null, null, page), context),
+				getJson(SifeupAPI.getSubjectsSearchUrl(encode(code), encode(name),
+						encode(acronym), encode(year), page), context),
 				new TypeToken<ResultsPage<SubjectSearchResult>>() {
 				}.getType());
 	}
@@ -93,36 +89,32 @@ public class SearchUtils {
 	}
 
 	public static ResultsPage<StudentSearchResult> getStudentsSearchReply(
-			String code, String name,
-			String email, String state, String firstYear, int page, Context context) {
+			String code, String name, String email, String state,
+			String firstYear, int page, Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(
-				getJson(SifeupAPI.getStudentsSearchUrl(encode(code), encode(name),
-						encode(email), encode(state), encode(firstYear), page), context),
+				getJson(SifeupAPI.getStudentsSearchUrl(encode(code),
+						encode(name), encode(email), encode(state),
+						encode(firstYear), page), context),
 				new TypeToken<ResultsPage<StudentSearchResult>>() {
 				}.getType());
 	}
 
-	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchByNameReply(
-			String query, int page, Context context) {
+	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchReply(
+			String code, String name, String email, String state,
+			String acronym, int page, Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(
-				getJson(SifeupAPI.getEmployeeSearchUrl(null, encode(query),
-						null, null, null, page), context),
+				getJson(SifeupAPI.getEmployeeSearchUrl(encode(code),
+						encode(name), encode(email), encode(state),
+						encode(acronym), page), context),
 				new TypeToken<ResultsPage<EmployeeSearchResult>>() {
 				}.getType());
 	}
 
-	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchByCodeReply(
-			String code, int page, Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
-				getJson(SifeupAPI.getEmployeeSearchUrl(encode(code), null,
-						null, null, null, page), context),
-				new TypeToken<ResultsPage<EmployeeSearchResult>>() {
-				}.getType());
-	}
-
+	/*
+	 * GetJson
+	 */
 	private static String getJson(String url, Context context) {
 		try {
 			return SifeupAPI.getReply(url, AccountUtils.getAuthToken(context),

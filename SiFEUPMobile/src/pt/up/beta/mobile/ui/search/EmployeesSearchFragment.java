@@ -51,6 +51,7 @@ public class EmployeesSearchFragment extends BaseFragment implements
 	private ListView list;
 	private int currentPage = 1;
 	private final static String REGEX_CODE = "^[0-9]*$";
+	private String[] advancedSearchParameters;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,13 +102,22 @@ public class EmployeesSearchFragment extends BaseFragment implements
 				return;
 			}
 		}
-		query = getArguments().getString(SearchManager.QUERY);
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getEmployeeSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getEmployeesSearchByNameReply(query, this,
-					getActivity());
+		advancedSearchParameters = getArguments().getStringArray(
+				SearchManager.QUERY);
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getEmployeesSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2], null,
+					advancedSearchParameters[3], this, getActivity());
+		else {
+			query = getArguments().getString(SearchManager.QUERY);
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getEmployeesSearchReply(query, null, null,
+						null, null, this, getActivity());
+			else
+				task = SearchUtils.getEmployeesSearchReply(null, query, null,
+						null, null, this, getActivity());
+		}
 	}
 
 	private boolean hasMoreResults() {
@@ -197,12 +207,22 @@ public class EmployeesSearchFragment extends BaseFragment implements
 		@Override
 		protected boolean cacheInBackground() throws Exception {
 			final ResultsPage<EmployeeSearchResult> page;
-			if (query.matches(REGEX_CODE))
-				page = SearchUtils.getEmployeesSearchByCodeReply(query,
-						++currentPage, getActivity());
-			else
-				page = SearchUtils.getEmployeesSearchByNameReply(query,
-						++currentPage, getActivity());
+			
+			if (advancedSearchParameters != null)
+				page = SearchUtils.getEmployeesSearchReply(
+						advancedSearchParameters[0],
+						advancedSearchParameters[1],
+						advancedSearchParameters[2], null,
+						advancedSearchParameters[3], ++currentPage,
+						getActivity());
+			else {
+				if (query.matches(REGEX_CODE))
+					page = SearchUtils.getEmployeesSearchReply(query, null,
+							null, null, null, ++currentPage, getActivity());
+				else
+					page = SearchUtils.getEmployeesSearchReply(null, query,
+							null, null, null, ++currentPage, getActivity());
+			}
 			if (page == null)
 				return false;
 			for (EmployeeSearchResult s : page.getResults())
@@ -250,12 +270,19 @@ public class EmployeesSearchFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getEmployeeSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getEmployeesSearchByNameReply(query, this,
-					getActivity());
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getEmployeesSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2], null,
+					advancedSearchParameters[3], this, getActivity());
+		else {
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getEmployeesSearchReply(query, null, null,
+						null, null, this, getActivity());
+			else
+				task = SearchUtils.getEmployeesSearchReply(null, query, null,
+						null, null, this, getActivity());
+		}
 	}
 
 }
