@@ -57,7 +57,6 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		addAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				startActivityForResult(new Intent(getBaseContext(),
 						AuthenticatorActivity.class), ADDING_OTHER_ACCOUNT);
 			}
@@ -140,8 +139,9 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			SharedPreferences loginSettings = PreferenceManager
 					.getDefaultSharedPreferences(getApplicationContext());
 			final SharedPreferences.Editor editor = loginSettings.edit();
-
-			editor.putString(PREF_ACTIVE_USER, accounts[0].name);
+			final String accountName = data
+					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			editor.putString(PREF_ACTIVE_USER, accountName);
 			new Thread(new Runnable() {
 				public void run() {
 					editor.commit();
