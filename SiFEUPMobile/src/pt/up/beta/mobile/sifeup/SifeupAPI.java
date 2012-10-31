@@ -41,6 +41,7 @@ public class SifeupAPI {
 
 	// TODO
 	private interface WebServices {
+		String CURRENTACCOUNT = "mob_ccorrent_geral.";
 		String STUDENT = "mob_fest_geral.";
 		String EMPLOYEE = "mob_func_geral.";
 		String PRINTING = "mob_imp_geral.";
@@ -84,8 +85,8 @@ public class SifeupAPI {
 		String PAGE = "pv_pag";
 	}
 
-	private interface StudentTuiton {
-		String NAME = "propinas";
+	private interface CurrentAccount {
+		String NAME = "conta_corrente";
 		String CODE = "pv_codigo";
 	}
 
@@ -123,6 +124,19 @@ public class SifeupAPI {
 		String EMPLOYEE_ACRONYM = "pv_sigla";
 		String EMPLOYEE_STATE = "pv_estado";
 		String PAGE = "pv_pag";
+	}
+
+	// .PERFIL
+	private interface EmployeeMarkings {
+		String NAME = "marcacoes";
+		String CODE = "pv_codigo";
+	}
+	
+
+	// .PERFIL
+	private interface EmployeeExams {
+		String NAME = "vigilancias";
+		String CODE = "pv_codigo";
 	}
 
 	// MOB_HOR_GERAL
@@ -333,7 +347,7 @@ public class SifeupAPI {
 		String CODE = "pct_cod";
 	}
 
-	private interface Exams {
+	private interface StudentExams {
 		String NAME = "exames";
 		String CODE = "pv_codigo";
 	}
@@ -418,9 +432,9 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Exams Url
 	 */
-	public static String getExamsUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + Exams.NAME + WEBSERVICE_SEP
-				+ Exams.CODE + EQUALS + code;
+	public static String getStudentExamsUrl(String code) {
+		return WEBSERVICE + WebServices.STUDENT + StudentExams.NAME + WEBSERVICE_SEP
+				+ StudentExams.CODE + EQUALS + code;
 	}
 
 	/**
@@ -429,9 +443,9 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Tuition Url
 	 */
-	public static String getTuitionUrl(String code) {
-		return WEBSERVICE + WebServices.SCHEDULE + StudentTuiton.NAME
-				+ WEBSERVICE_SEP + StudentTuiton.CODE + EQUALS + code;
+	public static String getCurrentAccountUrl(String code) {
+		return WEBSERVICE + WebServices.CURRENTACCOUNT + CurrentAccount.NAME
+				+ WEBSERVICE_SEP + CurrentAccount.CODE + EQUALS + code;
 	}
 
 	/**
@@ -510,9 +524,19 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Student Url
 	 */
-	public static String getEmployeProfileeUrl(String code) {
+	public static String getEmployeeProfileUrl(String code) {
 		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeProfile.NAME
 				+ WEBSERVICE_SEP + EmployeeProfile.CODE + EQUALS + code;
+	}
+
+	public static String getEmployeeMarkingsUrl(String code) {
+		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeMarkings.NAME
+				+ WEBSERVICE_SEP + EmployeeMarkings.CODE + EQUALS + code;
+	}
+
+	public static String getEmployeeExamsUrl(String code) {
+		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeExams.NAME + WEBSERVICE_SEP
+				+ EmployeeExams.CODE + EQUALS + code;
 	}
 
 	public static String getTeachingServiceUrl(String code, String year) {
