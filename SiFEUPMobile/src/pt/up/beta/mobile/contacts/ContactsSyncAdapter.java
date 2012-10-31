@@ -74,12 +74,10 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 						final String friendCode = c
 								.getString(c
 										.getColumnIndex(SigarraContract.FriendsColumns.CODE_FRIEND));
-						final String friendCourse = c
+						final String friendType = c
 								.getString(c
 										.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND));
-						final Profile friend = getProfile(friendCode,
-								friendCourse != null ? SifeupAPI.STUDENT_TYPE
-										: SifeupAPI.EMPLOYEE_TYPE);
+						final Profile friend = getProfile(friendCode,friendType);
 						if (friend != null)
 							rawContacts.add(friend);
 					} while (c.moveToNext());
