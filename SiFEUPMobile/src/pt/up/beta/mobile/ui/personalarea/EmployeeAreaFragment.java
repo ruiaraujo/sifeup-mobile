@@ -37,10 +37,14 @@ public class EmployeeAreaFragment extends ListFragment {
 		schedule.put(from[0], getString(R.string.btn_schedule));
 		fillMaps.add(schedule);
 
+		HashMap<String, String> exams = new HashMap<String, String>();
+		exams.put(from[0], getString(R.string.title_surveillances));
+		fillMaps.add(exams);
+
 		HashMap<String, String> teaching = new HashMap<String, String>();
 		teaching.put(from[0], getString(R.string.title_teaching_service));
 		fillMaps.add(teaching);
-		
+
 		HashMap<String, String> food = new HashMap<String, String>();
 		food.put(from[0], getString(R.string.btn_lunch_menu));
 		fillMaps.add(food);
@@ -81,13 +85,18 @@ public class EmployeeAreaFragment extends ListFragment {
 			return;
 		case 2:
 			activity.openActivityOrFragment(new Intent(getActivity(),
-					TeachingServiceActivity.class));
+					ExamsActivity.class).putExtra(Intent.EXTRA_TITLE,
+					getString(R.string.title_surveillances)));
 			return;
 		case 3:
 			activity.openActivityOrFragment(new Intent(getActivity(),
-					LunchMenuActivity.class));
+					TeachingServiceActivity.class));
 			return;
 		case 4:
+			activity.openActivityOrFragment(new Intent(getActivity(),
+					LunchMenuActivity.class));
+			return;
+		case 5:
 			activity.openActivityOrFragment(new Intent(getActivity(),
 					ParkOccupationActivity.class));
 			return;

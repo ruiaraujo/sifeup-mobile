@@ -130,6 +130,7 @@
     <!-- Exams -->
     <string name="title_exams">Exams</string>
     <string name="btn_exams">Exams</string>
+    <string name="title_surveillances">Surveillances</string>
     <string name="label_no_exams">You have no scheduled exams</string>
 
     <!-- Subjects -->

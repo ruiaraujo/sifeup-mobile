@@ -16,6 +16,7 @@ public class LastSyncTable {
     static final String KEY_SCHEDULE = ScheduleTable.TABLE;
     static final String KEY_SUBJECTS = SubjectsTable.TABLE;
     static final String KEY_TUITION = TuitionTable.TABLE;
+    static final String KEY_TEACHING_SERVICE = TeachingServiceTable.TABLE;
 
 
     // database info
@@ -31,6 +32,7 @@ public class LastSyncTable {
             + " TEXT NOT NULL, " + KEY_PROFILES
             + " TEXT NOT NULL, " + KEY_SCHEDULE
             + " TEXT NOT NULL, " + KEY_SUBJECTS
+            + " TEXT NOT NULL, " + KEY_TEACHING_SERVICE
             + " TEXT NOT NULL, " + KEY_TUITION
             + " TEXT NOT NULL);";
     

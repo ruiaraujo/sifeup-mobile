@@ -15,7 +15,7 @@ public class SubjectsTable implements BaseColumns {
 	static final String COLUMN_CONTENT = "content";
 	static final String COLUMN_FILES = "files";
 	static final String COLUMN_COURSE_CODE = "course_id";
-	static final String COLUMN_COURSE_NAME = "course_name";
+	static final String COLUMN_COURSE_ACRONYM = "course_acronym";
 	static final String COLUMN_ENTRY = "course_entry";
 
 	// Database creation SQL statement
@@ -24,7 +24,7 @@ public class SubjectsTable implements BaseColumns {
 			+ " TEXT NOT NULL, " + COLUMN_NAME_PT + " TEXT ," + COLUMN_NAME_EN
 			+ " TEXT DEFAULT NULL," + COLUMN_CONTENT + " TEXT NOT NULL,"
 			+ COLUMN_FILES + " TEXT NOT NULL," + COLUMN_COURSE_CODE
-			+ " TEXT DEFAULT NULL," + COLUMN_COURSE_NAME
+			+ " TEXT DEFAULT NULL," + COLUMN_COURSE_ACRONYM
 			+ " TEXT DEFAULT NULL," + COLUMN_ENTRY + " TEXT DEFAULT NULL,"
 			+ SQL_CREATE_STATE + ", PRIMARY KEY (" + COLUMN_USER_NAME + ","
 			+ COLUMN_CODE + "));";

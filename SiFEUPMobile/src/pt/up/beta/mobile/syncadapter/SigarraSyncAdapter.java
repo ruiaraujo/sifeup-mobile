@@ -35,6 +35,8 @@ import pt.up.beta.mobile.content.SyncStates;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.datatypes.StudentCourse;
 import pt.up.beta.mobile.datatypes.SubjectEntry;
+import pt.up.beta.mobile.datatypes.TeachingService;
+import pt.up.beta.mobile.datatypes.TeachingService.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
@@ -76,6 +78,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	final static String EXAMS = "exams";
 	final static String CANTEENS = "canteens";
 	final static String TUITION = "tuition";
+	final static String TEACHING_SERVICE = "teaching_service";
 	final static String ACADEMIC_PATH = "academic_path";
 	final static String PRINTING_QUOTA = "printing_quota";
 	final static String NOTIFICATIONS = "notifications";
@@ -109,10 +112,6 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		String authToken = null;
-
-		broadcastManager
-				.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-						.putExtra(SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));
 		try {
 			// brand new cookie
 			authToken = mAccountManager.blockingGetAuthToken(account,
@@ -151,6 +150,11 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 					syncTuition(account, authToken, syncResult);
 					return;
 				}
+				if (TEACHING_SERVICE.equals(extras
+						.getSerializable(REQUEST_TYPE))) {
+					syncTeachingService(account, authToken, syncResult);
+					return;
+				}
 				if (PRINTING_QUOTA.equals(extras.getSerializable(REQUEST_TYPE))) {
 					syncPrintingQuota(account, authToken, syncResult);
 					return;
@@ -174,26 +178,33 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			} else {
 				Log.d(getClass().getSimpleName(), "Sync Sigarra");
 				syncProfiles(account, authToken, syncResult);
-				syncSubjects(account, authToken, syncResult);
 				syncExams(account, authToken, syncResult);
-				syncAcademicPath(account, authToken, syncResult);
 				syncTuition(account, authToken, syncResult);
 				syncPrintingQuota(account, authToken, syncResult);
 				syncSchedule(account, authToken, syncResult);
 				syncNotifications(account, authToken, syncResult);
 				syncCanteens(account, authToken, syncResult);
+				final String type = mAccountManager.getUserData(account,
+						Constants.USER_TYPE);
+				if (type.equals(SifeupAPI.STUDENT_TYPE)) {
+					syncAcademicPath(account, authToken, syncResult);
+					syncSubjects(account, authToken, syncResult);
+				} else {
+					syncTeachingService(account, authToken, syncResult);
+				}
 			}
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 			broadcastManager
-			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-					.putExtra(SIGARRASYNCADAPTER_STATUS, CANCELLED_ERROR));
+					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+							.putExtra(SIGARRASYNCADAPTER_STATUS,
+									CANCELLED_ERROR));
 		} catch (AuthenticatorException e) {
 			syncResult.stats.numAuthExceptions++;
 			e.printStackTrace();
 			broadcastManager
-			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-					.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
+					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+							.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 		} catch (IOException e) {
 			// syncResult.stats.numIoExceptions++;
 			broadcastManager
@@ -205,12 +216,13 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, null);
 			syncResult.stats.numAuthExceptions++;
 			broadcastManager
-			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-					.putExtra(SIGARRASYNCADAPTER_STATUS, AUTHENTICATION_ERROR));
+					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+							.putExtra(SIGARRASYNCADAPTER_STATUS,
+									AUTHENTICATION_ERROR));
 		} catch (Exception e) {
 			broadcastManager
-			.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-					.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
+					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
+							.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
@@ -383,7 +395,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncTuition(Account account, String authToken,
 			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String tuition = SifeupAPI.getReply(SifeupAPI
-				.getTuitionUrl(mAccountManager.getUserData(account,
+				.getCurrentAccountUrl(mAccountManager.getUserData(account,
 						Constants.USER_CODE)), authToken, getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.TuitionColumns.ID, account.name);
@@ -411,7 +423,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncExams(Account account, String authToken,
 			SyncResult syncResult) throws AuthenticationException, IOException {
 		final String exams = SifeupAPI.getReply(SifeupAPI
-				.getExamsUrl(mAccountManager.getUserData(account,
+				.getStudentExamsUrl(mAccountManager.getUserData(account,
 						Constants.USER_CODE)), authToken, getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ExamsColumns.ID, account.name);
@@ -431,7 +443,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 					getContext());
 		else
 			profile = SifeupAPI.getReply(
-					SifeupAPI.getEmployeProfileeUrl(userCode), authToken,
+					SifeupAPI.getEmployeeProfileUrl(userCode), authToken,
 					getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ProfileColumns.ID, userCode);
@@ -469,7 +481,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 					getContext());
 		} else {
 			profile = SifeupAPI.getReply(
-					SifeupAPI.getEmployeProfileeUrl(userCode), authToken,
+					SifeupAPI.getEmployeeProfileUrl(userCode), authToken,
 					getContext());
 		}
 		final String picPath = getProfilePic(userCode, authToken, syncResult);
@@ -512,7 +524,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 								authToken, getContext());
 					} else {
 						friendPage = SifeupAPI.getReply(
-								SifeupAPI.getEmployeProfileeUrl(friendCode),
+								SifeupAPI.getEmployeeProfileUrl(friendCode),
 								authToken, getContext());
 					}
 					friendValues.put(SigarraContract.ProfileColumns.CONTENT,
@@ -569,7 +581,12 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			SyncResult syncResult) throws JSONException,
 			AuthenticationException, IOException {
 		if (TextUtils.isEmpty(code)) {
-			syncSubjects(account, authToken, syncResult);
+			final String type = mAccountManager.getUserData(account,
+					Constants.USER_TYPE);
+			if (type.equals(SifeupAPI.STUDENT_TYPE))
+				syncSubjects(account, authToken, syncResult);
+			else
+				syncTeachingService(account, authToken, syncResult);
 			return;
 		}
 		final String subjectContent = SifeupAPI.getReply(
@@ -636,8 +653,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
 				value.put(SigarraContract.SubjectsColumns.COURSE_ID,
 						course.getCourseId());
-				value.put(SigarraContract.SubjectsColumns.COURSE_NAME,
-						course.getCourseName());
+				value.put(SigarraContract.SubjectsColumns.COURSE_ACRONYM,
+						course.getCourseAcronym());
 				value.put(SigarraContract.SubjectsColumns.COURSE_ENTRY,
 						gson.toJson(subject));
 				value.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
@@ -657,4 +674,53 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		syncResult.stats.numEntries += values.size();
 	}
 
+	private void syncTeachingService(Account account, String authToken,
+			SyncResult syncResult) throws JSONException,
+			AuthenticationException, IOException {
+		final String teachingServicePage = SifeupAPI.getReply(SifeupAPI
+				.getTeachingServiceUrl(mAccountManager.getUserData(account,
+						Constants.USER_CODE), null), authToken, getContext());
+		final TeachingService service = new Gson().fromJson(
+				teachingServicePage, TeachingService.class);
+		if (service == null) {
+			syncResult.stats.numParseExceptions++;
+			ACRA.getErrorReporter().handleSilentException(
+					new RuntimeException("Id:"
+							+ AccountUtils.getActiveUserCode(getContext())
+							+ "\nPage:" + teachingServicePage));
+			return;
+		}
+		final ContentValues teachingValue = new ContentValues();
+		teachingValue.put(SigarraContract.TeachingService.ID, account.name);
+		teachingValue.put(SigarraContract.TeachingService.CONTENT,
+				teachingServicePage);
+		getContext().getContentResolver().insert(
+				SigarraContract.TeachingService.CONTENT_URI, teachingValue);
+		final List<ContentValues> values = new ArrayList<ContentValues>();
+		for (Subject subject : service.getService()) {
+			final String subjectContent = SifeupAPI.getReply(
+					SifeupAPI.getSubjectProfileUrl(subject.getOcorrId()),
+					authToken, getContext());
+			final String subjectFiles = SifeupAPI.getReply(
+					SifeupAPI.getSubjectFilestUrl(subject.getOcorrId()),
+					authToken, getContext());
+			final ContentValues value = new ContentValues();
+			value.put(SigarraContract.SubjectsColumns.USER_NAME, account.name);
+			value.put(SigarraContract.SubjectsColumns.CODE,
+					subject.getOcorrId());
+			value.put(SigarraContract.SubjectsColumns.NAME_PT,
+					subject.getUcurrName());
+			value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
+			value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
+			value.put(SigarraContract.SubjectsColumns.COURSE_ACRONYM,
+					subject.getCourse());
+			value.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
+			values.add(value);
+		}
+		if (values.size() > 0)
+			getContext().getContentResolver().bulkInsert(
+					SigarraContract.Subjects.CONTENT_URI,
+					values.toArray(new ContentValues[0]));
+		syncResult.stats.numEntries += values.size();
+	}
 }

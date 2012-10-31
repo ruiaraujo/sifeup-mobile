@@ -42,6 +42,42 @@ public class EmployeeMarkings implements Parcelable {
 		in.readTypedArray(afternoon, PunchIn.CREATOR);
 	}
 
+	public boolean isError() {
+		return error;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public String getBalance() {
+		return balance;
+	}
+
+	public String getAccumulatedBalance() {
+		return accumulatedBalance;
+	}
+
+	public String getInjustifiedBalance() {
+		return injustifiedBalance;
+	}
+
+	public String getAccumulatedInjustifiedBalance() {
+		return accumulatedInjustifiedBalance;
+	}
+
+	public Justification[] getJustifications() {
+		return justifications;
+	}
+
+	public PunchIn[] getMorning() {
+		return morning;
+	}
+
+	public PunchIn[] getAfternoon() {
+		return afternoon;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
