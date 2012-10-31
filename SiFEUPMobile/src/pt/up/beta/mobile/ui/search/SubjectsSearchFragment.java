@@ -53,6 +53,8 @@ public class SubjectsSearchFragment extends BaseFragment implements
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
+	private String[] advancedSearchParameters;
+	private final static String REGEX_CODE = "^[0-9]*$";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,11 +91,13 @@ public class SubjectsSearchFragment extends BaseFragment implements
 				if (hasMoreResults()) {
 					adapter = new EndlessSearchAdapter(getActivity(),
 							new SearchCustomAdapter(getActivity(),
-									R.layout.list_item_search, new SubjectSearchResult[0]),
+									R.layout.list_item_search,
+									new SubjectSearchResult[0]),
 							R.layout.list_item_loading);
 				} else {
 					adapter = new SearchCustomAdapter(getActivity(),
-							R.layout.list_item_friend, new SubjectSearchResult[0]);
+							R.layout.list_item_friend,
+							new SubjectSearchResult[0]);
 
 				}
 				list.setAdapter(adapter);
@@ -103,9 +107,23 @@ public class SubjectsSearchFragment extends BaseFragment implements
 				return;
 			}
 		}
-		query = getArguments().getString(SearchManager.QUERY);
-		task = SearchUtils.getSubjectsSearchByNameReply(query, this,
-				getActivity());
+
+		advancedSearchParameters = getArguments().getStringArray(
+				SearchManager.QUERY);
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getSubjectsSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2], advancedSearchParameters[3],
+					this, getActivity());
+		else {
+			query = getArguments().getString(SearchManager.QUERY);
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getSubjectsSearchReply(query, null, null,
+						null, this, getActivity());
+			else
+				task = SearchUtils.getSubjectsSearchReply(null, query, null,
+						null, this, getActivity());
+		}
 	}
 
 	private boolean hasMoreResults() {
@@ -198,8 +216,22 @@ public class SubjectsSearchFragment extends BaseFragment implements
 		@Override
 		protected boolean cacheInBackground() throws Exception {
 			final ResultsPage<SubjectSearchResult> page;
-			page = SearchUtils.getSubjectsSearchByNameReply(query,
-					++currentPage, getActivity());
+
+			if (advancedSearchParameters != null)
+				page = SearchUtils.getSubjectsSearchReply(
+						advancedSearchParameters[0],
+						advancedSearchParameters[1],
+						advancedSearchParameters[2],
+						advancedSearchParameters[3], ++currentPage,
+						getActivity());
+			else {
+				if (query.matches(REGEX_CODE))
+					page = SearchUtils.getSubjectsSearchReply(query, null,
+							null, null, ++currentPage, getActivity());
+				else
+					page = SearchUtils.getSubjectsSearchReply(null, query,
+							null, null, ++currentPage, getActivity());
+			}
 			if (page == null)
 				return false;
 			for (SubjectSearchResult s : page.getResults())
@@ -255,8 +287,19 @@ public class SubjectsSearchFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		task = SearchUtils.getSubjectsSearchByNameReply(query, this,
-				getActivity());
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getSubjectsSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2],
+					advancedSearchParameters[3], this, getActivity());
+		else {
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getSubjectsSearchReply(query, null, null,
+						null, this, getActivity());
+			else
+				task = SearchUtils.getSubjectsSearchReply(null, query, null,
+						null, this, getActivity());
+		}
 	}
 
 }
