@@ -3,7 +3,6 @@ package pt.up.beta.mobile.sifeup;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -33,14 +32,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
-	public final static String SIGARRA_HOST = "http://sigarradevp.up.pt/dev/";
-	final private static String WEBSERVICE = SIGARRA_HOST + "mob/";
+	public final static String SIGARRA_HOST = "https://sigarra.up.pt/feup/pt/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
 	final private static String WEBSERVICE_SEP = "?";
 
-	// TODO
 	private interface WebServices {
 		String CURRENTACCOUNT = "mob_ccorrente_geral.";
 		String STUDENT = "mob_fest_geral.";
@@ -389,7 +386,7 @@ public class SifeupAPI {
 	 * @return Authentication Url
 	 */
 	public static String getAuthenticationUrl(String code, String password) {
-		return WEBSERVICE + WebServices.AUTHENTICATION + Authentication.NAME
+		return SIGARRA_HOST + WebServices.AUTHENTICATION + Authentication.NAME
 				+ WEBSERVICE_SEP + Authentication.LOGIN + EQUALS + code
 				+ LINK_SEP + Authentication.PASSWORD + EQUALS + password;
 	}
@@ -400,7 +397,7 @@ public class SifeupAPI {
 	 * @return Notifications Url
 	 */
 	public static String getNotificationsUrl(String code) {
-		return WEBSERVICE + WebServices.NOTIFICATIONS + Notifications.NAME
+		return SIGARRA_HOST + WebServices.NOTIFICATIONS + Notifications.NAME
 				+ WEBSERVICE_SEP + Notifications.CODE + EQUALS + code;
 	}
 
@@ -410,7 +407,7 @@ public class SifeupAPI {
 	 * @return Notifications Url
 	 */
 	public static String getNotificationsSigarraUrl(String code) {
-		return WEBSERVICE + WebServices.NOTIFICATION_SIGARRA
+		return SIGARRA_HOST + WebServices.NOTIFICATION_SIGARRA
 				+ NotificationsSigarra.NAME + WEBSERVICE_SEP
 				+ NotificationsSigarra.CODE + EQUALS + code;
 	}
@@ -422,7 +419,7 @@ public class SifeupAPI {
 	 * @return Park Occupation Url
 	 */
 	public static String getParkOccupationUrl(String code) {
-		return WEBSERVICE + WebServices.PARK + ParkOcupation.NAME
+		return SIGARRA_HOST + WebServices.PARK + ParkOcupation.NAME
 				+ WEBSERVICE_SEP + ParkOcupation.CODE + EQUALS + code;
 	}
 
@@ -433,7 +430,7 @@ public class SifeupAPI {
 	 * @return Exams Url
 	 */
 	public static String getStudentExamsUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentExams.NAME
+		return SIGARRA_HOST + WebServices.STUDENT + StudentExams.NAME
 				+ WEBSERVICE_SEP + StudentExams.CODE + EQUALS + code;
 	}
 
@@ -444,7 +441,7 @@ public class SifeupAPI {
 	 * @return Tuition Url
 	 */
 	public static String getCurrentAccountUrl(String code) {
-		return WEBSERVICE + WebServices.CURRENTACCOUNT + CurrentAccount.NAME
+		return SIGARRA_HOST + WebServices.CURRENTACCOUNT + CurrentAccount.NAME
 				+ WEBSERVICE_SEP + CurrentAccount.CODE + EQUALS + code;
 	}
 
@@ -455,7 +452,7 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getStudenProfiletUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentProfile.NAME
+		return SIGARRA_HOST + WebServices.STUDENT + StudentProfile.NAME
 				+ WEBSERVICE_SEP + StudentProfile.CODE + EQUALS + code;
 	}
 
@@ -476,7 +473,7 @@ public class SifeupAPI {
 			email = "";
 		if (firstYear == null)
 			firstYear = "";
-		return WEBSERVICE
+		return SIGARRA_HOST
 				+ WebServices.STUDENT
 				+ StudentsSearch.NAME
 				+ WEBSERVICE_SEP
@@ -508,7 +505,7 @@ public class SifeupAPI {
 	 */
 	public static String getSetPasswordUrl(String login, String actualPassword,
 			String newPassword, String confirmNewPassword, String system) {
-		return WEBSERVICE + WebServices.AUTHENTICATION + ChangePassword.NAME
+		return SIGARRA_HOST + WebServices.AUTHENTICATION + ChangePassword.NAME
 				+ WEBSERVICE_SEP + ChangePassword.LOGIN + EQUALS + login
 				+ LINK_SEP + ChangePassword.CURRENT_PASSWORD + EQUALS
 				+ actualPassword + LINK_SEP + ChangePassword.NEW_PASSWORD
@@ -525,22 +522,22 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getEmployeeProfileUrl(String code) {
-		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeProfile.NAME
+		return SIGARRA_HOST + WebServices.EMPLOYEE + EmployeeProfile.NAME
 				+ WEBSERVICE_SEP + EmployeeProfile.CODE + EQUALS + code;
 	}
 
 	public static String getEmployeeMarkingsUrl(String code) {
-		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeMarkings.NAME
+		return SIGARRA_HOST + WebServices.EMPLOYEE + EmployeeMarkings.NAME
 				+ WEBSERVICE_SEP + EmployeeMarkings.CODE + EQUALS + code;
 	}
 
 	public static String getEmployeeExamsUrl(String code) {
-		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeExams.NAME
+		return SIGARRA_HOST + WebServices.EMPLOYEE + EmployeeExams.NAME
 				+ WEBSERVICE_SEP + EmployeeExams.CODE + EQUALS + code;
 	}
 
 	public static String getTeachingServiceUrl(String code, String year) {
-		return WEBSERVICE
+		return SIGARRA_HOST
 				+ WebServices.EMPLOYEE
 				+ TeachingService.NAME
 				+ WEBSERVICE_SEP
@@ -568,7 +565,7 @@ public class SifeupAPI {
 			email = "";
 		if (acronym == null)
 			acronym = "";
-		return WEBSERVICE
+		return SIGARRA_HOST
 				+ WebServices.EMPLOYEE
 				+ EmployeeSearch.NAME
 				+ WEBSERVICE_SEP
@@ -599,7 +596,7 @@ public class SifeupAPI {
 	 * @return Student Url
 	 */
 	public static String getPersonPicUrl(String code) {
-		return WEBSERVICE + WebServices.PEOPLE_PIC + PersonPic.NAME
+		return SIGARRA_HOST + WebServices.PEOPLE_PIC + PersonPic.NAME
 				+ WEBSERVICE_SEP + PersonPic.CODE + EQUALS + code;
 	}
 
@@ -610,7 +607,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getPrintingUrl(String code) {
-		return WEBSERVICE + WebServices.PRINTING + PrintingQuota.NAME
+		return SIGARRA_HOST + WebServices.PRINTING + PrintingQuota.NAME
 				+ WEBSERVICE_SEP + PrintingQuota.CODE + EQUALS + code;
 	}
 
@@ -621,7 +618,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getPrintingRefUrl(String code, String value) {
-		return WEBSERVICE + WebServices.PRINTING + PrintingRef.NAME
+		return SIGARRA_HOST + WebServices.PRINTING + PrintingRef.NAME
 				+ WEBSERVICE_SEP + PrintingRef.CODE + EQUALS + code + LINK_SEP
 				+ PrintingRef.VALUE + EQUALS + value;
 	}
@@ -633,7 +630,7 @@ public class SifeupAPI {
 	 * @return url
 	 */
 	public static String getSubjectFileContents(String id) {
-		return WEBSERVICE + WebServices.SUBJECT_CONTENTS
+		return SIGARRA_HOST + WebServices.SUBJECT_CONTENTS
 				+ SubjectFilesContent.NAME + WEBSERVICE_SEP
 				+ SubjectFilesContent.ID + EQUALS + id;
 	}
@@ -644,7 +641,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getStudentAcademicPathUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentAcademicPath.NAME
+		return SIGARRA_HOST + WebServices.STUDENT + StudentAcademicPath.NAME
 				+ WEBSERVICE_SEP + StudentAcademicPath.CODE + EQUALS + code;
 	}
 
@@ -655,7 +652,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getStudentCurrentSubjectsUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + StudentCurrentSubjects.NAME
+		return SIGARRA_HOST + WebServices.STUDENT + StudentCurrentSubjects.NAME
 				+ WEBSERVICE_SEP + StudentCurrentSubjects.CODE + EQUALS + code;
 	}
 
@@ -668,7 +665,7 @@ public class SifeupAPI {
 	 * @return url
 	 */
 	public static String getSubjectProfileUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectProfile.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectProfile.NAME
 				+ WEBSERVICE_SEP + SubjectProfile.CODE + EQUALS + code;
 	}
 
@@ -687,7 +684,7 @@ public class SifeupAPI {
 			name = "";
 		if (acronym == null)
 			acronym = "";
-		return WEBSERVICE
+		return SIGARRA_HOST
 				+ WebServices.SUBJECT
 				+ SubjectSearch.NAME
 				+ WEBSERVICE_SEP
@@ -708,43 +705,43 @@ public class SifeupAPI {
 	}
 
 	public static String getSubjectOtherOccuencesUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
 				+ WEBSERVICE_SEP + SubjectOtherOccurrences.CODE + EQUALS + code;
 	}
 
 	public static String getSubjectClassesUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectClasses.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectClasses.NAME
 				+ WEBSERVICE_SEP + SubjectClasses.CODE + EQUALS + code;
 	}
 
 	public static String getSubjectEnrolledStudentsUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT
+		return SIGARRA_HOST + WebServices.SUBJECT
 				+ SubjectRegisteredStudents.NAME + WEBSERVICE_SEP
 				+ SubjectRegisteredStudents.CODE + EQUALS + code;
 	}
 
 	public static String getSubjectClassesWithSummariesUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT
+		return SIGARRA_HOST + WebServices.SUBJECT
 				+ SubjectClassesWithSummaries.NAME + WEBSERVICE_SEP
 				+ SubjectClassesWithSummaries.CODE + EQUALS + code;
 	}
 
 	public static String getClassSummariesUrl(String code, String classCode,
 			String type) {
-		return WEBSERVICE + WebServices.SUBJECT + ClassSummaries.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + ClassSummaries.NAME
 				+ WEBSERVICE_SEP + ClassSummaries.OCURENCY + EQUALS + code
 				+ LINK_SEP + ClassSummaries.CLASS + EQUALS + classCode
 				+ LINK_SEP + ClassSummaries.TYPE + EQUALS + type;
 	}
 
 	public static String getSubjectSummaryUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectSummary.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectSummary.NAME
 				+ WEBSERVICE_SEP + SubjectSummary.CODE + EQUALS + code;
 	}
 
 	public static String getSubjectSummaryEditUrl(String code, String summary,
 			String teacherCod, String realDate, String numberOfStudents) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectSummaryEdit.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectSummaryEdit.NAME
 				+ WEBSERVICE_SEP + SubjectSummaryEdit.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSummaryEdit.SUMMARY + EQUALS + summary
 				+ LINK_SEP + SubjectSummaryEdit.TEACHER_CODE + EQUALS
@@ -762,7 +759,7 @@ public class SifeupAPI {
 	 * @return url
 	 */
 	public static String getSubjectSigarraUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT_SIGARA_LINK
+		return SIGARRA_HOST + WebServices.SUBJECT_SIGARA_LINK
 				+ SubjectSigarraContent.NAME + WEBSERVICE_SEP
 				+ SubjectSigarraContent.CODE + EQUALS + code;
 	}
@@ -774,7 +771,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getSubjectFilestUrl(String code) {
-		return WEBSERVICE + WebServices.SUBJECT + SubjectContent.NAME
+		return SIGARRA_HOST + WebServices.SUBJECT + SubjectContent.NAME
 				+ WEBSERVICE_SEP + SubjectContent.CODE + EQUALS + code;
 	}
 
@@ -784,7 +781,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getCanteensUrl() {
-		return WEBSERVICE + WebServices.CANTEENS + Canteens.NAME;
+		return SIGARRA_HOST + WebServices.CANTEENS + Canteens.NAME;
 	}
 
 	/**
@@ -793,13 +790,12 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getMailFilesUrl(String code) {
-		return WEBSERVICE + WebServices.MAIL + MailFiles.NAME + WEBSERVICE_SEP
+		return SIGARRA_HOST + WebServices.MAIL + MailFiles.NAME + WEBSERVICE_SEP
 				+ MailFiles.CODE + EQUALS + code;
 	}
 
-	// TODO: check this again when server code is in production
 	public static String getDownloadMailFilesUrl(String code, String name) {
-		return SIGARRA_HOST + "feup/pt/" + WebServices.DYNAMIC_MAIL_FILES
+		return SIGARRA_HOST + WebServices.DYNAMIC_MAIL_FILES
 				+ DownloadMailFiles.NAME + WEBSERVICE_SEP
 				+ DownloadMailFiles.FILENAME + EQUALS + name + LINK_SEP
 				+ DownloadMailFiles.CODE + EQUALS + code;
@@ -814,7 +810,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getBuildingPicUrl(String building, int floor) {
-		return WEBSERVICE + WebServices.FACILITIES + BuildingPic.NAME
+		return SIGARRA_HOST + WebServices.FACILITIES + BuildingPic.NAME
 				+ WEBSERVICE_SEP + BuildingPic.BUILDING + EQUALS + building
 				+ LINK_SEP + BuildingPic.FLOOR + EQUALS + floor;
 	}
@@ -828,7 +824,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getRoomPicUrl(String code) {
-		return WEBSERVICE + WebServices.FACILITIES + BuildingPic.NAME
+		return SIGARRA_HOST + WebServices.FACILITIES + BuildingPic.NAME
 				+ WEBSERVICE_SEP + BuildingPic.SPACE + EQUALS + code;
 	}
 
@@ -842,7 +838,7 @@ public class SifeupAPI {
 	 */
 	public static String getRoomPostFinderUrl(String building, int floor,
 			int x, int y) {
-		return WEBSERVICE + WebServices.FACILITIES + RoomFinder.NAME
+		return SIGARRA_HOST + WebServices.FACILITIES + RoomFinder.NAME
 				+ WEBSERVICE_SEP + RoomFinder.BUILDING + EQUALS + building
 				+ LINK_SEP + RoomFinder.FLOOR + EQUALS + floor + LINK_SEP
 				+ RoomFinder.X + EQUALS + x + LINK_SEP + RoomFinder.Y + EQUALS
@@ -860,7 +856,7 @@ public class SifeupAPI {
 	 */
 	public static String getStudentScheduleUrl(String code, String begin,
 			String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME
+		return SIGARRA_HOST + WebServices.SCHEDULE + StudentSchedule.NAME
 				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
 				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
 				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end
@@ -876,7 +872,7 @@ public class SifeupAPI {
 	 * @return Schedule Url
 	 */
 	public static String getUcScheduleUrl(String code, String begin, String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + SubjectSchedule.NAME
+		return SIGARRA_HOST + WebServices.SCHEDULE + SubjectSchedule.NAME
 				+ WEBSERVICE_SEP + SubjectSchedule.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSchedule.WEEK_BEGIN + EQUALS + begin
 				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end
@@ -893,7 +889,7 @@ public class SifeupAPI {
 	 */
 	public static String getTeacherScheduleUrl(String code, String begin,
 			String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + TeacherSchedule.NAME
+		return SIGARRA_HOST + WebServices.SCHEDULE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + TeacherSchedule.CODE + EQUALS + code
 				+ LINK_SEP + TeacherSchedule.WEEK_BEGIN + EQUALS + begin
 				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end
@@ -910,7 +906,7 @@ public class SifeupAPI {
 	 */
 	public static String getRoomScheduleUrl(String code, String begin,
 			String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + RoomSchedule.NAME
+		return SIGARRA_HOST + WebServices.SCHEDULE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code + LINK_SEP
 				+ RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
 				+ RoomSchedule.WEEK_END + EQUALS + end
@@ -927,14 +923,14 @@ public class SifeupAPI {
 	 */
 	public static String getClassScheduleUrl(String code, String begin,
 			String end) {
-		return WEBSERVICE + WebServices.SCHEDULE + ClassSchedule.NAME
+		return SIGARRA_HOST + WebServices.SCHEDULE + ClassSchedule.NAME
 				+ WEBSERVICE_SEP + ClassSchedule.CODE + EQUALS + code
 				+ LINK_SEP + ClassSchedule.WEEK_BEGIN + EQUALS + begin
 				+ LINK_SEP + ClassSchedule.WEEK_END + EQUALS + end;
 	}
 
 	public static String getRoomProfileUrl(String code) {
-		return WEBSERVICE + WebServices.FACILITIES + RoomProfile.NAME
+		return SIGARRA_HOST + WebServices.FACILITIES + RoomProfile.NAME
 				+ WEBSERVICE_SEP + RoomProfile.CODE + EQUALS + code;
 	}
 
@@ -946,7 +942,7 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getRoomSearchUrl(String query, Integer numPage) {
-		return WEBSERVICE + WebServices.FACILITIES + RoomSearch.NAME
+		return SIGARRA_HOST + WebServices.FACILITIES + RoomSearch.NAME
 				+ WEBSERVICE_SEP + RoomSearch.CODE + EQUALS + query + LINK_SEP
 				+ RoomSearch.PAGE + EQUALS + numPage;
 	}
@@ -987,10 +983,10 @@ public class SifeupAPI {
 		}
 	}
 
-	public static HttpURLConnection get(String url) {
+	public static HttpsURLConnection get(String url) {
 		try {
 
-			final HttpURLConnection connection = (HttpURLConnection) new URL(
+			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 					url).openConnection();
 			// connection.setSSLSocketFactory(sslCtx.getSocketFactory());
 			connection.setRequestProperty("connection", "close");
@@ -1054,7 +1050,7 @@ public class SifeupAPI {
 			throws IOException, AuthenticationException {
 		String page = null;
 		do {
-			final HttpURLConnection connection = get(strUrl);
+			final HttpsURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
 			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
 				throw new AuthenticationException();
@@ -1086,7 +1082,7 @@ public class SifeupAPI {
 			Context context) throws IOException, AuthenticationException {
 		initSSLContext(context);
 		String page = null;
-		HttpURLConnection connection = null;
+		HttpsURLConnection connection = null;
 		do {
 			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
 			final InputStream pageContent = connection.getInputStream();
@@ -1169,7 +1165,7 @@ public class SifeupAPI {
 	// the actual download code
 	public static Bitmap downloadBitmap(String url, String cookie)
 			throws AuthenticationException, IOException {
-		final HttpURLConnection connection = get(url);
+		final HttpsURLConnection connection = get(url);
 		try {
 			connection.setRequestProperty("Cookie", cookie);
 			final InputStream is = connection.getInputStream();
