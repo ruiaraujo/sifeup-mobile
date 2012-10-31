@@ -2,21 +2,19 @@ package pt.up.beta.mobile.ui.personalarea;
 
 import java.util.ArrayList;
 
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.Park;
 import pt.up.beta.mobile.sifeup.ParkUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
 import android.content.Context;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-
 import android.widget.TextView;
 import android.widget.Toast;
 

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package pt.up.beta.mobile.ui.services.tuition;
+package pt.up.beta.mobile.ui.services.current_account;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.datatypes.RefMB;
+import pt.up.beta.mobile.datatypes.PaymentTypology.Movement;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,9 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class TuitionRefDetailFragment extends Fragment {
+public class MovementDetailFragment extends Fragment {
 	public final static String REFERENCE = "ref";
-	private RefMB ref;
+	private Movement ref;
 	private TextView nome;
 	private TextView entidade;
 	private TextView referencia;
@@ -56,14 +56,14 @@ public class TuitionRefDetailFragment extends Fragment {
 				.findViewById(R.id.tuition_ref_detail_date_start);
 		dataFim = (TextView) root
 				.findViewById(R.id.tuition_ref_detail_date_end);
-		final String refStr = ref.getRef();
-		nome.setText(ref.getName());
+		final String refStr = ref.getReference();
+		nome.setText(ref.getDescription());
 		entidade.setText(ref.getEntity());
 		referencia.setText(refStr.substring(0, 3) + " "
 				+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
-		valor.setText(ref.getAmount() + "€");
+		valor.setText(ref.getDebt()+ "€");
 		dataIni.setText(ref.getStartDate());
-		dataFim.setText(ref.getEndDate());
+		dataFim.setText(ref.getFinalDate());
 		return root;
 	}
 }

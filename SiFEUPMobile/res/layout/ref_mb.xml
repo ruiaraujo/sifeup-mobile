@@ -1,120 +1,150 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
-    	<TableLayout android:id="@+id/tableLayout1"
-    		android:layout_height="wrap_content"
-    		android:layout_width="match_parent"
-    		android:layout_gravity="fill_horizontal|fill_vertical"
-    		android:paddingLeft="12dp" 
-    		android:paddingRight="12dp"
-    		android:paddingTop="12dp">
-    		<TextView android:id="@+id/tuition_ref_detail_name"
-	    		android:layout_height="wrap_content"
-	    		android:layout_width="wrap_content"
-	    		android:bufferType="normal"
-	    		android:layout_gravity="center_horizontal"
-	    		android:textSize="30.0sp"
-	    		android:paddingBottom="12dp"/>
-    		<TableRow android:id="@+id/tableRow1"
-    			android:layout_height="wrap_content"
-    			android:layout_width="match_parent"
-    			android:background="@color/body_text_disabled">
-    			<TextView android:id="@+id/lbl_tuition_ref_detail_entity"
-    				android:layout_height="wrap_content"
-    				android:layout_width="wrap_content"
-    				android:textSize="25.0sp"
-					android:text="@string/lbl_tuition_ref_detail_entity"
-					android:gravity="center_vertical|right"
-					android:layout_gravity="center_vertical|right"
-					android:paddingLeft="12dp"/>
-    			<TextView android:id="@+id/tuition_ref_detail_entity"
-    				android:layout_height="wrap_content"
-    				android:textSize="20.0sp"
-    				android:layout_width="fill_parent"
-    				android:layout_gravity="center_vertical|left"
-    				android:gravity="center_vertical|left"
-    				android:paddingLeft="10dp"/>
-    		</TableRow>
-    		<TableRow android:id="@+id/tableRow2"
-    			android:layout_height="wrap_content"
-    			android:layout_width="match_parent"
-    			android:background="@color/body_text_disabled">
-    			<TextView android:id="@+id/lbl_tuition_ref_detail_reference" 
-	    			android:layout_height="wrap_content" 
-	    			android:layout_width="wrap_content" 
-	    			android:textSize="25.0sp" 
-	    			android:text="@string/lbl_tuition_ref_detail_reference" 
-	    			android:layout_gravity="center_vertical|right" 
-	    			android:gravity="center_vertical|right" 
-	    			android:paddingLeft="12dp"/>
-    			<TextView android:id="@+id/tuition_ref_detail_reference" 
-	    			android:layout_height="wrap_content" 
-	    			android:textSize="20.0sp" 
-	    			android:layout_width="fill_parent" 
-	    			android:gravity="center_vertical|left" 
-	    			android:layout_gravity="center_vertical|left" 
-	    			android:paddingLeft="12dp"/>
-    		</TableRow>
-    		<TableRow android:id="@+id/tableRow3" 
-    		android:layout_height="wrap_content" 
-    		android:layout_width="match_parent" 
-    		android:background="@color/body_text_disabled">
-    			<TextView android:id="@+id/lbl_tuition_ref_detail_amount" 
-	    			android:layout_height="wrap_content" 
-	    			android:layout_width="wrap_content" 
-	    			android:textSize="25.0sp" 
-	    			android:text="@string/lbl_tuition_ref_detail_amount" 
-	    			android:gravity="center_vertical|right" 
-	    			android:layout_gravity="center_vertical|right" 
-	    			android:paddingLeft="12dp"/>
-    			<TextView android:id="@+id/tuition_ref_detail_amount" 
-	    			android:layout_height="wrap_content" 
-	    			android:textSize="20.0sp" 
-	    			android:layout_width="fill_parent" 
-	    			android:layout_gravity="center_vertical|left" 
-	    			android:gravity="center_vertical|left" 
-	    			android:paddingLeft="12dp"/>
-    		</TableRow>
-    		<TableRow android:id="@+id/tableRow4"
-    		android:layout_height="wrap_content" 
-    		android:layout_width="match_parent" 
-    		android:background="@color/body_text_disabled">
-    			<TextView android:id="@+id/lbl_tuition_ref_detail_date_start" 
-    			android:layout_height="wrap_content" 
-    			android:layout_width="wrap_content" 
-    			android:textSize="25.0sp" 
-    			android:text="@string/lbl_tuition_ref_detail_date_start" 
-    			android:layout_gravity="center_vertical|right" 
-    			android:gravity="center_vertical|right" 
-    			android:paddingLeft="12dp"></TextView>
-    			<TextView android:id="@+id/tuition_ref_detail_date_start"
-    			android:layout_height="wrap_content"
-    			android:textSize="20.0sp"
-    			android:layout_width="match_parent"
-    			android:gravity="center_vertical|left"
-    			android:layout_gravity="center_vertical|left"
-    			android:paddingLeft="12dp"/>
-    		</TableRow>
-    		<TableRow android:id="@+id/tableRow4"
-    			android:layout_width="match_parent"
-    			android:background="@color/body_text_disabled"
-    			android:layout_height="wrap_content">
-    			<TextView android:id="@+id/lbl_tuition_ref_detail_date_end"
-    				android:layout_height="wrap_content"
-    				android:layout_width="wrap_content"
-    				android:textSize="25.0sp"
-    				android:text="@string/lbl_tuition_ref_detail_date_end"
-    				android:layout_gravity="center_vertical|right"
-    				android:gravity="center_vertical|right"
-    				android:paddingLeft="12dp"/>
-    			<TextView android:id="@+id/tuition_ref_detail_date_end"
-    				android:layout_height="wrap_content"
-    				android:layout_width="match_parent"
-    				android:textSize="20.0sp"
-    				android:gravity="center_vertical|left"
-    				android:layout_gravity="center_vertical|left"
-    				android:paddingLeft="12dp"/>
-    		</TableRow>
-    	</TableLayout>
-</LinearLayout>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="fill_horizontal|fill_vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="12dp" >
+
+    <TextView
+        android:id="@+id/tuition_ref_detail_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:bufferType="normal"
+        android:paddingBottom="12dp"
+        android:textSize="30.0sp" />
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/body_text_disabled" >
+
+        <TextView
+            android:id="@+id/lbl_tuition_ref_detail_entity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="12dp"
+            android:text="@string/lbl_tuition_ref_detail_entity"
+            android:textSize="25.0sp" />
+
+        <TextView
+            android:id="@+id/tuition_ref_detail_entity"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="10dp"
+            android:textSize="20.0sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/body_text_disabled" >
+
+        <TextView
+            android:id="@+id/lbl_tuition_ref_detail_reference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="12dp"
+            android:text="@string/lbl_tuition_ref_detail_reference"
+            android:textSize="25.0sp" />
+
+        <TextView
+            android:id="@+id/tuition_ref_detail_reference"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="12dp"
+            android:textSize="20.0sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/body_text_disabled" >
+
+        <TextView
+            android:id="@+id/lbl_tuition_ref_detail_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="12dp"
+            android:text="@string/lbl_tuition_ref_detail_amount"
+            android:textSize="25.0sp" />
+
+        <TextView
+            android:id="@+id/tuition_ref_detail_amount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="12dp"
+            android:textSize="20.0sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/body_text_disabled" >
+
+        <TextView
+            android:id="@+id/lbl_tuition_ref_detail_date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="12dp"
+            android:text="@string/lbl_tuition_ref_detail_date_start"
+            android:textSize="25.0sp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tuition_ref_detail_date_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="12dp"
+            android:textSize="20.0sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/body_text_disabled" >
+
+        <TextView
+            android:id="@+id/lbl_tuition_ref_detail_date_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="12dp"
+            android:text="@string/lbl_tuition_ref_detail_date_end"
+            android:textSize="25.0sp" />
+
+        <TextView
+            android:id="@+id/tuition_ref_detail_date_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="12dp"
+            android:textSize="20.0sp" />
+    </TableRow>
+
+</TableLayout>

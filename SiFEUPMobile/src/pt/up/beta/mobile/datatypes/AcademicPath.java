@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.json.JSONException;
 
+import pt.up.beta.mobile.utils.StringUtils;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,7 +20,7 @@ public class AcademicPath implements Parcelable {
 	private final StudentCourse course;
 	private final List<AcademicYear> ucs;
 
-	private AcademicPath( StudentCourse course ) {
+	private AcademicPath(StudentCourse course) {
 		ucs = new ArrayList<AcademicYear>();
 		this.course = course;
 	}
@@ -35,36 +37,36 @@ public class AcademicPath implements Parcelable {
 			throws JSONException {
 		final AcademicPath academicPath = new AcademicPath(course);
 
-			for ( SubjectEntry subject : course.getSubjectEntries() ) {
+		for (SubjectEntry subject : course.getSubjectEntries()) {
 
-				AcademicYear year = null;
-				for (int j = 0; j < academicPath.ucs.size(); ++j) {
-					if (academicPath.ucs.get(j).getYear() == subject.getAno()) {
-						year = academicPath.ucs.get(j);
-						break;
-					}
-				}
-				// add uc to academic path
-				if (year == null) {
-					year = new AcademicYear();
-					year.setYear(subject.getAno());
-					academicPath.ucs.add(year);
-				}
-				if (subject.getPercodigo().equals("1S")) {
-					year.getFirstSemester().add(subject);
-				} else // TODO How to deal with anual stuff
-				{
-					year.getSecondSemester().add(subject);
+			AcademicYear year = null;
+			for (int j = 0; j < academicPath.ucs.size(); ++j) {
+				if (academicPath.ucs.get(j).getYear() == subject.getAno()) {
+					year = academicPath.ucs.get(j);
+					break;
 				}
 			}
+			// add uc to academic path
+			if (year == null) {
+				year = new AcademicYear();
+				year.setYear(subject.getAno());
+				academicPath.ucs.add(year);
+			}
+			if (subject.getPercodigo().equals("1S")) {
+				year.getFirstSemester().add(subject);
+			} else // TODO How to deal with anual stuff
+			{
+				year.getSecondSemester().add(subject);
+			}
+		}
 		Collections.sort(academicPath.ucs);
 		return academicPath;
 	}
-	
-	public String getCourseAcronym() {
-		return course.getCourseAcronym();
-	}
 
+	public String getCourseAcronym() {
+		return course.getCourseAcronym() == null ? StringUtils
+				.getAcronym(course.getCourseName()) : course.getCourseAcronym();
+	}
 
 	public String getAverage() {
 		return course.getAverage();

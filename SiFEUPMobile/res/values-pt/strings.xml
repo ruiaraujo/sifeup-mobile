@@ -226,7 +226,7 @@
 
     <!-- Tuition -->
     <string name="title_tuition">Pagamentos</string>
-    <string name="btn_tuition">Propinas</string>
+    <string name="btn_current_account">Conta Corrente</string>
     <string name="title_tuition_history">Histórico de Propinas</string>
     <string name="lbl_year">Ano </string>
     <string name="lbl_paid">Pago</string>
@@ -242,6 +242,7 @@
     <string name="lbl_tuition_ref_detail_amount">Montante</string>
     <string name="lbl_tuition_ref_detail_date_start">Data de Início</string>
     <string name="lbl_tuition_ref_detail_date_end">Data de Fim</string>
+    <string name="lbl_date">%1$s até %2$s</string>
     <string name="label_no_tuition_ref">Não tem referência disponíveis.</string>
 
     <!-- Change Password -->

@@ -3,7 +3,7 @@ package pt.up.beta.mobile.ui.services;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
-import pt.up.beta.mobile.ui.services.tuition.TuitionActivity;
+import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,7 +48,7 @@ public class StudentServicesFragment extends Fragment {
 					break;
 				case 1:
 					activity.openActivityOrFragment(new Intent(getActivity(),
-							TuitionActivity.class));
+							CurrentAccountActivity.class));
 					break;
 				case 2:
 					activity.openActivityOrFragment(new Intent(getActivity(),
@@ -67,7 +67,7 @@ public class StudentServicesFragment extends Fragment {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				final BaseActivity activity = (BaseActivity) getActivity();
+				//final BaseActivity activity = (BaseActivity) getActivity();
 				switch (groupPosition) {
 				case 1:
 					
@@ -86,7 +86,7 @@ public class StudentServicesFragment extends Fragment {
 		// Sample data set. children[i] contains the children (String[]) for
 		// groups[i].
 		private String[] groups = { getString(R.string.btn_printing),
-				getString(R.string.btn_tuition),
+				getString(R.string.btn_current_account),
 				getString(R.string.btn_change_password),
 				getString(R.string.btn_dynamic_mail_files) };
 		private String[][] children = {

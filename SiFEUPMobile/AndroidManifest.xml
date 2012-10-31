@@ -196,23 +196,11 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_academic_path" />
         <activity
-            android:name=".ui.services.tuition.TuitionActivity"
+            android:name=".ui.services.current_account.CurrentAccountActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition" />
         <activity
-            android:name=".ui.services.tuition.TuitionHistoryActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_tuition_history" />
-        <activity
-            android:name=".ui.services.tuition.TuitionMenuActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_tuition_menu" />
-        <activity
-            android:name=".ui.services.tuition.TuitionRefListActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_tuition_refs_list" />
-        <activity
-            android:name=".ui.services.tuition.TuitionRefDetailActivity"
+            android:name=".ui.services.current_account.MovementDetailActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition_ref_detail" />
         <activity

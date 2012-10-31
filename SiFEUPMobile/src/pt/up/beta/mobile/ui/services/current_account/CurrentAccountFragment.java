@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.services.tuition;
+package pt.up.beta.mobile.ui.services.current_account;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
@@ -8,25 +8,34 @@ import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseLoaderFragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.TitlePageIndicator;
 
-public class TuitionFragment extends BaseLoaderFragment implements
-		LoaderCallbacks<PaymentTypology[]> {
+public class CurrentAccountFragment extends BaseLoaderFragment implements
+		LoaderCallbacks<PaymentTypology[]>, OnItemClickListener {
 
-	private ListView list;
-	private PaymentTypology[] history;
+	private PaymentTypology[] typologies;
+
+	private ViewPager viewPager;
+	private TitlePageIndicator indicator;
+	private LayoutInflater mInflater;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,10 +46,13 @@ public class TuitionFragment extends BaseLoaderFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.generic_list,
+		mInflater = inflater;
+		View root = inflater.inflate(R.layout.fragment_view_pager,
 				getParentContainer(), true);
-		list = (ListView) root.findViewById(R.id.generic_list);
-		return getParentContainer(); // this is mandatory.
+		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
+		// Find the indicator from the layout
+		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
+		return getParentContainer();// mandatory
 	}
 
 	@Override
@@ -56,7 +68,9 @@ public class TuitionFragment extends BaseLoaderFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			onRepeat();
+			setRefreshActionItemState(true);
+			SigarraSyncAdapterUtils.syncTuitions(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -89,9 +103,9 @@ public class TuitionFragment extends BaseLoaderFragment implements
 			break;
 		}
 	}
+
 	@Override
-	public Loader<PaymentTypology[]> onCreateLoader(int loaderId,
-			Bundle options) {
+	public Loader<PaymentTypology[]> onCreateLoader(int loaderId, Bundle options) {
 		return new TuitionLoader(getActivity(),
 				SigarraContract.Tuition.CONTENT_URI,
 				SigarraContract.Tuition.COLUMNS,
@@ -102,34 +116,12 @@ public class TuitionFragment extends BaseLoaderFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<PaymentTypology[]> loader,
-			PaymentTypology[] yearsTuition) {
-		if (getActivity() == null)
+			PaymentTypology[] results) {
+		if (getActivity() == null || results == null)
 			return;
-		if (yearsTuition == null)
-			return;
-		history = yearsTuition;
-		String[] from = new String[] { "year", "paid", "to_pay" };
-		int[] to = new int[] { R.id.tuition_history_year,
-				R.id.tuition_history_paid, R.id.tuition_history_to_pay };
-		// prepare the list of all records
-		/*List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-		for (YearsTuition y : history) {
-			HashMap<String, String> map = new HashMap<String, String>();
-
-			map.put(from[0], getString(R.string.lbl_year) + " " + y.getYear());
-			map.put(from[1],
-					getString(R.string.lbl_paid) + ": " + y.getTotal_paid()
-							+ "€");
-			if (y.getTotal_in_debt() > 0.0)
-				map.put(from[2], getString(R.string.lbl_still_to_pay) + ": "
-						+ y.getTotal_in_debt() + "€");
-			fillMaps.add(map);
-		}
-*/
-		// fill in the grid_item layout
-	//	list.setAdapter(new SimpleAdapter(getActivity(), fillMaps,
-		//		R.layout.list_item_tuition_history, from, to));
-		Log.i("Propinas", "List view loaded successfully");
+		typologies = results;
+		viewPager.setAdapter(new PagerTypologiesAdapter());
+		indicator.setViewPager(viewPager);
 		setRefreshActionItemState(false);
 		showMainScreen();
 	}
@@ -137,4 +129,60 @@ public class TuitionFragment extends BaseLoaderFragment implements
 	@Override
 	public void onLoaderReset(Loader<PaymentTypology[]> loader) {
 	}
+
+	class PagerTypologiesAdapter extends PagerAdapter {
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return typologies[position].getName();
+		}
+
+		public void destroyItem(View collection, int position, Object view) {
+			((ViewPager) collection).removeView((View) view);
+
+		}
+
+		public int getCount() {
+			return typologies.length;
+		}
+
+		public Object instantiateItem(View collection, int position) {
+			ListView list = (ListView) mInflater.inflate(R.layout.generic_list,
+					viewPager, false);
+			list.setAdapter(new TypologyAdapter(getActivity(),
+					typologies[position].getMovements()));
+			list.setOnItemClickListener(CurrentAccountFragment.this);
+			((ViewPager) collection).addView(list, 0);
+			return list;
+		}
+
+		public boolean isViewFromObject(View view, Object object) {
+			return view == ((View) object);
+		}
+
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {
+			indicator.setViewPager(viewPager);
+		}
+
+		public Parcelable saveState() {
+			return null;
+		}
+
+		public void startUpdate(View arg0) {
+		}
+
+		public void finishUpdate(View arg0) {
+		}
+
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> list, View view, int position,
+			long id) {
+		startActivity(new Intent(getActivity(), MovementDetailActivity.class)
+				.putExtra(
+						MovementDetailFragment.REFERENCE,
+						typologies[viewPager.getCurrentItem()].getMovements()[position]));
+	}
+
 }
