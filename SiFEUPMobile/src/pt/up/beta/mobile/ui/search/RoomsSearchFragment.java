@@ -38,6 +38,10 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 public class RoomsSearchFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand<ResultsPage<RoomSearchResult>> {
 
+	private final static String CURRENT_PAGE = "current_page";
+	private final static String RESULTS = "results";
+	private final static String RESULTS_PAGE = "result_page";
+
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<RoomSearchResult> results = new ArrayList<RoomSearchResult>();
 	private ResultsPage<RoomSearchResult> resultPage;
@@ -45,6 +49,12 @@ public class RoomsSearchFragment extends BaseFragment implements
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -55,8 +65,40 @@ public class RoomsSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (resultPage != null) {
+			outState.putInt(CURRENT_PAGE, currentPage);
+			outState.putParcelableArrayList(RESULTS, results);
+			outState.putParcelable(RESULTS_PAGE, resultPage);
+		}
+	}
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			resultPage = savedInstanceState.getParcelable(RESULTS_PAGE);
+			if (resultPage != null) {
+				results = savedInstanceState.getParcelableArrayList(RESULTS);
+				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				if (hasMoreResults()) {
+					adapter = new EndlessSearchAdapter(getActivity(),
+							new SearchCustomAdapter(getActivity(),
+									R.layout.list_item_search, new RoomSearchResult[0]),
+							R.layout.list_item_loading);
+				} else {
+					adapter = new SearchCustomAdapter(getActivity(),
+							R.layout.list_item_friend, new RoomSearchResult[0]);
+
+				}
+				list.setAdapter(adapter);
+				list.setOnItemClickListener(this);
+				list.setSelection(0);
+				showMainScreen();
+				return;
+			}
+		}
 		query = getArguments().getString(SearchManager.QUERY);
 		task = SearchUtils
 				.getRoomsSearchByNameReply(query, this, getActivity());
@@ -134,8 +176,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 		// assumed only one page of results
 		RoomSearchResult profile = results.get(position);
 		i.putExtra(Intent.EXTRA_TITLE, profile.getFullName());
-		i.putExtra(ProfileActivity.PROFILE_TYPE,
-				ProfileActivity.PROFILE_ROOM);
+		i.putExtra(ProfileActivity.PROFILE_TYPE, ProfileActivity.PROFILE_ROOM);
 		i.putExtra(ProfileActivity.PROFILE_CODE, profile.getCode());
 		startActivity(i);
 	}

@@ -39,6 +39,10 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 public class EmployeesSearchFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand<ResultsPage<EmployeeSearchResult>> {
 
+	private final static String CURRENT_PAGE = "current_page";
+	private final static String RESULTS = "results";
+	private final static String RESULTS_PAGE = "result_page";
+
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<EmployeeSearchResult> results = new ArrayList<EmployeeSearchResult>();
 	private ResultsPage<EmployeeSearchResult> resultPage;
@@ -47,6 +51,12 @@ public class EmployeesSearchFragment extends BaseFragment implements
 	private ListView list;
 	private int currentPage = 1;
 	private final static String REGEX_CODE = "^[0-9]*$";
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -57,8 +67,40 @@ public class EmployeesSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (resultPage != null) {
+			outState.putInt(CURRENT_PAGE, currentPage);
+			outState.putParcelableArrayList(RESULTS, results);
+			outState.putParcelable(RESULTS_PAGE, resultPage);
+		}
+	}
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			resultPage = savedInstanceState.getParcelable(RESULTS_PAGE);
+			if (resultPage != null) {
+				results = savedInstanceState.getParcelableArrayList(RESULTS);
+				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				if (hasMoreResults()) {
+					adapter = new EndlessSearchAdapter(getActivity(),
+							new SearchCustomAdapter(getActivity(),
+									R.layout.list_item_search, new Employee[0]),
+							R.layout.list_item_loading);
+				} else {
+					adapter = new SearchCustomAdapter(getActivity(),
+							R.layout.list_item_friend, new Employee[0]);
+
+				}
+				list.setAdapter(adapter);
+				list.setOnItemClickListener(this);
+				list.setSelection(0);
+				showMainScreen();
+				return;
+			}
+		}
 		query = getArguments().getString(SearchManager.QUERY);
 		if (query.matches(REGEX_CODE))
 			task = SearchUtils.getEmployeeSearchByCodeReply(query, this,
@@ -165,7 +207,7 @@ public class EmployeesSearchFragment extends BaseFragment implements
 				return false;
 			for (EmployeeSearchResult s : page.getResults())
 				results.add(s);
-			if ( !hasMoreResults() || page.getResults().length == 0)
+			if (!hasMoreResults() || page.getResults().length == 0)
 				return false;
 			else
 				return true;
@@ -205,7 +247,6 @@ public class EmployeesSearchFragment extends BaseFragment implements
 			return results.size();
 		}
 	}
-
 
 	protected void onRepeat() {
 		showLoadingScreen();
