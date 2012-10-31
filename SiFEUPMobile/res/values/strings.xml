@@ -383,6 +383,13 @@
     <!--Employee -->
     <string name="lb_employee_acronym">Acronym</string>
     <string name="hint_employee_acronym">Acronym</string>
+    
+    
+    <string name="title_advanced_search_students">Students Search</string>
+    <string name="title_advanced_search_employees">Employees Search</string>
+    <string name="title_advanced_search_rooms">Room Search</string>
+    <string name="title_advanced_search_subjects">Subjects Search</string>
+    
 
     
 </resources>

@@ -358,5 +358,31 @@
     <!-- CONTACTS INTEGRATION -->
     <string name="action_view_profile">Ver perfil</string>
     <string name="action_view_schedule">Ver horário</string>
+    
+    
+    <!-- *************************************************************************************** -->
+    <!-- ADVANCED SEARCH -->
+    
+    <!-- STUDENTS -->
+    <string name="bt_search">Pesquisa</string>
+    <string name="lb_student_code">Código:</string>
+    <string name="lb_student_name">Nome:</string>
+    <string name="lb_student_email">Email:</string>
+    <string name="lb_student_first_year">Primeiro Ano:</string>
+	<string name="hint_student_code">Código</string>
+    <string name="hint_student_name">Nome</string>
+    <string name="hint_student_email">Email</string>
+    <string name="hint_student_first_year">Primeiro Ano</string>
+    
+    <!--Employee -->
+    <string name="lb_employee_acronym">Acrónimo</string>
+    <string name="hint_employee_acronym">Acrónimo</string>
+    
+    
+    <string name="title_advanced_search_students">Pesquisa de Estudantes</string>
+    <string name="title_advanced_search_employees">Pesquisa de Funcionários</string>
+    <string name="title_advanced_search_rooms">Pesquisa de Salas</string>
+    <string name="title_advanced_search_subjects">Pesquisa de Unidades Curriculares</string>
+    
 
 </resources>
