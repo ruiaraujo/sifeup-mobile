@@ -10,8 +10,9 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
 import pt.up.beta.mobile.loaders.ExamsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.calendar.CalendarHelper;
 import pt.up.beta.mobile.utils.calendar.Event;
@@ -21,7 +22,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.format.Time;
@@ -37,13 +37,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ExamsFragment extends BaseFragment implements
-		LoaderCallbacks<List<Exam>> {
+public class ExamsFragment extends BaseLoaderFragment implements
+		LoaderCallbacks<Exam[]> {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
 
 	/** Stores all exams from Student */
-	private List<Exam> exams;
+	private Exam[] exams;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";
 	private ListView list;
 	private String personCode;
@@ -70,7 +70,7 @@ public class ExamsFragment extends BaseFragment implements
 		if (personCode == null)
 			personCode = AccountUtils.getActiveUserCode(getActivity());
 		if (savedInstanceState != null) {
-			exams = savedInstanceState.getParcelableArrayList(EXAM_KEY);
+			exams = (Exam[]) savedInstanceState.getParcelableArray(EXAM_KEY);
 			if (exams == null) {
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
@@ -86,8 +86,7 @@ public class ExamsFragment extends BaseFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (exams != null)
-			outState.putParcelableArrayList(EXAM_KEY,
-					(ArrayList<? extends Parcelable>) exams);
+			outState.putParcelableArray(EXAM_KEY,exams);
 	}
 
 	@Override
@@ -100,22 +99,50 @@ public class ExamsFragment extends BaseFragment implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_export_calendar) {
-			if (exams == null || exams.isEmpty())
+			if (exams == null || exams.length == 0)
 				return true;
 			// export to Calendar (create event)
 			calendarExport();
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncExams(AccountUtils.getActiveUserName(getActivity()));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncExams(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
+
+
 	/**
-	 * Exports the schedule to Google Calendar 
+	 * Exports the schedule to Google Calendar
 	 * 
 	 * @return true if correct export
 	 */
@@ -156,8 +183,8 @@ public class ExamsFragment extends BaseFragment implements
 								// new event
 								long time = getDate(b.getDate(),
 										b.getStartTime()).toMillis(false);
-								Event event = new Event(b.getCourseName(), b
-										.getRooms(), b.getType(), time, time
+								Event event = new Event(b.getOcorrName(), b
+										.getRoomsString(), b.getType(), time, time
 										+ timeDifference(b.getStartTime(),
 												b.getEndTime()) * 60000);
 								final Uri newEvent = calendarHelper
@@ -215,7 +242,7 @@ public class ExamsFragment extends BaseFragment implements
 	private boolean populateList() {
 		if (getActivity() == null)
 			return false;
-		if (exams.isEmpty()) {
+		if (exams.length == 0) {
 			showEmptyScreen(getString(R.string.label_no_exams));
 			return false;
 		}
@@ -228,11 +255,11 @@ public class ExamsFragment extends BaseFragment implements
 			HashMap<String, String> map = new HashMap<String, String>();
 			String tipo = "( "
 					+ (e.getType().contains("Mini teste") ? "M" : "E") + " ) ";
-			map.put("chair", tipo + e.getCourseName());
+			map.put("chair", tipo + e.getOcorrName());
 			map.put("time",
-					e.getWeekDay() + ", " + e.getDate() + ": "
-							+ e.getStartTime() + "-" + e.getEndTime());
-			map.put("room", e.getRooms());
+					e.getDate() + ": " + e.getStartTime() + "-"
+							+ e.getEndTime());
+			map.put("room", e.getRoomsString());
 			fillMaps.add(map);
 		}
 
@@ -244,7 +271,7 @@ public class ExamsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public Loader<List<Exam>> onCreateLoader(int loaderId, Bundle options) {
+	public Loader<Exam[]> onCreateLoader(int loaderId, Bundle options) {
 		return new ExamsLoader(getActivity(),
 				SigarraContract.Exams.CONTENT_URI,
 				SigarraContract.Exams.COLUMNS, SigarraContract.Exams.PROFILE,
@@ -253,7 +280,7 @@ public class ExamsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Exam>> laoder, List<Exam> exams) {
+	public void onLoadFinished(Loader<Exam[]> laoder, Exam[] exams) {
 		if (getActivity() == null)
 			return;
 		if (exams == null)
@@ -266,7 +293,7 @@ public class ExamsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Exam>> loader) {
+	public void onLoaderReset(Loader<Exam[]> loader) {
 	}
 
 }

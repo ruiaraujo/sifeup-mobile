@@ -32,6 +32,7 @@ public class SigarraProvider extends ContentProvider {
 	private static final int SCHEDULE = 80;
 	private static final int NOTIFICATIONS = 90;
 	private static final int CANTEENS = 100;
+	private static final int TEACHING_SERVICE = 110;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -62,6 +63,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_NOTIFICATIONS, NOTIFICATIONS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_CANTEENS, CANTEENS);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_TEACHING_SERVICE, TEACHING_SERVICE);
 	}
 
 	private DatabaseHelper dbHelper;
@@ -102,6 +105,9 @@ public class SigarraProvider extends ContentProvider {
 			break;
 		case EXAMS:
 			table = ExamsTable.TABLE;
+			break;
+		case TEACHING_SERVICE:
+			table = TeachingServiceTable.TABLE;
 			break;
 		case ACADEMIC_PATH:
 			table = AcademicPathTable.TABLE;
@@ -148,6 +154,8 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.Profiles.CONTENT_PIC;
 		case EXAMS:
 			return SigarraContract.Exams.CONTENT_TYPE;
+		case TEACHING_SERVICE:
+			return SigarraContract.TeachingService.CONTENT_TYPE;
 		case ACADEMIC_PATH:
 			return SigarraContract.AcademicPath.CONTENT_TYPE;
 		case TUITION:
@@ -193,6 +201,10 @@ public class SigarraProvider extends ContentProvider {
 			table = ExamsTable.TABLE;
 			nullHack = null;
 			break;
+		case TEACHING_SERVICE:
+			table = TeachingServiceTable.TABLE;
+			nullHack = null;
+			break;
 		case ACADEMIC_PATH:
 			table = AcademicPathTable.TABLE;
 			nullHack = null;
@@ -236,7 +248,7 @@ public class SigarraProvider extends ContentProvider {
 
 		if (uriType != LAST_SYNC && uriType != FRIENDS) {
 			if (values.length > 0)
-				updateLastSyncState(getContext(),table);
+				updateLastSyncState(getContext(), table);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return values.length;
@@ -272,6 +284,10 @@ public class SigarraProvider extends ContentProvider {
 			table = ExamsTable.TABLE;
 			nullHack = null;
 			break;
+		case TEACHING_SERVICE:
+			table = TeachingServiceTable.TABLE;
+			nullHack = null;
+			break;
 		case ACADEMIC_PATH:
 			table = AcademicPathTable.TABLE;
 			nullHack = null;
@@ -303,7 +319,7 @@ public class SigarraProvider extends ContentProvider {
 		long rowID = getWritableDatabase().replace(table, nullHack, values);
 		if (rowID > 0) {
 			if (uriType != LAST_SYNC && uriType != FRIENDS)
-				updateLastSyncState(getContext(),table);
+				updateLastSyncState(getContext(), table);
 			final Uri url = ContentUris.withAppendedId(uri, rowID);
 			getContext().getContentResolver().notifyChange(url, null);
 			getContext().getContentResolver().notifyChange(uri, null);
@@ -336,6 +352,7 @@ public class SigarraProvider extends ContentProvider {
 				values.put(SigarraContract.LastSync.SCHEDULE, "0");
 				values.put(SigarraContract.LastSync.SUBJECTS, "0");
 				values.put(SigarraContract.LastSync.TUIION, "0");
+				values.put(SigarraContract.LastSync.TEACHING_SERVICE, "0");
 				insert(uri, values);
 				return query(uri, projection, selection, selectionArgs,
 						sortOrder);
@@ -419,7 +436,14 @@ public class SigarraProvider extends ContentProvider {
 				syncState.close();
 			}
 			break;
-
+		case TEACHING_SERVICE:
+			qb.setTables(TeachingServiceTable.TABLE);
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null, sortOrder);
+			if (c.getCount() == 0) {
+				SigarraSyncAdapterUtils.syncTeachingService(selectionArgs[0]);
+			}
+			break;
 		case ACADEMIC_PATH:
 			qb.setTables(AcademicPathTable.TABLE);
 			c = qb.query(getWritableDatabase(), projection, selection,
@@ -570,6 +594,9 @@ public class SigarraProvider extends ContentProvider {
 		case EXAMS:
 			table = ExamsTable.TABLE;
 			break;
+		case TEACHING_SERVICE:
+			table = TeachingServiceTable.TABLE;
+			break;
 		case ACADEMIC_PATH:
 			table = AcademicPathTable.TABLE;
 			break;
@@ -592,17 +619,20 @@ public class SigarraProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 		if (uriType != LAST_SYNC && uriType != FRIENDS)
-			updateLastSyncState(getContext(),table);
+			updateLastSyncState(getContext(), table);
 		count = getWritableDatabase().update(table, values, selection,
 				selectionArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
 
-	public static void updateLastSyncState(final Context context, final String column) {
+	public static void updateLastSyncState(final Context context,
+			final String column) {
 		final ContentValues values = new ContentValues();
 		values.put(column, Long.toString(System.currentTimeMillis()));
-		context.getContentResolver().update(SigarraContract.LastSync.CONTENT_URI, values,
+		context.getContentResolver().update(
+				SigarraContract.LastSync.CONTENT_URI,
+				values,
 				SigarraContract.LastSync.PROFILE,
 				SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 						.getActiveUserName(context)));

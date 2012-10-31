@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sendtosamba.FinishedTaskListener;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
@@ -138,7 +136,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 	@TargetApi(8)
 	@Override
 	protected Integer doInBackground(Void... voi) {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
 		InputStream dis = null;
 		FileOutputStream fos = null;
 		long myProgress = 0;
@@ -148,7 +145,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 
 			String state = Environment.getExternalStorageState();
 			if (!Environment.MEDIA_MOUNTED.equals(state)) {
-				httpclient.getConnectionManager().shutdown();
 				return NO_MEMORY_CARD;
 			}
 
@@ -158,7 +154,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			}
 
 			final URLConnection connection;
-			if (url.startsWith("https://sigarra.up.pt"))
+			if (url.startsWith(SifeupAPI.SIGARRA_HOST))
 				connection = SifeupAPI.get(url);
 			else
 				connection = new URL(url).openConnection();
@@ -210,7 +206,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 						fos.write(buf, 0, byteRead);
 						myProgress += byteRead;
 					} else {
-						httpclient.getConnectionManager().shutdown();
 						dis.close();
 						fos.close();
 						break;
@@ -224,7 +219,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 				if (filesize != 0)
 					publishProgress((int) (((float) myProgress / (float) filesize) * 100));
 				if (isCancelled()) {
-					httpclient.getConnectionManager().shutdown();
 					dis.close();
 					fos.close();
 					myFile.delete();
@@ -243,8 +237,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 				myFile.delete();
 			return ERROR;
 		} finally {
-			if (httpclient != null)
-				httpclient.getConnectionManager().shutdown();
 			try {
 				if (dis != null)
 					dis.close();

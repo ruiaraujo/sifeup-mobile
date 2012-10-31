@@ -16,8 +16,9 @@
 
 package pt.up.beta.mobile.loaders;
 
-import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.datatypes.Notification;
+import org.acra.ACRA;
+
+import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -34,7 +35,7 @@ import com.google.gson.Gson;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
+public class TeachingServiceLoader extends AsyncTaskLoader<TeachingService> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -43,12 +44,12 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	Notification[] notifications;
+	TeachingService teachingService;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public Notification[] loadInBackground() {
+	public TeachingService loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -60,38 +61,25 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 				mCursor.close();
 			}
 			mCursor = cursor;
-			if (cursor.moveToFirst()) {
-					Notification[] notifications = new Notification[cursor.getCount()];
-					final Gson gson = new Gson();
-					int i = 0;
-					do {
-						notifications[i] = gson.fromJson(cursor.getString(cursor
-												.getColumnIndex(SigarraContract.Notifcations.CONTENT)), Notification.class);
-						notifications[i].setRead(SigarraContract.Notifcations.SEEN.equals(cursor.getString(cursor
-								.getColumnIndex(SigarraContract.Notifcations.STATE))));
-						++i;
-					} while (cursor.moveToNext());
-					return notifications;
-			} else {
-				final Cursor syncState = getContext().getContentResolver().query(
-						SigarraContract.LastSync.CONTENT_URI,
-						SigarraContract.LastSync.COLUMNS,
-						SigarraContract.LastSync.PROFILE,
-						SigarraContract.LastSync
-								.getLastSyncSelectionArgs(AccountUtils
-										.getActiveUserName(getContext())),
-						null);
-				if ( syncState.moveToFirst() ){
-					if ( syncState.getLong(syncState.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) != 0 ){
-						syncState.close();
-						return new Notification[0];
-					}
-				}
-				else
-					throw new RuntimeException("It should always have a result");
-				syncState.close();
-			}
 
+			if (cursor.moveToFirst()) {
+				try {
+					return new Gson()
+							.fromJson(
+									cursor.getString(0),TeachingService.class);
+				} catch (Exception e) {
+					e.printStackTrace();
+					ACRA.getErrorReporter().handleSilentException(e);
+					ACRA.getErrorReporter()
+							.handleSilentException(
+									new RuntimeException(
+											"Id:"
+													+ AccountUtils
+															.getActiveUserCode(null)
+													+ "\n\n"
+													+ cursor.getString(0)));
+				}
+			}
 		}
 		return null;
 	}
@@ -106,26 +94,17 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(Notification[] notifications) {
+	public void deliverResult(TeachingService teachingService) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (notifications != null) {
-				for ( int i = 0; i < notifications.length;++i )
-					notifications[i] = null;
-				notifications = null;
+			if (teachingService != null) {
+				teachingService = null;
 			}
 			return;
 		}
-		final Notification[] oldNotifications = this.notifications;
-		this.notifications = notifications;
+		this.teachingService = teachingService;
 		if (isStarted()) {
-			super.deliverResult(notifications);
-		}
-
-		if (oldNotifications != null && oldNotifications != notifications
-				&& oldNotifications.length != 0) {
-			for ( int i = 0; i < oldNotifications.length;++i )
-				oldNotifications[i] = null;
+			super.deliverResult(teachingService);
 		}
 	}
 
@@ -134,7 +113,7 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	 * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc to
 	 * specify the query to perform.
 	 */
-	public NotificationsLoader(Context context) {
+	public TeachingServiceLoader(Context context) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
 	}
@@ -145,7 +124,7 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	 * ContentResolver.query()} for documentation on the meaning of the
 	 * parameters. These will be passed as-is to that call.
 	 */
-	public NotificationsLoader(Context context, Uri uri, String[] projection,
+	public TeachingServiceLoader(Context context, Uri uri, String[] projection,
 			String selection, String[] selectionArgs, String sortOrder) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
@@ -166,10 +145,10 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (notifications != null) {
-			deliverResult(notifications);
+		if (teachingService != null) {
+			deliverResult(teachingService);
 		}
-		if (takeContentChanged() || notifications == null) {
+		if (takeContentChanged() || teachingService == null) {
 			forceLoad();
 		}
 	}
@@ -184,12 +163,7 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 	}
 
 	@Override
-	public void onCanceled(Notification[] notifications) {
-		if (notifications != null) {
-			for ( int i = 0; i < notifications.length;++i )
-				notifications[i] = null;
-			notifications = null;
-		}
+	public void onCanceled(TeachingService teachingService) {
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
 		}
@@ -206,10 +180,6 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (notifications != null){
-			for ( int i = 0; i < notifications.length;++i )
-				notifications[i] = null;
-		}
-		notifications = null;
+		teachingService = null;
 	}
 }

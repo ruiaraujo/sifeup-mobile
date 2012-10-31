@@ -9,10 +9,11 @@ import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.loaders.StudentLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.utils.LoaderDrawable;
@@ -37,6 +38,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -50,7 +52,7 @@ import com.actionbarsherlock.view.MenuItem;
  * 
  * @author Ângela Igreja
  */
-public class StudentProfileFragment extends BaseFragment implements
+public class StudentProfileFragment extends BaseLoaderFragment implements
 		OnItemClickListener, LoaderCallbacks<Student> {
 	private TextView name;
 	private ImageView pic;
@@ -149,6 +151,7 @@ public class StudentProfileFragment extends BaseFragment implements
 					null, new FriendChecker());
 		getActivity().getSupportLoaderManager().initLoader(PROFILE_LOADER,
 				null, this);
+		setRefreshActionItemState(true);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -158,14 +161,44 @@ public class StudentProfileFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncProfile(
-					AccountUtils.getActiveUserName(getActivity()), code,
-					SifeupAPI.STUDENT_TYPE);
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncProfile(
+				AccountUtils.getActiveUserName(getActivity()), code,
+				SifeupAPI.STUDENT_TYPE);
+	}
+	
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
+	
+	
+
+
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position,

@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -17,7 +18,8 @@ public class FileUtils {
     
     // our caching functions
     // Find the dir to save cached images
-    public static File getCacheDirectory(Context context) {
+    @TargetApi(8)
+	public static File getCacheDirectory(Context context) {
     String sdState = android.os.Environment.getExternalStorageState();
         File cacheDir = null;
 
@@ -35,7 +37,7 @@ public class FileUtils {
         {
             cacheDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() +
                     File.separator + "Android" + File.separator + "data" +
-                    File.separator + context.getPackageName());
+                    File.separator + context.getPackageName() + File.separator + "cache");
             if (!cacheDir.exists())
                 cacheDir.mkdirs();
         }

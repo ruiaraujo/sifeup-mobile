@@ -18,6 +18,17 @@ public class SigarraSyncAdapterUtils {
 				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
 				extras);
 	}
+	
+	public static void syncTeachingService(final String accountName) {
+		final Bundle extras = new Bundle();
+		extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		extras.putBoolean(SigarraSyncAdapter.SINGLE_REQUEST, true);
+		extras.putString(SigarraSyncAdapter.REQUEST_TYPE, SigarraSyncAdapter.TEACHING_SERVICE);
+		ContentResolver.requestSync(new Account(accountName,
+				Constants.ACCOUNT_TYPE), SigarraContract.CONTENT_AUTHORITY,
+				extras);
+	}
 
 	public static void syncSubject(final String accountName, final String code) {
 		final Bundle extras = new Bundle();

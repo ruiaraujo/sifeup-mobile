@@ -7,8 +7,9 @@ import pt.up.beta.mobile.datatypes.AcademicYear;
 import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.loaders.AcademicPathLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.subjects.SubjectDescriptionActivity;
 import pt.up.beta.mobile.ui.subjects.SubjectDescriptionFragment;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -41,7 +43,7 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  * @author Ângela Igreja
  * 
  */
-public class AcademicPathFragment extends BaseFragment implements
+public class AcademicPathFragment extends BaseLoaderFragment implements
 		OnChildClickListener, LoaderCallbacks<AcademicPath[]> {
 
 	private final static String ACADEMIC_KEY = "pt.up.fe.mobile.ui.studentarea.ACADEMIC_PATH";
@@ -109,11 +111,37 @@ public class AcademicPathFragment extends BaseFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
-					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
 	}
 
 	private class AcademicPathAdapter extends BaseExpandableListAdapter {
@@ -169,9 +197,17 @@ public class AcademicPathFragment extends BaseFragment implements
 					.findViewById(R.id.grade_subject_name);
 			TextView gradeNumber = (TextView) root
 					.findViewById(R.id.grade_number);
-			gradeName.setText(uc.getUcurrnome());
-			gradeNumber.setText(getString(R.string.path_grade,
-					uc.getResultadomelhor()));
+			if (UIUtils.isLocalePortuguese()
+					|| TextUtils.isEmpty(uc.getUcurrnome()))
+				gradeName.setText(uc.getUcurrnome());
+			else {
+				gradeName.setText(uc.getUcurrname());
+			}
+			if (uc.getResultadomelhor() == null)
+				gradeNumber.setText(null);
+			else
+				gradeNumber.setText(getString(R.string.path_grade,
+						uc.getResultadomelhor()));
 			return root;
 		}
 
@@ -203,8 +239,8 @@ public class AcademicPathFragment extends BaseFragment implements
 			if (convertView == null)
 				convertView = mInflater.inflate(
 						R.layout.list_item_grade_marker, null);
-			((TextView) convertView)
-					.setText(Html.fromHtml(getGroup(groupPosition).toString()));
+			((TextView) convertView).setText(Html.fromHtml(getGroup(
+					groupPosition).toString()));
 			return convertView;
 		}
 
@@ -272,7 +308,7 @@ public class AcademicPathFragment extends BaseFragment implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return academicPaths[position].getCourseName();
+			return academicPaths[position].getCourseAcronym();
 		}
 
 		public void destroyItem(View collection, int position, Object view) {
@@ -298,7 +334,8 @@ public class AcademicPathFragment extends BaseFragment implements
 				averageStr = getString(R.string.no_data);
 			else
 				averageStr = academicPaths[position].getAverage();
-			average.setText(Html.fromHtml(getString(R.string.path_average, averageStr)));
+			average.setText(Html.fromHtml(getString(R.string.path_average,
+					averageStr)));
 			year.setText(Html.fromHtml(getString(R.string.path_year,
 					academicPaths[position].getCourseYears())));
 			grades.setAdapter(new AcademicPathAdapter());

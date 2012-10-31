@@ -42,6 +42,10 @@ import external.com.google.android.apps.iosched.util.UIUtils;
 public class SubjectsSearchFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand<ResultsPage<SubjectSearchResult>> {
 
+	private final static String CURRENT_PAGE = "current_page";
+	private final static String RESULTS = "results";
+	private final static String RESULTS_PAGE = "result_page";
+
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<SubjectSearchResult> results = new ArrayList<SubjectSearchResult>();
 	private ResultsPage<SubjectSearchResult> resultPage;
@@ -49,6 +53,12 @@ public class SubjectsSearchFragment extends BaseFragment implements
 	private String query;
 	private ListView list;
 	private int currentPage = 1;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -59,8 +69,40 @@ public class SubjectsSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (resultPage != null) {
+			outState.putInt(CURRENT_PAGE, currentPage);
+			outState.putParcelableArrayList(RESULTS, results);
+			outState.putParcelable(RESULTS_PAGE, resultPage);
+		}
+	}
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			resultPage = savedInstanceState.getParcelable(RESULTS_PAGE);
+			if (resultPage != null) {
+				results = savedInstanceState.getParcelableArrayList(RESULTS);
+				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				if (hasMoreResults()) {
+					adapter = new EndlessSearchAdapter(getActivity(),
+							new SearchCustomAdapter(getActivity(),
+									R.layout.list_item_search, new SubjectSearchResult[0]),
+							R.layout.list_item_loading);
+				} else {
+					adapter = new SearchCustomAdapter(getActivity(),
+							R.layout.list_item_friend, new SubjectSearchResult[0]);
+
+				}
+				list.setAdapter(adapter);
+				list.setOnItemClickListener(this);
+				list.setSelection(0);
+				showMainScreen();
+				return;
+			}
+		}
 		query = getArguments().getString(SearchManager.QUERY);
 		task = SearchUtils.getSubjectsSearchByNameReply(query, this,
 				getActivity());

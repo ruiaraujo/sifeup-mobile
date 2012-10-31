@@ -39,6 +39,10 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 public class StudentsSearchFragment extends BaseFragment implements
 		OnItemClickListener, ResponseCommand<ResultsPage<StudentSearchResult>> {
 
+	private final static String CURRENT_PAGE = "current_page";
+	private final static String RESULTS = "results";
+	private final static String RESULTS_PAGE = "result_page";
+
 	// query is in SearchActivity, sent to here in the arguments
 	private ArrayList<StudentSearchResult> results = new ArrayList<StudentSearchResult>();
 	private ResultsPage<StudentSearchResult> resultPage;
@@ -49,7 +53,12 @@ public class StudentsSearchFragment extends BaseFragment implements
 	private int currentPage = 1;
 	private final static String REGEX_CODE = "^[0-9]*$";
 
-	// TODO: implement the rest of the lifecycle
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -59,8 +68,40 @@ public class StudentsSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (resultPage != null) {
+			outState.putInt(CURRENT_PAGE, currentPage);
+			outState.putParcelableArrayList(RESULTS, results);
+			outState.putParcelable(RESULTS_PAGE, resultPage);
+		}
+	}
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			resultPage = savedInstanceState.getParcelable(RESULTS_PAGE);
+			if (resultPage != null) {
+				results = savedInstanceState.getParcelableArrayList(RESULTS);
+				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				if (hasMoreResults()) {
+					adapter = new EndlessSearchAdapter(getActivity(),
+							new SearchCustomAdapter(getActivity(),
+									R.layout.list_item_search, new Student[0]),
+							R.layout.list_item_loading);
+				} else {
+					adapter = new SearchCustomAdapter(getActivity(),
+							R.layout.list_item_friend, new Student[0]);
+
+				}
+				list.setAdapter(adapter);
+				list.setOnItemClickListener(this);
+				list.setSelection(0);
+				showMainScreen();
+				return;
+			}
+		}
 		advancedSearchParameters = getArguments().getStringArray(
 				SearchManager.QUERY);
 		if (advancedSearchParameters != null)
@@ -128,7 +169,7 @@ public class StudentsSearchFragment extends BaseFragment implements
 
 		}
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(StudentsSearchFragment.this);
+		list.setOnItemClickListener(this);
 		list.setSelection(0);
 		showMainScreen();
 	}

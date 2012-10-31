@@ -32,7 +32,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
-	final private static String WEBSERVICE = "http://sigarradevp.up.pt/dev/mob/";
+	public final static String SIGARRA_HOST = "http://sigarradevp.up.pt/dev/";
+	final private static String WEBSERVICE = SIGARRA_HOST + "mob/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
@@ -40,6 +41,7 @@ public class SifeupAPI {
 
 	// TODO
 	private interface WebServices {
+		String CURRENTACCOUNT = "mob_ccorrent_geral.";
 		String STUDENT = "mob_fest_geral.";
 		String EMPLOYEE = "mob_func_geral.";
 		String PRINTING = "mob_imp_geral.";
@@ -83,8 +85,8 @@ public class SifeupAPI {
 		String PAGE = "pv_pag";
 	}
 
-	private interface StudentTuiton {
-		String NAME = "propinas";
+	private interface CurrentAccount {
+		String NAME = "conta_corrente";
 		String CODE = "pv_codigo";
 	}
 
@@ -122,6 +124,19 @@ public class SifeupAPI {
 		String EMPLOYEE_ACRONYM = "pv_sigla";
 		String EMPLOYEE_STATE = "pv_estado";
 		String PAGE = "pv_pag";
+	}
+
+	// .PERFIL
+	private interface EmployeeMarkings {
+		String NAME = "marcacoes";
+		String CODE = "pv_codigo";
+	}
+	
+
+	// .PERFIL
+	private interface EmployeeExams {
+		String NAME = "vigilancias";
+		String CODE = "pv_codigo";
 	}
 
 	// MOB_HOR_GERAL
@@ -207,6 +222,7 @@ public class SifeupAPI {
 	private interface DownloadMailFiles {
 		String NAME = "download_file";
 		String CODE = "p_name";
+		String FILENAME = "p_cod";
 	}
 
 	// MOB_PAR_GERAL
@@ -331,7 +347,7 @@ public class SifeupAPI {
 		String CODE = "pct_cod";
 	}
 
-	private interface Exams {
+	private interface StudentExams {
 		String NAME = "exames";
 		String CODE = "pv_codigo";
 	}
@@ -416,9 +432,9 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Exams Url
 	 */
-	public static String getExamsUrl(String code) {
-		return WEBSERVICE + WebServices.STUDENT + Exams.NAME + WEBSERVICE_SEP
-				+ Exams.CODE + EQUALS + code;
+	public static String getStudentExamsUrl(String code) {
+		return WEBSERVICE + WebServices.STUDENT + StudentExams.NAME + WEBSERVICE_SEP
+				+ StudentExams.CODE + EQUALS + code;
 	}
 
 	/**
@@ -427,9 +443,9 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Tuition Url
 	 */
-	public static String getTuitionUrl(String code) {
-		return WEBSERVICE + WebServices.SCHEDULE + StudentTuiton.NAME
-				+ WEBSERVICE_SEP + StudentTuiton.CODE + EQUALS + code;
+	public static String getCurrentAccountUrl(String code) {
+		return WEBSERVICE + WebServices.CURRENTACCOUNT + CurrentAccount.NAME
+				+ WEBSERVICE_SEP + CurrentAccount.CODE + EQUALS + code;
 	}
 
 	/**
@@ -508,9 +524,19 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Student Url
 	 */
-	public static String getEmployeProfileeUrl(String code) {
+	public static String getEmployeeProfileUrl(String code) {
 		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeProfile.NAME
 				+ WEBSERVICE_SEP + EmployeeProfile.CODE + EQUALS + code;
+	}
+
+	public static String getEmployeeMarkingsUrl(String code) {
+		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeMarkings.NAME
+				+ WEBSERVICE_SEP + EmployeeMarkings.CODE + EQUALS + code;
+	}
+
+	public static String getEmployeeExamsUrl(String code) {
+		return WEBSERVICE + WebServices.EMPLOYEE + EmployeeExams.NAME + WEBSERVICE_SEP
+				+ EmployeeExams.CODE + EQUALS + code;
 	}
 
 	public static String getTeachingServiceUrl(String code, String year) {
@@ -771,9 +797,11 @@ public class SifeupAPI {
 				+ MailFiles.CODE + EQUALS + code;
 	}
 
-	public static String getDownloadMailFilesUrl(String code) {
-		return WEBSERVICE + WebServices.DYNAMIC_MAIL_FILES
+	// TODO: check this again when server code is in production
+	public static String getDownloadMailFilesUrl(String code, String name) {
+		return SIGARRA_HOST + "feup/pt/" + WebServices.DYNAMIC_MAIL_FILES
 				+ DownloadMailFiles.NAME + WEBSERVICE_SEP
+				+ DownloadMailFiles.FILENAME + EQUALS + name + LINK_SEP
 				+ DownloadMailFiles.CODE + EQUALS + code;
 	}
 
@@ -821,7 +849,6 @@ public class SifeupAPI {
 				+ y;
 
 	}
-	
 
 	/**
 	 * Schedule Url for Web Service
@@ -836,9 +863,9 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + StudentSchedule.NAME
 				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
 				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
-
 
 	/**
 	 * UC Schedule Url for Web Service
@@ -852,7 +879,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + SubjectSchedule.NAME
 				+ WEBSERVICE_SEP + SubjectSchedule.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -868,7 +896,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + TeacherSchedule.CODE + EQUALS + code
 				+ LINK_SEP + TeacherSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -884,7 +913,8 @@ public class SifeupAPI {
 		return WEBSERVICE + WebServices.SCHEDULE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code + LINK_SEP
 				+ RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
-				+ RoomSchedule.WEEK_END + EQUALS + end + "&pv_ano_lectivo=2010&pv_periodos=2";
+				+ RoomSchedule.WEEK_END + EQUALS + end
+				+ "&pv_ano_lectivo=2010&pv_periodos=2";
 	}
 
 	/**
@@ -1127,7 +1157,6 @@ public class SifeupAPI {
 		}
 
 	}
-
 
 	public static String getContentCharSet(final String contentType) {
 		String[] values = contentType.split(";"); // The values.length must be

@@ -137,10 +137,12 @@ public class DynamicMailFilesFragment extends BaseFragment implements
 		final DynamicMailFile file = files[position];
 		try {
 			getActivity().startService(
-					DownloaderService.newDownload(getActivity(),
-							SifeupAPI.getDownloadMailFilesUrl(file.getCode()),
-							file.getName(), null, file.getSize(),
-							AccountUtils.getAuthToken(getActivity())));
+					DownloaderService.newDownload(getActivity(), SifeupAPI
+							.getDownloadMailFilesUrl(file.getCode(),
+									AccountUtils
+											.getActiveUserCode(getActivity())),
+							file.getName(), null, 0, AccountUtils
+									.getAuthToken(getActivity())));
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 		} catch (AuthenticatorException e) {

@@ -161,7 +161,7 @@ public class BaseFragment extends SherlockFragment {
 	}
 
 	protected void onRepeat() {
-
+		showLoadingScreen();
 	}
 
 	protected void removeDialog(String dialog) { // DialogFragment.show() will

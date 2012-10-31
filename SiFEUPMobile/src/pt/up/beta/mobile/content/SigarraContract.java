@@ -12,7 +12,7 @@ public final class SigarraContract {
 		String CONTENT = SubjectsTable.COLUMN_CONTENT;
 		String FILES = SubjectsTable.COLUMN_FILES;
 		String COURSE_ID = SubjectsTable.COLUMN_COURSE_CODE;
-		String COURSE_NAME = SubjectsTable.COLUMN_COURSE_NAME;
+		String COURSE_ACRONYM = SubjectsTable.COLUMN_COURSE_ACRONYM;
 		String COURSE_ENTRY = SubjectsTable.COLUMN_ENTRY;
 	}
 
@@ -44,6 +44,11 @@ public final class SigarraContract {
 	public interface TuitionColumns {
 		String ID = TuitionTable.KEY_ID_USER;
 		String CONTENT = TuitionTable.KEY_CONTENT;
+	}
+
+	public interface TeachingServiceColumns {
+		String ID = TeachingServiceTable.KEY_ID_USER;
+		String CONTENT = TeachingServiceTable.KEY_CONTENT;
 	}
 
 	public interface PrintingQuotaColumns {
@@ -82,6 +87,7 @@ public final class SigarraContract {
 		String SCHEDULE = LastSyncTable.KEY_SCHEDULE;
 		String SUBJECTS = LastSyncTable.KEY_SUBJECTS;
 		String TUIION = LastSyncTable.KEY_TUITION;
+		String TEACHING_SERVICE = LastSyncTable.KEY_TEACHING_SERVICE;
 	}
 
 	public static final String CONTENT_AUTHORITY = "pt.up.fe.mobile.content.SigarraProvider";
@@ -96,6 +102,7 @@ public final class SigarraContract {
 	static final String PATH_PROFILES_PIC = "profiles_pic";
 	static final String PATH_EXAMS = "exams";
 	static final String PATH_ACADEMIC_PATH = "academic_path";
+	static final String PATH_TEACHING_SERVICE = "teaching_service";
 	static final String PATH_TUITION = "tuition";
 	static final String PATH_PRINTING = "printing_quota";
 	static final String PATH_SCHEDULE = "schedules";
@@ -117,7 +124,7 @@ public final class SigarraContract {
 
 		public static final String[] SUBJECTS_COLUMNS = {
 				SigarraContract.SubjectsColumns.COURSE_ID,
-				SigarraContract.SubjectsColumns.COURSE_NAME,
+				SigarraContract.SubjectsColumns.COURSE_ACRONYM,
 				SigarraContract.SubjectsColumns.COURSE_ENTRY };
 
 		public static final String USER_SUBJECTS = USER_NAME + "=? AND "
@@ -216,6 +223,24 @@ public final class SigarraContract {
 		public static final String PROFILE = ID + "=?";
 
 		public static final String[] getAcademicPathSelectionArgs(String code) {
+			return new String[] { code };
+		}
+
+		public static final String[] COLUMNS = { CONTENT };
+
+	}
+	
+
+	public static class TeachingService implements TeachingServiceColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_TEACHING_SERVICE).build();
+
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.teaching_service";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.teaching_service";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getTeachingServiceSelectionArgs(String code) {
 			return new String[] { code };
 		}
 

@@ -3,8 +3,7 @@ package pt.up.beta.mobile.ui.services;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
-import pt.up.beta.mobile.ui.services.tuition.TuitionHistoryActivity;
-import pt.up.beta.mobile.ui.services.tuition.TuitionRefListActivity;
+import pt.up.beta.mobile.ui.services.tuition.TuitionActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,7 +47,8 @@ public class StudentServicesFragment extends Fragment {
 							PrintActivity.class));
 					break;
 				case 1:
-					// has children;
+					activity.openActivityOrFragment(new Intent(getActivity(),
+							TuitionActivity.class));
 					break;
 				case 2:
 					activity.openActivityOrFragment(new Intent(getActivity(),
@@ -70,16 +70,7 @@ public class StudentServicesFragment extends Fragment {
 				final BaseActivity activity = (BaseActivity) getActivity();
 				switch (groupPosition) {
 				case 1:
-					switch (childPosition) {
-					case 0:
-						activity.openActivityOrFragment(new Intent(
-								getActivity(), TuitionHistoryActivity.class));
-						break;
-					case 1:
-						activity.openActivityOrFragment(new Intent(
-								getActivity(), TuitionRefListActivity.class));
-						break;
-					}
+					
 					break;
 				}
 
@@ -100,8 +91,7 @@ public class StudentServicesFragment extends Fragment {
 				getString(R.string.btn_dynamic_mail_files) };
 		private String[][] children = {
 				{},
-				{ getString(R.string.btn_tuition_history),
-						getString(R.string.btn_tuition_refs) }, {}, {} };
+				{}, {}, {} };
 
 		public Object getChild(int groupPosition, int childPosition) {
 			return children[groupPosition][childPosition];

@@ -9,8 +9,9 @@ import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;
 import pt.up.beta.mobile.loaders.CanteenLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -25,6 +26,7 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -37,7 +39,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  * @author Ângela Igreja
  * 
  */
-public class LunchMenuFragment extends BaseFragment implements
+public class LunchMenuFragment extends BaseLoaderFragment implements
 		LoaderCallbacks<Canteen[]> {
 	private final static String CANTEEN_KEY = "pt.up.fe.mobile.ui.studentarea.CANTEENS";
 
@@ -90,13 +92,40 @@ public class LunchMenuFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncCanteens(AccountUtils
-					.getActiveUserName(getActivity()));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncCanteens(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
+
 
 	/**
 	 * Build Pages

@@ -5,15 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.datatypes.TeachingService.Subject;
+import pt.up.beta.mobile.loaders.TeachingServiceLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.sifeup.SubjectUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +30,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class TeachingServiceFragment extends BaseFragment implements
-		OnItemClickListener, ResponseCommand<TeachingService> {
+public class TeachingServiceFragment extends BaseLoaderFragment implements
+		OnItemClickListener, LoaderCallbacks<TeachingService> {
 
 	/** Contains all subscribed subjects */
 	private TeachingService teachingService;
@@ -51,9 +54,7 @@ public class TeachingServiceFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		task = SubjectUtils.getTeachingService(
-				AccountUtils.getActiveUserCode(getActivity()), this,
-				getActivity());
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -63,12 +64,18 @@ public class TeachingServiceFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncSubjects(AccountUtils
-					.getActiveUserName(getActivity()));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncTeachingService(AccountUtils
+				.getActiveUserName(getActivity()));
 	}
 
 	@Override
@@ -78,7 +85,7 @@ public class TeachingServiceFragment extends BaseFragment implements
 		final Subject subject = teachingService.getService()[position];
 		i.putExtra(SubjectDescriptionFragment.SUBJECT_CODE,
 				subject.getOcorrId());
-		i.putExtra(Intent.EXTRA_TITLE,  subject.getUcurrName());
+		i.putExtra(Intent.EXTRA_TITLE, subject.getUcurrName());
 		startActivity(i);
 
 	}
@@ -103,7 +110,21 @@ public class TeachingServiceFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onResultReceived(TeachingService results) {
+	public Loader<TeachingService> onCreateLoader(int loaderId, Bundle options) {
+		return new TeachingServiceLoader(getActivity(),
+				SigarraContract.TeachingService.CONTENT_URI,
+				SigarraContract.TeachingService.COLUMNS,
+				SigarraContract.TeachingService.PROFILE,
+				SigarraContract.TeachingService
+						.getTeachingServiceSelectionArgs(AccountUtils
+								.getActiveUserName(getActivity())), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<TeachingService> loader,
+			TeachingService results) {
+		if (getActivity() == null || results == null)
+			return;
 		teachingService = results;
 		if (teachingService.getService().length == 0) {
 			showEmptyScreen(getString(R.string.lb_no_teaching_service));
@@ -128,7 +149,12 @@ public class TeachingServiceFragment extends BaseFragment implements
 				fillMaps, R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		setRefreshActionItemState(false);
 		showMainScreen();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<TeachingService> loader) {
 	}
 
 }

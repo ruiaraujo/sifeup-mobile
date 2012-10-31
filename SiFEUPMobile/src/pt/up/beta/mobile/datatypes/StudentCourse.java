@@ -13,8 +13,12 @@ public class StudentCourse implements Parcelable {
 	private final String courseType;
 	@SerializedName("fest_tipo_descr")
 	private final String courseTypeDesc;
+	@SerializedName("cur_sigla")
+	private final String courseAcronym;
 	@SerializedName("cur_nome")
 	private final String courseName;
+	@SerializedName("cur_name")
+	private final String courseNameEn;
 	@SerializedName("fest_a_lect_1_insc")
 	private final String firstYear;
 	@SerializedName("fest_d_1_insc")
@@ -42,28 +46,25 @@ public class StudentCourse implements Parcelable {
 	@SerializedName("inscricoes")
 	private final SubjectEntry[] subjectEntries;
 
-	public StudentCourse(String courseId, String courseType,
-			String courseTypeDesc, String courseName, String firstYear,
-			String firstDate, String degreeId, String currentYear,
-			String state, String stateName, String stateBegin, String stateEnd,
-			String placeName, String placeAcronym, String curriculumYear,
-			String average, SubjectEntry[] subjectEntries) {
+	public StudentCourse(String courseId, String courseAcronym, SubjectEntry[] subjectEntries) {
 		this.courseId = courseId;
-		this.courseType = courseType;
-		this.courseTypeDesc = courseTypeDesc;
-		this.courseName = courseName;
-		this.firstYear = firstYear;
-		this.firstDate = firstDate;
-		this.degreeId = degreeId;
-		this.currentYear = currentYear;
-		this.state = state;
-		this.stateName = stateName;
-		this.stateBegin = stateBegin;
-		this.stateEnd = stateEnd;
-		this.placeName = placeName;
-		this.placeAcronym = placeAcronym;
-		this.curriculumYear = curriculumYear;
-		this.average = average;
+		this.courseType = null;
+		this.courseTypeDesc = null;
+		this.courseAcronym = courseAcronym;
+		this.courseName = null;
+		this.courseNameEn = null;
+		this.firstYear = null;
+		this.firstDate = null;
+		this.degreeId = null;
+		this.currentYear = null;
+		this.state = null;
+		this.stateName = null;
+		this.stateBegin = null;
+		this.stateEnd = null;
+		this.placeName = null;
+		this.placeAcronym = null;
+		this.curriculumYear = null;
+		this.average = null;
 		this.subjectEntries = subjectEntries;
 	}
 
@@ -81,6 +82,14 @@ public class StudentCourse implements Parcelable {
 
 	public String getCourseName() {
 		return courseName;
+	}
+
+	public String getCourseAcronym() {
+		return courseAcronym;
+	}
+
+	public String getCourseNameEn() {
+		return courseNameEn;
 	}
 
 	public String getFirstYear() {
@@ -171,7 +180,9 @@ public class StudentCourse implements Parcelable {
 		ParcelUtils.writeString(dest, courseId);
 		ParcelUtils.writeString(dest, courseType);
 		ParcelUtils.writeString(dest, courseTypeDesc);
+		ParcelUtils.writeString(dest, courseAcronym);
 		ParcelUtils.writeString(dest, courseName);
+		ParcelUtils.writeString(dest, courseNameEn);
 		ParcelUtils.writeString(dest, firstYear);
 		ParcelUtils.writeString(dest, firstDate);
 		ParcelUtils.writeString(dest, degreeId);
@@ -184,14 +195,20 @@ public class StudentCourse implements Parcelable {
 		ParcelUtils.writeString(dest, placeAcronym);
 		ParcelUtils.writeString(dest, curriculumYear);
 		ParcelUtils.writeString(dest, average);
-		dest.writeParcelableArray(subjectEntries, flags);
+		dest.writeInt(subjectEntries != null ? 1 : 0);
+		if (subjectEntries != null) {
+			dest.writeInt(subjectEntries.length);
+			dest.writeParcelableArray(subjectEntries, flags);
+		}
 	}
 
 	private StudentCourse(Parcel in) {
 		courseId = ParcelUtils.readString(in);
 		courseType = ParcelUtils.readString(in);
 		courseTypeDesc = ParcelUtils.readString(in);
+		courseAcronym= ParcelUtils.readString(in);
 		courseName = ParcelUtils.readString(in);
+		courseNameEn = ParcelUtils.readString(in);
 		firstYear = ParcelUtils.readString(in);
 		firstDate = ParcelUtils.readString(in);
 		degreeId = ParcelUtils.readString(in);
@@ -204,11 +221,13 @@ public class StudentCourse implements Parcelable {
 		placeAcronym = ParcelUtils.readString(in);
 		curriculumYear = ParcelUtils.readString(in);
 		average = ParcelUtils.readString(in);
-		subjectEntries = (SubjectEntry[]) in
-				.readParcelableArray(SubjectEntry.class.getClassLoader());
+		if (in.readInt() == 1) {
+			subjectEntries = new SubjectEntry[in.readInt()];
+			in.readTypedArray(subjectEntries, SubjectEntry.CREATOR);
+		} else
+			subjectEntries = null;
 	}
 
-	
 	public static final Parcelable.Creator<StudentCourse> CREATOR = new Parcelable.Creator<StudentCourse>() {
 		public StudentCourse createFromParcel(Parcel in) {
 			return new StudentCourse(in);

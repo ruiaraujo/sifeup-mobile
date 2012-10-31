@@ -16,21 +16,18 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.util.List;
-
 import org.acra.ACRA;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.datatypes.YearsTuition;
+import pt.up.beta.mobile.datatypes.PaymentTypology;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -39,7 +36,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
+public class TuitionLoader extends AsyncTaskLoader<PaymentTypology[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -48,12 +45,12 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	List<YearsTuition> yearsTuitions;
+	PaymentTypology[] paymentTypologys;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public List<YearsTuition> loadInBackground() {
+	public PaymentTypology[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -67,11 +64,9 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 				try {
-					return YearsTuition
-							.parseListJSON(new JSONObject(
-									cursor.getString(cursor
-											.getColumnIndex(SigarraContract.TuitionColumns.CONTENT))));
-				} catch (JSONException e) {
+					return new Gson().fromJson(cursor.getString(cursor
+											.getColumnIndex(SigarraContract.TuitionColumns.CONTENT)),PaymentTypology[].class);
+				} catch (Exception e) {
 					e.printStackTrace();
 					ACRA.getErrorReporter().handleSilentException(e);
 					ACRA.getErrorReporter().handleSilentException(
@@ -93,23 +88,17 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(List<YearsTuition> yearsTuitions) {
+	public void deliverResult(PaymentTypology[] paymentTypologys) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (yearsTuitions != null) {
-				yearsTuitions.clear();
+			if (paymentTypologys != null) {
+				paymentTypologys = null;
 			}
 			return;
 		}
-		final List<YearsTuition> oldYearsTuitions = this.yearsTuitions;
-		this.yearsTuitions = yearsTuitions;
+		this.paymentTypologys = paymentTypologys;
 		if (isStarted()) {
-			super.deliverResult(yearsTuitions);
-		}
-
-		if (oldYearsTuitions != null && oldYearsTuitions != yearsTuitions
-				&& oldYearsTuitions.size() != 0) {
-			oldYearsTuitions.clear();
+			super.deliverResult(paymentTypologys);
 		}
 	}
 
@@ -150,10 +139,10 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (yearsTuitions != null) {
-			deliverResult(yearsTuitions);
+		if (paymentTypologys != null) {
+			deliverResult(paymentTypologys);
 		}
-		if (takeContentChanged() || yearsTuitions == null) {
+		if (takeContentChanged() || paymentTypologys == null) {
 			forceLoad();
 		}
 	}
@@ -168,9 +157,9 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 	}
 
 	@Override
-	public void onCanceled(List<YearsTuition> yearsTuitions) {
-		if (yearsTuitions != null) {
-			yearsTuitions.clear();
+	public void onCanceled(PaymentTypology[] paymentTypologys) {
+		if (paymentTypologys != null) {
+			paymentTypologys = null;
 		}
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
@@ -188,8 +177,6 @@ public class TuitionLoader extends AsyncTaskLoader<List<YearsTuition>> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (yearsTuitions != null)
-			yearsTuitions.clear();
-		yearsTuitions = null;
+		paymentTypologys = null;
 	}
 }

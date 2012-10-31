@@ -1,54 +1,140 @@
 package pt.up.beta.mobile.ui.services.tuition;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.datatypes.Payment;
-import pt.up.beta.mobile.datatypes.YearsTuition;
+import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.datatypes.PaymentTypology;
+import pt.up.beta.mobile.loaders.TuitionLoader;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.widget.SimpleAdapter;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
-/**
- * A {@link ListFragment} showing a list of sessions.
- */
-public class TuitionFragment extends ListFragment {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-	public static final String CURRENT_YEAR = "current_year";
-	private YearsTuition currentYear;
+public class TuitionFragment extends BaseLoaderFragment implements
+		LoaderCallbacks<PaymentTypology[]> {
 
+	private ListView list;
+	private PaymentTypology[] history;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        currentYear = getArguments().getParcelable(CURRENT_YEAR);
-    }
-    
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        String[] from = new String[] {"name", "date", "amount", "debt"};
-        int[] to = new int[] { R.id.tuition_year_payment_name, R.id.tuition_year_payment_date, R.id.tuition_year_payment_amount, R.id.tuition_year_payment_to_pay};
-	    //prepare the list of all records
-        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();         
-        for(Payment p: currentYear.getPayments()){
-            HashMap<String, String> map = new HashMap<String, String>();
-        	map.put("name", p.getName());
-        	if(p.getDueDate()!=null)
-        		map.put("date", p.getDueDate().format3339(true));
-        	map.put("amount", Double.toString(p.getAmount())+"€");
-        	if(p.getAmountDebt()>0)
-        		map.put("debt", getString(R.string.lbl_still_to_pay)+": "+Double.toString(p.getAmount())+"€");
-            fillMaps.add(map);
-        }
-		 
-        // fill in the grid_item layout
-        setListAdapter( new SimpleAdapter(getActivity(), fillMaps, R.layout.list_item_tuition_year, from, to));
-		getListView().setClickable(false);
-		getListView().setFocusable(false);
-    }
-  
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		View root = inflater.inflate(R.layout.generic_list,
+				getParentContainer(), true);
+		list = (ListView) root.findViewById(R.id.generic_list);
+		return getParentContainer(); // this is mandatory.
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().getSupportLoaderManager().initLoader(0, null, this);
+	}
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.refresh_menu_items, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			onRepeat();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncTuitions(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
+	}
+	@Override
+	public Loader<PaymentTypology[]> onCreateLoader(int loaderId,
+			Bundle options) {
+		return new TuitionLoader(getActivity(),
+				SigarraContract.Tuition.CONTENT_URI,
+				SigarraContract.Tuition.COLUMNS,
+				SigarraContract.Tuition.PROFILE,
+				SigarraContract.Tuition.getTuitionSelectionArgs(AccountUtils
+						.getActiveUserName(getActivity())), null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<PaymentTypology[]> loader,
+			PaymentTypology[] yearsTuition) {
+		if (getActivity() == null)
+			return;
+		if (yearsTuition == null)
+			return;
+		history = yearsTuition;
+		String[] from = new String[] { "year", "paid", "to_pay" };
+		int[] to = new int[] { R.id.tuition_history_year,
+				R.id.tuition_history_paid, R.id.tuition_history_to_pay };
+		// prepare the list of all records
+		/*List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		for (YearsTuition y : history) {
+			HashMap<String, String> map = new HashMap<String, String>();
+
+			map.put(from[0], getString(R.string.lbl_year) + " " + y.getYear());
+			map.put(from[1],
+					getString(R.string.lbl_paid) + ": " + y.getTotal_paid()
+							+ "€");
+			if (y.getTotal_in_debt() > 0.0)
+				map.put(from[2], getString(R.string.lbl_still_to_pay) + ": "
+						+ y.getTotal_in_debt() + "€");
+			fillMaps.add(map);
+		}
+*/
+		// fill in the grid_item layout
+	//	list.setAdapter(new SimpleAdapter(getActivity(), fillMaps,
+		//		R.layout.list_item_tuition_history, from, to));
+		Log.i("Propinas", "List view loaded successfully");
+		setRefreshActionItemState(false);
+		showMainScreen();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<PaymentTypology[]> loader) {
+	}
 }

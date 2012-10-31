@@ -2,21 +2,21 @@ package pt.up.beta.mobile.sifeup;
 
 import org.acra.ACRA;
 
-import pt.up.beta.mobile.datatypes.Park;
+import pt.up.beta.mobile.datatypes.EmployeeMarkings;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
-public class ParkUtils {
-	private ParkUtils() {
+public class EmployeeUtils {
+	private EmployeeUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getParkReply( String code , 
-			ResponseCommand<Park> command, Context context) {
-		return new FetcherTask<Park>(command, new ParkParser(), context).execute(SifeupAPI
-				.getParkOccupationUrl(code));
+	public static AsyncTask<String, Void, ERROR_TYPE> getEmployeeMarkingsReply( String code , 
+			ResponseCommand<EmployeeMarkings[]> command, Context context) {
+		return new FetcherTask<EmployeeMarkings[]>(command, new EmployeeMarkingsParser(), context).execute(SifeupAPI
+				.getEmployeeMarkingsUrl(code));
 	}
 
 	/**
@@ -24,11 +24,11 @@ public class ParkUtils {
 	 * Collection exams.
 	 */
 
-	private static class ParkParser implements ParserCommand<Park> {
+	private static class EmployeeMarkingsParser implements ParserCommand<EmployeeMarkings[]> {
 
-		public Park parse(String page) {
+		public EmployeeMarkings[] parse(String page) {
 			try {
-				return new Gson().fromJson(page, Park.class);
+				return new Gson().fromJson(page,EmployeeMarkings[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
 				ACRA.getErrorReporter().handleSilentException(e);

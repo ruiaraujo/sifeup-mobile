@@ -1,5 +1,7 @@
 package pt.up.beta.mobile.datatypes;
 
+import java.lang.reflect.Array;
+
 import com.google.gson.annotations.SerializedName;
 
 import android.os.Parcel;
@@ -26,14 +28,24 @@ public class ResultsPage<T extends Parcelable> implements Parcelable {
 		page = in.readInt();
 		pageResults = in.readInt();
 		Class<T> c = null;
+		Parcelable.Creator<T> creator = null;
 		try {
 			c = (Class<T>) Class.forName(in.readString());
+			creator = (Parcelable.Creator<T>) c.getDeclaredField("CREATOR")
+					.get(null);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
 		}
-		if (c != null)
-			results = (T[]) in.readParcelableArray(c.getClassLoader());
-		else
+		if (c != null && creator != null) {
+			results = (T[]) Array.newInstance(c, in.readInt());
+			in.readTypedArray(results, creator);
+		} else
 			results = null;
 
 	}
@@ -65,6 +77,7 @@ public class ResultsPage<T extends Parcelable> implements Parcelable {
 		dest.writeInt(page);
 		dest.writeInt(pageResults);
 		dest.writeString(results.getClass().getName());
+		dest.writeInt(results.length);
 		dest.writeParcelableArray(results, flags);
 	}
 }

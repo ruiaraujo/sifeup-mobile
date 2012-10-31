@@ -18,9 +18,10 @@ import pt.up.beta.mobile.datatypes.SubjectFiles.Folder;
 import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.loaders.SubjectLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
@@ -47,6 +48,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -55,7 +57,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-public class SubjectDescriptionFragment extends BaseFragment implements
+public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 		OnPageChangeListener, LoaderCallbacks<Subject> {
 
 	public final static String SUBJECT_CODE = "pt.up.fe.mobile.ui.studentarea.SUBJECT_CODE";
@@ -151,12 +153,38 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			setRefreshActionItemState(true);
-			SigarraSyncAdapterUtils.syncSubject(
-					AccountUtils.getActiveUserName(getActivity()), code);
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncSubject(
+				AccountUtils.getActiveUserName(getActivity()), code);
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
 	}
 
 	/**
@@ -240,7 +268,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 2: {
-				if (subject.getTeachers().length != 0) {
+				if (subject.getTeachers() != null && subject.getTeachers().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView list = (ListView) root
@@ -282,7 +310,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 3: {
-				if (subject.getBibliography().length != 0) {
+				if (subject.getBibliography() != null && subject.getBibliography().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listBooks = (ListView) root
@@ -327,7 +355,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 4: {
-				if (subject.getSoftware().length != 0) {
+				if (subject.getSoftware() != null && subject.getSoftware().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listSoftware = (ListView) root
@@ -369,7 +397,7 @@ public class SubjectDescriptionFragment extends BaseFragment implements
 				break;
 			}
 			case 6: {
-				if (subject.getEvaluation().length != 0) {
+				if (subject.getEvaluation() != null && subject.getEvaluation().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					final ListView listEvaluation = (ListView) root

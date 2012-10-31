@@ -9,8 +9,9 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.loaders.NotificationsLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.ui.BaseFragment;
+import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -34,20 +36,19 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Ângela Igreja
  * 
  */
-public class NotificationsFragment extends BaseFragment implements
-		OnItemClickListener,
-		LoaderCallbacks<List<Notification>> {
+public class NotificationsFragment extends BaseLoaderFragment implements
+		OnItemClickListener, LoaderCallbacks<Notification[]> {
 
 	private ListView list;
 
-	private List<Notification> notifications;
+	private Notification[] notifications;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -69,10 +70,38 @@ public class NotificationsFragment extends BaseFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			SigarraSyncAdapterUtils.syncNotifications(AccountUtils.getActiveUserName(getActivity()));
+			onRepeat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRepeat() {
+		super.onRepeat();
+		setRefreshActionItemState(true);
+		SigarraSyncAdapterUtils.syncNotifications(AccountUtils
+				.getActiveUserName(getActivity()));
+
+	}
+
+	@Override
+	public void onError(ERROR_TYPE error) {
+		if (getActivity() == null)
+			return;
+		switch (error) {
+		case AUTHENTICATION:
+			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
+					Toast.LENGTH_LONG).show();
+			goLogin();
+			break;
+		case NETWORK:
+			showRepeatTaskScreen(getString(R.string.toast_server_error));
+			break;
+		default:
+			showEmptyScreen(getString(R.string.general_error));
+			break;
+		}
 	}
 
 	@Override
@@ -80,13 +109,13 @@ public class NotificationsFragment extends BaseFragment implements
 			long id) {
 		Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
 		i.putExtra(NotificationsDescActivity.NOTIFICATION,
-				notifications.get(position));
+				notifications[position]);
 		startActivity(i);
 
 	}
 
 	@Override
-	public Loader<List<Notification>> onCreateLoader(int arg0, Bundle arg1) {
+	public Loader<Notification[]> onCreateLoader(int arg0, Bundle arg1) {
 		return new NotificationsLoader(getActivity(),
 				SigarraContract.Notifcations.CONTENT_URI,
 				SigarraContract.Notifcations.COLUMNS,
@@ -98,13 +127,13 @@ public class NotificationsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Notification>> loader,
-			List<Notification> notifications) {
+	public void onLoadFinished(Loader<Notification[]> loader,
+			Notification[] notifications) {
 		if (getActivity() == null || notifications == null)
 			return;
 
 		this.notifications = notifications;
-		if (notifications.isEmpty()) {
+		if (notifications.length == 0) {
 			showEmptyScreen(getString(R.string.lb_no_notification));
 			setRefreshActionItemState(false);
 			return;
@@ -125,7 +154,7 @@ public class NotificationsFragment extends BaseFragment implements
 			map.put("subject", " " + n.getSubject());
 			map.put("date", " " + n.getDate());
 			map.put("designation", " " + n.getDesignation());
-			map.put("priority", " " + n.getPriorityString());
+			map.put("priority", " " + n.getPriority());
 			fillMaps.add(map);
 		}
 
@@ -138,7 +167,7 @@ public class NotificationsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Notification>> arg0) {
+	public void onLoaderReset(Loader<Notification[]> arg0) {
 
 	}
 }

@@ -141,6 +141,9 @@ public class RoomProfileFragment extends BaseFragment implements
 				TextView llItem = (TextView) mInflater.inflate(
 						R.layout.simple_list_item1, null);
 				llItem.setText(Html.fromHtml("<b>"+attr.getName() + ":</b> " + attr.getContent()));
+				llItem.setClickable(false);
+				llItem.setFocusable(false);
+				llItem.setFocusableInTouchMode(false);
 				attributesContainer.addView(llItem);
 			}
 		} else {

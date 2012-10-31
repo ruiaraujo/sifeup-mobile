@@ -2,11 +2,14 @@ package pt.up.beta.mobile.ui.profile;
 
 import java.util.List;
 
+import external.com.google.android.apps.iosched.util.UIUtils;
+
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.StudentCourse;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +85,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			if (convertView == null
 					|| convertView.getTag().toString().equals(NORMAL)) {
 				convertView = mInflater.inflate(
-						R.layout.list_item_programme_marker, parent,false);
+						R.layout.list_item_programme_marker, parent, false);
 				convertView.setTag(HEADER);
 			}
 			final TextView header = (TextView) convertView
@@ -93,7 +96,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			if (convertView == null
 					|| convertView.getTag().toString().equals(HEADER)) {
 				convertView = mInflater.inflate(R.layout.list_item_profile,
-						parent,false);
+						parent, false);
 				convertView.setTag(NORMAL);
 			}
 			final TextView title = (TextView) convertView
@@ -103,7 +106,12 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			switch (position % 5) {
 			case 1:
 				title.setText(R.string.profile_title_programme);
-				content.setText(courses[position / 5].getCourseName());
+				if (UIUtils.isLocalePortuguese()
+						|| TextUtils.isEmpty(courses[position / 5]
+								.getCourseNameEn()))
+					content.setText(courses[position / 5].getCourseName());
+				else
+					content.setText(courses[position / 5].getCourseNameEn());
 				break;
 			case 2:
 				title.setText(R.string.profile_title_status);

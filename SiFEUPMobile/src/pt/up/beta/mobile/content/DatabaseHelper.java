@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME="sigarra.db";
-	private static final int SCHEMA=29;
+	private static final int SCHEMA=1;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, SCHEMA);
@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		NotificationsTable.onCreate(db);
 		CanteensTable.onCreate(db);
 		LastSyncTable.onCreate(db);
+		TeachingServiceTable.onCreate(db);
 	}
 
 	@Override
@@ -40,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		NotificationsTable.onUpgrade(db, oldVersion, newVersion);
 		CanteensTable.onUpgrade(db, oldVersion, newVersion);
 		LastSyncTable.onUpgrade(db, oldVersion, newVersion);
+		TeachingServiceTable.onUpgrade(db, oldVersion, newVersion);
 	}
 
 }
