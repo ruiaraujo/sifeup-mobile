@@ -33,7 +33,7 @@ import com.commonsware.cwac.endless.EndlessAdapter;
  * server and shows them a list. When loading a list item launches the activity
  * ProfileActivity.
  * 
- * @author Ângela Igreja
+ * @author Angela Igreja
  * 
  */
 public class StudentsSearchFragment extends BaseFragment implements
@@ -44,10 +44,12 @@ public class StudentsSearchFragment extends BaseFragment implements
 	private ResultsPage<StudentSearchResult> resultPage;
 	private ListAdapter adapter;
 	private String query;
+	private String[] advancedSearchParameters;
 	private ListView list;
 	private int currentPage = 1;
 	private final static String REGEX_CODE = "^[0-9]*$";
-//TODO: implement the rest of the lifecycle
+
+	// TODO: implement the rest of the lifecycle
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -59,13 +61,22 @@ public class StudentsSearchFragment extends BaseFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		query = getArguments().getString(SearchManager.QUERY);
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		advancedSearchParameters = getArguments().getStringArray(
+				SearchManager.QUERY);
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getStudentsSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2], null,
+					advancedSearchParameters[3], this, getActivity());
+		else {
+			query = getArguments().getString(SearchManager.QUERY);
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getStudentsSearchReply(query, null, null,
+						null, null, this, getActivity());
+			else
+				task = SearchUtils.getStudentsSearchReply(null, query, null,
+						null, null, this, getActivity());
+		}
 	}
 
 	private boolean hasMoreResults() {
@@ -155,17 +166,27 @@ public class StudentsSearchFragment extends BaseFragment implements
 		@Override
 		protected boolean cacheInBackground() throws Exception {
 			final ResultsPage<StudentSearchResult> page;
-			if (query.matches(REGEX_CODE))
-				page = SearchUtils.getStudentsSearchByCodeReply(query,
-						++currentPage, getActivity());
-			else
-				page = SearchUtils.getStudentsSearchByNameReply(query,
-						++currentPage, getActivity());
+
+			if (advancedSearchParameters != null)
+				page = SearchUtils.getStudentsSearchReply(
+						advancedSearchParameters[0],
+						advancedSearchParameters[1],
+						advancedSearchParameters[2], null,
+						advancedSearchParameters[3], ++currentPage,
+						getActivity());
+			else {
+				if (query.matches(REGEX_CODE))
+					page = SearchUtils.getStudentsSearchReply(query, null,
+							null, null, null, ++currentPage, getActivity());
+				else
+					page = SearchUtils.getStudentsSearchReply(null, query,
+							null, null, null, ++currentPage, getActivity());
+			}
 			if (page == null)
 				return false;
 			for (StudentSearchResult s : page.getResults())
 				results.add(s);
-			if ( !hasMoreResults() || page.getResults().length == 0)
+			if (!hasMoreResults() || page.getResults().length == 0)
 				return false;
 			else
 				return true;
@@ -206,15 +227,21 @@ public class StudentsSearchFragment extends BaseFragment implements
 		}
 	}
 
-
 	protected void onRepeat() {
 		showLoadingScreen();
-		if (query.matches(REGEX_CODE))
-			task = SearchUtils.getStudentSearchByCodeReply(query, this,
-					getActivity());
-		else
-			task = SearchUtils.getStudentsSearchByNameReply(query, this,
-					getActivity());
+		if (advancedSearchParameters != null)
+			task = SearchUtils.getStudentsSearchReply(
+					advancedSearchParameters[0], advancedSearchParameters[1],
+					advancedSearchParameters[2], null,
+					advancedSearchParameters[3], this, getActivity());
+		else {
+			if (query.matches(REGEX_CODE))
+				task = SearchUtils.getStudentsSearchReply(query, null, null,
+						null, null, this, getActivity());
+			else
+				task = SearchUtils.getStudentsSearchReply(null, query, null,
+						null, null, this, getActivity());
+		}
 	}
 
 }

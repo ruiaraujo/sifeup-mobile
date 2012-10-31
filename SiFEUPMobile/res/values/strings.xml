@@ -365,5 +365,25 @@
     <!-- CONTACTS INTEGRATION -->
     <string name="action_view_profile">View profile</string>
     <string name="action_view_schedule">View schedule</string>
+    
+    
+    <!-- *************************************************************************************** -->
+    <!-- ADVANCED SEARCH -->
+    
+    <!-- STUDENTS -->
+    <string name="bt_search">Search</string>
+    <string name="lb_student_code">Code:</string>
+    <string name="lb_student_name">Name:</string>
+    <string name="lb_student_email">Email:</string>
+    <string name="lb_student_first_year">First Year:</string>
+	<string name="hint_student_code">Code</string>
+    <string name="hint_student_name">Name</string>
+    <string name="hint_student_email">Email</string>
+    <string name="hint_student_first_year">First Year</string>
+    
+    <!--Employee -->
+    <string name="lb_employee_acronym">Acronym</string>
+    <string name="hint_employee_acronym">Acronym</string>
 
+    
 </resources>

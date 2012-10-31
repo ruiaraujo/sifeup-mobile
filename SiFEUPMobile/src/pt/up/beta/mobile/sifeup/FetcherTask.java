@@ -33,13 +33,10 @@ public class FetcherTask<T> extends
 	}
 
 	protected ERROR_TYPE doInBackground(String... pages) {
-		String page = "";
 		try {
-			if (pages.length < 1)
-				return ERROR_TYPE.GENERAL;
 			if (isCancelled())
 				return null;
-			page = SifeupAPI.getReply(pages[0],
+			final String page = SifeupAPI.getReply(pages[0],
 					AccountUtils.getAuthToken(context), context);
 			result = parser.parse(page);
 		} catch (OperationCanceledException e) {
