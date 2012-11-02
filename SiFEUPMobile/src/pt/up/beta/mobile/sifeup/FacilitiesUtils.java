@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import pt.up.beta.mobile.datatypes.RoomProfile;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -198,19 +196,16 @@ public class FacilitiesUtils {
 			// params comes from the execute() call: params[0] is the url.
 			try {
 				bitmap = SifeupAPI.downloadBitmap(params[0],
-						AccountUtils.getAuthToken(context), context);
+						AccountUtils.getActiveAccount(context), context);
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
 				return ERROR_TYPE.AUTHENTICATION;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return ERROR_TYPE.NETWORK;
-			} catch (OperationCanceledException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-				return ERROR_TYPE.AUTHENTICATION;
-			} catch (AuthenticatorException e) {
-				e.printStackTrace();
-				return ERROR_TYPE.AUTHENTICATION;
+				return ERROR_TYPE.GENERAL;
 			}
 			return null;
 		}

@@ -13,8 +13,6 @@ import pt.up.beta.mobile.datatypes.RoomSearchResult;
 import pt.up.beta.mobile.datatypes.StudentSearchResult;
 import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -68,12 +66,13 @@ public class SearchUtils {
 
 	/* Get ResultsPage */
 	public static ResultsPage<SubjectSearchResult> getSubjectsSearchReply(
-			String code, String name,
-			String acronym, String year, int page, Context context) {
+			String code, String name, String acronym, String year, int page,
+			Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(
-				getJson(SifeupAPI.getSubjectsSearchUrl(encode(code), encode(name),
-						encode(acronym), encode(year), page), context),
+				getJson(SifeupAPI.getSubjectsSearchUrl(encode(code),
+						encode(name), encode(acronym), encode(year), page),
+						context),
 				new TypeToken<ResultsPage<SubjectSearchResult>>() {
 				}.getType());
 	}
@@ -117,13 +116,9 @@ public class SearchUtils {
 	 */
 	private static String getJson(String url, Context context) {
 		try {
-			return SifeupAPI.getReply(url, AccountUtils.getAuthToken(context),
-					context);
+			return SifeupAPI.getReply(url,
+					AccountUtils.getActiveAccount(context), context);
 		} catch (AuthenticationException e) {
-			e.printStackTrace();
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();

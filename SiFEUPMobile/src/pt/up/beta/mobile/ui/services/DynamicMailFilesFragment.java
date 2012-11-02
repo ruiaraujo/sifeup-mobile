@@ -141,8 +141,9 @@ public class DynamicMailFilesFragment extends BaseFragment implements
 							.getDownloadMailFilesUrl(file.getCode(),
 									AccountUtils
 											.getActiveUserCode(getActivity())),
-							file.getName(), null, 0, AccountUtils
-									.getAuthToken(getActivity())));
+							file.getName(), null, 0, AccountUtils.getAuthToken(
+									getActivity(), AccountUtils
+											.getActiveAccount(getActivity()))));
 		} catch (OperationCanceledException e) {
 			e.printStackTrace();
 		} catch (AuthenticatorException e) {

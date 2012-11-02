@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.apache.http.auth.AuthenticationException;
 
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -37,21 +35,19 @@ public class FetcherTask<T> extends
 			if (isCancelled())
 				return null;
 			final String page = SifeupAPI.getReply(pages[0],
-					AccountUtils.getAuthToken(context), context);
+					AccountUtils.getActiveAccount(context), context);
 			result = parser.parse(page);
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-			return ERROR_TYPE.AUTHENTICATION;
-		} catch (AuthenticatorException e) {
-			e.printStackTrace();
-			return ERROR_TYPE.AUTHENTICATION;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return ERROR_TYPE.NETWORK;
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 			return ERROR_TYPE.AUTHENTICATION;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ERROR_TYPE.GENERAL;
 		}
+
 
 		return null;
 	}

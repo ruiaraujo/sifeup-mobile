@@ -33,8 +33,7 @@ public class AccountUtils {
 		if (!TextUtils.isEmpty(activeUser)) {
 			mAccount = new Account(activeUser, Constants.ACCOUNT_TYPE);
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
 
@@ -42,35 +41,23 @@ public class AccountUtils {
 		return mAccount == null || mAccountManager == null;
 	}
 
-	public static String renewAuthToken(final Context context, String authToken)
-			throws OperationCanceledException, AuthenticatorException,
-			IOException {
+	public static String renewAuthToken(final Context context,
+			final Account account) throws OperationCanceledException,
+			AuthenticatorException, IOException {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
-		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, authToken);
-		return getAuthToken(context);
+		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
+				getAuthToken(context, account));
+		return getAuthToken(context, account);
 	}
-	
 
-	public static String renewAuthToken(final Context context, final Account account)
-			throws OperationCanceledException, AuthenticatorException,
-			IOException {
+	public static String getAuthToken(final Context context,
+			final Account account) throws OperationCanceledException,
+			AuthenticatorException, IOException {
 		if (needsInit()) {
-			if ( !init(context) ) 
-				return null;
-		}
-		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, getAuthToken(context, account));
-		return getAuthToken(context);
-	}
-	
-
-	public static String getAuthToken(final Context context, final Account account)
-			throws OperationCanceledException, AuthenticatorException,
-			IOException {
-		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		final String authToken = mAccountManager.peekAuthToken(account,
@@ -80,31 +67,14 @@ public class AccountUtils {
 					Constants.AUTHTOKEN_TYPE, false);
 		return authToken;
 	}
-	
 
-	public static String getAuthToken(final Context context)
-			throws OperationCanceledException, AuthenticatorException,
-			IOException {
-		if (needsInit()) {
-			if ( !init(context) ) 
-				return null;
-		}
-		final String authToken = mAccountManager.peekAuthToken(mAccount,
-				Constants.ACCOUNT_TYPE);
-		if (authToken == null)
-			return mAccountManager.blockingGetAuthToken(mAccount,
-					Constants.AUTHTOKEN_TYPE, false);
-		return authToken;
-	}
-	
 	public static Account getActiveAccount(final Context context) {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		return mAccount;
 	}
-
 
 	/**
 	 * Get Login Code
@@ -113,7 +83,7 @@ public class AccountUtils {
 	 */
 	public static String getActiveUserCode(final Context context) {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		return mAccountManager.getUserData(mAccount, Constants.USER_CODE);
@@ -126,7 +96,7 @@ public class AccountUtils {
 	 */
 	public static String getActiveUserType(final Context context) {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		return mAccountManager.getUserData(mAccount, Constants.USER_TYPE);
@@ -139,7 +109,7 @@ public class AccountUtils {
 	 */
 	public static String getActiveUserName(final Context context) {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		return mAccount.name;
@@ -152,7 +122,7 @@ public class AccountUtils {
 	 */
 	public static String getActiveUserPassword(final Context context) {
 		if (needsInit()) {
-			if ( !init(context) ) 
+			if (!init(context))
 				return null;
 		}
 		return mAccountManager.getPassword(mAccount);

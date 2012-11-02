@@ -268,7 +268,8 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 				break;
 			}
 			case 2: {
-				if (subject.getTeachers() != null && subject.getTeachers().length != 0) {
+				if (subject.getTeachers() != null
+						&& subject.getTeachers().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView list = (ListView) root
@@ -310,7 +311,8 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 				break;
 			}
 			case 3: {
-				if (subject.getBibliography() != null && subject.getBibliography().length != 0) {
+				if (subject.getBibliography() != null
+						&& subject.getBibliography().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listBooks = (ListView) root
@@ -355,7 +357,8 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 				break;
 			}
 			case 4: {
-				if (subject.getSoftware() != null && subject.getSoftware().length != 0) {
+				if (subject.getSoftware() != null
+						&& subject.getSoftware().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					ListView listSoftware = (ListView) root
@@ -397,7 +400,8 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 				break;
 			}
 			case 6: {
-				if (subject.getEvaluation() != null && subject.getEvaluation().length != 0) {
+				if (subject.getEvaluation() != null
+						&& subject.getEvaluation().length != 0) {
 					root = layoutInflater.inflate(R.layout.generic_list,
 							viewPager, false);
 					final ListView listEvaluation = (ListView) root
@@ -525,7 +529,10 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 																		toDownload
 																				.getSize(),
 																		AccountUtils
-																				.getAuthToken(getActivity())));
+																				.getAuthToken(
+																						getActivity(),
+																						AccountUtils
+																								.getActiveAccount(getActivity()))));
 									} catch (OperationCanceledException e) {
 										e.printStackTrace();
 									} catch (AuthenticatorException e) {

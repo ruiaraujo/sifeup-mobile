@@ -705,8 +705,9 @@ public class SifeupAPI {
 	}
 
 	public static String getSubjectOtherOccuencesUrl(String code) {
-		return SIGARRA_HOST + WebServices.SUBJECT + SubjectOtherOccurrences.NAME
-				+ WEBSERVICE_SEP + SubjectOtherOccurrences.CODE + EQUALS + code;
+		return SIGARRA_HOST + WebServices.SUBJECT
+				+ SubjectOtherOccurrences.NAME + WEBSERVICE_SEP
+				+ SubjectOtherOccurrences.CODE + EQUALS + code;
 	}
 
 	public static String getSubjectClassesUrl(String code) {
@@ -790,8 +791,8 @@ public class SifeupAPI {
 	 * @return
 	 */
 	public static String getMailFilesUrl(String code) {
-		return SIGARRA_HOST + WebServices.MAIL + MailFiles.NAME + WEBSERVICE_SEP
-				+ MailFiles.CODE + EQUALS + code;
+		return SIGARRA_HOST + WebServices.MAIL + MailFiles.NAME
+				+ WEBSERVICE_SEP + MailFiles.CODE + EQUALS + code;
 	}
 
 	public static String getDownloadMailFilesUrl(String code, String name) {
@@ -998,26 +999,6 @@ public class SifeupAPI {
 		return null;
 	}
 
-	public static String getReply(String strUrl, String cookie, Context context)
-			throws IOException, AuthenticationException {
-		try {
-			try {
-				initSSLContext(context);
-				return getReply(strUrl, cookie);
-			} catch (AuthenticationException e) {
-				e.printStackTrace();
-				return getReply(strUrl,
-						AccountUtils.renewAuthToken(context, cookie));
-			}
-
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
-			e.printStackTrace();
-		}
-		throw new AuthenticationException();
-	}
-
 	public static String getReply(String strUrl, Account account,
 			Context context) throws IOException, AuthenticationException {
 		try {
@@ -1120,26 +1101,6 @@ public class SifeupAPI {
 				return new String[] { page, cookie };
 		}
 		throw new AuthenticationException("No authentication");
-	}
-
-	public static Bitmap downloadBitmap(String strUrl, String cookie,
-			Context context) throws IOException, AuthenticationException {
-		try {
-			try {
-				initSSLContext(context);
-				return downloadBitmap(strUrl, cookie);
-			} catch (AuthenticationException e) {
-				e.printStackTrace();
-				return downloadBitmap(strUrl,
-						AccountUtils.renewAuthToken(context, cookie));
-			}
-
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
-			e.printStackTrace();
-		}
-		throw new AuthenticationException();
 	}
 
 	public static Bitmap downloadBitmap(String strUrl, Account account,

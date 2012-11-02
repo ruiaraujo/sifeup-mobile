@@ -9,8 +9,6 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -118,7 +116,7 @@ public class AuthenticationUtils {
 			try {
 				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(
 						strings[0], strings[1], strings[2], strings[3],
-						strings[4]), AccountUtils.getAuthToken(context), context);
+						strings[4]), AccountUtils.getActiveAccount(context), context);
 				int error = SifeupAPI.JSONError(page);
 				switch (error) {
 				case SifeupAPI.Errors.ERROR:
@@ -147,12 +145,6 @@ public class AuthenticationUtils {
 									+ AccountUtils.getActiveUserCode(null) + "\n\n"));
 				}
 				e.printStackTrace();
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-				return "";
-			} catch (AuthenticatorException e) {
-				e.printStackTrace();
-				return "";
 			} catch (IOException e) {
 				e.printStackTrace();
 				return "Net";
