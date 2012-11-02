@@ -22,10 +22,7 @@ import android.widget.TextView;
  */
 
 /*
- * SUBJECT_CODE 
- * SUBJECT_NAME 
- * SUBJECT_ACRONYM 
- * SUBJECT_YEAR
+ * SUBJECT_CODE SUBJECT_NAME SUBJECT_ACRONYM SUBJECT_YEAR
  */
 public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 		OnClickListener {
@@ -41,16 +38,16 @@ public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 
 		name = (EditText) root.findViewById(R.id.name);
 		code = (EditText) root.findViewById(R.id.code);
-		
+
 		acronymLabel = (TextView) root.findViewById(R.id.email_label);
-		acronymLabel.setText("Acronym:");
+		acronymLabel.setText(R.string.lb_employee_acronym);
 		acronym = (EditText) root.findViewById(R.id.email);
-		acronym.setHint("Acronym");
+		acronym.setHint(R.string.hint_employee_acronym);
 
 		yearLabel = (TextView) root.findViewById(R.id.first_year_label);
-		yearLabel.setText("Year:");
+		yearLabel.setText(R.string.lb_year);
 		year = (EditText) root.findViewById(R.id.first_year);
-		year.setHint("Year");
+		year.setHint(R.string.hint_year);
 
 		Button searchButton = (Button) root.findViewById(R.id.search);
 
@@ -59,18 +56,22 @@ public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 		return getParentContainer();
 	}
 
-	
 	@Override
 	public void onClick(View v) {
 
-		final String nameStr = TextUtils.isEmpty(name.getText())?null:name.getText().toString();
-		final String codeStr = TextUtils.isEmpty(code.getText())?null:code.getText().toString();
-		final String acronymStr = TextUtils.isEmpty(acronym.getText())?null:acronym.getText().toString();
-		final String yearStr = TextUtils.isEmpty(year.getText())?null:year.getText().toString();
-			
+		final String nameStr = TextUtils.isEmpty(name.getText()) ? null : name
+				.getText().toString();
+		final String codeStr = TextUtils.isEmpty(code.getText()) ? null : code
+				.getText().toString();
+		final String acronymStr = TextUtils.isEmpty(acronym.getText()) ? null
+				: acronym.getText().toString();
+		final String yearStr = TextUtils.isEmpty(year.getText()) ? null : year
+				.getText().toString();
+
 		Fragment searchFrag = new StudentsSearchFragment();
 		final Bundle args = new Bundle();
-		args.putStringArray(SearchManager.QUERY, new String[]{nameStr, codeStr, acronymStr, yearStr});
+		args.putStringArray(SearchManager.QUERY, new String[] { nameStr,
+				codeStr, acronymStr, yearStr });
 
 		searchFrag.setArguments(args);
 		FragmentTransaction ft = getActivity().getSupportFragmentManager()

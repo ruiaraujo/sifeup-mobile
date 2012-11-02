@@ -383,9 +383,11 @@
     <string name="hint_student_first_year">First Year</string>
     
     <!--Employee -->
-    <string name="lb_employee_acronym">Acronym</string>
+    <string name="lb_employee_acronym">Acronym:</string>
     <string name="hint_employee_acronym">Acronym</string>
     
+    <string name="lb_year">Year:</string>
+    <string name="hint_year">Year</string>
     
     <string name="title_advanced_search_students">Students Search</string>
     <string name="title_advanced_search_employees">Employees Search</string>
