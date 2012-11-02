@@ -4,6 +4,7 @@ package pt.up.beta.mobile.ui.services;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
+import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,9 +49,13 @@ public class EmployeeServicesFragment extends Fragment {
 					break;
 				case 1:
 					activity.openActivityOrFragment(new Intent(getActivity(),
-							ChangePasswordActivity.class));
+							CurrentAccountActivity.class));
 					break;
 				case 2:
+					activity.openActivityOrFragment(new Intent(getActivity(),
+							ChangePasswordActivity.class));
+					break;
+				case 3:
 					activity.openActivityOrFragment(new Intent(getActivity(),
 							DynamicMailFilesActivity.class));
 					break;
@@ -75,6 +80,7 @@ public class EmployeeServicesFragment extends Fragment {
 		// Sample data set. children[i] contains the children (String[]) for
 		// groups[i].
 		private String[] groups = { getString(R.string.btn_printing),
+				getString(R.string.btn_current_account),
 				getString(R.string.btn_change_password),
 				getString(R.string.btn_dynamic_mail_files) };
 		private String[][] children = { {}, {}, {} };

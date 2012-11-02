@@ -228,7 +228,7 @@
 
     <!-- Tuition -->
     <string name="title_tuition">Payments</string>
-    <string name="btn_tuition">Tuition</string>
+    <string name="btn_current_account">Current Account</string>
     <string name="title_tuition_history">Tuition History</string>
     <string name="lbl_year">Year </string>
     <string name="lbl_paid">Paid</string>
@@ -244,6 +244,7 @@
     <string name="lbl_tuition_ref_detail_amount">Amount</string>
     <string name="lbl_tuition_ref_detail_date_start">Start Date</string>
     <string name="lbl_tuition_ref_detail_date_end">End Date</string>
+    <string name="lbl_date">%1$s to %2$s</string>
     <string name="label_no_tuition_ref">There are no available references.</string>
 
     <!-- Change Password -->

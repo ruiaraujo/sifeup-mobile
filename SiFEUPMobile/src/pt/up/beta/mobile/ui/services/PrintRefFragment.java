@@ -57,7 +57,7 @@ public class PrintRefFragment extends BaseFragment implements
 		valor = (TextView) root.findViewById(R.id.tuition_ref_detail_amount);
 		dataFim = (TextView) root
 				.findViewById(R.id.tuition_ref_detail_date_end);
-		root.findViewById(R.id.tableRow4).setVisibility(View.GONE);
+		root.findViewById(R.id.tableRow5).setVisibility(View.GONE);
 
 		return getParentContainer(); // mandatory
 

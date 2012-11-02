@@ -1,13 +1,13 @@
 [
 {
-	"code":1341,
+	"code":1401,
 	"namePt":"Edifício A (Administração)",
 	"nameEn":"Building A (Administração)",
 	"floors":[-1,0,1,2,3],
-	"coords"=[122,224,151,224,151,229,167,233,167,238,180,242,172,270,174,270,172,275,187,278,184,294,135,288,139,264,152,265,155,252,151,251,151,254,121,254]
+	"coords"=[122,224,151,224,151,229,167,233,167,238,180,242,172,270,174,270,172,275,187,278,184,294,141,288,149,264,152,265,155,252,151,251,151,254,121,254]
 },
 {
-	"code":1344,
+	"code":1404,
 	"namePt":"Edifício B (Aulas) - Bloco I",
 	"nameEn":"Building B (Aulas) - Bloco I",
 	"floors":[0],
@@ -15,15 +15,15 @@
 },
 
 {
-	"code":1347,
+	"code":1407,
 	"namePt":"Edifício B (Aulas) - Bloco II",
 	"nameEn":"Building B (Aulas) - Bloco II",
 	"floors":[0,1,2,3,4],
-	"coords"=[438,331,430,329,430,327,384,313,383,317,363,312,360,326,371,329,366,351,386,356,393,329,415,335,408,362,428,368]
+	"coords"=[438,331,430,329,430,327,384,314,383,317,363,312,360,326,371,329,366,351,386,356,393,329,415,335,408,362,428,368]
 },
 
 {
-	"code":1345,
+	"code":1405,
 	"namePt":"Edifício B (Aulas) - Bloco III",
 	"nameEn":"Building B (Aulas) - Bloco III",
 	"floors":[0,1,2,3,4],
@@ -31,7 +31,7 @@
 },
 
 {
-	"code":1346,
+	"code":1406,
 	"namePt":"Edifício B (Aulas) - Bloco IV",
 	"nameEn":"Building B (Aulas) - Bloco IV",
 	"floors":[-1,0,1,2,3,4],
@@ -39,7 +39,7 @@
 },
 
 {
-	"code":1348,
+	"code":1408,
 	"namePt":"Edifício C (Biblioteca)",
 	"nameEn":"Building C (Biblioteca)",
 	"floors":[-1,0,1,2,3,4,5,6,7],
@@ -47,138 +47,138 @@
 },
 
 {
-	"code":1349,
+	"code":1409,
 	"namePt":"Edifício D (CICA)",
 	"nameEn":"Building D (CICA)",
 	"floors":[-1,0,1,2],
 	"coords"=[434,260,434,260,449,265,441,293,435,291,424,294,424,264,435,268]
 },
 {
-	"code":1350,
+	"code":1410,
 	"namePt":"Edifício E (Química)",
 	"nameEn":"Building E (Química)",
 	"floors":[-1,0,1,2,3,4,5],
 	"coords"=[269,240,269,259,225,259,225,247,216,247,216,191,227,191,227,195,229,195,229,191,240,191,240,240]
 },
 {
-	"code":1351,
+	"code":1411,
 	"namePt":"Edifício F (Minas e Metalurgia)",
 	"nameEn":"Building F (Minas e Metalurgia)",
 	"floors":[-1,0,1,2,3,4,5],
 	"coords"=[270,191,270,259,293,259,293,191,282,191,282,195,279,195,279,191]
 },
 {
-	"code":1351,
+	"code":1411,
 	"namePt":"Edifício F (Minas e Metalurgia)",
 	"nameEn":"Building F (Minas e Metalurgia)",
 	"floors":[-1,0,1,2,3,4,5],
 	"coords"=[292,175,282,175,282,165,284,165,284,162,290,162,290,165,293,165,293,174]
 },
 {
-	"code":1352,
+	"code":1412,
 	"namePt":"Edifício G (Civil)",
 	"nameEn":"Building G (Civil)",
 	"floors":[0,1,2,3,4,5],
-	"coords"=[313,191,313,240,294,240,294,259,380,259,380,240,359,240,359,206,374,206,374,195,337,195,337,191]
+	"coords"=[314,191,314,240,294,240,294,259,380,259,380,240,359,240,359,206,374,206,374,195,337,195,337,191]
 },
 {
-	"code":1353,
+	"code":1413,
 	"namePt":"Edifício H (Civil)",
 	"nameEn":"Building H (Civil)",
 	"floors":[0,1,2,3,4],
-	"coords"=[382,106,382,175,374,175,374,180,313,180,313,106]
+	"coords"=[382,106,382,175,374,175,374,180,314,180,314,106]
 },
 {
-	"code":1354,
+	"code":1414,
 	"namePt":"Edifício I (Electrotecnia)",
 	"nameEn":"Building I (Electrotecnia)",
 	"floors":[-1,0,1,2,3,4],
 	"coords"=[381,259,435,259,435,247,437,247,437,246,448,246,448,191,439,191,439,195,437,195,437,191,426,191,426,240,405,240,405,191,394,191,394,195,391,195,391,191,381,191]
 },
 {
-	"code":1355,
+	"code":1415,
 	"namePt":"Edifício J (Electrotecnia)",
 	"nameEn":"Building J (Electrotecnia)",
 	"floors":[0,1,2,3,4],
-	"coords"=[383,160,383,176,381,176,381,180,427,180,427,137,410,137,410,159,418,159,418,160]
+	"coords"=[383,160,383,176,381,176,381,180,427,180,427,143,410,143,410,159,418,159,418,160]
 },
 {
-	"code":1367,
+	"code":1427,
 	"namePt":"Edifício K (Pavilhão FCNAUP)",
 	"nameEn":"Building K (Pavilhão FCNAUP)",
 	"floors":[0],
-	"coords"=[385,135,398,135,398,138,406,138,406,158,385,158]
+	"coords"=[385,135,398,135,398,148,406,148,406,158,385,158]
 },
 {
-	"code":1356,
+	"code":1416,
 	"namePt":"Edifício L (Mecânica)",
 	"nameEn":"Building L (Mecânica)",
 	"floors":[-1,0,1,2,3,4,5],
 	"coords"=[471,191,471,245,449,245,449,247,438,247,438,248,436,248,436,259,453,259,455,255,471,259,471,253,493,259,493,191,483,191,483,195,481,195,481,191]
 },
 {
-	"code":1361,
+	"code":1421,
 	"namePt":"Edifício M (Mecânica)",
 	"nameEn":"Building M (Mecânica)",
 	"floors":[0,1,2,3,4],
 	"coords"=[447,106,447,179,494,106,494,179]
 },
 {
-	"code":1357,
+	"code":1417,
 	"namePt":"Edifício N (Garagem)",
 	"nameEn":"Building N (Garagem)",
 	"floors":[-1],
 	"coords"=[455,255,472,260,472,258,508,268,495,294,490,292,487,304,453,294,453,290,448,289,455,260,454,260]
 },
 {
-	"code":1370,
+	"code":1430,
 	"namePt":"Edifício O (Cafetaria)",
 	"nameEn":"Building O (Cafetaria)",
 	"floors":[0],
 	"coords"=[171,207,171,215,155,215,155,218,152,218,152,209,155,209,155,206,151,206,151,192,198,192,198,195,207,195,205,211,195,207]
 },
 {
-	"code":1371,
+	"code":1431,
 	"namePt":"Edifício P (Cantina)",
 	"nameEn":"Building P (Cantina)",
 	"floors":[0,1],
 	"coords"=[411,432,374,467,403,498,397,504,403,510,437,480,434,477,444,468]
 },
 {
-	"code":1366,
+	"code":1426,
 	"namePt":"Edifício Q (Central de Gases)",
 	"nameEn":"Building Q (Central de Gases)",
 	"floors":[0],
 	"coords"=[270,165,277,165,277,176,270,176]
 },
 {
-	"code":1368,
+	"code":1428,
 	"namePt":"Edifício R (Laboratório de Engenharia do Ambiente)",
 	"nameEn":"Building R (Laboratório de Engenharia do Ambiente)",
 	"floors":[0],
-	"coords"=[283,138,292,138,292,162,281,162,281,137,283,137]
+	"coords"=[283,138,292,138,292,162,281,162,281,143,283,143]
 },
 {
-	"code":1360,
+	"code":1420,
 	"namePt":"Edifício S (INESC)",
 	"nameEn":"Building S (INESC)",
 	"floors":[-1,0,1,2,3,4,5],
 	"coords"=[403,22,403,67,358,67,358,56,360,56,360,45,366,45,366,40,390,32]
 },
 {
-	"code":1364,
+	"code":1424,
 	"namePt":"Edifício T (INEGI - Torre)",
 	"nameEn":"Building T (INEGI - Torre)",
 	"coords"=[476,40,487,40,504,46,498,67,476,61,478,53,476,53]
 },
 {
-	"code":1369,
+	"code":1429,
 	"namePt":"Edifício U (INEGI - Nave)",
 	"nameEn":"Building U (INEGI - Nave)",
 	"coords"=[434,3,464,3,464,17,471,17,471,67,434,67]
 },
 {
-	"code":1372,
+	"code":1432,
 	"namePt":"Edifício X (Associação de Estudantes)",
 	"nameEn":"Building X (Associação de Estudantes)",
 	"floors":[-1,0,1,2],

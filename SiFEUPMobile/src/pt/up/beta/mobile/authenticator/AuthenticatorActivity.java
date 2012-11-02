@@ -199,66 +199,85 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 	 *            the confirmCredentials result.
 	 */
 	@TargetApi(8)
-	private void finishLogin(User user) {
+	private void finishLogin(final User user) {
 
 		Log.i(TAG, "finishLogin()");
-		final Account account = new Account(mUsername, Constants.ACCOUNT_TYPE);
-		if (mRequestNewAccount) {
-			mAccountManager.addAccountExplicitly(account, mPassword, null);
-			// Set contacts sync for this account.
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final Account account = new Account(mUsername,
+						Constants.ACCOUNT_TYPE);
+				if (mRequestNewAccount) {
+					mAccountManager.addAccountExplicitly(account, mPassword,
+							null);
+					// Set contacts sync for this account.
 
-			String syncIntervalValue = PreferenceManager
-					.getDefaultSharedPreferences(getApplicationContext())
-					.getString(
-							getString(R.string.key_sync_interval),
-							Integer.toString(getResources().getInteger(
-									R.integer.default_sync_interval)));
+					String syncIntervalValue = PreferenceManager
+							.getDefaultSharedPreferences(
+									getApplicationContext()).getString(
+									getString(R.string.key_sync_interval),
+									Integer.toString(getResources().getInteger(
+											R.integer.default_sync_interval)));
 
-			String syncNotIntervalValue = PreferenceManager
-					.getDefaultSharedPreferences(getApplicationContext())
-					.getString(
-							getString(R.string.key_notifications_sync_interval),
-							Integer.toString(getResources().getInteger(
-									R.integer.default_sync_interval)));
+					String syncNotIntervalValue = PreferenceManager
+							.getDefaultSharedPreferences(
+									getApplicationContext())
+							.getString(
+									getString(R.string.key_notifications_sync_interval),
+									Integer.toString(getResources().getInteger(
+											R.integer.default_sync_interval)));
 
-			ContentResolver.setSyncAutomatically(account,
-					SigarraContract.CONTENT_AUTHORITY, true);
-			ContentResolver.setSyncAutomatically(account,
-					ContactsContract.AUTHORITY, true);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-				ContentResolver.addPeriodicSync(account,
-						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY,
-						Integer.parseInt(syncIntervalValue) * 3600);
-				ContentResolver.addPeriodicSync(account,
-						SigarraContract.CONTENT_AUTHORITY,
-						SigarraSyncAdapterUtils
-								.getNotificationsPeriodicBundle(), Integer
-								.parseInt(syncNotIntervalValue) * 3600);
-			} else {
-				PeriodicSyncReceiver.cancelPreviousAlarms(this, account,
-						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY);
-				PeriodicSyncReceiver.addPeriodicSync(this, account,
-						SigarraContract.CONTENT_AUTHORITY, Bundle.EMPTY,
-						Integer.parseInt(syncIntervalValue) * 3600);
+					ContentResolver.setSyncAutomatically(account,
+							SigarraContract.CONTENT_AUTHORITY, true);
+					ContentResolver.setSyncAutomatically(account,
+							ContactsContract.AUTHORITY, true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+						ContentResolver.addPeriodicSync(account,
+								SigarraContract.CONTENT_AUTHORITY,
+								Bundle.EMPTY,
+								Integer.parseInt(syncIntervalValue) * 3600);
+						ContentResolver.addPeriodicSync(account,
+								SigarraContract.CONTENT_AUTHORITY,
+								SigarraSyncAdapterUtils
+										.getNotificationsPeriodicBundle(),
+								Integer.parseInt(syncNotIntervalValue) * 3600);
+					} else {
+						PeriodicSyncReceiver
+								.cancelPreviousAlarms(getApplicationContext(),
+										account,
+										SigarraContract.CONTENT_AUTHORITY,
+										Bundle.EMPTY);
+						PeriodicSyncReceiver.addPeriodicSync(
+								getApplicationContext(), account,
+								SigarraContract.CONTENT_AUTHORITY,
+								Bundle.EMPTY,
+								Integer.parseInt(syncIntervalValue) * 3600);
 
-				PeriodicSyncReceiver.addPeriodicSync(this, account,
-						SigarraContract.CONTENT_AUTHORITY,
-						SigarraSyncAdapterUtils.getNotificationsBundle(),
-						Integer.parseInt(syncNotIntervalValue) * 3600);
+						PeriodicSyncReceiver.addPeriodicSync(
+								getApplicationContext(), account,
+								SigarraContract.CONTENT_AUTHORITY,
+								SigarraSyncAdapterUtils
+										.getNotificationsBundle(), Integer
+										.parseInt(syncNotIntervalValue) * 3600);
+					}
+				} else {
+					mAccountManager.setPassword(account, user.getPassword());
+				}
+				mAccountManager.setUserData(account, Constants.USER_TYPE,
+						user.getType());
+				mAccountManager.setUserData(account, Constants.USER_CODE,
+						user.getUser());
+				final Intent intent = new Intent();
+				intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
+				intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE,
+						Constants.ACCOUNT_TYPE);
+				setAccountAuthenticatorResult(intent.getExtras());
+				setResult(RESULT_OK, intent);
+				finish();
+				// TODO Auto-generated method stub
+
 			}
-		} else {
-			mAccountManager.setPassword(account, user.getPassword());
-		}
-		mAccountManager.setUserData(account, Constants.USER_TYPE,
-				user.getType());
-		mAccountManager.setUserData(account, Constants.USER_CODE,
-				user.getUser());
-		final Intent intent = new Intent();
-		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
-		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-		setAccountAuthenticatorResult(intent.getExtras());
-		setResult(RESULT_OK, intent);
-		finish();
+		}).start();
 	}
 
 	/**

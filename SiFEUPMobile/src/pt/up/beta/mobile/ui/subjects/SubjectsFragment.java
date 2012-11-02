@@ -13,6 +13,7 @@ import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseLoaderFragment;
+import pt.up.beta.mobile.utils.StringUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -170,7 +171,9 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return studentCourses[position].getCourseAcronym();
+			return studentCourses[position].getCourseAcronym() == null ? StringUtils
+					.getAcronym(studentCourses[position].getCourseName())
+					: studentCourses[position].getCourseAcronym();
 		}
 
 		public void destroyItem(View collection, int position, Object view) {
