@@ -860,8 +860,7 @@ public class SifeupAPI {
 		return SIGARRA_HOST + WebServices.SCHEDULE + StudentSchedule.NAME
 				+ WEBSERVICE_SEP + StudentSchedule.CODE + EQUALS + code
 				+ LINK_SEP + StudentSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end
-				+ "&pv_ano_lectivo=2012&pv_periodos=2";
+				+ LINK_SEP + StudentSchedule.WEEK_END + EQUALS + end;
 	}
 
 	/**
@@ -876,8 +875,7 @@ public class SifeupAPI {
 		return SIGARRA_HOST + WebServices.SCHEDULE + SubjectSchedule.NAME
 				+ WEBSERVICE_SEP + SubjectSchedule.CODE + EQUALS + code
 				+ LINK_SEP + SubjectSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end
-				+ "&pv_ano_lectivo=2012&pv_periodos=2";
+				+ LINK_SEP + SubjectSchedule.WEEK_END + EQUALS + end;
 	}
 
 	/**
@@ -893,8 +891,7 @@ public class SifeupAPI {
 		return SIGARRA_HOST + WebServices.SCHEDULE + TeacherSchedule.NAME
 				+ WEBSERVICE_SEP + TeacherSchedule.CODE + EQUALS + code
 				+ LINK_SEP + TeacherSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end
-				+ "&pv_ano_lectivo=2012&pv_periodos=2";
+				+ LINK_SEP + TeacherSchedule.WEEK_END + EQUALS + end;
 	}
 
 	/**
@@ -910,8 +907,7 @@ public class SifeupAPI {
 		return SIGARRA_HOST + WebServices.SCHEDULE + RoomSchedule.NAME
 				+ WEBSERVICE_SEP + RoomSchedule.CODE + EQUALS + code + LINK_SEP
 				+ RoomSchedule.WEEK_BEGIN + EQUALS + begin + LINK_SEP
-				+ RoomSchedule.WEEK_END + EQUALS + end
-				+ "&pv_ano_lectivo=2012&pv_periodos=2";
+				+ RoomSchedule.WEEK_END + EQUALS + end;
 	}
 
 	/**
@@ -927,8 +923,7 @@ public class SifeupAPI {
 		return SIGARRA_HOST + WebServices.SCHEDULE + ClassSchedule.NAME
 				+ WEBSERVICE_SEP + ClassSchedule.CODE + EQUALS + code
 				+ LINK_SEP + ClassSchedule.WEEK_BEGIN + EQUALS + begin
-				+ LINK_SEP + ClassSchedule.WEEK_END + EQUALS + end
-				+ "&pv_ano_lectivo=2012&pv_periodos=2";
+				+ LINK_SEP + ClassSchedule.WEEK_END + EQUALS + end;
 	}
 
 	public static String getRoomProfileUrl(String code) {
