@@ -22,14 +22,11 @@ import android.widget.TextView;
  */
 
 /*
- * EMPLOYEE_CODE 
- * EMPLOYEE_NAME
- * EMPLOYEE_EMAIL 
- * EMPLOYEE_ACRONYM
+ * EMPLOYEE_CODE EMPLOYEE_NAME EMPLOYEE_EMAIL EMPLOYEE_ACRONYM
  */
 public class EmployeesAdvanceSearchFragment extends BaseFragment implements
-OnClickListener {
-	
+		OnClickListener {
+
 	EditText name, code, email, acronym;
 	TextView acronymLabel;
 
@@ -43,27 +40,31 @@ OnClickListener {
 		code = (EditText) root.findViewById(R.id.code);
 		email = (EditText) root.findViewById(R.id.code);
 		acronymLabel = (TextView) root.findViewById(R.id.first_year_label);
-		acronymLabel.setText("Acronym:");
+		acronymLabel.setText(R.string.lb_employee_acronym);
 		acronym = (EditText) root.findViewById(R.id.first_year);
-		acronym.setHint("Acronym");
-		
+		acronym.setHint(R.string.hint_employee_acronym);
+
 		searchButton.setOnClickListener(this);
-		
+
 		return getParentContainer();
 	}
-	
-	
+
 	@Override
 	public void onClick(View v) {
 
-		final String nameStr = TextUtils.isEmpty(name.getText())?null:name.getText().toString();
-		final String codeStr = TextUtils.isEmpty(code.getText())?null:code.getText().toString();
-		final String emailStr = TextUtils.isEmpty(email.getText())?null:email.getText().toString();
-		final String acronymStr = TextUtils.isEmpty(acronym.getText())?null:acronym.getText().toString();
-			
+		final String nameStr = TextUtils.isEmpty(name.getText()) ? null : name
+				.getText().toString();
+		final String codeStr = TextUtils.isEmpty(code.getText()) ? null : code
+				.getText().toString();
+		final String emailStr = TextUtils.isEmpty(email.getText()) ? null
+				: email.getText().toString();
+		final String acronymStr = TextUtils.isEmpty(acronym.getText()) ? null
+				: acronym.getText().toString();
+
 		Fragment searchFrag = new StudentsSearchFragment();
 		final Bundle args = new Bundle();
-		args.putStringArray(SearchManager.QUERY, new String[]{nameStr, codeStr, emailStr, acronymStr});
+		args.putStringArray(SearchManager.QUERY, new String[] { nameStr,
+				codeStr, emailStr, acronymStr });
 
 		searchFrag.setArguments(args);
 		FragmentTransaction ft = getActivity().getSupportFragmentManager()
@@ -72,6 +73,5 @@ OnClickListener {
 				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 				.addToBackStack(null).commit();
 	}
-
 
 }

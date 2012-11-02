@@ -54,7 +54,6 @@ public class SubjectsSearchFragment extends BaseFragment implements
 	private ListView list;
 	private int currentPage = 1;
 	private String[] advancedSearchParameters;
-	private final static String REGEX_CODE = "^[0-9]*$";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,12 +116,8 @@ public class SubjectsSearchFragment extends BaseFragment implements
 					this, getActivity());
 		else {
 			query = getArguments().getString(SearchManager.QUERY);
-			if (query.matches(REGEX_CODE))
-				task = SearchUtils.getSubjectsSearchReply(query, null, null,
-						null, this, getActivity());
-			else
-				task = SearchUtils.getSubjectsSearchReply(null, query, null,
-						null, this, getActivity());
+			task = SearchUtils.getSubjectsSearchReply(null, query, null, null,
+					this, getActivity());
 		}
 	}
 
@@ -225,12 +220,8 @@ public class SubjectsSearchFragment extends BaseFragment implements
 						advancedSearchParameters[3], ++currentPage,
 						getActivity());
 			else {
-				if (query.matches(REGEX_CODE))
-					page = SearchUtils.getSubjectsSearchReply(query, null,
-							null, null, ++currentPage, getActivity());
-				else
-					page = SearchUtils.getSubjectsSearchReply(null, query,
-							null, null, ++currentPage, getActivity());
+				page = SearchUtils.getSubjectsSearchReply(null, query, null,
+						null, ++currentPage, getActivity());
 			}
 			if (page == null)
 				return false;
@@ -290,15 +281,11 @@ public class SubjectsSearchFragment extends BaseFragment implements
 		if (advancedSearchParameters != null)
 			task = SearchUtils.getSubjectsSearchReply(
 					advancedSearchParameters[0], advancedSearchParameters[1],
-					advancedSearchParameters[2],
-					advancedSearchParameters[3], this, getActivity());
+					advancedSearchParameters[2], advancedSearchParameters[3],
+					this, getActivity());
 		else {
-			if (query.matches(REGEX_CODE))
-				task = SearchUtils.getSubjectsSearchReply(query, null, null,
-						null, this, getActivity());
-			else
-				task = SearchUtils.getSubjectsSearchReply(null, query, null,
-						null, this, getActivity());
+			task = SearchUtils.getSubjectsSearchReply(null, query, null, null,
+					this, getActivity());
 		}
 	}
 
