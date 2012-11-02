@@ -119,10 +119,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;
 		case android.R.id.home:
-			// Handle the HOME / UP affordance. Since the app is only two levels
-			// deep
-			// hierarchically, UP always just goes home.
-			goUp();
+			toggle();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -133,11 +130,9 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	 */
 	protected void goUp() {
 		if (this instanceof PersonalAreaActivity) {
-			toggle();
 			return;
 		}
 		final Intent upIntent = new Intent(this, PersonalAreaActivity.class);
-
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is not part of the application's task, so create a
 			// new task
