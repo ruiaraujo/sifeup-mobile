@@ -27,8 +27,12 @@ import android.widget.TextView;
 public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 		OnClickListener {
 
-	EditText name, code, acronym, year;
-	TextView acronymLabel, yearLabel;
+	private EditText name;
+	private EditText code;
+	private EditText acronym;
+	private EditText year;
+	private TextView acronymLabel;
+	private TextView yearLabel;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -48,11 +52,9 @@ public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 		yearLabel.setText(R.string.lb_year);
 		year = (EditText) root.findViewById(R.id.first_year);
 		year.setHint(R.string.hint_year);
-
 		Button searchButton = (Button) root.findViewById(R.id.search);
-
 		searchButton.setOnClickListener(this);
-
+		showMainScreen();
 		return getParentContainer();
 	}
 
@@ -68,7 +70,7 @@ public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 		final String yearStr = TextUtils.isEmpty(year.getText()) ? null : year
 				.getText().toString();
 
-		Fragment searchFrag = new StudentsSearchFragment();
+		Fragment searchFrag = new SubjectsSearchFragment();
 		final Bundle args = new Bundle();
 		args.putStringArray(SearchManager.QUERY, new String[] { nameStr,
 				codeStr, acronymStr, yearStr });

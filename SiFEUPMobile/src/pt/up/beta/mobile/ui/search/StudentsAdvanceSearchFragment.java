@@ -28,7 +28,10 @@ import android.widget.EditText;
 public class StudentsAdvanceSearchFragment extends BaseFragment implements
 		OnClickListener {
 
-	EditText name, code, email, firstYear;
+	private EditText name;
+	private EditText code;
+	private EditText email;
+	private EditText firstYear;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -38,9 +41,10 @@ public class StudentsAdvanceSearchFragment extends BaseFragment implements
 		Button searchButton = (Button) root.findViewById(R.id.search);
 		name = (EditText) root.findViewById(R.id.name);
 		code = (EditText) root.findViewById(R.id.code);
-		email = (EditText) root.findViewById(R.id.code);
+		email = (EditText) root.findViewById(R.id.email);
 		firstYear = (EditText) root.findViewById(R.id.first_year);
 		searchButton.setOnClickListener(this);
+		showMainScreen();
 		return getParentContainer();
 	}
 

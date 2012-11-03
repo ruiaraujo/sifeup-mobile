@@ -16,6 +16,7 @@ public class AdvanceSearchActivity extends BaseSinglePaneActivity {
 	public final static String STUDENT = "pt.up.fe.mobile.ui.search.STUDENT";
 	public final static String EMPLOYEE = "pt.up.fe.mobile.ui.search.EMPLOYEE";
 	public final static String ROOM = "pt.up.fe.mobile.ui.search.ROOM";
+	public final static String SUBJECTS = "pt.up.fe.mobile.ui.search.SUBJECTS";
 
 	@Override
 	protected Fragment onCreatePane() {
@@ -26,10 +27,8 @@ public class AdvanceSearchActivity extends BaseSinglePaneActivity {
 			return new StudentsAdvanceSearchFragment();
 		if (type.equals(EMPLOYEE))
 			return new EmployeesAdvanceSearchFragment();
-		if (type.equals(ROOM)) // TODO: add room advanced search and
-
-			// so tem um parametro foi por isso que nao adicionei
-			return new StudentsAdvanceSearchFragment();
+		if (type.equals(SUBJECTS))
+			return new SubjectsAdvanceSearchFragment();
 		return new Fragment();
 
 	}

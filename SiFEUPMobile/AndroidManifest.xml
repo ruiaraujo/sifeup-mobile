@@ -167,9 +167,9 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
-            android:name=".ui.search.StudentsSearchActivity"
+            android:name=".ui.search.AdvanceSearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_search" />
+            android:label="@string/title_advanced_search" />
         <activity
             android:name=".ui.subjects.SubjectsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"

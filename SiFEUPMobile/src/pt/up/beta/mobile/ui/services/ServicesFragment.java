@@ -1,9 +1,9 @@
 package pt.up.beta.mobile.ui.services;
 
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
+import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;
 import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
 
-public class EmployeeServicesFragment extends Fragment {
+public class ServicesFragment extends Fragment {
 	private ExpandableListView menu;
 	private LayoutInflater mInflater;
 
@@ -25,7 +25,7 @@ public class EmployeeServicesFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/EmployeeServices");
+				"/StudentServices");
 	}
 
 	@Override
@@ -68,6 +68,50 @@ public class EmployeeServicesFragment extends Fragment {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
+				final BaseActivity activity = (BaseActivity) getActivity();
+				switch (groupPosition) {
+				case 4:
+					switch (childPosition) {
+					case 0:
+						activity.openActivityOrFragment(new Intent(
+								getActivity(), AdvanceSearchActivity.class)
+								.putExtra(AdvanceSearchActivity.SEARCH_TYPE,
+										AdvanceSearchActivity.STUDENT)
+								.putExtra(
+										Intent.EXTRA_TITLE,
+										getString(R.string.title_advanced_search_students)));
+						break;
+					case 1:
+						activity.openActivityOrFragment(new Intent(
+								getActivity(), AdvanceSearchActivity.class)
+								.putExtra(AdvanceSearchActivity.SEARCH_TYPE,
+										AdvanceSearchActivity.EMPLOYEE)
+								.putExtra(
+										Intent.EXTRA_TITLE,
+										getString(R.string.title_advanced_search_employees)));
+						break;
+					case 2:
+						activity.openActivityOrFragment(new Intent(
+								getActivity(), AdvanceSearchActivity.class)
+								.putExtra(AdvanceSearchActivity.SEARCH_TYPE,
+										AdvanceSearchActivity.ROOM)
+								.putExtra(
+										Intent.EXTRA_TITLE,
+										getString(R.string.title_advanced_search_rooms)));
+						break;
+					case 3:
+						activity.openActivityOrFragment(new Intent(
+								getActivity(), AdvanceSearchActivity.class)
+								.putExtra(AdvanceSearchActivity.SEARCH_TYPE,
+										AdvanceSearchActivity.SUBJECTS)
+								.putExtra(
+										Intent.EXTRA_TITLE,
+										getString(R.string.title_advanced_search_subjects)));
+						break;
+					}
+					break;
+				}
+
 				return true;
 			}
 		});
@@ -82,8 +126,17 @@ public class EmployeeServicesFragment extends Fragment {
 		private String[] groups = { getString(R.string.btn_printing),
 				getString(R.string.btn_current_account),
 				getString(R.string.btn_change_password),
-				getString(R.string.btn_dynamic_mail_files) };
-		private String[][] children = { {}, {}, {} };
+				getString(R.string.btn_dynamic_mail_files),
+				getString(R.string.title_advanced_search) };
+		private String[][] children = {
+				{},
+				{},
+				{},
+				{},
+				{ getString(R.string.title_advanced_search_students),
+						getString(R.string.title_advanced_search_employees),
+						getString(R.string.title_advanced_search_rooms),
+						getString(R.string.title_advanced_search_subjects) } };
 
 		public Object getChild(int groupPosition, int childPosition) {
 			return children[groupPosition][childPosition];

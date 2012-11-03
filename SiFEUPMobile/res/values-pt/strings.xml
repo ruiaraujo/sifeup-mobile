@@ -383,7 +383,7 @@
     <string name="lb_year">Ano:</string>
     <string name="hint_year">Ano</string>
     
-    
+    <string name="title_advanced_search">Pesquisa</string>
     <string name="title_advanced_search_students">Pesquisa de Estudantes</string>
     <string name="title_advanced_search_employees">Pesquisa de Funcionários</string>
     <string name="title_advanced_search_rooms">Pesquisa de Salas</string>

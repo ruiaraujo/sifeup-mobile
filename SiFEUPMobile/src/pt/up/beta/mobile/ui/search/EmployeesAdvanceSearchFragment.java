@@ -27,8 +27,11 @@ import android.widget.TextView;
 public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 		OnClickListener {
 
-	EditText name, code, email, acronym;
-	TextView acronymLabel;
+	private EditText name;
+	private EditText code;
+	private EditText email;
+	private EditText acronym;
+	private TextView acronymLabel;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -38,14 +41,14 @@ public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 		Button searchButton = (Button) root.findViewById(R.id.search);
 		name = (EditText) root.findViewById(R.id.name);
 		code = (EditText) root.findViewById(R.id.code);
-		email = (EditText) root.findViewById(R.id.code);
+		email = (EditText) root.findViewById(R.id.email);
 		acronymLabel = (TextView) root.findViewById(R.id.first_year_label);
 		acronymLabel.setText(R.string.lb_employee_acronym);
 		acronym = (EditText) root.findViewById(R.id.first_year);
 		acronym.setHint(R.string.hint_employee_acronym);
 
 		searchButton.setOnClickListener(this);
-
+		showMainScreen();
 		return getParentContainer();
 	}
 
@@ -61,7 +64,7 @@ public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 		final String acronymStr = TextUtils.isEmpty(acronym.getText()) ? null
 				: acronym.getText().toString();
 
-		Fragment searchFrag = new StudentsSearchFragment();
+		Fragment searchFrag = new EmployeesSearchFragment();
 		final Bundle args = new Bundle();
 		args.putStringArray(SearchManager.QUERY, new String[] { nameStr,
 				codeStr, emailStr, acronymStr });

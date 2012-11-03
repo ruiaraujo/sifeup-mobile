@@ -389,6 +389,7 @@
     <string name="lb_year">Year:</string>
     <string name="hint_year">Year</string>
     
+    <string name="title_advanced_search">Search</string>
     <string name="title_advanced_search_students">Students Search</string>
     <string name="title_advanced_search_employees">Employees Search</string>
     <string name="title_advanced_search_rooms">Room Search</string>
