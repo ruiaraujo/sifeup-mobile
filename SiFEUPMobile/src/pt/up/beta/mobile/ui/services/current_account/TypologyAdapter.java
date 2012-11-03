@@ -51,6 +51,15 @@ public class TypologyAdapter extends BaseAdapter {
 				.findViewById(R.id.dates);
 		dates.setText(context.getString(R.string.lbl_date, mov.getStartDate(),
 				mov.getFinalDate() == null ? "..." : mov.getFinalDate()));
+		if ( mov.getState().equals("Anulado") ){
+			dates.setTextColor(context.getResources().getColor(R.color.light_gray));
+			desc.setTextColor(context.getResources().getColor(R.color.light_gray));
+		}
+		else
+		{
+			dates.setTextColor(context.getResources().getColor(R.color.body_text_2));
+			desc.setTextColor(context.getResources().getColor(R.color.body_text_1));
+		}
 		return convertView;
 	}
 
