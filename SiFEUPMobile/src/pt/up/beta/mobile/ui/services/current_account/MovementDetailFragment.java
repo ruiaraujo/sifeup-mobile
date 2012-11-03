@@ -59,9 +59,12 @@ public class MovementDetailFragment extends Fragment {
 		final String refStr = ref.getReference();
 		nome.setText(ref.getDescription());
 		entidade.setText(ref.getEntity());
-		referencia.setText(refStr.substring(0, 3) + " "
-				+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
-		valor.setText(ref.getDebt()+ "€");
+
+		if (refStr != null){
+			referencia.setText(refStr.substring(0, 3) + " "
+					+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
+		}
+		valor.setText(ref.getDebt() + "€");
 		dataIni.setText(ref.getStartDate());
 		dataFim.setText(ref.getFinalDate());
 		return root;

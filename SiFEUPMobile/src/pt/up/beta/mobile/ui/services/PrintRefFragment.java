@@ -35,6 +35,7 @@ public class PrintRefFragment extends BaseFragment implements
 	private TextView entidade;
 	private TextView referencia;
 	private TextView valor;
+	private TextView dataInicio;
 	private TextView dataFim;
 
 	@Override
@@ -55,9 +56,10 @@ public class PrintRefFragment extends BaseFragment implements
 		referencia = (TextView) root
 				.findViewById(R.id.tuition_ref_detail_reference);
 		valor = (TextView) root.findViewById(R.id.tuition_ref_detail_amount);
+		dataInicio = (TextView) root
+				.findViewById(R.id.tuition_ref_detail_date_start);
 		dataFim = (TextView) root
 				.findViewById(R.id.tuition_ref_detail_date_end);
-		root.findViewById(R.id.tableRow5).setVisibility(View.GONE);
 
 		return getParentContainer(); // mandatory
 
@@ -166,6 +168,7 @@ public class PrintRefFragment extends BaseFragment implements
 		referencia.setText(refStr.substring(0, 3) + " "
 				+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
 		valor.setText(ref.getAmount() + "€");
+		dataInicio.setText(ref.getStartDate());
 		dataFim.setText(ref.getEndDate());
 	}
 
