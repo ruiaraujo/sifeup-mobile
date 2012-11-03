@@ -66,7 +66,6 @@
                 <data android:mimeType="vnd.android.cursor.item/vnd.feup.profile" />
                 <data android:mimeType="vnd.android.cursor.item/vnd.feup.schedule" />
             </intent-filter>
-            
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
@@ -89,7 +88,8 @@
         <activity
             android:name=".ui.services.PrintRefActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_printing" />
+            android:label="@string/title_printing"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -169,7 +169,8 @@
         <activity
             android:name=".ui.search.AdvanceSearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_advanced_search" />
+            android:label="@string/title_advanced_search"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.subjects.SubjectsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
