@@ -3,8 +3,6 @@
 
     <!-- APPLICATION -->
     <string name="app_name">FEUP Mobile</string>
-    <string name="description_logo">FEUP Mobile</string>
-    <string name="description_home">Home</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
     <string name="button_repeat">Repetir</string>
@@ -33,7 +31,9 @@
     <string name="lb_sync_interval_title">Intervalo de actualização</string>
     <string name="key_sync_interval">sync_interval</string>
     <string name="key_notifications_sync_interval">notifications_sync_interval</string>
-    <string name="lb_preferences_title">Definições</string>
+    <string name="lb_clean_history_title">Limpar Histórico</string>
+    <string name="lb_clean_history_desc">Limpar histórico de pesquisas</string>
+    <string name="key_clean_history">clean_search_history</string>
 
     <string-array name="sync_intervals">
         <item>1 hora</item>
@@ -58,6 +58,7 @@
     <string name="lb_login_username">Utilizador</string>
     <string name="lb_login_password">Senha</string>
     <string name="bt_cancel">Cancelar</string>
+    <string name="lb_login_authenticating">A autenticar\u2026</string>
     <string name="bt_login">Login</string>
     <string name="lb_show_password">Mostrar Senha</string>
     <string name="toast_login_error_empty_username">Utilizador tem de estar preenchido.</string>
@@ -66,6 +67,7 @@
     <string name="toast_login_error_password_too_short">Senha tem de ser maior que 8 caracteres.</string>
     <string name="toast_server_error">O servidor parece estar com dificuldades. Por favor, tente outra vez.</string>
     <string name="toast_auth_error">A sua sessão terminou. Por favor, reautentique-se.</string>
+    <string name="login_activity_newaccount_text">Entre na sua conta SiGARRA.</string>
 
     <!-- *************************************************************************************** -->
     <!-- LOGOUT -->
@@ -123,7 +125,6 @@
     <string name="class_team">&lt;b>Turma:&lt;/b>%1$s</string>
     <string name="class_start_time">&lt;b>Hora de início:&lt;/b>%1$s</string>
     <string name="class_end_time">&lt;b>Hora de fim:&lt;/b>%1$s</string>
-    <string name="toast_too_many_rooms">Há mais que uma sala para mapear.</string>
 
     <!-- Exams -->
     <string name="title_exams">Exames</string>
@@ -173,7 +174,6 @@
     <string name="path_semestre">Semestre: %1$s</string>
     <string name="path_average">&lt;b>Média: &lt;/b> %1$s</string>
     <string name="path_grade">Nota: %1$s</string>
-    <string name="path_link_sifeup"><u>Página Web Sigarra</u></string>
 
     <!-- People Profile -->
     <string name="btn_profile">Perfil</string>
@@ -185,7 +185,6 @@
     <string name="profile_title_ext_mobile">Extensão de Telemóvel</string>
     <string name="profile_title_ext_voip">Extensão VOIP</string>
     <string name="profile_title_ext_telephone">Extensão de Telefone</string>
-    <string name="profile_title_branch">Ramo</string>
     <string name="profile_title_programme">Curso</string>
     <string name="profile_title_code">Código</string>
     <string name="profile_title_status">Estado</string>
@@ -202,7 +201,6 @@
     <string name="room_building">&lt;b>Building:&lt;/b> %1$s</string>
     <string name="room_area"> &lt;b>Área:&lt;/b> %1$s m&lt;sup>&lt;small>2&lt;/small>&lt;/sup></string>
     <string name="room_usage">&lt;b>Utilização:&lt;/b> %1$s</string>
-    <string name="room_attributes"><b>Atributos:</b></string>
     <string name="room_responsible"><b>Responsáveis:</b></string>
     <string name="room_occupiers"><b>Ocupantes:</b></string>
 
@@ -251,8 +249,11 @@
     <string name="bt_set_password_confirm">OK</string>
     <string name="bt_set_password_cancel">Cancelar</string>
     <string name="lb_new_password">Nova password</string>
+    <string name="hint_new_password">Nova password</string>
     <string name="lb_confirm_new_password">Confirmar nova password:</string>
+    <string name="hint_confirm_new_password">Confirmar nova password</string>
     <string name="lb_current_password">Password actual:</string>
+    <string name="hint_current_password">Password actual</string>
     <string name="set_password_message">Para alterar a sua palavra-passe siga as seguintes normas e preencha os campos a seguir:<ul><li>Conter obrigatoriamente entre 8 e 32 caracteres.</li><li>Não ser igual às 5 palavras-passe anteriores.</li><li>Conter um misto de letras e números;</li></ul></string>
     <string name="lb_username">Utilizador:</string>
     <string name="hint_username">Utilizador</string>
@@ -285,17 +286,18 @@
     <string name="print_ref_share_err">Ocorreu um erro ao partilhar a referência.</string>
     <string name="print_ref_share_title">Partilhar Referência</string>
     <string name="toast_invalid_value">O valor inserido não é suportado.</string>
+    <string name="print_ref_default_value">5</string>
 
     <!-- *************************************************************************************** -->
     <!-- Dynamic mail -->
     <string name="title_dynamic_mail_files">Ficheiros do Email Dinâmico</string>
     <string name="btn_dynamic_mail_files">Ficheiros do Email Dinâmico</string>
+    <string name="label_no_files">Não tem ficheiros.</string>
 
     <!-- *************************************************************************************** -->
     <!-- FRIENDS -->
     <string name="title_friends">Amigos</string>
     <string name="btn_friends">Amigos</string>
-    <string name="description_add">Adicionar Amigo</string>
     <string name="friends_context_delete">Remover Amigo</string>
     <string name="friends_context_timetable">Ver Horário</string>
     <string name="label_no_friends">Não tem amigos.\n\nAo ver um perfil, carregue na estrela para marcar como amigo.</string>
@@ -320,7 +322,6 @@
     <!-- *************************************************************************************** -->
     <!-- SETTINGS -->
     <string name="title_settings">Definições</string>
-    <string name="btn_settings">Definições</string>
 
     <!-- *************************************************************************************** -->
     <!-- NOTIFICATIONS -->
@@ -333,7 +334,6 @@
     <string name="lb_subject">Assunto: </string>
     <string name="lb_message">Messagem: </string>
     <string name="lb_reply_notification">Resposta </string>
-    <string name="lb_obs">Comentários: </string>
     <string name="lb_no_notification">Não tem notificações.</string>
 
     <!-- *************************************************************************************** -->

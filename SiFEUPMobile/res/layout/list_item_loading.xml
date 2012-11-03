@@ -2,14 +2,14 @@
 <LinearLayout android:id="@+id/search_itemLoading" xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" 
-		android:padding="3px" 
+		android:padding="3dip" 
 		android:gravity="center"
 		android:orientation="horizontal">
 		<ProgressBar android:id="@+id/search_progress"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content" 
 			android:indeterminate="true"/>
-		<TextView android:id="@+id/search_progress"
+		<TextView 
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
 			android:text="@string/lb_data_fetching"/>

@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,8 +73,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 			public void onClick(View arg0) {
 				String username = usernameText.getText().toString();
 				if (username.equals("")) {
-					Toast.makeText(getActivity(),
-							getString(R.string.username_empty),
+					Toast.makeText(getActivity(), R.string.username_empty,
 							Toast.LENGTH_SHORT).show();
 					usernameText.requestFocus();
 					return;
@@ -81,43 +81,47 @@ public class ChangePasswordFragment extends BaseFragment implements
 				String actualPassword = actualPasswordText.getText().toString();
 
 				if (actualPassword.equals("")) {
-					Toast.makeText(getActivity(),
-							getString(R.string.old_password_empty),
+					Toast.makeText(getActivity(), R.string.old_password_empty,
 							Toast.LENGTH_SHORT).show();
 					actualPasswordText.requestFocus();
 					return;
 				}
 				String newPassword = newPasswordText.getText().toString();
 				if (newPassword.equals("")) {
-					Toast.makeText(getActivity(),
-							getString(R.string.new_password_empty),
+					Toast.makeText(getActivity(), R.string.new_password_empty,
 							Toast.LENGTH_SHORT).show();
 					newPasswordText.requestFocus();
 					return;
 				}
 				if (currentQuality <= 1) {
 					Toast.makeText(getActivity(),
-							getString(R.string.new_password_too_weak),
-							Toast.LENGTH_SHORT).show();
+							R.string.new_password_too_weak, Toast.LENGTH_SHORT)
+							.show();
 					newPasswordText.requestFocus();
 					return;
 				}
 				String confirmNewPassword = confirmNewPasswordText.getText()
 						.toString();
 
-				if (confirmNewPassword.equals("")) {
+				if (TextUtils.isEmpty(confirmNewPassword)) {
 					Toast.makeText(getActivity(),
-							getString(R.string.confirm_new_password_empty),
+							R.string.confirm_new_password_empty,
 							Toast.LENGTH_SHORT).show();
 					confirmNewPasswordText.requestFocus();
 					return;
 				}
 				if (!confirmNewPassword.equals(newPassword)) {
-					Toast.makeText(
-							getActivity(),
-							getString(R.string.confirmation_password_different),
+					Toast.makeText(getActivity(),
+							R.string.confirmation_password_different,
 							Toast.LENGTH_SHORT).show();
 					confirmNewPasswordText.requestFocus();
+					return;
+				}
+				if (newPassword.length() < 8) {
+					Toast.makeText(getActivity(),
+							R.string.toast_login_error_password_too_short,
+							Toast.LENGTH_SHORT).show();
+					newPasswordText.requestFocus();
 					return;
 				}
 				ProgressDialogFragment.newInstance(false).show(
@@ -204,12 +208,12 @@ public class ChangePasswordFragment extends BaseFragment implements
 				return null;
 			}
 		}.execute();
-			String user = AccountUtils.getActiveUserCode(getActivity());
-			if (!user.equals("") ) {
-				usernameText.setText(user);
+		String user = AccountUtils.getActiveUserCode(getActivity());
+		if (!user.equals("")) {
+			usernameText.setText(user);
 
-			}
-		
+		}
+
 		return getParentContainer();
 	}
 
@@ -252,7 +256,9 @@ public class ChangePasswordFragment extends BaseFragment implements
 		final String usernameTextEdit = usernameText.getText().toString();
 		if (usernameTextEdit.equals(userCode)
 				|| usernameTextEdit.equals(userName)) {
-			accountManager.setPassword(new Account(userName, Constants.ACCOUNT_TYPE), newPasswordText.getText().toString());
+			accountManager.setPassword(new Account(userName,
+					Constants.ACCOUNT_TYPE), newPasswordText.getText()
+					.toString());
 		}
 
 		actualPasswordText.setText(newPasswordText.getText().toString());
@@ -270,7 +276,8 @@ public class ChangePasswordFragment extends BaseFragment implements
 		AuthenticationUtils.setPasswordReply(usernameText.getText().toString(),
 				actualPasswordText.getText().toString(), newPasswordText
 						.getText().toString(), confirmNewPasswordText.getText()
-						.toString(), "S", ChangePasswordFragment.this, getActivity());
+						.toString(), "S", ChangePasswordFragment.this,
+				getActivity());
 	}
 
 }

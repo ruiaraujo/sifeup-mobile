@@ -22,6 +22,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
+@TargetApi(8)
 public class TouchImageView extends ImageView {
 
 	public TouchImageView(Context context) {
@@ -235,7 +236,6 @@ public class TouchImageView extends ImageView {
 		}
 	}
 
-	@TargetApi(8)
 	private class ScaleListener extends
 			ScaleGestureDetector.SimpleOnScaleGestureListener {
 		@Override

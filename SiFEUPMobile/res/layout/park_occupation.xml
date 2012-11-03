@@ -1,26 +1,19 @@
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:gravity="center"
-	android:paddingTop="25.0dp" >
-	<LinearLayout
-		android:orientation="vertical"
-		android:paddingLeft="25.0dp"
-		android:paddingRight="25.0dp"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		>
-		<TextView
-			android:textSize="16.0sp"
-			android:textStyle="normal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="4.0dp"
-			android:text="@string/btn_park_occupation"
-			/>
-		
-	</LinearLayout>
-	
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="25.0dp"
+    android:paddingRight="25.0dp"
+    android:paddingTop="25.0dp" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4.0dp"
+        android:text="@string/btn_park_occupation"
+        android:textSize="16.0sp"
+        android:textStyle="normal" />
+
 </LinearLayout>

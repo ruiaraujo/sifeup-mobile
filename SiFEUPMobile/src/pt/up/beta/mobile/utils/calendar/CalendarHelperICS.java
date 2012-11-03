@@ -1,6 +1,7 @@
 package pt.up.beta.mobile.utils.calendar;
 
 import pt.up.beta.mobile.utils.DateUtils;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -13,7 +14,8 @@ public class CalendarHelperICS extends CalendarHelper {
         super(cr);
     }
     
-    @Override
+    @TargetApi(14)
+	@Override
     public Cursor getCalendars() {
         final Uri uri = CalendarContract.Calendars.CONTENT_URI;
         final String[] projection = new String[] { CalendarContract.Calendars._ID,
@@ -22,7 +24,8 @@ public class CalendarHelperICS extends CalendarHelper {
         return cr.query(uri, projection, null, null, null);
     }
     
-    @Override
+    @TargetApi(14)
+	@Override
     public Uri insertEvent(long calendarId, Event ev){
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, calendarId);

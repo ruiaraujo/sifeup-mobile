@@ -110,10 +110,7 @@ public class MenuFragment extends SherlockFragment implements
 				selected.setVisibility(View.VISIBLE);
 			} else
 				selected.setVisibility(View.INVISIBLE);
-			// title.setCompoundDrawablesWithIntrinsicBounds(getItem(position).iconRes,
-			// 0,0,0);
 			title.setText(getItem(position).tag);
-
 			return convertView;
 		}
 
