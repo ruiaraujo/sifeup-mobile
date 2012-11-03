@@ -11,12 +11,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
+
+import external.com.google.android.apps.iosched.util.UIUtils;
 
 /**
  * A base activity that defers common functionality across app activities. This
@@ -34,21 +37,27 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		// .incrementActivityCount();
 		actionbar = getSupportActionBar();
 
-		// set the Behind View
-		setBehindContentView(R.layout.menu_frame);
-		FragmentTransaction t = this.getSupportFragmentManager()
-				.beginTransaction();
-		t.replace(R.id.menu_frame, new MenuFragment());
-		t.commit();
+		if (!UIUtils.isTablet(getApplicationContext())) {
+			// set the Behind View
+			setBehindContentView(R.layout.menu_frame);
+			FragmentTransaction t = this.getSupportFragmentManager()
+					.beginTransaction();
+			t.replace(R.id.menu_frame, new MenuFragment());
+			t.commit();
 
-		// customize the SlidingMenu
-		final SlidingMenu sm = getSlidingMenu();
-		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindOffsetRes(R.dimen.actionbar_home_width);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			// customize the SlidingMenu
+			final SlidingMenu sm = getSlidingMenu();
+			sm.setShadowWidthRes(R.dimen.shadow_width);
+			sm.setShadowDrawable(R.drawable.shadow);
+			sm.setBehindOffsetRes(R.dimen.actionbar_home_width);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 
-		setSlidingActionBarEnabled(false);
+			setSlidingActionBarEnabled(false);
+		}
+		else{
+			setBehindContentView(new View(getApplicationContext()));
+			getSlidingMenu().setSlidingEnabled(false);
+		}
 	}
 
 	@Override
@@ -119,7 +128,10 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			startSearch(null, false, Bundle.EMPTY, false);
 			return true;
 		case android.R.id.home:
-			toggle();
+			if (UIUtils.isTablet(getApplicationContext()))
+				goUp();
+			else
+				toggle();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -165,7 +177,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	public void openActivityOrFragment(final Intent intent) {
 		// Default implementation simply calls startActivity
 		if (getSlidingMenu().isBehindShowing()) {
-			//delay a bit to help prevent jankyness
+			// delay a bit to help prevent jankyness
 			showAbove();
 			mHandler.postDelayed(new Runnable() {
 				@Override

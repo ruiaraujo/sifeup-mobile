@@ -31,6 +31,7 @@ public class MenuFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 		final View root = inflater.inflate(R.layout.fragment_sidemenu,
 				container, false);
 		list = (ListView) root.findViewById(R.id.list);
