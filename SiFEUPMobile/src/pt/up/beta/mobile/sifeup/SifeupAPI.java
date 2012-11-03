@@ -985,7 +985,7 @@ public class SifeupAPI {
 
 			final HttpsURLConnection connection = (HttpsURLConnection) new URL(
 					url).openConnection();
-			// connection.setSSLSocketFactory(sslCtx.getSocketFactory());
+			connection.setSSLSocketFactory(sslCtx.getSocketFactory());
 			connection.setRequestProperty("connection", "close");
 			return connection;
 		} catch (IOException e) {
@@ -1029,8 +1029,13 @@ public class SifeupAPI {
 		do {
 			final HttpsURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
 				throw new AuthenticationException();
+			}
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
 			if (charset == null) {
@@ -1125,10 +1130,15 @@ public class SifeupAPI {
 		final HttpsURLConnection connection = get(url);
 		try {
 			connection.setRequestProperty("Cookie", cookie);
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
+				throw new AuthenticationException("Invalid cookie");
+			}
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN)
-				throw new AuthenticationException("Invalid cookie");
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
 			int read = 0;
 			int bufSize = 512;
