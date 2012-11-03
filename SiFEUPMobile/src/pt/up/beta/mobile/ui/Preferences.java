@@ -6,6 +6,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
+import pt.up.beta.mobile.ui.search.SearchActivity;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -46,6 +48,15 @@ public class Preferences extends SherlockPreferenceActivity implements
 				R.array.sync_intervals);
 		syncDisplayValues = getResources().getStringArray(
 				R.array.sync_intervals_values);
+		findPreference(getString(R.string.key_clean_history))
+				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						SearchActivity
+								.clearSearchHistory(getApplicationContext());
+						return true;
+					}
+				});
 	}
 
 	@Override

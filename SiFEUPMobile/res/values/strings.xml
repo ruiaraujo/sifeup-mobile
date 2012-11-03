@@ -34,6 +34,9 @@
     <string name="key_sync_interval">sync_interval</string>
     <string name="key_notifications_sync_interval">notifications_sync_interval</string>
     <string name="lb_preferences_title">Settings</string>
+    <string name="lb_clean_history_title">Clean History</string>
+    <string name="lb_clean_history_desc">Clean search history</string>
+    <string name="key_clean_history">clean_search_history</string>
 
     <string-array name="sync_intervals">
         <item>1 hour</item>

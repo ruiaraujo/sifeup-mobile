@@ -11,14 +11,21 @@
             android:entryValues="@array/sync_intervals_values"
             android:key="@string/key_sync_interval"
             android:title="@string/lb_sync_interval_title" />
-        
+
         <ListPreference
             android:defaultValue="@integer/default_notifications_sync_interval"
             android:entries="@array/sync_intervals"
             android:entryValues="@array/sync_intervals_values"
             android:key="@string/key_notifications_sync_interval"
             android:title="@string/lb_sync_notifications_interval_title" />
-        
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_search" >
+
+        <Preference
+            android:key="@string/key_clean_history"
+            android:summary="@string/lb_clean_history_desc"
+            android:title="@string/lb_clean_history_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -37,7 +37,6 @@ public class SearchActivity extends BaseSinglePaneActivity {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
                 SearchSuggestionHistory.AUTHORITY, SearchSuggestionHistory.MODE);
         suggestions.saveRecentQuery(mQuery, null);
-        //TODO: add a way to clean the previous searches
         final CharSequence title = getString(R.string.title_search_query, mQuery);
         actionbar.setTitle(title);
 
