@@ -401,9 +401,17 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void syncExams(Account account, SyncResult syncResult)
 			throws AuthenticationException, IOException {
-		final String exams = SifeupAPI.getReply(SifeupAPI
-				.getStudentExamsUrl(mAccountManager.getUserData(account,
-						Constants.USER_CODE)), account, getContext());
+		final String type = mAccountManager.getUserData(account,
+				Constants.USER_TYPE);
+		final String exams;
+		if (type.equals(SifeupAPI.STUDENT_TYPE))
+			exams = SifeupAPI.getReply(SifeupAPI
+					.getStudentExamsUrl(mAccountManager.getUserData(account,
+							Constants.USER_CODE)), account, getContext());
+		else
+			exams = SifeupAPI.getReply(SifeupAPI
+					.getEmployeeExamsUrl(mAccountManager.getUserData(account,
+							Constants.USER_CODE)), account, getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.ExamsColumns.ID, account.name);
 		values.put(SigarraContract.ExamsColumns.CONTENT, exams);
