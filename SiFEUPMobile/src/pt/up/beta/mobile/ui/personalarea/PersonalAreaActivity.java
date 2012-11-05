@@ -45,7 +45,7 @@ public class PersonalAreaActivity extends BaseSinglePaneActivity {
 							| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);
 			finish();
-			overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

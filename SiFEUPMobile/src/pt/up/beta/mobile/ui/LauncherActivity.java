@@ -230,7 +230,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						startActivity(intent);
 						finish();
 						overridePendingTransition(R.anim.fade_in,
-								android.R.anim.fade_out);
+								R.anim.fade_out);
 					}
 
 					@Override
@@ -251,7 +251,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 				startActivity(new Intent(this, DynamicMailFilesActivity.class));
 				finish();
 				overridePendingTransition(R.anim.fade_in,
-						android.R.anim.fade_out);
+						R.anim.fade_out);
 				return;
 			}
 
@@ -265,7 +265,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						uri.getQueryParameter("pv_num_unico")));
 				finish();
 				overridePendingTransition(R.anim.fade_in,
-						android.R.anim.fade_out);
+						R.anim.fade_out);
 				return;
 			}
 
@@ -278,7 +278,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						uri.getQueryParameter("p_codigo")));
 				finish();
 				overridePendingTransition(R.anim.fade_in,
-						android.R.anim.fade_out);
+						R.anim.fade_out);
 				return;
 			}
 
@@ -291,7 +291,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						uri.getQueryParameter("pv_id")));
 				finish();
 				overridePendingTransition(R.anim.fade_in,
-						android.R.anim.fade_out);
+						R.anim.fade_out);
 				return;
 			}
 			startActivity(new Intent(this, WebviewActivity.class).putExtra(
@@ -301,7 +301,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		}
 		startActivity(new Intent(this, PersonalAreaActivity.class));
 		finish();
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 	}
 }

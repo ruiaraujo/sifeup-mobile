@@ -163,7 +163,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 			} else
 				NavUtils.navigateUpTo(this, upIntent);
 		}
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	private void updateListSummary(String syncIntervalValue,
@@ -181,7 +181,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	@TargetApi(8)

@@ -211,7 +211,7 @@ public class WebviewFragment extends BaseFragment {
 		} else {
 			getActivity().finish();
 			getActivity().overridePendingTransition(R.anim.fade_in,
-					android.R.anim.fade_out);
+					R.anim.fade_out);
 		}
 	}
 
