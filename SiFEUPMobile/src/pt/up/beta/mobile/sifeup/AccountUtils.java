@@ -26,7 +26,7 @@ public class AccountUtils {
 	private static AccountManager mAccountManager;
 	private static User user;
 
-	public static boolean init(final Context context) {
+	public synchronized static boolean init(final Context context) {
 		mAccountManager = AccountManager.get(context);
 		SharedPreferences loginSettings = PreferenceManager
 				.getDefaultSharedPreferences(context.getApplicationContext());
@@ -59,15 +59,20 @@ public class AccountUtils {
 		return getAuthToken(context, account);
 	}
 
-	public static String getAuthToken(final Context context,
+	private static final Object LOCK = new Object();
+
+	public synchronized static String getAuthToken(final Context context,
 			final Account account) throws OperationCanceledException,
 			AuthenticatorException, IOException {
 		if (needsInit()) {
 			if (!init(context))
 				return null;
 		}
-		return mAccountManager.blockingGetAuthToken(account,
-				Constants.AUTHTOKEN_TYPE, true);
+		// I think that two things calling this function leads to problems.
+		synchronized (LOCK) {
+			return mAccountManager.blockingGetAuthToken(account,
+					Constants.AUTHTOKEN_TYPE, true);
+		}
 	}
 
 	public static Account getActiveAccount(final Context context) {

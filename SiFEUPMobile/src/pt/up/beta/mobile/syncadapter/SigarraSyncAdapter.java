@@ -110,8 +110,10 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
+		boolean listeningToProblems = false;
 		try {
 			if (extras.getBoolean(SINGLE_REQUEST)) {
+				listeningToProblems = true;
 				Log.d(getClass().getSimpleName(), "Fetching Sigarra");
 				if (SUBJECT.equals(extras.getString(REQUEST_TYPE))) {
 					getSubject(account, extras.getString(CODE), syncResult);
@@ -185,22 +187,24 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (IOException e) {
 			syncResult.stats.numIoExceptions++;
 			syncResult.delayUntil = 3600;
-			broadcastManager
-					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-							.putExtra(SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));
+			if (listeningToProblems)
+				broadcastManager.sendBroadcast(new Intent(
+						SIGARRASYNCADAPTER_STATUS).putExtra(
+						SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));
 			e.printStackTrace();
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, null);
 			syncResult.stats.numAuthExceptions++;
-			broadcastManager
-					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-							.putExtra(SIGARRASYNCADAPTER_STATUS,
-									AUTHENTICATION_ERROR));
+			if (listeningToProblems)
+				broadcastManager.sendBroadcast(new Intent(
+						SIGARRASYNCADAPTER_STATUS).putExtra(
+						SIGARRASYNCADAPTER_STATUS, AUTHENTICATION_ERROR));
 		} catch (Exception e) {
-			broadcastManager
-					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
-							.putExtra(SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
+			if (listeningToProblems)
+				broadcastManager.sendBroadcast(new Intent(
+						SIGARRASYNCADAPTER_STATUS).putExtra(
+						SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e);
 			ACRA.getErrorReporter().handleSilentException(
@@ -619,6 +623,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						subject.getUcurrnome());
 				value.put(SigarraContract.SubjectsColumns.NAME_EN,
 						subject.getUcurrname());
+				value.put(SigarraContract.SubjectsColumns.PERIOD,
+						subject.getPercodigo());
 				value.put(SigarraContract.SubjectsColumns.CONTENT,
 						subjectContent);
 				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
@@ -683,6 +689,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 					subject.getOcorrId());
 			value.put(SigarraContract.SubjectsColumns.NAME_PT,
 					subject.getUcurrName());
+			value.put(SigarraContract.SubjectsColumns.PERIOD,
+					subject.getPeriodCode());
 			value.put(SigarraContract.SubjectsColumns.CONTENT, subjectContent);
 			value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
 			value.put(SigarraContract.SubjectsColumns.COURSE_ACRONYM,

@@ -10,6 +10,7 @@ public class SubjectsTable implements BaseColumns {
 
 	static final String COLUMN_USER_NAME = "_id";
 	static final String COLUMN_CODE = "code";
+	static final String COLUMN_PERIOD = "period";
 	static final String COLUMN_NAME_PT = "name_pt";
 	static final String COLUMN_NAME_EN = "name_en";
 	static final String COLUMN_CONTENT = "content";
@@ -23,7 +24,7 @@ public class SubjectsTable implements BaseColumns {
 			+ COLUMN_USER_NAME + " TEXT NOT NULL, " + COLUMN_CODE
 			+ " TEXT NOT NULL, " + COLUMN_NAME_PT + " TEXT ," + COLUMN_NAME_EN
 			+ " TEXT DEFAULT NULL," + COLUMN_CONTENT + " TEXT NOT NULL,"
-			+ COLUMN_FILES + " TEXT NOT NULL," + COLUMN_COURSE_CODE
+			+ COLUMN_FILES + " TEXT NOT NULL," + COLUMN_PERIOD + " TEXT DEFAULT NULL," + COLUMN_COURSE_CODE
 			+ " TEXT DEFAULT NULL," + COLUMN_COURSE_ACRONYM
 			+ " TEXT DEFAULT NULL," + COLUMN_ENTRY + " TEXT DEFAULT NULL,"
 			+ SQL_CREATE_STATE + ", PRIMARY KEY (" + COLUMN_USER_NAME + ","

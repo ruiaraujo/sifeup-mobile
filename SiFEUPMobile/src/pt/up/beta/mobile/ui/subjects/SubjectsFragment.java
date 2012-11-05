@@ -139,7 +139,8 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 				SigarraContract.Subjects.USER_SUBJECTS,
 				SigarraContract.Subjects
 						.getUserSubjectsSelectionArgs(AccountUtils
-								.getActiveUserName(getActivity())), null);
+								.getActiveUserName(getActivity())),
+				SigarraContract.Subjects.SUBJECTS_ORDER);
 	}
 
 	@Override
@@ -217,7 +218,7 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 				map.put(from[1], s.getUcurrsigla());
 				map.put(from[2],
 						getString(R.string.subjects_year, s.getAno(),
-								s.getPercodigo()));
+								s.getPernome()));
 				fillMaps.add(map);
 			}
 			// fill in the grid_item layout

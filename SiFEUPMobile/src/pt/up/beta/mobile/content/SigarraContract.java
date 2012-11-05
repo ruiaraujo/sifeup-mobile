@@ -7,6 +7,7 @@ public final class SigarraContract {
 	public interface SubjectsColumns {
 		String USER_NAME = SubjectsTable.COLUMN_USER_NAME;
 		String CODE = SubjectsTable.COLUMN_CODE;
+		String PERIOD = SubjectsTable.COLUMN_PERIOD;
 		String NAME_PT = SubjectsTable.COLUMN_NAME_PT;
 		String NAME_EN = SubjectsTable.COLUMN_NAME_EN;
 		String CONTENT = SubjectsTable.COLUMN_CONTENT;
@@ -133,7 +134,7 @@ public final class SigarraContract {
 		public static final String[] getUserSubjectsSelectionArgs(String code) {
 			return new String[] { code };
 		}
-
+		public static final String SUBJECTS_ORDER = PERIOD + " ASC, " + NAME_PT + " ASC";
 		public static final String[] SUBJECT_COLUMNS = { CONTENT, FILES };
 		public static final String SUBJECT_SELECTION = CODE + "=?";
 
