@@ -29,8 +29,7 @@ public final class ProfileContactColumns {
     /**
      * MIME-type used when storing a profile {@link Data} entry.
      */
-    public static final String MIME_PROFILE = SigarraContract.Profiles.CONTENT_ITEM_TYPE;
-    public static final String MIME_SCHEDULE = SigarraContract.Schedule.CONTENT_ITEM_TYPE;
+    public static final String MIME = SigarraContract.Profiles.CONTENT_ITEM_TYPE;
 
     public static final String DATA_CODE = Data.DATA1;
 

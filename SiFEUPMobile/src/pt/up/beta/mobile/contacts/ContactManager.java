@@ -223,7 +223,7 @@ public class ContactManager {
 				} else if (mimeType.equals(Photo.CONTENT_ITEM_TYPE)) {
 					existingAvatar = true;
 					contactOp.updateAvatar(resolver, rawContact.getCode(), uri);
-				} else if (mimeType.equals(ProfileContactColumns.MIME_PROFILE)) {
+				} else if (mimeType.equals(ProfileContactColumns.MIME)) {
 					existingActions = true;
 					contactOp.updateProfileAction(rawContact.getShortName(), uri);
 				}
@@ -275,8 +275,8 @@ public class ContactManager {
 			// with the information we received from the server.
 			while (c.moveToNext()) {
 				final String mimeType = c.getString(DataQuery.COLUMN_MIMETYPE);
-				if (mimeType.equals(ProfileContactColumns.MIME_PROFILE)
-						|| mimeType.equals(ProfileContactColumns.MIME_SCHEDULE)) {
+				if (mimeType.equals(ProfileContactColumns.MIME)
+						|| mimeType.equals(ProfileContactColumns.MIME)) {
 					profileInfo[0] = mimeType;
 					profileInfo[1] = c.getString(c
 							.getColumnIndex(ProfileContactColumns.DATA_CODE));

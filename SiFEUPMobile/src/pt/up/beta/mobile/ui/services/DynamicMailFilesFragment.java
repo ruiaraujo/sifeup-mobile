@@ -27,7 +27,8 @@ import android.widget.Toast;
 
 public class DynamicMailFilesFragment extends BaseFragment implements
 		ResponseCommand<DynamicMailFile[]>, OnItemClickListener {
-	final public static String FILES_KEY = "pt.up.fe.mobile.ui.studentarea.FILES";
+
+	private final static String FILES_KEY = "pt.up.fe.mobile.ui.studentarea.FILES";
 	/** Stores all exams from Student */
 	private DynamicMailFile[] files;
 	final public static String PROFILE_CODE = "pt.up.fe.mobile.ui.studentarea.PROFILE";

@@ -283,7 +283,7 @@ public class ContactOperations {
 					mContext.getString(R.string.app_name));
 			mValues.put(ProfileContactColumns.DATA_DETAIL,
 					mContext.getString(R.string.action_view_profile));
-			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME_PROFILE);
+			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME);
 			addInsertOp();
 			mValues.clear();
 			mValues.put(ProfileContactColumns.DATA_CODE, userId);
@@ -293,7 +293,7 @@ public class ContactOperations {
 					mContext.getString(R.string.app_name));
 			mValues.put(ProfileContactColumns.DATA_DETAIL,
 					mContext.getString(R.string.action_view_schedule));
-			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME_SCHEDULE);
+			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME);
 			addInsertOp();
 			
 		}
