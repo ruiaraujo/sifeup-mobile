@@ -52,8 +52,13 @@ public class Preferences extends SherlockPreferenceActivity implements
 				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						SearchActivity
-								.clearSearchHistory(getApplicationContext());
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								SearchActivity
+										.clearSearchHistory(getApplicationContext());
+							}
+						}).start();
 						return true;
 					}
 				});
