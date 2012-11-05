@@ -1,5 +1,6 @@
 package pt.up.beta.mobile.ui;
 
+import pt.up.beta.mobile.BuildConfig;
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
@@ -44,15 +45,12 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 		OnItemClickListener {
 	private static final int FIRST_ACCOUNT = 0;
 	private static final int ADDING_OTHER_ACCOUNT = 1;
-	private static final int CONFIRM_CREDENTIALS = 2;
 
 	private AccountManager mAccountManager;
 	public static final String LOGOUT_FLAG = "pt.up.fe.mobile.ui.logout";
-	public static final String WRONG_CREDENTIALS_FLAG = "pt.up.fe.mobile.ui.logout";
 	public static final String PREF_ACTIVE_USER = "pt.up.fe.mobile.ui.USERNAME";
 
 	private boolean logOut = false;
-	private boolean mConfirmCredentials = false;
 
 	/** Called when the activity is first created. */
 	@TargetApi(11)
@@ -69,20 +67,23 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			}
 		});
 		mAccountManager = AccountManager.get(getApplicationContext());
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-					.detectAll().penaltyLog().build());
-			final StrictMode.VmPolicy.Builder builder;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				builder = new StrictMode.VmPolicy.Builder()
-						.detectLeakedSqlLiteObjects()
-						.detectLeakedClosableObjects().penaltyLog()
-						.penaltyDeath();
-			else
-				builder = new StrictMode.VmPolicy.Builder()
-						.detectLeakedSqlLiteObjects().penaltyLog()
-						.penaltyDeath();
-			StrictMode.setVmPolicy(builder.build());
+		if (BuildConfig.DEBUG) {
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+				StrictMode
+						.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+								.detectAll().penaltyLog().build());
+				final StrictMode.VmPolicy.Builder builder;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					builder = new StrictMode.VmPolicy.Builder()
+							.detectLeakedSqlLiteObjects()
+							.detectLeakedClosableObjects().penaltyLog()
+							.penaltyDeath();
+				else
+					builder = new StrictMode.VmPolicy.Builder()
+							.detectLeakedSqlLiteObjects().penaltyLog()
+							.penaltyDeath();
+				StrictMode.setVmPolicy(builder.build());
+			}
 		}
 
 	}
@@ -92,12 +93,6 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 	public void onStart() {
 		super.onStart();
 		logOut = getIntent().getBooleanExtra(LOGOUT_FLAG, false);
-		mConfirmCredentials = getIntent().getBooleanExtra(LOGOUT_FLAG, false);
-		if (mConfirmCredentials) {
-			startActivityForResult(new Intent(getBaseContext(),
-					AuthenticatorActivity.class), CONFIRM_CREDENTIALS);
-			return;
-		}
 		Account[] accounts = mAccountManager
 				.getAccountsByType(Constants.ACCOUNT_TYPE);
 
@@ -250,8 +245,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 			if (lastSegment.startsWith("mail_dinamico.ficheiros")) {
 				startActivity(new Intent(this, DynamicMailFilesActivity.class));
 				finish();
-				overridePendingTransition(R.anim.fade_in,
-						R.anim.fade_out);
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				return;
 			}
 
@@ -264,8 +258,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						ProfileActivity.PROFILE_CODE,
 						uri.getQueryParameter("pv_num_unico")));
 				finish();
-				overridePendingTransition(R.anim.fade_in,
-						R.anim.fade_out);
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				return;
 			}
 
@@ -277,8 +270,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						ProfileActivity.PROFILE_CODE,
 						uri.getQueryParameter("p_codigo")));
 				finish();
-				overridePendingTransition(R.anim.fade_in,
-						R.anim.fade_out);
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				return;
 			}
 
@@ -290,8 +282,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 						ProfileActivity.PROFILE_CODE,
 						uri.getQueryParameter("pv_id")));
 				finish();
-				overridePendingTransition(R.anim.fade_in,
-						R.anim.fade_out);
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				return;
 			}
 			startActivity(new Intent(this, WebviewActivity.class).putExtra(
