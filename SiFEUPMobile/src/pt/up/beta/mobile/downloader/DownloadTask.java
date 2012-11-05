@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
 
 public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
@@ -38,6 +39,8 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 	private final static int NO_MEMORY = -3;
 	private final static int NO_MEMORY_CARD = -4;
 
+	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
+
 	private File myFile;
 	private final String cookie;
 	private final Context context;
@@ -50,8 +53,9 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 
 	private NotificationManager mNotificationManager;
 
-	public DownloadTask(final FinishedTaskListener lis,String url, String filename, String type,
-			long filesize, String cookie, Context c) {
+	public DownloadTask(final FinishedTaskListener lis, String url,
+			String filename, String type, long filesize, String cookie,
+			Context c) {
 		this.listener = lis;
 		this.cookie = cookie;
 		this.context = c;
@@ -75,6 +79,8 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			Intent intent = new Intent();
 			intent.setAction(Intent.ACTION_VIEW);
 			if (TextUtils.isEmpty(type))
+				type = getMimeType(myFile.getAbsolutePath());
+			if (TextUtils.isEmpty(type))
 				intent.setData(Uri.fromFile(myFile));
 			else
 				intent.setDataAndType(Uri.fromFile(myFile), type);
@@ -88,31 +94,35 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
 				DownloadManager manager = (DownloadManager) context
 						.getSystemService(Context.DOWNLOAD_SERVICE);
-				manager.addCompletedDownload(filename, url, true, type,
-						myFile.getAbsolutePath(), filesize, false);
+				if (!TextUtils.isEmpty(type))
+					manager.addCompletedDownload(filename, url, true, type,
+							myFile.getAbsolutePath(), filesize, false);
 			}
 			break;
 		}
 		case ERROR:
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					getSimple(context.getString(R.string.notification_error_title),
-							context.getString(R.string.toast_download_error))
-							.build());
+			mNotificationManager
+					.notify(UNIQUE_ID,
+							getSimple(
+									context.getString(R.string.notification_error_title),
+									context.getString(R.string.toast_download_error))
+									.build());
 			break;
 		case FILE_ERROR:
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					getSimple(context.getString(R.string.notification_error_title),
-							context.getString(R.string.toast_download_error_file))
-							.build());
+			mNotificationManager
+					.notify(UNIQUE_ID,
+							getSimple(
+									context.getString(R.string.notification_error_title),
+									context.getString(R.string.toast_download_error_file))
+									.build());
 			break;
 		case NO_MEMORY:
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					getSimple(context.getString(R.string.notification_error_title),
-							context.getString(R.string.toast_download_no_memory))
-							.build());
+			mNotificationManager
+					.notify(UNIQUE_ID,
+							getSimple(
+									context.getString(R.string.notification_error_title),
+									context.getString(R.string.toast_download_no_memory))
+									.build());
 			break;
 		case NO_MEMORY_CARD:
 			mNotificationManager
@@ -142,7 +152,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 		int byteRead;
 		byte[] buf;
 		try {
-
 			String state = Environment.getExternalStorageState();
 			if (!Environment.MEDIA_MOUNTED.equals(state)) {
 				return NO_MEMORY_CARD;
@@ -154,21 +163,37 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			}
 
 			final URLConnection connection;
-			if (url.startsWith(SifeupAPI.SIGARRA_HOST))
+			if (url.startsWith(SifeupAPI.SIGARRA)) {
+				SifeupAPI.initSSLContext(context);
 				connection = SifeupAPI.get(url);
-			else
+			} else
 				connection = new URL(url).openConnection();
 
 			connection.setRequestProperty("connection", "close");
 			if (cookie != null)
 				connection.setRequestProperty("Cookie", cookie);
 
+			dis = connection.getInputStream();
+			if (filesize == 0)
+				filesize = connection.getContentLength();
+			if (filesize < 0)
+				filesize = 0;
+			// Checking if external storage has enough memory ...
+			android.os.StatFs stat = new android.os.StatFs(Environment
+					.getExternalStorageDirectory().getPath());
+			if ((long) stat.getBlockSize() * (long) stat.getAvailableBlocks() < filesize)
+				return NO_MEMORY;
+
+			mNotificationManager.notify(
+					UNIQUE_ID,
+					createProgressBar(context.getString(
+							R.string.msg_downloading, filename), "", 0,
+							filesize == 0));
+
 			final File dir;
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
-				dir = new File(Environment
-						.getExternalStoragePublicDirectory(
-								Environment.DIRECTORY_DOWNLOADS)
-						.getAbsolutePath());
+				dir = new File(Environment.getExternalStoragePublicDirectory(
+						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 			else
 				dir = new File(Environment.getExternalStorageDirectory()
 						.getAbsolutePath() + File.separator + "Download");
@@ -179,25 +204,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			}
 			fos = new FileOutputStream(myFile);
 
-			dis = connection.getInputStream();
-			if (filesize == 0)
-				filesize = connection.getContentLength();
-			if (filesize < 0)
-				filesize = 0;
-			if (TextUtils.isEmpty(type)) {
-				type = connection.getContentType();
-			}
-			// Checking if external storage has enough memory ...
-			android.os.StatFs stat = new android.os.StatFs(Environment
-					.getExternalStorageDirectory().getPath());
-			if ((long) stat.getBlockSize()
-					* (long) stat.getAvailableBlocks() < filesize)
-				return NO_MEMORY;
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					createProgressBar(context.getString(
-							R.string.msg_downloading, filename), "", 0,
-							filesize == 0));
+			long lastNotificationTime = System.currentTimeMillis();
 			buf = new byte[65536];
 			while (true) {
 				try {
@@ -216,8 +223,12 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 					fos.close();
 					return null;
 				}
-				if (filesize != 0)
-					publishProgress((int) (((float) myProgress / (float) filesize) * 100));
+				if (filesize != 0) {
+					if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
+						publishProgress((int) (((float) myProgress / (float) filesize) * 100));
+						lastNotificationTime = System.currentTimeMillis();
+					}
+				}
 				if (isCancelled()) {
 					dis.close();
 					fos.close();
@@ -273,11 +284,11 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			builder.setProgress(100, progress, indeterminate);
 		} else {
-			RemoteViews contentView = new RemoteViews(
-					context.getPackageName(), R.layout.notification_upload);
+			RemoteViews contentView = new RemoteViews(context.getPackageName(),
+					R.layout.notification_upload);
 			contentView.setTextViewText(android.R.id.text1, content);
-			contentView.setProgressBar(android.R.id.progress, 100,
-					progress, indeterminate);
+			contentView.setProgressBar(android.R.id.progress, 100, progress,
+					indeterminate);
 			builder.setContent(contentView);
 		}
 		update = builder.build();
@@ -285,21 +296,20 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 	}
 
 	@TargetApi(16)
-	private Notification updateProgressBar(int progress,
-			boolean indeterminate) {
+	private Notification updateProgressBar(int progress, boolean indeterminate) {
 		if (filesize == 0)
 			indeterminate = true;
-		update.contentView.setProgressBar(android.R.id.progress, 100,
-				progress, indeterminate);
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-			//update.bigContentView.setProgressBar(android.R.id.progress,
-				//	100, progress, indeterminate);
+		update.contentView.setProgressBar(android.R.id.progress, 100, progress,
+				indeterminate);
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		// update.bigContentView.setProgressBar(android.R.id.progress,
+		// 100, progress, indeterminate);
 		return update;
 	}
 
 	private PendingIntent getPendingIntent() {
-		return PendingIntent.getActivity(context.getApplicationContext(),
-				0, new Intent(), // add this
+		return PendingIntent.getActivity(context.getApplicationContext(), 0,
+				new Intent(), // add this
 				// pass null
 				// to intent
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -320,4 +330,13 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 		return nonExistant;
 	}
 
+	public static String getMimeType(String path) {
+		String type = null;
+		String extension = path.substring(path.lastIndexOf(".") + 1);
+		if (extension != null) {
+			MimeTypeMap mime = MimeTypeMap.getSingleton();
+			type = mime.getMimeTypeFromExtension(extension);
+		}
+		return type;
+	}
 }

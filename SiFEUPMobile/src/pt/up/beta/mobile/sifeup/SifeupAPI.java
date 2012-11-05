@@ -32,7 +32,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class SifeupAPI {
-	public final static String SIGARRA_HOST = "https://sigarra.up.pt/feup/pt/";
+	public final static String SIGARRA = "https://sigarra.up.pt/";
+	private final static String SIGARRA_HOST = SIGARRA + "feup/pt/";
 
 	final private static String EQUALS = "=";
 	final private static String LINK_SEP = "&";
@@ -1030,24 +1031,31 @@ public class SifeupAPI {
 		do {
 			final HttpsURLConnection connection = get(strUrl);
 			connection.setRequestProperty("Cookie", cookie);
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
+			final InputStream pageContent;
+			try {
+				pageContent = connection.getInputStream();
+
+				String charset = getContentCharSet(connection.getContentType());
+				if (charset == null) {
+					charset = HTTP.DEFAULT_CONTENT_CHARSET;
+				}
+				page = getPage(pageContent, charset);
+				pageContent.close();
 				InputStream errStream = connection.getErrorStream();
 				if (errStream != null)
 					errStream.close();
 				connection.disconnect();
-				throw new AuthenticationException();
+			} catch (IOException e) {
+				int returnCode = connection.getResponseCode();
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
+				if (returnCode == HttpsURLConnection.HTTP_FORBIDDEN) {
+					throw new AuthenticationException();
+				} else
+					throw e;
 			}
-			final InputStream pageContent = connection.getInputStream();
-			String charset = getContentCharSet(connection.getContentType());
-			if (charset == null) {
-				charset = HTTP.DEFAULT_CONTENT_CHARSET;
-			}
-			page = getPage(pageContent, charset);
-			pageContent.close();
-			InputStream errStream = connection.getErrorStream();
-			if (errStream != null)
-				errStream.close();
-			connection.disconnect();
 			if (page == null)
 				throw new IOException("Null page");
 		} while (page.equals(""));
