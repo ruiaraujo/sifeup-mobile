@@ -3,12 +3,15 @@ package pt.up.beta.mobile.sifeup;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -388,8 +391,8 @@ public class SifeupAPI {
 	 */
 	public static String getAuthenticationUrl(String code, String password) {
 		return SIGARRA_HOST + WebServices.AUTHENTICATION + Authentication.NAME
-				+ WEBSERVICE_SEP + Authentication.LOGIN + EQUALS + code
-				+ LINK_SEP + Authentication.PASSWORD + EQUALS + password;
+				+ WEBSERVICE_SEP + Authentication.LOGIN + EQUALS + encode(code)
+				+ LINK_SEP + Authentication.PASSWORD + EQUALS + encode(password);
 	}
 
 	/**
@@ -1186,7 +1189,7 @@ public class SifeupAPI {
 		String charset = null;
 		for (String value : values) {
 			value = value.trim();
-			if (value.toLowerCase().startsWith("charset=")) {
+			if (value.toLowerCase(Locale.getDefault()).startsWith("charset=")) {
 				charset = value.substring("charset=".length());
 			}
 		}
@@ -1252,5 +1255,17 @@ public class SifeupAPI {
 		}
 
 		return Errors.NO_ERROR;
+	}
+	
+
+	private static String encode(String s) {
+		if (s == null)
+			return null;
+		try {
+			return URLEncoder.encode(s.trim(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }
