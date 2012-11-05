@@ -25,7 +25,7 @@
     <!-- *************************************************************************************** -->
     <!-- PREFERENCES -->
     <string name="title_preferences">Settings</string>
-    <string name="lb_sync_preferences">Configure syncronization</string>
+    <string name="lb_sync_preferences">Configure synchronization</string>
     <string name="lb_sync_preferences_sum">Configure period</string>
     <string name="lb_sync_notifications_interval_title">Notifications Refresh Interval</string>
     <string name="lb_sync_interval_title">Refresh Interval</string>
@@ -116,6 +116,7 @@
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
     <string name="description_now">Go to Now</string>
     <string name="description_schedule">See the Schedule</string>
+    <string name="label_no_classes">You have no scheduled classes</string>
 
     <!-- Class Description -->
     <string name="class_subject">&lt;b>Subject:&lt;/b>%1$s</string>

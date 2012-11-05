@@ -211,6 +211,11 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			// export to Calendar (create event)
 			EasyTracker.getTracker().trackEvent("ui_action", "button_press",
 					"Export Calendar", 0L);
+			if (schedule.isEmpty()) {
+				Toast.makeText(getActivity(), R.string.label_no_classes,
+						Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			calendarExport();
 			return true;
 		}
@@ -688,6 +693,9 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		Log.d("Schedule", "success");
 		for (ScheduleBlock block : schedule)
 			addBlock(block.getWeekDay(), block);
+		if (schedule.isEmpty())
+			Toast.makeText(getActivity(), R.string.label_no_classes,
+					Toast.LENGTH_SHORT).show();
 		mPager.setAdapter(new DayAdapter());
 		if (fetchingPreviousWeek) {
 			mPager.setCurrentItem(mDays.size() - 2, false);

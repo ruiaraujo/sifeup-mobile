@@ -86,7 +86,7 @@ public class ExamsFragment extends BaseLoaderFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (exams != null)
-			outState.putParcelableArray(EXAM_KEY,exams);
+			outState.putParcelableArray(EXAM_KEY, exams);
 	}
 
 	@Override
@@ -99,14 +99,22 @@ public class ExamsFragment extends BaseLoaderFragment implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_export_calendar) {
-			if (exams == null || exams.length == 0)
+			if (exams == null)
 				return true;
+
+			if (exams.length == 0) {
+				Toast.makeText(getActivity(), R.string.label_no_exams,
+						Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			// export to Calendar (create event)
 			calendarExport();
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			onRepeat();
+			setRefreshActionItemState(true);
+			SigarraSyncAdapterUtils.syncExams(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -139,7 +147,6 @@ public class ExamsFragment extends BaseLoaderFragment implements
 			break;
 		}
 	}
-
 
 	/**
 	 * Exports the schedule to Google Calendar
@@ -184,9 +191,11 @@ public class ExamsFragment extends BaseLoaderFragment implements
 								long time = getDate(b.getDate(),
 										b.getStartTime()).toMillis(false);
 								Event event = new Event(b.getOcorrName(), b
-										.getRoomsString(), b.getType(), time, time
-										+ timeDifference(b.getStartTime(),
-												b.getEndTime()) * 60000);
+										.getRoomsString(), b.getType(), time,
+										time
+												+ timeDifference(
+														b.getStartTime(),
+														b.getEndTime()) * 60000);
 								final Uri newEvent = calendarHelper
 										.insertEvent(calIds[which], event);
 								// check event error
@@ -199,7 +208,7 @@ public class ExamsFragment extends BaseLoaderFragment implements
 								Toast.makeText(
 										getActivity(),
 										R.string.toast_export_calendar_finished,
-										Toast.LENGTH_LONG).show();
+										Toast.LENGTH_SHORT).show();
 
 						}
 
