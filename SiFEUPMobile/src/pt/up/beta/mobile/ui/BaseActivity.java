@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.KeyEvent;
-import android.view.View;
+import android.widget.ImageView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -34,8 +34,6 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
-		// GoogleAnalyticsSessionManager.getInstance(getApplication())
-		// .incrementActivityCount();
 		actionbar = getSupportActionBar();
 
 		if (!UIUtils.isTablet(getApplicationContext())) {
@@ -55,7 +53,9 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 
 			setSlidingActionBarEnabled(false);
 		} else {
-			setBehindContentView(new View(getApplicationContext()));
+			final ImageView pic = new ImageView(this);
+			pic.setBackgroundColor(getResources().getColor(R.color.body_text_white));
+			setBehindContentView(pic);
 			getSlidingMenu().setSlidingEnabled(false);
 		}
 	}
@@ -76,8 +76,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	public void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// NOTE: there needs to be a content view set before this is called, so
-		// this method
-		// should be called in onPostCreate.
+		// this method should be called in onPostCreate.
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 				| ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_HOME);
 
@@ -151,7 +150,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			} else
 				NavUtils.navigateUpTo(this, upIntent);
 		}
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	/**
@@ -173,13 +172,19 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 				public void run() {
 					startActivity(intent);
 					overridePendingTransition(R.anim.fade_in,
-							android.R.anim.fade_out);
+							R.anim.fade_out);
 				}
 			}, 200);
 		} else {
 			startActivity(intent);
-			overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
+	}
+	
+
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	/**
@@ -230,9 +235,5 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		return intent;
 	}
 
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
-	}
 
 }

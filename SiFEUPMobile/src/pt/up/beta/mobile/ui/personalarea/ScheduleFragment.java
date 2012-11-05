@@ -215,7 +215,36 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_refresh) {
-			onRepeat();
+			setRefreshActionItemState(true);
+			final Time monday = new Time(DateUtils.TIME_REFERENCE);
+			monday.set(mondayMillis);
+			monday.normalize(false);
+			final String initialDay = monday.format("%Y%m%d");
+			// Friday
+			monday.set(DateUtils.moveDayofWeek(mondayMillis, 4));
+			monday.normalize(false);
+			final String finalDay = monday.format("%Y%m%d");
+			final String type;
+			switch (scheduleType) {
+			case SCHEDULE_STUDENT:
+				type = SigarraContract.Schedule.STUDENT;
+				break;
+			case SCHEDULE_EMPLOYEE:
+				type = SigarraContract.Schedule.EMPLOYEE;
+				break;
+			case SCHEDULE_ROOM:
+				type = SigarraContract.Schedule.ROOM;
+				break;
+			case SCHEDULE_UC:
+				type = SigarraContract.Schedule.UC;
+				break;
+			default:
+				throw new RuntimeException("Invalid schedule type");
+			}
+			SigarraSyncAdapterUtils.syncSchedule(
+					AccountUtils.getActiveUserName(getActivity()),
+					scheduleCode, initialDay, finalDay, type,
+					Long.toString(mondayMillis));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

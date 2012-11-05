@@ -377,11 +377,15 @@
     <string name="hint_student_first_year">Primeiro Ano</string>
     
     <!--Employee -->
-    <string name="lb_employee_acronym">Acrónimo</string>
-    <string name="hint_employee_acronym">Acrónimo</string>
+    <string name="lb_employee_acronym">Sigla:</string>
+    <string name="hint_employee_acronym">Sigla</string>
     
     <string name="lb_year">Ano:</string>
     <string name="hint_year">Ano</string>
+    
+     <!--Room -->
+    <string name="lb_room_name">Nome:</string>
+	<string name="hint_room_name">Nome</string>
     
     <string name="title_advanced_search">Pesquisa</string>
     <string name="title_advanced_search_students">Pesquisa de Estudantes</string>

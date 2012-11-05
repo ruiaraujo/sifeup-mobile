@@ -33,7 +33,7 @@ public class SearchUtils {
 						encode(acronym), encode(year), 1));
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getRoomsSearchByNameReply(
+	public static AsyncTask<String, Void, ERROR_TYPE> getRoomsSearchReply(
 			String name,
 			ResponseCommand<ResultsPage<RoomSearchResult>> command,
 			Context context) {
@@ -77,7 +77,7 @@ public class SearchUtils {
 				}.getType());
 	}
 
-	public static ResultsPage<RoomSearchResult> getRoomsSearchByNameReply(
+	public static ResultsPage<RoomSearchResult> getRoomsSearchReply(
 			String query, int page, Context context) {
 		final Gson gson = new Gson();
 		return gson.fromJson(

@@ -11,6 +11,7 @@ import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
 import pt.up.beta.mobile.ui.utils.TouchImageView;
 import pt.up.beta.mobile.ui.utils.TouchImageView.OnTapListener;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -167,6 +168,7 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 			showEmptyScreen(getString(R.string.general_error));
 	}
 
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	public void onResultReceived(List<BuildingPicHotspot> results) {
 		hotspots = results;
@@ -178,9 +180,17 @@ public class FeupFacilitiesFragment extends BaseFragment implements
 		if (!welcomeScreenShown) {
 			Toast.makeText(getActivity(), R.string.toast_first_map_view,
 					Toast.LENGTH_LONG).show();
-			SharedPreferences.Editor editor = mPrefs.edit();
+			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(welcomeScreenShownPref, true);
-			editor.commit();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+				editor.apply();
+			else
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						editor.commit();
+					}
+				});
 		}
 		showMainScreen();
 	}
