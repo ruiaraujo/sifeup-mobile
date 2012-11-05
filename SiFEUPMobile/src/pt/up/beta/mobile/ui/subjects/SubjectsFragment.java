@@ -103,7 +103,7 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 		case AUTHENTICATION:
 			Toast.makeText(getActivity(), getString(R.string.toast_auth_error),
 					Toast.LENGTH_LONG).show();
-			goLogin();
+			finish();
 			break;
 		case NETWORK:
 			showRepeatTaskScreen(getString(R.string.toast_server_error));

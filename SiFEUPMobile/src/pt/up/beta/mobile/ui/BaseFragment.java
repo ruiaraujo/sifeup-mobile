@@ -124,17 +124,10 @@ public class BaseFragment extends SherlockFragment {
 		super.onPause();
 	}
 
-	public void goLogin() {
+	public void finish() {
 		if (getActivity() == null)
 			return;
-		final Intent i = new Intent(getActivity(), LauncherActivity.class);
-		i.putExtra(LauncherActivity.LOGOUT_FLAG, true).addFlags(
-				Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
 		getActivity().finish();
-		getActivity().overridePendingTransition(R.anim.fade_in,
-				android.R.anim.fade_out);
 	}
 
 	protected void showRepeatTaskScreen(final String message) {

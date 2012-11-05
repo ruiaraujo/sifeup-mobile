@@ -105,6 +105,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 		Log.i(TAG, "onCreate(" + icicle + ")");
 		super.onCreate(icicle);
+		setContentView(R.layout.login);
+		mMessage = (TextView) findViewById(R.id.message);
+		mUsernameEdit = (EditText) findViewById(R.id.login_username);
+		mPasswordEdit = (EditText) findViewById(R.id.login_pass);
 		mAccountManager = AccountManager.get(this);
 		Log.i(TAG, "loading data from Intent");
 		final Intent intent = getIntent();
@@ -112,11 +116,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		mRequestNewAccount = mUsername == null;
 		mConfirmCredentials = intent.getBooleanExtra(PARAM_CONFIRM_CREDENTIALS,
 				false);
+		if ( mConfirmCredentials )
+			mPasswordEdit.requestFocus();
 		Log.i(TAG, "    request new: " + mRequestNewAccount);
-		setContentView(R.layout.login);
-		mMessage = (TextView) findViewById(R.id.message);
-		mUsernameEdit = (EditText) findViewById(R.id.login_username);
-		mPasswordEdit = (EditText) findViewById(R.id.login_pass);
 
 		final CheckBox showPassword = (CheckBox) findViewById(R.id.show_password);
 		showPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -182,6 +184,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		final Account account = new Account(mUsername, Constants.ACCOUNT_TYPE);
 		mAccountManager.setPassword(account, mPassword);
 		final Intent intent = new Intent();
+		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 		intent.putExtra(AccountManager.KEY_BOOLEAN_RESULT, result);
 		setAccountAuthenticatorResult(intent.getExtras());
 		setResult(RESULT_OK, intent);
@@ -266,7 +269,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				mAccountManager.setUserData(account, Constants.USER_TYPE,
 						user.getType());
 				mAccountManager.setUserData(account, Constants.USER_CODE,
-						user.getUser());
+						user.getUserCode());
 				final Intent intent = new Intent();
 				intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 				intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE,

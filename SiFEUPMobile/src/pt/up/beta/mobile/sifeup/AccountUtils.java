@@ -3,6 +3,7 @@ package pt.up.beta.mobile.sifeup;
 import java.io.IOException;
 
 import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.ui.LauncherActivity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -23,6 +24,7 @@ public class AccountUtils {
 
 	private static Account mAccount;
 	private static AccountManager mAccountManager;
+	private static User user;
 
 	public static boolean init(final Context context) {
 		mAccountManager = AccountManager.get(context);
@@ -32,6 +34,10 @@ public class AccountUtils {
 				LauncherActivity.PREF_ACTIVE_USER, "");
 		if (!TextUtils.isEmpty(activeUser)) {
 			mAccount = new Account(activeUser, Constants.ACCOUNT_TYPE);
+			user = new User(mAccount.name, mAccountManager.getUserData(
+					mAccount, Constants.USER_CODE),
+					mAccountManager.getPassword(mAccount),
+					mAccountManager.getUserData(mAccount, Constants.USER_TYPE));
 			return true;
 		} else
 			return false;
@@ -42,14 +48,14 @@ public class AccountUtils {
 	}
 
 	public static String renewAuthToken(final Context context,
-			final Account account) throws OperationCanceledException,
-			AuthenticatorException, IOException {
+			final Account account, final String cookie)
+			throws OperationCanceledException, AuthenticatorException,
+			IOException {
 		if (needsInit()) {
 			if (!init(context))
 				return null;
 		}
-		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
-				getAuthToken(context, account));
+		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, cookie);
 		return getAuthToken(context, account);
 	}
 
@@ -60,12 +66,8 @@ public class AccountUtils {
 			if (!init(context))
 				return null;
 		}
-		final String authToken = mAccountManager.peekAuthToken(account,
-				Constants.ACCOUNT_TYPE);
-		if (authToken == null)
-			return mAccountManager.blockingGetAuthToken(account,
-					Constants.AUTHTOKEN_TYPE, false);
-		return authToken;
+		return mAccountManager.blockingGetAuthToken(account,
+				Constants.AUTHTOKEN_TYPE, true);
 	}
 
 	public static Account getActiveAccount(final Context context) {
@@ -86,7 +88,7 @@ public class AccountUtils {
 			if (!init(context))
 				return null;
 		}
-		return mAccountManager.getUserData(mAccount, Constants.USER_CODE);
+		return user.getUserCode();
 	}
 
 	/**
@@ -99,7 +101,7 @@ public class AccountUtils {
 			if (!init(context))
 				return null;
 		}
-		return mAccountManager.getUserData(mAccount, Constants.USER_TYPE);
+		return user.getType();
 	}
 
 	/**
@@ -112,7 +114,7 @@ public class AccountUtils {
 			if (!init(context))
 				return null;
 		}
-		return mAccount.name;
+		return user.getDisplayName();
 	}
 
 	/**
@@ -125,14 +127,14 @@ public class AccountUtils {
 			if (!init(context))
 				return null;
 		}
-		return mAccountManager.getPassword(mAccount);
+		return user.getPassword();
 	}
 
 	/*
 	 * GetLoginPassword return null if the account doesn't exist
 	 */
 	public static boolean isAccountValid(final Context context) {
-		return getActiveUserPassword(context) != null;
+		return mAccountManager.getPassword(mAccount) != null;
 	}
 
 }

@@ -105,16 +105,26 @@ class Authenticator extends AbstractAccountAuthenticator {
 			return result;
 		}
 		try {
+			final AccountManager am = AccountManager.get(mContext);
+			if (am.peekAuthToken(account, authTokenType) != null) {
+				final Bundle result = new Bundle();
+				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+				result.putString(AccountManager.KEY_ACCOUNT_TYPE,
+						Constants.ACCOUNT_TYPE);
+				result.putString(AccountManager.KEY_AUTHTOKEN,
+						am.peekAuthToken(account, authTokenType));
+				return result;
+			}
 			// Extract the username and password from the Account Manager, and
 			// ask
 			// the server for an appropriate AuthToken.
-			final AccountManager am = AccountManager.get(mContext);
 			final String password = am.getPassword(account);
 			if (password != null) {
 				String[] reply;
 
 				reply = SifeupAPI.authenticate(
-						am.getUserData(account, Constants.USER_CODE), password, mContext);
+						am.getUserData(account, Constants.USER_CODE), password,
+						mContext);
 				final String authToken = reply[1];
 				if (!TextUtils.isEmpty(authToken)) {
 					final Bundle result = new Bundle();
@@ -137,6 +147,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 		// need to re-prompt them for their credentials. We do that by creating
 		// an intent to display our AuthenticatorActivity panel.
 		final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+		intent.putExtra(AuthenticatorActivity.PARAM_CONFIRM_CREDENTIALS, true);
 		intent.putExtra(AuthenticatorActivity.PARAM_USERNAME, account.name);
 		intent.putExtra(AuthenticatorActivity.PARAM_AUTHTOKEN_TYPE,
 				authTokenType);

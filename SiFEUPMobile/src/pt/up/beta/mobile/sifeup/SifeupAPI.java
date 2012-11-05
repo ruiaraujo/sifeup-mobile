@@ -996,15 +996,16 @@ public class SifeupAPI {
 
 	public static String getReply(String strUrl, Account account,
 			Context context) throws IOException, AuthenticationException {
+		final String cookie;
 		try {
+			cookie = AccountUtils.getAuthToken(context, account);
 			try {
 				initSSLContext(context);
-				return getReply(strUrl,
-						AccountUtils.getAuthToken(context, account));
+				return getReply(strUrl, cookie);
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
 				return getReply(strUrl,
-						AccountUtils.renewAuthToken(context, account));
+						AccountUtils.renewAuthToken(context, account, cookie));
 			}
 
 		} catch (OperationCanceledException e) {
@@ -1067,6 +1068,13 @@ public class SifeupAPI {
 		HttpsURLConnection connection = null;
 		do {
 			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
+				InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
+				throw new AuthenticationException();
+			}
 			final InputStream pageContent = connection.getInputStream();
 			String charset = getContentCharSet(connection.getContentType());
 			if (charset == null) {
@@ -1105,15 +1113,16 @@ public class SifeupAPI {
 
 	public static Bitmap downloadBitmap(String strUrl, Account account,
 			Context context) throws IOException, AuthenticationException {
+		final String cookie;
 		try {
+			cookie = AccountUtils.getAuthToken(context, account);
 			try {
 				initSSLContext(context);
-				return downloadBitmap(strUrl,
-						AccountUtils.getAuthToken(context, account));
+				return downloadBitmap(strUrl, cookie);
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
 				return downloadBitmap(strUrl,
-						AccountUtils.renewAuthToken(context, account));
+						AccountUtils.renewAuthToken(context, account, cookie));
 			}
 
 		} catch (OperationCanceledException e) {

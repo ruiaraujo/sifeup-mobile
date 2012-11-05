@@ -6,13 +6,13 @@ import android.os.Parcelable;
 
 public class User implements Parcelable {
 	private final String displayName;
-	private final String user;
+	private final String userCode;
 	private final String password;
 	private final String type;
 
 	public User(String displayName, String user, String password, String type) {
 		this.displayName = displayName;
-		this.user = user;
+		this.userCode = user;
 		this.password = password;
 		this.type = type;
 	}
@@ -21,8 +21,8 @@ public class User implements Parcelable {
 		return displayName;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUserCode() {
+		return userCode;
 	}
 
 	public String getPassword() {
@@ -49,14 +49,14 @@ public class User implements Parcelable {
 
 	private User(Parcel in) {
 		displayName = ParcelUtils.readString(in);
-		user = ParcelUtils.readString(in);
+		userCode = ParcelUtils.readString(in);
 		password = ParcelUtils.readString(in);
 		type = ParcelUtils.readString(in);
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		ParcelUtils.writeString(dest, displayName);
-		ParcelUtils.writeString(dest, user);
+		ParcelUtils.writeString(dest, userCode);
 		ParcelUtils.writeString(dest, password);
 		ParcelUtils.writeString(dest, type);
 	}

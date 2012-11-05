@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
-import org.json.JSONException;
-
-import com.google.gson.Gson;
 
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.SigarraContract;
@@ -38,6 +35,8 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
+
+import com.google.gson.Gson;
 
 public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -77,7 +76,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 						final String friendType = c
 								.getString(c
 										.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND));
-						final Profile friend = getProfile(friendCode,friendType);
+						final Profile friend = getProfile(friendCode,
+								friendType);
 						if (friend != null)
 							rawContacts.add(friend);
 					} while (c.moveToNext());
@@ -90,7 +90,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 					true);
 			ContactManager.updateContacts(getContext(), account.name,
 					rawContacts);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();
 			ACRA.getErrorReporter().handleSilentException(e);
@@ -100,8 +100,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 
-	private Profile getProfile(String userCode, String type)
-			throws JSONException {
+	private Profile getProfile(String userCode, String type) {
 		final Cursor c = getContext().getContentResolver().query(
 				SigarraContract.Profiles.CONTENT_URI,
 				SigarraContract.Profiles.PROFILE_COLUMNS,

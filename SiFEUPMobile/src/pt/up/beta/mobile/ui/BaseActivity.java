@@ -53,8 +53,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 
 			setSlidingActionBarEnabled(false);
-		}
-		else{
+		} else {
 			setBehindContentView(new View(getApplicationContext()));
 			getSlidingMenu().setSlidingEnabled(false);
 		}
@@ -239,21 +238,6 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		intent.putExtras(arguments);
 		intent.removeExtra("_uri");
 		return intent;
-	}
-
-	/**
-	 * Starts the login activity. the param is used for the login activity to
-	 * know whether it should start logging in as soon as it is starts or not.
-	 * 
-	 */
-	public void goLogin() {
-		Intent i = new Intent(this, LauncherActivity.class).putExtra(
-				LauncherActivity.LOGOUT_FLAG, true).addFlags(
-				Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-		finish();
-		overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 	public void onBackPressed() {

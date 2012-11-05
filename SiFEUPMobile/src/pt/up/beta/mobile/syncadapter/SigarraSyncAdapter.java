@@ -183,7 +183,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 		} catch (IOException e) {
-			// syncResult.stats.numIoExceptions++;
+			syncResult.stats.numIoExceptions++;
+			syncResult.delayUntil = 3600;
 			broadcastManager
 					.sendBroadcast(new Intent(SIGARRASYNCADAPTER_STATUS)
 							.putExtra(SIGARRASYNCADAPTER_STATUS, NETWORK_ERROR));

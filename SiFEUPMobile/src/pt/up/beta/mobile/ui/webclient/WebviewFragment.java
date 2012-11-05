@@ -187,7 +187,7 @@ public class WebviewFragment extends BaseFragment {
 					Toast.makeText(getActivity(), R.string.msg_authenticating,
 							Toast.LENGTH_SHORT).show();
 					if (user.equals("") || pass.equals(""))
-						goLogin();
+						finish();
 					mWebView.loadUrl("javascript: {"
 							+ "document.getElementById('user').value = '"
 							+ user + "';"
