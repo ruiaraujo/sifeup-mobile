@@ -18,11 +18,7 @@ package pt.up.beta.mobile.loaders;
 
 import java.lang.reflect.Type;
 
-import org.acra.ACRA;
 import org.json.JSONException;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import pt.up.beta.mobile.datatypes.AcademicPath;
 import pt.up.beta.mobile.datatypes.StudentCourse;
@@ -32,6 +28,10 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Static library support version of the framework's
@@ -80,12 +80,9 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 					return academicPath;
 				} catch (JSONException e) {
 					e.printStackTrace();
-					ACRA.getErrorReporter().handleSilentException(e);
-					ACRA.getErrorReporter().handleSilentException(
-							new RuntimeException("Id:"
-									+ AccountUtils
-											.getActiveUserCode(getContext())
-									+ "\n\n" + cursor.getString(0)));
+					EasyTracker.getTracker().trackException(
+							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+									+ cursor.getString(0), e, true);
 				}
 			}
 		}

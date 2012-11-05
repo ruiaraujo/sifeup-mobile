@@ -1,13 +1,12 @@
 package pt.up.beta.mobile.sifeup;
 
-import org.acra.ACRA;
-
 import pt.up.beta.mobile.datatypes.OtherSubjectOccurrences;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class SubjectUtils {
@@ -43,11 +42,9 @@ public class SubjectUtils {
 						OtherSubjectOccurrences[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n"
-								+ page));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ page, e, true);
 			}
 			return null;
 		}
@@ -67,11 +64,9 @@ public class SubjectUtils {
 				return new Gson().fromJson(page, Student[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n"
-								+ page));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ page, e, true);
 			}
 			return null;
 		}

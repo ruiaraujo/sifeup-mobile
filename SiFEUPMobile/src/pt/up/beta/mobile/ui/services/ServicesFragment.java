@@ -1,7 +1,6 @@
 package pt.up.beta.mobile.ui.services;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;
 import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
@@ -20,13 +19,6 @@ import android.widget.TextView;
 public class ServicesFragment extends Fragment {
 	private ExpandableListView menu;
 	private LayoutInflater mInflater;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/StudentServices");
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

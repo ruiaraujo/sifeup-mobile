@@ -21,7 +21,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.ACRA;
 import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +60,7 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -104,6 +104,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		mAccountManager = AccountManager.get(context.getApplicationContext());
 		broadcastManager = LocalBroadcastManager.getInstance(context
 				.getApplicationContext());
+		EasyTracker.getInstance().setContext(context);
 	}
 
 	@TargetApi(8)
@@ -206,10 +207,9 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						SIGARRASYNCADAPTER_STATUS).putExtra(
 						SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
-			ACRA.getErrorReporter().handleSilentException(e);
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(getContext())));
+			EasyTracker.getTracker().trackException(
+					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
+							+ e.getMessage(), true);
 		}
 	}
 
@@ -236,10 +236,9 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				Notification[].class);
 		if (notifications == null) {
 			syncResult.stats.numParseExceptions++;
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + notificationReply));
+			EasyTracker.getTracker().trackException(
+					"Id:" + AccountUtils.getActiveUserCode(getContext())
+							+ "\nPage:" + notificationReply, true);
 			return;
 		}
 		ArrayList<String> fetchedNotCodes = new ArrayList<String>();
@@ -599,10 +598,9 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final StudentCourse[] courses = gson.fromJson(subjectsPage, listType);
 		if (courses == null) {
 			syncResult.stats.numParseExceptions++;
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + subjectsPage));
+			EasyTracker.getTracker().trackException(
+					"Id:" + AccountUtils.getActiveUserCode(getContext())
+							+ "\nPage:" + subjectsPage, true);
 			return;
 		}
 		final List<ContentValues> values = new ArrayList<ContentValues>();
@@ -663,10 +661,9 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				teachingServicePage, TeachingService.class);
 		if (service == null) {
 			syncResult.stats.numParseExceptions++;
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + teachingServicePage));
+			EasyTracker.getTracker().trackException(
+					"Id:" + AccountUtils.getActiveUserCode(getContext())
+							+ "\nPage:" + teachingServicePage, true);
 			return;
 		}
 		final ContentValues teachingValue = new ContentValues();

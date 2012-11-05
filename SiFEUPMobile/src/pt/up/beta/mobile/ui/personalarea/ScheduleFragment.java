@@ -13,7 +13,6 @@ import pt.up.beta.mobile.loaders.ScheduleLoader;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.dialogs.ProgressDialogFragment;
 import pt.up.beta.mobile.utils.DateUtils;
@@ -46,6 +45,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import external.com.google.android.apps.iosched.ui.widget.BlockView;
 import external.com.google.android.apps.iosched.ui.widget.BlocksLayout;
@@ -202,8 +202,6 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_now) {
 			if (!updateNowView()) {
-				AnalyticsUtils.getInstance(getActivity()).trackEvent(
-						AnalyticsUtils.MENU_CAT, "Click", "Go to Now", 1);
 				Toast.makeText(getActivity(), R.string.toast_now_not_visible,
 						Toast.LENGTH_SHORT).show();
 			}
@@ -211,8 +209,8 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		}
 		if (item.getItemId() == R.id.menu_export_calendar) {
 			// export to Calendar (create event)
-			AnalyticsUtils.getInstance(getActivity()).trackEvent(
-					AnalyticsUtils.MENU_CAT, "Click", "Export Calendar", 1);
+			EasyTracker.getTracker().trackEvent("ui_action", "button_press",
+					"Export Calendar", 0L);
 			calendarExport();
 			return true;
 		}
@@ -226,8 +224,8 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	@Override
 	protected void onRepeat() {
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-			ProgressDialogFragment.newInstance(true).show(
-					getFragmentManager(), DIALOG);
+			ProgressDialogFragment.newInstance(true).show(getFragmentManager(),
+					DIALOG);
 		} else
 			showLoadingScreen();
 		setRefreshActionItemState(true);

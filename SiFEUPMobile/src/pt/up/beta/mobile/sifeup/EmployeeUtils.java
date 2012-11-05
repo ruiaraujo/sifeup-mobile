@@ -1,12 +1,11 @@
 package pt.up.beta.mobile.sifeup;
 
-import org.acra.ACRA;
-
 import pt.up.beta.mobile.datatypes.EmployeeMarkings;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class EmployeeUtils {
@@ -31,12 +30,9 @@ public class EmployeeUtils {
 				return new Gson().fromJson(page,EmployeeMarkings[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils
-										.getActiveUserCode(null)
-								+ "\n\n" + page));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ e.getMessage(), e, true);
 			}
 			return null;
 		}

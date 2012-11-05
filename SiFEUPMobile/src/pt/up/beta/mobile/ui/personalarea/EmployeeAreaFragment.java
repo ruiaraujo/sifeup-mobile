@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import pt.up.beta.mobile.ui.subjects.TeachingServiceActivity;
@@ -16,13 +15,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class EmployeeAreaFragment extends ListFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/Employee Area");
+		EasyTracker.getTracker().trackView(
+				"Employee Area");
 		String[] from = new String[] { "title" };
 		int[] to = new int[] { R.id.list_menu_title };
 

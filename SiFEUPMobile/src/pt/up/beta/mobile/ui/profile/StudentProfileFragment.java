@@ -12,7 +12,6 @@ import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseLoaderFragment;
 import pt.up.beta.mobile.ui.personalarea.ScheduleActivity;
 import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
@@ -44,6 +43,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 /**
  * Student Profile Fragment This interface is responsible for fetching the
@@ -72,8 +72,7 @@ public class StudentProfileFragment extends BaseLoaderFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		AnalyticsUtils.getInstance(getActivity()).trackPageView(
-				"/StudentProfile");
+		EasyTracker.getTracker().trackView("Student Profile");
 	}
 
 	@Override

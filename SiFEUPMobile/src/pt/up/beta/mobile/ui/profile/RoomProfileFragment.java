@@ -6,7 +6,6 @@ import pt.up.beta.mobile.datatypes.RoomProfile.Attributes;
 import pt.up.beta.mobile.datatypes.RoomProfile.People;
 import pt.up.beta.mobile.sifeup.FacilitiesUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
-import pt.up.beta.mobile.tracker.AnalyticsUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsFragment;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 /**
  * Employee Profile Fragment This interface is responsible for fetching the
@@ -46,8 +46,7 @@ public class RoomProfileFragment extends BaseFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		AnalyticsUtils.getInstance(getActivity())
-				.trackPageView("/Room Profile");
+		EasyTracker.getTracker().trackView("Room Profile");
 	}
 
 	@Override
@@ -140,7 +139,8 @@ public class RoomProfileFragment extends BaseFragment implements
 			for (Attributes attr : room.getAtributes()) {
 				TextView llItem = (TextView) mInflater.inflate(
 						R.layout.simple_list_item1, null);
-				llItem.setText(Html.fromHtml("<b>"+attr.getName() + ":</b> " + attr.getContent()));
+				llItem.setText(Html.fromHtml("<b>" + attr.getName() + ":</b> "
+						+ attr.getContent()));
 				llItem.setClickable(false);
 				llItem.setFocusable(false);
 				llItem.setFocusableInTouchMode(false);

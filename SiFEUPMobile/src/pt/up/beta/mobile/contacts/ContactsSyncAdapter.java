@@ -18,8 +18,6 @@ package pt.up.beta.mobile.contacts;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.ACRA;
-
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
@@ -36,6 +34,7 @@ import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -45,6 +44,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 	public ContactsSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		mAccountManager = AccountManager.get(context);
+		EasyTracker.getInstance().setContext(context);
 	}
 
 	@Override
@@ -93,10 +93,9 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (Exception e) {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();
-			ACRA.getErrorReporter().handleSilentException(e);
-			ACRA.getErrorReporter().handleSilentException(
-					new RuntimeException("Id:"
-							+ AccountUtils.getActiveUserCode(null)));
+			EasyTracker.getTracker().trackException(
+					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
+							+ e.getMessage(), true);
 		}
 	}
 

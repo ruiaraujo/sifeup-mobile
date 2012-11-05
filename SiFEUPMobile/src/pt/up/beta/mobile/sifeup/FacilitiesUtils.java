@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.ACRA;
 import org.apache.http.auth.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +17,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class FacilitiesUtils {
@@ -168,11 +168,9 @@ public class FacilitiesUtils {
 				return hotspots;
 			} catch (JSONException e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n"
-								+ page));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ page, e, true);
 			}
 			return null;
 		}

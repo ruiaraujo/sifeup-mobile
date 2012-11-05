@@ -2,7 +2,6 @@ package pt.up.beta.mobile.sifeup;
 
 import java.io.IOException;
 
-import org.acra.ACRA;
 import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +11,8 @@ import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class AuthenticationUtils {
 	private AuthenticationUtils() {
 	}
@@ -20,7 +21,6 @@ public class AuthenticationUtils {
 			String password, ResponseCommand<User> command, Context context) {
 		return new Authenticator(command, context).execute(code, password);
 	}
-
 
 	private static User JSONUser(String page) throws JSONException {
 		JSONObject jObject = new JSONObject(page);
@@ -62,10 +62,9 @@ public class AuthenticationUtils {
 					return ERROR_TYPE.AUTHENTICATION;
 			} catch (JSONException e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n"));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ e.getMessage(), e, true);
 				return ERROR_TYPE.GENERAL;
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
@@ -104,7 +103,7 @@ public class AuthenticationUtils {
 			if (result.equals("Success")) {
 				com.onResultReceived(null);
 			} else if (result.equals("Error")) {
-				com.onResultReceived(new String[]{errorTitle, errorContent});
+				com.onResultReceived(new String[] { errorTitle, errorContent });
 			} else if (result.equals("Net"))
 				com.onError(ERROR_TYPE.NETWORK);
 			else
@@ -116,7 +115,8 @@ public class AuthenticationUtils {
 			try {
 				page = SifeupAPI.getReply(SifeupAPI.getSetPasswordUrl(
 						strings[0], strings[1], strings[2], strings[3],
-						strings[4]), AccountUtils.getActiveAccount(context), context);
+						strings[4]), AccountUtils.getActiveAccount(context),
+						context);
 				int error = SifeupAPI.JSONError(page);
 				switch (error) {
 				case SifeupAPI.Errors.ERROR:
@@ -129,20 +129,18 @@ public class AuthenticationUtils {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleSilentException(e);
-				ACRA.getErrorReporter().handleSilentException(
-						new RuntimeException("Id:"
-								+ AccountUtils.getActiveUserCode(null) + "\n\n"));
+				EasyTracker.getTracker().trackException(
+						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+								+ e.getMessage(), e, true);
 			} catch (AuthenticationException e) {
 				try {
 					getError(page);
 					return "Error";
 				} catch (JSONException e1) {
 					e1.printStackTrace();
-					ACRA.getErrorReporter().handleSilentException(e1);
-					ACRA.getErrorReporter().handleSilentException(
-							new RuntimeException("Id:"
-									+ AccountUtils.getActiveUserCode(null) + "\n\n"));
+					EasyTracker.getTracker().trackException(
+							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+									+ e.getMessage(), e, true);
 				}
 				e.printStackTrace();
 			} catch (IOException e) {

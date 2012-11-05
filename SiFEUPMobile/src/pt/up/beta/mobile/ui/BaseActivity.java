@@ -16,6 +16,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -60,26 +61,15 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		// TODO: we need to improve this
-		// if (!AccountUtils.isAccountValid(this)) {
-		// goLogin();
-		// }
-		// Example of how to track a pageview event
-		// AnalyticsUtils.getInstance(getApplicationContext()).trackPageView(
-		// getClass().getSimpleName());
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart(this); // Add this method.
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		// Purge analytics so they don't hold references to this activity
-		// GoogleAnalyticsSessionManager.getInstance().dispatch();
-
-		// Need to do this for every activity that uses google analytics
-		// GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this); // Add this method.
 	}
 
 	@Override
