@@ -72,6 +72,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 			outState.putInt(CURRENT_PAGE, currentPage);
 			outState.putParcelableArrayList(RESULTS, results);
 			outState.putParcelable(RESULTS_PAGE, resultPage);
+			outState.putString(SearchManager.QUERY, query);
 		}
 	}
 
@@ -80,6 +81,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 		if (savedInstanceState != null) {
 			resultPage = savedInstanceState.getParcelable(RESULTS_PAGE);
 			if (resultPage != null) {
+				query = savedInstanceState.getString(SearchManager.QUERY);
 				results = savedInstanceState.getParcelableArrayList(RESULTS);
 				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
 				if (hasMoreResults()) {
@@ -101,7 +103,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 		}
 		query = getArguments().getString(SearchManager.QUERY);
 		task = SearchUtils
-				.getRoomsSearchByNameReply(query, this, getActivity());
+				.getRoomsSearchReply(query, this, getActivity());
 	}
 
 	private boolean hasMoreResults() {
@@ -191,7 +193,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 		@Override
 		protected boolean cacheInBackground() throws Exception {
 			final ResultsPage<RoomSearchResult> page;
-			page = SearchUtils.getRoomsSearchByNameReply(query, ++currentPage,
+			page = SearchUtils.getRoomsSearchReply(query, ++currentPage,
 					getActivity());
 			if (page == null)
 				return false;
@@ -246,7 +248,7 @@ public class RoomsSearchFragment extends BaseFragment implements
 	protected void onRepeat() {
 		showLoadingScreen();
 		task = SearchUtils
-				.getRoomsSearchByNameReply(query, this, getActivity());
+				.getRoomsSearchReply(query, this, getActivity());
 	}
 
 }

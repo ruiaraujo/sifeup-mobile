@@ -7,12 +7,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,31 +23,27 @@ import android.widget.TextView;
  */
 
 /*
- * EMPLOYEE_CODE EMPLOYEE_NAME EMPLOYEE_EMAIL EMPLOYEE_ACRONYM
+ * SUBJECT_CODE SUBJECT_NAME SUBJECT_ACRONYM SUBJECT_YEAR
  */
-public class EmployeesAdvanceSearchFragment extends BaseFragment implements
+public class RoomsAdvanceSearchFragment extends BaseFragment implements
 		OnClickListener {
 
 	private EditText name;
-	private EditText code;
-	private EditText email;
-	private EditText acronym;
-	private TextView acronymLabel;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View root = inflater.inflate(R.layout.search_form,
 				getParentContainer(), true);
-		Button searchButton = (Button) root.findViewById(R.id.search);
-		name = (EditText) root.findViewById(R.id.name);
-		code = (EditText) root.findViewById(R.id.code);
-		email = (EditText) root.findViewById(R.id.email);
-		acronymLabel = (TextView) root.findViewById(R.id.first_year_label);
-		acronymLabel.setText(R.string.lb_employee_acronym);
-		acronym = (EditText) root.findViewById(R.id.first_year);
-		acronym.setHint(R.string.hint_employee_acronym);
 
+		name = (EditText) root.findViewById(R.id.name);
+		name.setHint(R.string.hint_room_name);
+		final TextView nameLb = (TextView) root.findViewById(R.id.name_label);
+		nameLb.setText(R.string.lb_room_name);
+		root.findViewById(R.id.code_group).setVisibility(View.GONE);
+		root.findViewById(R.id.year_group).setVisibility(View.GONE);
+		root.findViewById(R.id.email_group).setVisibility(View.GONE);
+		Button searchButton = (Button) root.findViewById(R.id.search);
 		searchButton.setOnClickListener(this);
 		showMainScreen();
 		return getParentContainer();
@@ -56,21 +51,9 @@ public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 
 	@Override
 	public void onClick(View v) {
-
-		final String nameStr = TextUtils.isEmpty(name.getText()) ? null : name
-				.getText().toString();
-		final String codeStr = TextUtils.isEmpty(code.getText()) ? null : code
-				.getText().toString();
-		final String emailStr = TextUtils.isEmpty(email.getText()) ? null
-				: email.getText().toString();
-		final String acronymStr = TextUtils.isEmpty(acronym.getText()) ? null
-				: acronym.getText().toString();
-
-		Fragment searchFrag = new EmployeesSearchFragment();
+		Fragment searchFrag = new RoomsSearchFragment();
 		final Bundle args = new Bundle();
-		args.putStringArray(SearchManager.QUERY, new String[] { nameStr,
-				codeStr, emailStr, acronymStr });
-
+		args.putString(SearchManager.QUERY, name.getText().toString());
 		searchFrag.setArguments(args);
 		FragmentTransaction ft = getActivity().getSupportFragmentManager()
 				.beginTransaction();
@@ -81,5 +64,4 @@ public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
 	}
-
 }

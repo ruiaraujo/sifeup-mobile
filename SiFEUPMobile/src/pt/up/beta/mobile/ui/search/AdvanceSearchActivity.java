@@ -29,6 +29,8 @@ public class AdvanceSearchActivity extends BaseSinglePaneActivity {
 			return new EmployeesAdvanceSearchFragment();
 		if (type.equals(SUBJECTS))
 			return new SubjectsAdvanceSearchFragment();
+		if (type.equals(ROOM))
+			return new RoomsAdvanceSearchFragment();
 		return new Fragment();
 
 	}

@@ -75,6 +75,11 @@ public class EmployeesSearchFragment extends BaseFragment implements
 			outState.putInt(CURRENT_PAGE, currentPage);
 			outState.putParcelableArrayList(RESULTS, results);
 			outState.putParcelable(RESULTS_PAGE, resultPage);
+			if (query != null)
+				outState.putString(SearchManager.QUERY, query);
+			else
+				outState.putStringArray(SearchManager.QUERY,
+						advancedSearchParameters);
 		}
 	}
 
@@ -85,6 +90,10 @@ public class EmployeesSearchFragment extends BaseFragment implements
 			if (resultPage != null) {
 				results = savedInstanceState.getParcelableArrayList(RESULTS);
 				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				query = savedInstanceState.getString(SearchManager.QUERY);
+				if (query == null)
+					advancedSearchParameters = savedInstanceState
+							.getStringArray(SearchManager.QUERY);
 				if (hasMoreResults()) {
 					adapter = new EndlessSearchAdapter(getActivity(),
 							new SearchCustomAdapter(getActivity(),
