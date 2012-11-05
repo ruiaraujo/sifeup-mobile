@@ -170,7 +170,6 @@ public class RoomProfileFragment extends BaseFragment implements
 				TextView llItem = (TextView) mInflater.inflate(
 						R.layout.simple_list_item1, null);
 				llItem.setText(person.getName());
-				// To know wich item has been clicked
 				if (person.isPerson()) {
 					llItem.setTag(person);
 					// In the onClickListener just get the id using getTag() on

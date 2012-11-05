@@ -6,7 +6,5 @@
     android:background="@drawable/clicked_effect"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true"
     android:paddingBottom="10dip"
-    android:selectAllOnFocus="true"
     android:textSize="16.0sp" />
