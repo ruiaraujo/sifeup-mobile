@@ -193,7 +193,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.schedule_menu_items, menu);
+		inflater.inflate(R.menu.schedule_fragment_menu_items, menu);
 		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
