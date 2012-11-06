@@ -18,6 +18,7 @@ package pt.up.beta.mobile.contacts;
 import java.util.List;
 
 import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.datatypes.Profile;
 import android.accounts.Account;
 import android.content.ContentResolver;
@@ -123,14 +124,16 @@ public class ContactManager {
 				context, rawContact.getCode(), accountName, inSync,
 				batchOperation);
 
-		contactOp.addName(rawContact.getName(), null, null)
+		contactOp
+				.addName(rawContact.getName(), null, null)
 				.addEmail(rawContact.getEmail())
 				.addAltEmail(rawContact.getEmailAlt())
 				.addWebPage(rawContact.getWebPage())
 				.addPhone(rawContact.getMobilePhone(), Phone.TYPE_WORK_MOBILE)
 				.addPhone(rawContact.getPhone(), Phone.TYPE_WORK)
 				.addAvatar(context.getContentResolver(), rawContact.getCode())
-				.addProfileAction(rawContact.getCode(), rawContact.getType(), rawContact.getShortName());
+				.addProfileAction(rawContact.getCode(), rawContact.getType(),
+						rawContact.getShortName());
 	}
 
 	/**
@@ -225,7 +228,8 @@ public class ContactManager {
 					contactOp.updateAvatar(resolver, rawContact.getCode(), uri);
 				} else if (mimeType.equals(ProfileContactColumns.MIME)) {
 					existingActions = true;
-					contactOp.updateProfileAction(rawContact.getShortName(), uri);
+					contactOp.updateProfileAction(rawContact.getShortName(),
+							uri);
 				}
 			} // while
 		} finally {
@@ -261,12 +265,12 @@ public class ContactManager {
 		}
 	}
 
-	public static String[] getProfileDataContact(ContentResolver resolver,
-			Uri uri) {
-		final Cursor c = resolver
-				.query(DataQuery.CONTENT_URI,
-						DataQuery.PROJECTION_PROFILE,
-						DataQuery.SELECTION,
+	public static String[] getProfileDataContact(Context context, Uri uri) {
+		final Cursor c = context
+				.getContentResolver()
+				.query(DetailsQuery.CONTENT_URI,
+						DetailsQuery.PROJECTION_PROFILE,
+						DetailsQuery.SELECTION,
 						new String[] { String.valueOf(ContentUris.parseId(uri)) },
 						null);
 		final String[] profileInfo = new String[4];
@@ -274,15 +278,19 @@ public class ContactManager {
 			// Iterate over the existing rows of data, and update each one
 			// with the information we received from the server.
 			while (c.moveToNext()) {
-				final String mimeType = c.getString(DataQuery.COLUMN_MIMETYPE);
-				if (mimeType.equals(ProfileContactColumns.MIME)
-						|| mimeType.equals(ProfileContactColumns.MIME)) {
-					profileInfo[0] = mimeType;
-					profileInfo[1] = c.getString(c
-							.getColumnIndex(ProfileContactColumns.DATA_CODE));
-					profileInfo[2] = c.getString(c
-							.getColumnIndex(ProfileContactColumns.DATA_TYPE));
-					profileInfo[3] = c.getString(DataQuery.COLUMN_DATA5);
+				final String mimeType = c
+						.getString(DetailsQuery.COLUMN_MIMETYPE);
+				if (mimeType.equals(ProfileContactColumns.MIME)) {
+					profileInfo[0] = c.getString(
+							DetailsQuery.COLUMN_ACTION_PROFILE).equals(
+							context.getString(R.string.action_view_schedule)) ? ProfileContactColumns.MIME_SCHEDULE
+							: ProfileContactColumns.MIME_PROFILE;
+					profileInfo[1] = c
+							.getString(DetailsQuery.COLUMN_PROFILE_CODE);
+					profileInfo[2] = c
+							.getString(DetailsQuery.COLUMN_PROFILE_TYPE);
+					profileInfo[3] = c
+							.getString(DetailsQuery.COLUMN_PROFILE_NAME);
 					return profileInfo;
 				}
 			} // while
@@ -488,18 +496,12 @@ public class ContactManager {
 		public static final String[] PROJECTION = new String[] { Data._ID,
 				RawContacts.SOURCE_ID, Data.MIMETYPE, Data.DATA1, Data.DATA2,
 				Data.DATA3, Data.DATA15, Data.SYNC1 };
-		public static final String[] PROJECTION_PROFILE = new String[] {
-				ProfileContactColumns.DATA_CODE,
-				ProfileContactColumns.DATA_TYPE, Data.MIMETYPE, Data.DATA5 };
 
 		public static final int COLUMN_ID = 0;
-		// public static final int COLUMN_SERVER_ID = 1;
 		public static final int COLUMN_MIMETYPE = 2;
 		public static final int COLUMN_DATA1 = 3;
 		public static final int COLUMN_DATA2 = 4;
 		public static final int COLUMN_DATA3 = 5;
-		public static final int COLUMN_DATA5 = 3;
-		// public static final int COLUMN_SYNC1 = 7;
 
 		public static final Uri CONTENT_URI = Data.CONTENT_URI;
 
@@ -510,9 +512,29 @@ public class ContactManager {
 		public static final int COLUMN_FULL_NAME = COLUMN_DATA1;
 		public static final int COLUMN_GIVEN_NAME = COLUMN_DATA2;
 		public static final int COLUMN_FAMILY_NAME = COLUMN_DATA3;
-		// public static final int COLUMN_AVATAR_IMAGE = COLUMN_DATA15;
 
 		public static final String SELECTION_RAW = Data.RAW_CONTACT_ID + "=?";
+	}
+
+	final private static class DetailsQuery {
+
+		public static final Uri CONTENT_URI = Data.CONTENT_URI;
+
+		public static final String[] PROJECTION_PROFILE = new String[] {
+
+		ProfileContactColumns.DATA_CODE, ProfileContactColumns.DATA_NAME,
+				ProfileContactColumns.DATA_TYPE,
+				ProfileContactColumns.DATA_DETAIL, Data.MIMETYPE };
+
+		public static final int COLUMN_MIMETYPE = 4;
+		public static final int COLUMN_DATA1 = 0;
+		public static final int COLUMN_DATA3 = 3;
+		public static final int COLUMN_DATA4 = 2;
+		public static final int COLUMN_DATA5 = 1;
+		public static final int COLUMN_PROFILE_NAME = COLUMN_DATA5;
+		public static final int COLUMN_PROFILE_TYPE = COLUMN_DATA4;
+		public static final int COLUMN_PROFILE_CODE = COLUMN_DATA1;
+		public static final int COLUMN_ACTION_PROFILE = COLUMN_DATA3;
 		public static final String SELECTION = Data._ID + "=?";
 	}
 

@@ -1,5 +1,7 @@
 package pt.up.beta.mobile.sendtosamba;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
@@ -21,6 +23,7 @@ public class SendToSambaActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		EasyTracker.getInstance().setContext(getApplicationContext());
 		final String user = AccountUtils.getActiveUserName(this);
 		final String pass = AccountUtils.getActiveUserPassword(this);
 		if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pass)) {

@@ -204,7 +204,6 @@ public class ContactOperations {
 		}
 		return this;
 	}
-	
 
 	public ContactOperations addWebPage(String url) {
 		mValues.clear();
@@ -270,10 +269,11 @@ public class ContactOperations {
 	 * 
 	 * @param userId
 	 *            the userId of the sample SyncAdapter user object
-	 * @param shortName 
+	 * @param shortName
 	 * @return instance of ContactOperations
 	 */
-	public ContactOperations addProfileAction(String userId, String type, String shortName) {
+	public ContactOperations addProfileAction(String userId, String type,
+			String shortName) {
 		mValues.clear();
 		if (userId != null) {
 			mValues.put(ProfileContactColumns.DATA_CODE, userId);
@@ -295,7 +295,7 @@ public class ContactOperations {
 					mContext.getString(R.string.action_view_schedule));
 			mValues.put(Data.MIMETYPE, ProfileContactColumns.MIME);
 			addInsertOp();
-			
+
 		}
 		return this;
 	}

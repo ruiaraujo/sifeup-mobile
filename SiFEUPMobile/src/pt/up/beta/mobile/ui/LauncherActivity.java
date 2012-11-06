@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.analytics.tracking.android.EasyTracker;
 
 @SuppressLint("CommitPrefEdits")
 public class LauncherActivity extends SherlockFragmentActivity implements
@@ -58,6 +59,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_account);
+		EasyTracker.getInstance().setContext(getApplicationContext());
 		final Button addAccount = (Button) findViewById(R.id.add_account);
 		addAccount.setOnClickListener(new OnClickListener() {
 			@Override
@@ -236,7 +238,7 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 					@Override
 					protected String[] doInBackground(Void... params) {
 						return ContactManager.getProfileDataContact(
-								getContentResolver(), uri);
+								getApplicationContext(), uri);
 					}
 				}.execute();
 				return;
