@@ -21,10 +21,12 @@ public class StudentDetailsAdapter extends BaseAdapter {
 	private final List<ProfileDetail> details;
 	private final StudentCourse[] courses;
 	private final LayoutInflater mInflater;
+	private final Context context;
 
 	public StudentDetailsAdapter(Student student, Context mContext) {
 		this.details = student.getProfileContents(mContext.getResources());
 		this.courses = student.getCourses();
+		this.context = mContext;
 		this.mInflater = LayoutInflater.from(mContext);
 	}
 
@@ -40,25 +42,31 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			return details.get(position);
 		}
 		position -= details.size();
-		if (position % 5 == 0) {
-			return HEADER;
-		}
 		switch (position % 5) {
+		default:
+		case 0:
+			return HEADER;
 		case 1:
-			return courses[position / 5].getCourseName();
+			final String courseName = courses[position / 5].getCourseName();
+			return courseName != null ? courseName : courses[position / 5]
+					.getCourseTypeDesc();
 		case 2:
 			return courses[position / 5].getStateName();
 		case 3:
-			return courses[position / 5].getCurriculumYear();
+			return courses[position / 5].getCurriculumYear() != null ? courses[position / 5]
+					.getCurriculumYear() : context
+					.getString(R.string.lb_unavailable);
 		case 4:
 			return courses[position / 5].getPlaceName();
 		}
-		return null;
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return getItem(position).hashCode();
+		final Object item = getItem(position);
+		if (item != null)
+			return item.hashCode();
+		return 0;
 	}
 
 	private static final String HEADER = "header";
@@ -119,7 +127,9 @@ public class StudentDetailsAdapter extends BaseAdapter {
 				break;
 			case 3:
 				title.setText(R.string.profile_title_year);
-				content.setText(courses[position / 5].getCurriculumYear());
+				content.setText(courses[position / 5].getCurriculumYear() != null ? courses[position / 5]
+						.getCurriculumYear() : context
+						.getString(R.string.lb_unavailable));
 				break;
 			case 4:
 				title.setText(R.string.profile_title_faculty);
