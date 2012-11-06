@@ -80,4 +80,16 @@ public class ResultsPage<T extends Parcelable> implements Parcelable {
 		dest.writeInt(results.length);
 		dest.writeParcelableArray(results, flags);
 	}
+	
+
+	@SuppressWarnings("rawtypes")
+	public static final Parcelable.Creator<ResultsPage> CREATOR = new Parcelable.Creator<ResultsPage>() {
+		public ResultsPage createFromParcel(Parcel in) {
+			return new ResultsPage(in);
+		}
+	
+		public ResultsPage[] newArray(int size) {
+			return new ResultsPage[size];
+		}
+	};
 }
