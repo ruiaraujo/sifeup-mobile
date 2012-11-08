@@ -131,7 +131,6 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 									context.getString(R.string.notification_error_title),
 									context.getString(R.string.toast_download_no_memory_card))
 									.build());
-
 			break;
 
 		}
@@ -279,10 +278,9 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 	private Notification createProgressBar(CharSequence title,
 			CharSequence content, int progress, boolean indeterminate) {
 		final NotificationCompat.Builder builder = getSimple(title, content);
-		builder.setTicker(title);
-		builder.setOngoing(true);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.setProgress(100, progress, indeterminate);
+			builder.setProgress(100, progress, indeterminate)
+					.setContentTitle(title).setContentText(content);
 		} else {
 			RemoteViews contentView = new RemoteViews(context.getPackageName(),
 					R.layout.notification_upload);
@@ -291,19 +289,17 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 					indeterminate);
 			builder.setContent(contentView);
 		}
+		builder.setTicker(title);
+		builder.setOngoing(true);
 		update = builder.build();
 		return update;
 	}
 
-	@TargetApi(16)
 	private Notification updateProgressBar(int progress, boolean indeterminate) {
 		if (filesize == 0)
 			indeterminate = true;
 		update.contentView.setProgressBar(android.R.id.progress, 100, progress,
 				indeterminate);
-		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-		// update.bigContentView.setProgressBar(android.R.id.progress,
-		// 100, progress, indeterminate);
 		return update;
 	}
 

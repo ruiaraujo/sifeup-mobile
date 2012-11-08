@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -21,7 +22,6 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
 	private final InputStreamManaged is;
 	private final String filename;
-	private Notification notification;
 	private final Context context;
 	private final FinishedTaskListener listener;
 
@@ -55,30 +55,11 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 	}
 
 	protected void onPreExecute() {
-		RemoteViews contentView = new RemoteViews(context.getPackageName(),
-				R.layout.notification_upload);
-		if (is.getLength() == 0)
-			contentView.setProgressBar(android.R.id.progress, 0, 0, true);
-		else
-			contentView.setProgressBar(android.R.id.progress, 100, 0, false);
-		contentView.setTextViewText(android.R.id.text1, context.getString(
-				R.string.notification_uploader_content, filename));
-		final PendingIntent contentIntent = PendingIntent.getActivity(
-				context.getApplicationContext(), 0, new Intent(), // add this
-																	// pass null
-																	// to intent
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		// Build the notification
-		NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(
-				context);
-		notBuilder.setOngoing(true);
-		notBuilder.setContentTitle(context
-				.getString(R.string.notification_uploader_title));
-		notBuilder.setSmallIcon(R.drawable.ic_launcher);
-		notBuilder.setContent(contentView);
-		notBuilder.setContentIntent(contentIntent);
-		notification = notBuilder.build();
-		mNotificationManager.notify(UNIQUE_ID, notification);
+		mNotificationManager.notify(
+				UNIQUE_ID,
+				createProgressBar(context.getString(
+						R.string.notification_uploader_content, filename), "",
+						0, is.getLength() == 0));
 	}
 
 	@Override
@@ -135,65 +116,100 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 		return true;
 	}
 
-	protected void onProgressUpdate(Integer... values) {
+	protected void onProgressUpdate(Integer... progress) {
 		// update the notification object
 		if (is.getLength() != 0)
-			notification.contentView.setProgressBar(android.R.id.progress, 100,
-					values[0], false);
-		// notify the notification manager on the update.
-		mNotificationManager.notify(UNIQUE_ID, notification);
+			mNotificationManager.notify(UNIQUE_ID,
+					updateProgressBar(progress[0], false));
 	}
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		mNotificationManager.cancel(UNIQUE_ID);
-
-		final PendingIntent contentIntent = PendingIntent.getActivity(
-				context.getApplicationContext(), 0, new Intent(), // add this
-																	// pass null
-																	// to intent
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		// Build the notification
-		NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(
-				context);
-		notBuilder.setOngoing(false);
-		notBuilder.setContentIntent(contentIntent);
-
 		if (result) {
-			notBuilder.setContentTitle(context
-					.getString(R.string.notification_uploader_title));
-			notBuilder.setContentText(context.getString(
-					R.string.notification_uploader_finished, filename));
+			mNotificationManager
+					.notify(UNIQUE_ID,
+							getSimple(
+									context.getString(R.string.notification_uploader_title),
+									context.getString(
+											R.string.notification_uploader_finished,
+											filename)).build());
 		} else {
 			switch (error) {
 			case WRONG_CREDENTIAL:
-				notBuilder
-						.setContentTitle(context
-								.getString(R.string.notification_uploader_error_credential_title));
-				notBuilder
-						.setContentText(context
-								.getString(R.string.notification_uploader_error_credential));
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								getSimple(
+										context.getString(R.string.notification_uploader_error_credential_title),
+										context.getString(R.string.notification_uploader_error_credential))
+										.build());
 				break;
 			case WRONG_HOST:
-				notBuilder
-						.setContentTitle(context
-								.getString(R.string.notification_uploader_error_host_title));
-				notBuilder.setContentText(context
-						.getString(R.string.notification_uploader_error_host));
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								getSimple(
+										context.getString(R.string.notification_uploader_error_host_title),
+										context.getString(R.string.notification_uploader_error_host))
+										.build());
 				break;
 			default:
-				notBuilder.setContentTitle(context
-						.getString(R.string.notification_error_title));
-				notBuilder.setContentText(context.getString(
-						R.string.notification_uploader_error, filename));
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								getSimple(
+										context.getString(R.string.notification_error_title),
+										context.getString(
+												R.string.notification_uploader_error,
+												filename)).build());
 				break;
 			}
 		}
-		notBuilder.setSmallIcon(R.drawable.ic_launcher);
-		mNotificationManager.notify(UNIQUE_ID, notBuilder.build());
-
 		listener.finishedTask();
 
+	}
+
+	private NotificationCompat.Builder getSimple(CharSequence title,
+			CharSequence content) {
+		NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(
+				context);
+		notBuilder.setSmallIcon(R.drawable.icon).setTicker(content)
+				.setContentTitle(title).setContentText(content)
+				.setContentIntent(getPendingIntent());
+		return notBuilder;
+	}
+
+	private Notification update;
+
+	private Notification createProgressBar(CharSequence title,
+			CharSequence content, int progress, boolean indeterminate) {
+		final NotificationCompat.Builder builder = getSimple(title, content);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			builder.setProgress(100, progress, indeterminate)
+					.setContentTitle(title).setContentText(content);
+		} else {
+			RemoteViews contentView = new RemoteViews(context.getPackageName(),
+					R.layout.notification_upload);
+			contentView.setTextViewText(android.R.id.text1, content);
+			contentView.setProgressBar(android.R.id.progress, 100, progress,
+					indeterminate);
+			builder.setContent(contentView);
+		}
+		builder.setTicker(title);
+		builder.setOngoing(true);
+		update = builder.build();
+		return update;
+	}
+
+	private Notification updateProgressBar(int progress, boolean indeterminate) {
+		update.contentView.setProgressBar(android.R.id.progress, 100, progress,
+				indeterminate);
+		return update;
+	}
+
+	private PendingIntent getPendingIntent() {
+		return PendingIntent.getActivity(context.getApplicationContext(), 0,
+				new Intent(), // add this
+				// pass null
+				// to intent
+				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 }
