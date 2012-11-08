@@ -243,7 +243,7 @@ public class SifeupAPI {
 	// MOB_UCURR_GERAL.OUTRAS_OCORRENCIAS
 	private interface SubjectOtherOccurrences {
 		String NAME = "outras_ocorrencias";
-		String CODE = "pv_ucurr_id";
+		String CODE = "pv_ocorrencia_id";
 	}
 
 	// MOB_UCURR_GERAL.PERFIL
@@ -392,7 +392,8 @@ public class SifeupAPI {
 	public static String getAuthenticationUrl(String code, String password) {
 		return SIGARRA_HOST + WebServices.AUTHENTICATION + Authentication.NAME
 				+ WEBSERVICE_SEP + Authentication.LOGIN + EQUALS + encode(code)
-				+ LINK_SEP + Authentication.PASSWORD + EQUALS + encode(password);
+				+ LINK_SEP + Authentication.PASSWORD + EQUALS
+				+ encode(password);
 	}
 
 	/**
@@ -1037,20 +1038,19 @@ public class SifeupAPI {
 			final InputStream pageContent;
 			try {
 				pageContent = connection.getInputStream();
-
 				String charset = getContentCharSet(connection.getContentType());
 				if (charset == null) {
 					charset = HTTP.DEFAULT_CONTENT_CHARSET;
 				}
 				page = getPage(pageContent, charset);
 				pageContent.close();
-				InputStream errStream = connection.getErrorStream();
+				final InputStream errStream = connection.getErrorStream();
 				if (errStream != null)
 					errStream.close();
 				connection.disconnect();
 			} catch (IOException e) {
-				int returnCode = connection.getResponseCode();
-				InputStream errStream = connection.getErrorStream();
+				final int returnCode = connection.getResponseCode();
+				final InputStream errStream = connection.getErrorStream();
 				if (errStream != null)
 					errStream.close();
 				connection.disconnect();
@@ -1078,47 +1078,53 @@ public class SifeupAPI {
 		String page = null;
 		HttpsURLConnection connection = null;
 		do {
-			connection = get(SifeupAPI.getAuthenticationUrl(username, password));
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
-				InputStream errStream = connection.getErrorStream();
+
+			try {
+				connection = get(SifeupAPI.getAuthenticationUrl(username,
+						password));
+				final InputStream pageContent = connection.getInputStream();
+				String charset = getContentCharSet(connection.getContentType());
+				if (charset == null) {
+					charset = HTTP.DEFAULT_CONTENT_CHARSET;
+				}
+				page = getPage(pageContent, charset);
+				pageContent.close();
+				final InputStream errStream = connection.getErrorStream();
 				if (errStream != null)
 					errStream.close();
 				connection.disconnect();
-				throw new AuthenticationException();
+			} catch (IOException e) {
+				final int returnCode = connection.getResponseCode();
+				final InputStream errStream = connection.getErrorStream();
+				if (errStream != null)
+					errStream.close();
+				connection.disconnect();
+				if (returnCode == HttpsURLConnection.HTTP_FORBIDDEN) {
+					throw new AuthenticationException();
+				} else
+					throw e;
 			}
-			final InputStream pageContent = connection.getInputStream();
-			String charset = getContentCharSet(connection.getContentType());
-			if (charset == null) {
-				charset = HTTP.DEFAULT_CONTENT_CHARSET;
-			}
-			page = getPage(pageContent, charset);
-			pageContent.close();
-			InputStream errStream = connection.getErrorStream();
-			if (errStream != null)
-				errStream.close();
-			connection.disconnect();
 			if (page == null)
 				throw new IOException("Null page");
 		} while (page.equals(""));
-		if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-			try {
-				if (JSONError(page) == Errors.ERROR)
-					throw new AuthenticationException("No authentication");
-			} catch (JSONException e) {
-				e.printStackTrace();
-				throw new RuntimeException(page);
-			}
-			// Saving cookie for later using throughout the program
-			String cookie = "";
-			String headerName = null;
-			for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
-				if (headerName.equalsIgnoreCase("Set-Cookie")) {
-					cookie += connection.getHeaderField(i) + "; ";
-				}
-			}
-			if (!TextUtils.isEmpty(cookie))
-				return new String[] { page, cookie };
+		try {
+			if (JSONError(page) == Errors.ERROR)
+				throw new AuthenticationException("No authentication");
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new RuntimeException(page);
 		}
+		// Saving cookie for later using throughout the program
+		String cookie = "";
+		String headerName = null;
+		for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; i++) {
+			if (headerName.equalsIgnoreCase("Set-Cookie")) {
+				cookie += connection.getHeaderField(i) + "; ";
+			}
+		}
+		if (!TextUtils.isEmpty(cookie))
+			return new String[] { page, cookie };
+
 		throw new AuthenticationException("No authentication");
 	}
 
@@ -1256,7 +1262,6 @@ public class SifeupAPI {
 
 		return Errors.NO_ERROR;
 	}
-	
 
 	private static String encode(String s) {
 		if (s == null)

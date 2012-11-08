@@ -14,11 +14,11 @@ public class SubjectUtils {
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getOtherSubjectOccurrences(
-			String ucurr_id,
+			String ocorrId,
 			ResponseCommand<OtherSubjectOccurrences[]> command, Context context) {
 		return new FetcherTask<OtherSubjectOccurrences[]>(command,
 				new OtherSubjectOccurrencesParser(), context).execute(SifeupAPI
-				.getSubjectOtherOccuencesUrl(ucurr_id));
+				.getSubjectOtherOccuencesUrl(ocorrId));
 	}
 
 	public static AsyncTask<String, Void, ERROR_TYPE> getSubjectEnrolledStudents(

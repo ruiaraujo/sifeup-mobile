@@ -134,9 +134,9 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_other_occurrences) {
-			startActivity(new Intent(getActivity(),
-					OtherOccurrencesActivity.class).putExtra(
-					OtherOccurrencesFragment.UCURR_CODE, subject.getUcurrId()));
+				startActivity(new Intent(getActivity(),
+						OtherOccurrencesActivity.class).putExtra(
+						OtherOccurrencesFragment.OCORR_CODE,code));
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_enrolled_students) {

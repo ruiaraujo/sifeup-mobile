@@ -27,9 +27,9 @@ public class OtherOccurrencesFragment extends BaseFragment implements
 	final public static String OCCURRENCES_KEY = "pt.up.fe.mobile.ui.studentarea.OCCURRENCES";
 	/** Stores all exams from Student */
 	private OtherSubjectOccurrences[] occurrences;
-	final public static String UCURR_CODE = "pt.up.fe.mobile.ui.studentarea.UCURR";
+	final public static String OCORR_CODE = "pt.up.fe.mobile.ui.studentarea.UCURR";
 	private ListView list;
-	private String uccurrId;
+	private String ocorrId;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -43,19 +43,19 @@ public class OtherOccurrencesFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		uccurrId = getArguments().getString(UCURR_CODE);
+		ocorrId = getArguments().getString(OCORR_CODE);
 		if (savedInstanceState != null) {
 			occurrences = (OtherSubjectOccurrences[]) savedInstanceState
 					.getParcelableArray(OCCURRENCES_KEY);
 			if (occurrences == null) {
-				task = SubjectUtils.getOtherSubjectOccurrences(uccurrId, this,
+				task = SubjectUtils.getOtherSubjectOccurrences(ocorrId, this,
 						getActivity());
 			} else {
 				if (populateList())
 					showMainScreen();
 			}
 		} else
-			task = SubjectUtils.getOtherSubjectOccurrences(uccurrId, this,
+			task = SubjectUtils.getOtherSubjectOccurrences(ocorrId, this,
 					getActivity());
 
 	}
@@ -139,7 +139,7 @@ public class OtherOccurrencesFragment extends BaseFragment implements
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		task = SubjectUtils.getOtherSubjectOccurrences(uccurrId, this,
+		task = SubjectUtils.getOtherSubjectOccurrences(ocorrId, this,
 				getActivity());
 	}
 
