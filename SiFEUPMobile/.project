@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>Actionbar</project>
+		<project>SlidingMenu</project>
 		<project>ViewPagerIndicator</project>
 	</projects>
 	<buildSpec>

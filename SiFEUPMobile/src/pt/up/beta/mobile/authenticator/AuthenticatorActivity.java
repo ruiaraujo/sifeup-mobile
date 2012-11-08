@@ -116,8 +116,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		mRequestNewAccount = mUsername == null;
 		mConfirmCredentials = intent.getBooleanExtra(PARAM_CONFIRM_CREDENTIALS,
 				false);
-		if ( mConfirmCredentials )
+		if (mConfirmCredentials){
+			mUsernameEdit.setKeyListener(null); // disable username editing
 			mPasswordEdit.requestFocus();
+		}
 		Log.i(TAG, "    request new: " + mRequestNewAccount);
 
 		final CheckBox showPassword = (CheckBox) findViewById(R.id.show_password);
@@ -211,8 +213,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				final Account account = new Account(mUsername,
 						Constants.ACCOUNT_TYPE);
 				if (mRequestNewAccount) {
+					final Bundle userData = new Bundle();
+					userData.putString(Constants.USER_TYPE, user.getType());
+					userData.putString(Constants.USER_CODE, user.getUserCode());
 					mAccountManager.addAccountExplicitly(account, mPassword,
-							null);
+							userData);
 					// Set contacts sync for this account.
 
 					String syncIntervalValue = PreferenceManager
@@ -266,10 +271,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				} else {
 					mAccountManager.setPassword(account, user.getPassword());
 				}
-				mAccountManager.setUserData(account, Constants.USER_TYPE,
-						user.getType());
-				mAccountManager.setUserData(account, Constants.USER_CODE,
-						user.getUserCode());
 				final Intent intent = new Intent();
 				intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 				intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE,
@@ -277,8 +278,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				setAccountAuthenticatorResult(intent.getExtras());
 				setResult(RESULT_OK, intent);
 				finish();
-				// TODO Auto-generated method stub
-
 			}
 		}).start();
 	}
@@ -319,10 +318,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 	public void onError(ERROR_TYPE error) {
 		hideProgress();
+		// Our task is complete, so clear it out
+		mAuthTask = null;
 		switch (error) {
 		case CANCELLED:
-			// Our task is complete, so clear it out
-			mAuthTask = null;
 			break;
 		case AUTHENTICATION:
 			mMessage.setText(R.string.toast_login_error_wrong_password);
@@ -347,7 +346,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-
 		Log.i(TAG, "user cancelling authentication");
 		if (mAuthTask != null) {
 			mAuthTask.cancel(true);

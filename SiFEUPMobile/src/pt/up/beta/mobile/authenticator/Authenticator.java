@@ -106,13 +106,13 @@ class Authenticator extends AbstractAccountAuthenticator {
 		}
 		try {
 			final AccountManager am = AccountManager.get(mContext);
-			if (am.peekAuthToken(account, authTokenType) != null) {
+			final String peek = am.peekAuthToken(account, authTokenType);
+			if (peek != null) {
 				final Bundle result = new Bundle();
 				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
 				result.putString(AccountManager.KEY_ACCOUNT_TYPE,
 						Constants.ACCOUNT_TYPE);
-				result.putString(AccountManager.KEY_AUTHTOKEN,
-						am.peekAuthToken(account, authTokenType));
+				result.putString(AccountManager.KEY_AUTHTOKEN, peek);
 				return result;
 			}
 			// Extract the username and password from the Account Manager, and

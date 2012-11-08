@@ -23,7 +23,7 @@
 	    	android:textSize="20.0sp"
 	    	android:id="@+id/print_desc"
 	    	android:bufferType="normal"/>
-	    	<RelativeLayout
+	    	<RelativeLayout android:id="@+id/print_ref_group"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 	    		android:paddingTop="25dp">

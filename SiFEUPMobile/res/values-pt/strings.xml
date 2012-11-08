@@ -6,6 +6,7 @@
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
     <string name="button_repeat">Repetir</string>
+    <string name="lb_unavailable">Indisponível</string>
     <string name="general_error">Oops!\n Alguma coisa correu mal&#8230; :(</string>
 
     <!-- *************************************************************************************** -->
