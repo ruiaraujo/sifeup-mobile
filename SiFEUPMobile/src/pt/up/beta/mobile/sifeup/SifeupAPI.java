@@ -1156,13 +1156,6 @@ public class SifeupAPI {
 		final HttpsURLConnection connection = get(url);
 		try {
 			connection.setRequestProperty("Cookie", cookie);
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN) {
-				InputStream errStream = connection.getErrorStream();
-				if (errStream != null)
-					errStream.close();
-				connection.disconnect();
-				throw new AuthenticationException("Invalid cookie");
-			}
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
@@ -1182,9 +1175,15 @@ public class SifeupAPI {
 			return BitmapFactory.decodeByteArray(baf.toByteArray(), 0,
 					baf.length());
 		} catch (IOException e) {
-			e.printStackTrace();
+			final int returnCode = connection.getResponseCode();
+			final InputStream errStream = connection.getErrorStream();
+			if (errStream != null)
+				errStream.close();
 			connection.disconnect();
-			throw e;
+			if (returnCode == HttpsURLConnection.HTTP_FORBIDDEN) {
+				throw new AuthenticationException();
+			} else
+				throw e;
 		}
 
 	}

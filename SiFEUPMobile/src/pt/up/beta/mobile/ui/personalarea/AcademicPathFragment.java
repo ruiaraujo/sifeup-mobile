@@ -111,6 +111,8 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);
+			SigarraSyncAdapterUtils.syncAcademicPath(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

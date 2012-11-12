@@ -547,18 +547,26 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private String getProfilePic(String userCode, Account account,
-			SyncResult syncResult) throws AuthenticationException, IOException {
+			SyncResult syncResult) {
 		final File f = FileUtils.getFile(getContext(), userCode);
 		if (f == null)
 			return null;
-		final Bitmap pic = SifeupAPI.downloadBitmap(
-				SifeupAPI.getPersonPicUrl(userCode), account, getContext());
-		if (pic == null) {
-			syncResult.stats.numIoExceptions++;
-			return null;
+		Bitmap pic;
+		try {
+			pic = SifeupAPI.downloadBitmap(
+					SifeupAPI.getPersonPicUrl(userCode), account, getContext());
+			if (pic == null) {
+				syncResult.stats.numIoExceptions++;
+				return null;
+			}
+			FileUtils.writeFile(pic, f);
+			return f.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
 		}
-		FileUtils.writeFile(pic, f);
-		return f.getAbsolutePath();
+		return null;
 	}
 
 	private void getSubject(Account account, String code, SyncResult syncResult)
