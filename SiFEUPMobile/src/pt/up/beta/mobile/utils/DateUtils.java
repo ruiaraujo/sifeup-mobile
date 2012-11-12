@@ -18,10 +18,10 @@ public class DateUtils {
         yourDate.hour = 0;
         yourDate.second = 0;
         yourDate.normalize(false);
-        if (!zone.inDaylightTime(new Date(yourDate.toMillis(false)))) {
-            yourDate.hour = 1;
-            yourDate.normalize(false);
-        }
+       // if (!zone.inDaylightTime(new Date(yourDate.toMillis(false)))) {
+         //   yourDate.hour = 1;
+        //    yourDate.normalize(false);
+        //}
         int weekDay = yourDate.weekDay - 1;
         // Our week starts at Monday
         if (weekDay < 0)
