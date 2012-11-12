@@ -33,8 +33,7 @@ public class AcademicPath implements Parcelable {
 	 * @return boolean
 	 * @throws JSONException
 	 */
-	public static AcademicPath instance(StudentCourse course)
-			throws JSONException {
+	public static AcademicPath instance(StudentCourse course){
 		final AcademicPath academicPath = new AcademicPath(course);
 
 		for (SubjectEntry subject : course.getSubjectEntries()) {

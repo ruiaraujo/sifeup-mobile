@@ -16,10 +16,7 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.lang.reflect.Type;
-
-import pt.up.beta.mobile.datatypes.AcademicPath;
-import pt.up.beta.mobile.datatypes.StudentCourse;
+import pt.up.beta.mobile.datatypes.PrintingQuota;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -29,7 +26,6 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Static library support version of the framework's
@@ -38,7 +34,7 @@ import com.google.gson.reflect.TypeToken;
  * implementation is still used; it does not try to switch to the framework's
  * implementation. See the framework SDK documentation for a class overview.
  */
-public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
+public class PrintingQuotaLoader extends AsyncTaskLoader<PrintingQuota[]> {
 	final ForceLoadContentObserver mObserver;
 
 	Uri mUri;
@@ -47,12 +43,12 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 	String[] mSelectionArgs;
 	String mSortOrder;
 
-	AcademicPath[] academicPath;
+	PrintingQuota[] printingQuotas;
 	Cursor mCursor;
 
 	/* Runs on a worker thread */
 	@Override
-	public AcademicPath[] loadInBackground() {
+	public PrintingQuota[] loadInBackground() {
 		Cursor cursor = getContext().getContentResolver().query(mUri,
 				mProjection, mSelection, mSelectionArgs, mSortOrder);
 		if (cursor != null) {
@@ -67,15 +63,7 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					final Gson gson = new Gson();
-					Type listType = new TypeToken<StudentCourse[]>() {
-					}.getType();
-					final StudentCourse[] courses = gson.fromJson(cursor.getString(0), listType);
-					AcademicPath[] academicPath = new AcademicPath[courses.length];
-					for ( int i = 0; i < academicPath.length ; ++i ){
-						academicPath[i] = AcademicPath.instance(courses[i]);
-					}
-					return academicPath;
+					return  new Gson().fromJson(cursor.getString(0), PrintingQuota[].class);
 				} catch (Exception e) {
 					e.printStackTrace();
 					EasyTracker.getTracker().trackException(
@@ -97,17 +85,17 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 
 	/* Runs on the UI thread */
 	@Override
-	public void deliverResult(AcademicPath[] academicPath) {
+	public void deliverResult(PrintingQuota[] printingQuotas) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (academicPath != null) {
-				academicPath = null;
+			if (printingQuotas != null) {
+				printingQuotas = null;
 			}
 			return;
 		}
-		this.academicPath = academicPath;
+		this.printingQuotas = printingQuotas;
 		if (isStarted()) {
-			super.deliverResult(academicPath);
+			super.deliverResult(printingQuotas);
 		}
 	}
 
@@ -116,7 +104,7 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 	 * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc to
 	 * specify the query to perform.
 	 */
-	public AcademicPathLoader(Context context) {
+	public PrintingQuotaLoader(Context context) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
 	}
@@ -127,7 +115,7 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 	 * ContentResolver.query()} for documentation on the meaning of the
 	 * parameters. These will be passed as-is to that call.
 	 */
-	public AcademicPathLoader(Context context, Uri uri, String[] projection,
+	public PrintingQuotaLoader(Context context, Uri uri, String[] projection,
 			String selection, String[] selectionArgs, String sortOrder) {
 		super(context);
 		mObserver = new ForceLoadContentObserver();
@@ -148,10 +136,10 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 	 */
 	@Override
 	protected void onStartLoading() {
-		if (academicPath != null) {
-			deliverResult(academicPath);
+		if (printingQuotas != null) {
+			deliverResult(printingQuotas);
 		}
-		if (takeContentChanged() || academicPath == null) {
+		if (takeContentChanged() || printingQuotas == null) {
 			forceLoad();
 		}
 	}
@@ -166,7 +154,7 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 	}
 
 	@Override
-	public void onCanceled(AcademicPath[] academicPath) {
+	public void onCanceled(PrintingQuota[] printingQuotas) {
 		if (mCursor != null && !mCursor.isClosed()) {
 			mCursor.close();
 		}
@@ -183,6 +171,6 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 			mCursor.close();
 		}
 		mCursor = null;
-		academicPath = null;
+		printingQuotas = null;
 	}
 }

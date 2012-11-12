@@ -54,7 +54,8 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -67,17 +68,20 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
-
+	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
-
+	
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.refresh_menu_items, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			setRefreshActionItemState(true);

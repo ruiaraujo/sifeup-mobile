@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.BaseColumns;
@@ -363,8 +362,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						Constants.USER_CODE)), account, getContext());
 		final ContentValues values = new ContentValues();
 		values.put(SigarraContract.PrintingQuotaColumns.ID, account.name);
-		values.put(SigarraContract.PrintingQuotaColumns.QUOTA, new JSONObject(
-				printing).getDouble("saldo"));
+		values.put(SigarraContract.PrintingQuotaColumns.QUOTA, printing);
 		values.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
 		getContext().getContentResolver().insert(
 				SigarraContract.PrintingQuota.CONTENT_URI, values);
