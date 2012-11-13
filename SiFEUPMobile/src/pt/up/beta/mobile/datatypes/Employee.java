@@ -153,8 +153,10 @@ public class Employee extends Profile implements Parcelable {
 		ParcelUtils.writeString(dest, voipExt);
 		ParcelUtils.writeString(dest, presentation);
 		ParcelUtils.writeString(dest, presentationEn);
-		dest.writeParcelableArray(rooms, flags);
-		dest.writeParcelableArray(interests, flags);
+		dest.writeInt(rooms.length);
+		dest.writeTypedArray(rooms, flags);
+		dest.writeInt(interests.length);
+		dest.writeTypedArray(interests, flags);
 	}
 
 	private Employee(Parcel in) {
@@ -166,9 +168,10 @@ public class Employee extends Profile implements Parcelable {
 		voipExt = ParcelUtils.readString(in);
 		presentation = ParcelUtils.readString(in);
 		presentationEn = ParcelUtils.readString(in);
-		rooms = (Room[]) in.readParcelableArray(Room.class.getClassLoader());
-		interests = (Interest[]) in.readParcelableArray(Interest.class
-				.getClassLoader());
+		rooms = new Room[in.readInt()];
+		in.readTypedArray(rooms, Room.CREATOR);
+		interests = new Interest[in.readInt()];
+		in.readTypedArray(interests, Interest.CREATOR);
 	}
 
 	public static final Parcelable.Creator<Employee> CREATOR = new Parcelable.Creator<Employee>() {

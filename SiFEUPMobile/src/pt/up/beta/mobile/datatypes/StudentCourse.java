@@ -198,7 +198,7 @@ public class StudentCourse implements Parcelable {
 		dest.writeInt(subjectEntries != null ? 1 : 0);
 		if (subjectEntries != null) {
 			dest.writeInt(subjectEntries.length);
-			dest.writeParcelableArray(subjectEntries, flags);
+			dest.writeTypedArray(subjectEntries, flags);
 		}
 	}
 

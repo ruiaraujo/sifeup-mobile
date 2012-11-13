@@ -15,17 +15,18 @@ import android.os.Parcelable;
 public class Menu implements Parcelable {
 	@SerializedName("estado")
 	private final String state;
-	
+
 	@SerializedName("data")
 	private final String date;
-	
+
 	@SerializedName("pratos")
 	private final Dish[] dishes;
 
 	private Menu(Parcel in) {
 		state = ParcelUtils.readString(in);
 		date = ParcelUtils.readString(in);
-		dishes = (Dish[]) in.readParcelableArray(Dish.class.getClassLoader());
+		dishes = new Dish[in.readInt()];
+		in.readTypedArray(dishes, Dish.CREATOR);
 	}
 
 	public String getState() {
@@ -49,6 +50,7 @@ public class Menu implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		ParcelUtils.writeString(dest, state);
 		ParcelUtils.writeString(dest, date);
+		dest.writeInt(dishes.length);
 		dest.writeParcelableArray(dishes, flags);
 	}
 

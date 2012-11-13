@@ -17,7 +17,7 @@ public class Subject implements Parcelable {
 	/** Subject code - EIC0083 */
 	@SerializedName("codigo")
 	private final String code;
-	
+
 	@SerializedName("ucurr_id")
 	private final String ucurrId;
 
@@ -111,7 +111,7 @@ public class Subject implements Parcelable {
 	@SerializedName("areas")
 	private final Area[] areas;
 
-	//added later
+	// added later
 	private SubjectFiles files;
 
 	private Subject(Parcel in) {
@@ -138,22 +138,22 @@ public class Subject implements Parcelable {
 		evaluationExams = ParcelUtils.readString(in);
 		softwareDesc = ParcelUtils.readString(in);
 		evalutionDesc = ParcelUtils.readString(in);
-		bibliography = (Book[]) in.readParcelableArray(Book.class
-				.getClassLoader());
-		workload = (Workload[]) in.readParcelableArray(Workload.class
-				.getClassLoader());
-		evaluation = (EvaluationComponent[]) in
-				.readParcelableArray(EvaluationComponent.class.getClassLoader());
-		responsibles = (Responsible[]) in.readParcelableArray(Responsible.class
-				.getClassLoader());
-		worloadDesc = (WorkloadDesc[]) in.readParcelableArray(WorkloadDesc.class
-				.getClassLoader());
-		software = (Software[]) in.readParcelableArray(Software.class
-				.getClassLoader());
-		keywords = (Keyword[]) in.readParcelableArray(Keyword.class
-				.getClassLoader());
-		areas = (Area[]) in.readParcelableArray(Area.class
-				.getClassLoader());
+		bibliography = new Book[in.readInt()];
+		in.readTypedArray(bibliography, Book.CREATOR);
+		workload = new Workload[in.readInt()];
+		in.readTypedArray(workload, Workload.CREATOR);
+		evaluation = new EvaluationComponent[in.readInt()];
+		in.readTypedArray(evaluation, EvaluationComponent.CREATOR);
+		responsibles = new Responsible[in.readInt()];
+		in.readTypedArray(responsibles, Responsible.CREATOR);
+		worloadDesc = new WorkloadDesc[in.readInt()];
+		in.readTypedArray(worloadDesc, WorkloadDesc.CREATOR);
+		software = new Software[in.readInt()];
+		in.readTypedArray(software, Software.CREATOR);
+		keywords = new Keyword[in.readInt()];
+		in.readTypedArray(keywords, Keyword.CREATOR);
+		areas = new Area[in.readInt()];
+		in.readTypedArray(areas, Area.CREATOR);
 		files = in.readParcelable(SubjectFiles.class.getClassLoader());
 
 	}
@@ -329,7 +329,6 @@ public class Subject implements Parcelable {
 			observations = ParcelUtils.readString(in);
 			year = ParcelUtils.readString(in);
 		}
-		
 
 		public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
 			public Book createFromParcel(Parcel in) {
@@ -424,7 +423,6 @@ public class Subject implements Parcelable {
 			ParcelUtils.writeString(dest, description);
 			ParcelUtils.writeString(dest, lenght);
 		}
-		
 
 		public static final Parcelable.Creator<Workload> CREATOR = new Parcelable.Creator<Workload>() {
 			public Workload createFromParcel(Parcel in) {
@@ -578,8 +576,8 @@ public class Subject implements Parcelable {
 			typeDesc = ParcelUtils.readString(in);
 			numClasses = ParcelUtils.readString(in);
 			numHours = ParcelUtils.readString(in);
-			teachers = (Teacher[]) in.readParcelableArray(Teacher.class
-					.getClassLoader());
+			teachers = new Teacher[in.readInt()];
+			in.readTypedArray(teachers, Teacher.CREATOR);
 		}
 
 		public Teacher[] getTeachers() {
@@ -598,7 +596,8 @@ public class Subject implements Parcelable {
 			ParcelUtils.writeString(dest, typeDesc);
 			ParcelUtils.writeString(dest, numClasses);
 			ParcelUtils.writeString(dest, numHours);
-			dest.writeParcelableArray(teachers, flags);
+			dest.writeInt(teachers.length);
+			dest.writeTypedArray(teachers, flags);
 		}
 
 		public static final Parcelable.Creator<WorkloadDesc> CREATOR = new Parcelable.Creator<WorkloadDesc>() {
@@ -659,6 +658,7 @@ public class Subject implements Parcelable {
 			ParcelUtils.writeString(dest, name);
 			ParcelUtils.writeString(dest, time);
 		}
+
 		public static final Parcelable.Creator<Teacher> CREATOR = new Parcelable.Creator<Teacher>() {
 			public Teacher createFromParcel(Parcel in) {
 				return new Teacher(in);
@@ -755,8 +755,6 @@ public class Subject implements Parcelable {
 			}
 		};
 	}
-	
-
 
 	public static class Keyword implements Parcelable {
 
@@ -833,14 +831,22 @@ public class Subject implements Parcelable {
 		ParcelUtils.writeString(dest, evaluationExams);
 		ParcelUtils.writeString(dest, softwareDesc);
 		ParcelUtils.writeString(dest, evalutionDesc);
-		dest.writeParcelableArray(bibliography, flags);
-		dest.writeParcelableArray(workload, flags);
-		dest.writeParcelableArray(evaluation, flags);
-		dest.writeParcelableArray(responsibles, flags);
-		dest.writeParcelableArray(worloadDesc, flags);
-		dest.writeParcelableArray(software, flags);
-		dest.writeParcelableArray(keywords, flags);
-		dest.writeParcelableArray(areas, flags);
+		dest.writeInt(bibliography.length);
+		dest.writeTypedArray(bibliography, flags);
+		dest.writeInt(workload.length);
+		dest.writeTypedArray(workload, flags);
+		dest.writeInt(evaluation.length);
+		dest.writeTypedArray(evaluation, flags);
+		dest.writeInt(responsibles.length);
+		dest.writeTypedArray(responsibles, flags);
+		dest.writeInt(worloadDesc.length);
+		dest.writeTypedArray(worloadDesc, flags);
+		dest.writeInt(software.length);
+		dest.writeTypedArray(software, flags);
+		dest.writeInt(keywords.length);
+		dest.writeTypedArray(keywords, flags);
+		dest.writeInt(areas.length);
+		dest.writeTypedArray(areas, flags);
 		dest.writeParcelable(files, flags);
 	}
 

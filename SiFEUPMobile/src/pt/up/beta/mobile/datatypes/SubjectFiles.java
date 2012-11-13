@@ -74,8 +74,8 @@ public class SubjectFiles implements Parcelable {
 			name = ParcelUtils.readString(in);
 			nameEn = ParcelUtils.readString(in);
 			level = in.readInt();
-			files = (File[]) in
-					.readParcelableArray(File.class.getClassLoader());
+			files = new File[in.readInt()];
+			in.readTypedArray(files, File.CREATOR);
 			in.readTypedList(folders, CREATOR);
 			parent = in.readParcelable(Folder.class.getClassLoader());
 		}
@@ -123,7 +123,8 @@ public class SubjectFiles implements Parcelable {
 			ParcelUtils.writeString(dest, name);
 			ParcelUtils.writeString(dest, nameEn);
 			dest.writeInt(level);
-			dest.writeParcelableArray(files, flags);
+			dest.writeInt(files.length);
+			dest.writeTypedArray(files, flags);
 			dest.writeTypedList(folders);
 			dest.writeParcelable(parent, flags);
 		}
@@ -143,7 +144,7 @@ public class SubjectFiles implements Parcelable {
 	public static class File implements Parcelable {
 		@SerializedName("codigo")
 		private final int code;
-		
+
 		@SerializedName("nome")
 		private final String name;
 

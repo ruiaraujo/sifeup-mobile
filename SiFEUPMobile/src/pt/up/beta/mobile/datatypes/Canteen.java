@@ -31,7 +31,8 @@ public class Canteen implements Parcelable {
 		code = in.readInt();
 		description = ParcelUtils.readString(in);
 		timetable = ParcelUtils.readString(in);
-		this.menus = (Menu[]) in.readParcelableArray(Menu.class.getClassLoader());
+		menus = new Menu[in.readInt()];
+		in.readTypedArray(menus, Menu.CREATOR);
 	}
 
 	public Menu[] getMenus() {
@@ -66,7 +67,8 @@ public class Canteen implements Parcelable {
 		out.writeInt(code);
 		ParcelUtils.writeString(out, description);
 		ParcelUtils.writeString(out, timetable);
-		out.writeParcelableArray(menus, flags);
+		out.writeInt(menus.length);
+		out.writeTypedArray(menus, flags);
 	}
 
 	public static final Parcelable.Creator<Canteen> CREATOR = new Parcelable.Creator<Canteen>() {

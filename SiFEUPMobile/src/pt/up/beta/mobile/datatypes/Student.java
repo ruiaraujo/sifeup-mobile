@@ -90,13 +90,14 @@ public class Student extends Profile implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
+		dest.writeInt(courses.length);
 		dest.writeParcelableArray(courses, flags);
 	}
 
 	private Student(Parcel in) {
 		super(in);
-		courses = (StudentCourse[]) in.readParcelableArray(StudentCourse.class
-				.getClassLoader());
+		courses = new StudentCourse[in.readInt()];
+		in.readTypedArray(courses, StudentCourse.CREATOR);
 	}
 
 	public static final Parcelable.Creator<Student> CREATOR = new Parcelable.Creator<Student>() {
