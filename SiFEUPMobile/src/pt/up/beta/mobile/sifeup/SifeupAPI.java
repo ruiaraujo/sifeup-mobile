@@ -1189,6 +1189,8 @@ public class SifeupAPI {
 	}
 
 	public static String getContentCharSet(final String contentType) {
+		if ( contentType == null )
+			return null;
 		String[] values = contentType.split(";"); // The values.length must be
 													// equal to 2...
 		String charset = null;
