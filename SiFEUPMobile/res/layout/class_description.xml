@@ -11,11 +11,12 @@
 
         <TextView
             android:id="@+id/class_subject"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:paddingBottom="15dip"
             android:paddingTop="30dip"
+            android:drawableEnd="@drawable/arrow_to_right"
             android:textSize="16.0sp" />
 
         <TextView

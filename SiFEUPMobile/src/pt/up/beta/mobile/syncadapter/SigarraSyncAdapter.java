@@ -556,7 +556,6 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			pic = SifeupAPI.downloadBitmap(
 					SifeupAPI.getPersonPicUrl(userCode), account, getContext());
 			if (pic == null) {
-				syncResult.stats.numIoExceptions++;
 				return null;
 			}
 			FileUtils.writeFile(pic, f);

@@ -138,12 +138,9 @@ public class RoomProfileFragment extends BaseFragment implements
 					.findViewById(R.id.list_attributes);
 			for (Attributes attr : room.getAtributes()) {
 				TextView llItem = (TextView) mInflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item, null);
 				llItem.setText(Html.fromHtml("<b>" + attr.getName() + ":</b> "
 						+ attr.getContent()));
-				llItem.setClickable(false);
-				llItem.setFocusable(false);
-				llItem.setFocusableInTouchMode(false);
 				attributesContainer.addView(llItem);
 			}
 		} else {
@@ -168,7 +165,7 @@ public class RoomProfileFragment extends BaseFragment implements
 					.findViewById(R.id.list_responsible);
 			for (People person : room.getResponsible()) {
 				TextView llItem = (TextView) mInflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item_clickable, null);
 				llItem.setText(person.getName());
 				if (person.isPerson()) {
 					llItem.setTag(person);
@@ -188,7 +185,7 @@ public class RoomProfileFragment extends BaseFragment implements
 					.findViewById(R.id.list_occupiers);
 			for (People person : room.getOccupiers()) {
 				TextView llItem = (TextView) mInflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item_clickable, null);
 				llItem.setText(person.getName());
 				// To know wich item has been clicked
 				if (person.isPerson()) {

@@ -95,7 +95,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 			};
 			for (ScheduleTeacher teacher : block.getTeachers()) {
 				TextView llItem = (TextView) inflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item_clickable, null);
 				llItem.setText(teacher.toString());
 				// To know wich item has been clicked
 				llItem.setTag(teacher);
@@ -127,7 +127,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 			};
 			for (ScheduleRoom room : block.getRooms()) {
 				TextView llItem = (TextView) inflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item_clickable, null);
 				llItem.setText(room.toString());
 				// To know wich item has been clicked
 				llItem.setTag(room);
@@ -172,7 +172,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 			};
 			for (ScheduleClass clas : block.getClasses()) {
 				TextView llItem = (TextView) inflater.inflate(
-						R.layout.simple_list_item1, null);
+						R.layout.simple_list_item_clickable, null);
 				llItem.setText(clas.getName());
 				// To know wich item has been clicked
 				llItem.setTag(clas);
