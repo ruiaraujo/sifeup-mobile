@@ -41,16 +41,12 @@ public class MenuFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		MenuAdapter adapter = new MenuAdapter(getActivity());
-		adapter.add(new MenuEntry(R.string.btn_student_area,
-				R.drawable.home_btn_sessions));
-		adapter.add(new MenuEntry(R.string.btn_student_services,
-				R.drawable.home_btn_printer));
-		adapter.add(new MenuEntry(R.string.btn_friends,
-				R.drawable.home_btn_friends));
-		adapter.add(new MenuEntry(R.string.btn_news, R.drawable.home_btn_news));
-		adapter.add(new MenuEntry(R.string.btn_map, R.drawable.home_btn_map));
-		adapter.add(new MenuEntry(R.string.btn_notifications,
-				R.drawable.home_btn_announcements));
+		adapter.add(new MenuEntry(R.string.btn_student_area));
+		adapter.add(new MenuEntry(R.string.btn_student_services));
+		adapter.add(new MenuEntry(R.string.btn_friends));
+		adapter.add(new MenuEntry(R.string.btn_news));
+		adapter.add(new MenuEntry(R.string.btn_map));
+		adapter.add(new MenuEntry(R.string.btn_notifications));
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 		list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -83,12 +79,9 @@ public class MenuFragment extends SherlockFragment implements
 
 	private class MenuEntry {
 		private final int tag;
-		@SuppressWarnings("unused")
-		private final int iconRes;
 
-		public MenuEntry(int tag, int iconRes) {
+		public MenuEntry(int tag) {
 			this.tag = tag;
-			this.iconRes = iconRes;
 		}
 	}
 
