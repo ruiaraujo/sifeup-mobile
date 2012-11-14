@@ -202,6 +202,7 @@ public class PrintFragment extends BaseLoaderFragment implements
 			if (pagesA4Black > 0)
 				desc.setText(getString(R.string.print_can_print_a4_black,
 						Long.toString(pagesA4Black)));
+			root.findViewById(R.id.print_ref_group).setVisibility(View.GONE);
 			root.findViewById(R.id.print_generate_reference)
 					.setOnClickListener(new OnClickListener() {
 						@Override
