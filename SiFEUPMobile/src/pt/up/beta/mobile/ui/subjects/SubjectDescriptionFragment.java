@@ -134,9 +134,9 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_other_occurrences) {
-				startActivity(new Intent(getActivity(),
-						OtherOccurrencesActivity.class).putExtra(
-						OtherOccurrencesFragment.OCORR_CODE,code));
+			startActivity(new Intent(getActivity(),
+					OtherOccurrencesActivity.class).putExtra(
+					OtherOccurrencesFragment.OCORR_CODE, code));
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_enrolled_students) {
@@ -507,39 +507,48 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							if (position >= subjectFiles.getCurrentFolder()
 									.getFolders().size()) {
 								// launch download;
-								File toDownload = subjectFiles
+								final File toDownload = subjectFiles
 										.getCurrentFolder().getFiles()[position
 										- subjectFiles.getCurrentFolder()
 												.getFolders().size()];
 								if (toDownload.getUrl() == null
 										|| toDownload.getUrl().trim().length() == 0) {
-									try {
-										getActivity()
-												.startService(
-														DownloaderService
-																.newDownload(
-																		getActivity(),
-																		SifeupAPI
-																				.getSubjectFileContents(Integer
-																						.toString(toDownload
-																								.getCode())),
-																		toDownload
-																				.getFilename(),
-																		null,
-																		toDownload
-																				.getSize(),
-																		AccountUtils
-																				.getAuthToken(
-																						getActivity(),
-																						AccountUtils
-																								.getActiveAccount(getActivity()))));
-									} catch (OperationCanceledException e) {
-										e.printStackTrace();
-									} catch (AuthenticatorException e) {
-										e.printStackTrace();
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
+									new Thread(new Runnable() {
+
+										@Override
+										public void run() {
+											try {
+												// TODO Auto-generated method
+												// stub
+												getActivity()
+														.startService(
+																DownloaderService
+																		.newDownload(
+																				getActivity(),
+																				SifeupAPI
+																						.getSubjectFileContents(Integer
+																								.toString(toDownload
+																										.getCode())),
+																				toDownload
+																						.getFilename(),
+																				null,
+																				toDownload
+																						.getSize(),
+																				AccountUtils
+																						.getAuthToken(
+																								getActivity(),
+																								AccountUtils
+																										.getActiveAccount(getActivity()))));
+											} catch (OperationCanceledException e) {
+												e.printStackTrace();
+											} catch (AuthenticatorException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+										}
+									}).start();
+
 								} else {
 									Intent i = new Intent(Intent.ACTION_VIEW);
 									i.setData(Uri.parse(toDownload.getUrl()));
