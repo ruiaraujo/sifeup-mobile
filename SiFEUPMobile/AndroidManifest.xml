@@ -41,12 +41,6 @@
         android:theme="@style/Theme.Sigarra" >
 
         <!-- Activities for both phones and tablets -->
-
-        <activity
-            android:name=".ui.HomeActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.Sigarra.Home" />
         <activity
             android:name=".ui.LauncherActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -119,13 +113,8 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_notifications" />
         <activity
-            android:name=".ui.map.SettingsActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_settings" />
-        <activity
             android:name=".ui.personalarea.ScheduleActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:hardwareAccelerated="false"
             android:label="@string/title_schedule" />
         <activity
             android:name=".ui.personalarea.LunchMenuActivity"
@@ -240,15 +229,6 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_webview"
             android:launchMode="singleInstance" />
-
-        <!-- Used for install referrer tracking -->
-        <receiver
-            android:name="com.google.android.apps.analytics.AnalyticsReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
 
         <!-- Other manifest items -->
 
