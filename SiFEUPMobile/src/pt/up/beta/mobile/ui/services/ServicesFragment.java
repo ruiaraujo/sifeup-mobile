@@ -1,9 +1,12 @@
 package pt.up.beta.mobile.ui.services;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sendtosamba.InternalSendToSambaActivity;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;
 import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
+import pt.up.beta.mobile.ui.services.print.InternalMobilePrintActivity;
+import pt.up.beta.mobile.ui.services.print.PrintActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,6 +53,13 @@ public class ServicesFragment extends Fragment {
 				case 3:
 					activity.openActivityOrFragment(new Intent(getActivity(),
 							DynamicMailFilesActivity.class));
+					break;
+				case 4:
+					//has children
+					break;
+				case 5:
+					activity.openActivityOrFragment(new Intent(getActivity(),
+							InternalSendToSambaActivity.class));
 					break;
 				}
 				return false;
@@ -119,7 +129,8 @@ public class ServicesFragment extends Fragment {
 				getString(R.string.btn_current_account),
 				getString(R.string.btn_change_password),
 				getString(R.string.btn_dynamic_mail_files),
-				getString(R.string.title_advanced_search) };
+				getString(R.string.title_advanced_search),
+				getString(R.string.title_samba_uploader) };
 		private String[][] children = {
 				{},
 				{},
@@ -128,7 +139,8 @@ public class ServicesFragment extends Fragment {
 				{ getString(R.string.title_advanced_search_students),
 						getString(R.string.title_advanced_search_employees),
 						getString(R.string.title_advanced_search_rooms),
-						getString(R.string.title_advanced_search_subjects) } };
+						getString(R.string.title_advanced_search_subjects) },
+				{} };
 
 		public Object getChild(int groupPosition, int childPosition) {
 			return children[groupPosition][childPosition];

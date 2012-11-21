@@ -139,7 +139,7 @@ public class SigarraSyncAdapterUtils {
 
 	public static void syncSchedule(final String accountName,
 			final String code, final String initialTime,
-			final String finalTime, final String type, final String baseTime) {
+			final String finalTime, final String type) {
 		final Bundle extras = new Bundle();
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 		extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);

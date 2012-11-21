@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.services;
+package pt.up.beta.mobile.ui.services.print;
 
 import android.content.Intent;
 import android.os.Bundle;

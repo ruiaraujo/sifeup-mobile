@@ -345,6 +345,10 @@
     <string name="msg_authenticating">A autenticar no Sigarra</string>
 
     <!-- *************************************************************************************** -->
+    <!-- Mobile Print -->
+    
+    
+    <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
     <string name="title_samba_uploader">Samba FEUP</string>
     <string name="notification_uploader_title">FEUP Mobile</string>

@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.ui.services;
+package pt.up.beta.mobile.ui.services.print;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;

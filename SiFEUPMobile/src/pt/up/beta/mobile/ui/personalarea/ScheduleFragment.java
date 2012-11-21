@@ -248,8 +248,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			}
 			SigarraSyncAdapterUtils.syncSchedule(
 					AccountUtils.getActiveUserName(getActivity()),
-					scheduleCode, initialDay, finalDay, type,
-					Long.toString(mondayMillis));
+					scheduleCode, initialDay, finalDay, type);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -290,7 +289,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		}
 		SigarraSyncAdapterUtils.syncSchedule(
 				AccountUtils.getActiveUserName(getActivity()), scheduleCode,
-				initialDay, finalDay, type, Long.toString(mondayMillis));
+				initialDay, finalDay, type);
 	}
 
 	@Override

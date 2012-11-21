@@ -73,21 +73,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.services.PrintActivity"
+            android:name=".ui.services.print.PrintActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_printing" />
         <activity
-            android:name=".ui.services.PrintRefActivity"
+            android:name=".ui.services.print.PrintRefActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_printing"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".ui.services.print.InternalMobilePrintActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_printing"
+            android:theme="@style/Theme.Invisible" />
+        <activity
             android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_exams" />
-
-        <!-- Phone-only activities -->
-
         <activity
             android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -191,6 +193,12 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition_ref_detail" />
         <activity
+            android:name=".sendtosamba.InternalSendToSambaActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_samba_uploader"
+            android:theme="@style/Theme.Invisible" >
+        </activity>
+        <activity
             android:name=".sendtosamba.SendToSambaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_samba_uploader"
@@ -201,6 +209,19 @@
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ipaulpro.afilechooser.FileChooserActivity"
+            android:icon="@drawable/ic_chooser"
+            android:label="@string/choose_file" >
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
 
                 <data android:mimeType="*/*" />
             </intent-filter>

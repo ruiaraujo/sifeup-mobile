@@ -51,7 +51,11 @@ public class UploaderService extends Service implements FinishedTaskListener {
         final String password = intent.getStringExtra(PASSWORD_KEY);
         try {
             final InputStreamManaged is;
-            Uri uri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+            final Uri uri;
+            if ( intent.getData() == null )
+            	uri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+            else
+            	uri = intent.getData();
             CharSequence filename = null;
             if (uri == null) {
                 filename = extras.getCharSequence(Intent.EXTRA_TEXT);

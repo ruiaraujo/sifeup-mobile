@@ -134,7 +134,9 @@ public final class SigarraContract {
 		public static final String[] getUserSubjectsSelectionArgs(String code) {
 			return new String[] { code };
 		}
-		public static final String SUBJECTS_ORDER = PERIOD + " ASC, " + NAME_PT + " ASC";
+
+		public static final String SUBJECTS_ORDER = PERIOD + " ASC, " + NAME_PT
+				+ " ASC";
 		public static final String[] SUBJECT_COLUMNS = { CONTENT, FILES };
 		public static final String SUBJECT_SELECTION = CODE + "=?";
 
@@ -230,7 +232,6 @@ public final class SigarraContract {
 		public static final String[] COLUMNS = { CONTENT };
 
 	}
-	
 
 	public static class TeachingService implements TeachingServiceColumns {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -297,33 +298,33 @@ public final class SigarraContract {
 		public static final String[] getRoomScheduleSelectionArgs(String code,
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
-					ScheduleTable.TYPE.ROOM, Long.toString(mondayMillis) };
+					ScheduleTable.TYPE.ROOM };
 		}
 
 		public static final String[] getStudentScheduleSelectionArgs(
 				String code, String initialDay, String finalDay,
 				long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
-					ScheduleTable.TYPE.STUDENT, Long.toString(mondayMillis) };
+					ScheduleTable.TYPE.STUDENT };
 		}
 
 		public static final String[] getEmployeeScheduleSelectionArgs(
 				String code, String initialDay, String finalDay,
 				long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
-					ScheduleTable.TYPE.EMPLOYEE, Long.toString(mondayMillis) };
+					ScheduleTable.TYPE.EMPLOYEE };
 		}
 
 		public static final String[] getUCScheduleSelectionArgs(String code,
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
-					ScheduleTable.TYPE.UC, Long.toString(mondayMillis) };
+					ScheduleTable.TYPE.UC };
 		}
 
 		public static final String[] getClassScheduleSelectionArgs(String code,
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,
-					ScheduleTable.TYPE.CLASS, Long.toString(mondayMillis) };
+					ScheduleTable.TYPE.CLASS };
 		}
 
 		public static final String[] COLUMNS = { CONTENT };

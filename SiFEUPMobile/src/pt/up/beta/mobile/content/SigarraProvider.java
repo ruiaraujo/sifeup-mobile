@@ -503,14 +503,12 @@ public class SigarraProvider extends ContentProvider {
 		case SCHEDULE:
 			qb.setTables(ScheduleTable.TABLE);
 			c = qb.query(getWritableDatabase(), projection, selection,
-					new String[] { selectionArgs[0], selectionArgs[1],
-							selectionArgs[2], selectionArgs[3] }, null, null,
-					sortOrder);
+					selectionArgs, null, null, sortOrder);
 			if (c.getCount() == 0) {
 				SigarraSyncAdapterUtils.syncSchedule(
 						AccountUtils.getActiveUserName(getContext()),
 						selectionArgs[0], selectionArgs[1], selectionArgs[2],
-						selectionArgs[3], selectionArgs[4]);
+						selectionArgs[3]);
 
 			}
 			break;
