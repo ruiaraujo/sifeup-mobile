@@ -8,6 +8,11 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,12 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
-
 /**
  * 
  * This interface is responsible for fetching the news from the server through
@@ -37,6 +36,7 @@ import pt.up.beta.mobile.R;
  */
 public class NewsFragment extends BaseFragment implements
 		AdapterView.OnItemClickListener {
+	private final static String NEWS_KEYS = "pt.up.fe.mobile.ui.studentarea.FILES";
 
 	/** News Feed from FEUP */
 	private final String RSSFEEDOFCHOICE = "https://sigarra.up.pt/feup/noticias_web.rss";
@@ -55,7 +55,48 @@ public class NewsFragment extends BaseFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		task = new NewsTask().execute(RSSFEEDOFCHOICE);
+		if (savedInstanceState != null) {
+			feed = savedInstanceState.getParcelable(NEWS_KEYS);
+			if (feed == null)
+				task = new NewsTask().execute(RSSFEEDOFCHOICE);
+			else
+				displayData();
+		} else
+			task = new NewsTask().execute(RSSFEEDOFCHOICE);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (feed != null)
+			outState.putParcelable(NEWS_KEYS, feed);
+	}
+
+	void displayData() {
+
+		if (feed.getAllItems().isEmpty()) {
+			showEmptyScreen(getString(R.string.lb_no_news));
+			return;
+		}
+		Log.d("News", "success");
+		String[] from = new String[] { "title", "time" };
+		int[] to = new int[] { R.id.news_title, R.id.news_time };
+		// prepare the list of all records
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+		for (RSSItem e : feed.getAllItems()) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("time", e.getPubDate());
+			map.put("title", e.getTitle());
+			fillMaps.add(map);
+		}
+
+		// fill in the grid_item layout
+		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
+				R.layout.list_item_news, from, to);
+
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(this);
+		list.setSelection(0);
+		showMainScreen();
 	}
 
 	/** Classe privada para a busca de dados ao servidor */
@@ -69,32 +110,7 @@ public class NewsFragment extends BaseFragment implements
 			if (getActivity() == null)
 				return;
 			if (result != null) {
-				if (result.getAllItems().isEmpty()) {
-					showEmptyScreen(getString(R.string.lb_no_news));
-					return;
-				}
-				Log.d("News", "success");
-				String[] from = new String[] { "title", "time" };
-				int[] to = new int[] { R.id.news_title, R.id.news_time };
-				// prepare the list of all records
-				List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
-				for (RSSItem e : result.getAllItems()) {
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("time", e.getPubDate());
-					map.put("title", e.getTitle());
-					fillMaps.add(map);
-				}
-
-				// fill in the grid_item layout
-				SimpleAdapter adapter = new SimpleAdapter(getActivity(),
-						fillMaps, R.layout.list_item_news, from, to);
-
-				list.setAdapter(adapter);
-				list.setOnItemClickListener(NewsFragment.this);
-				list.setSelection(0);
-				showMainScreen();
-				Log.d("JSON", "news visual list loaded");
-
+				displayData();
 			} else {
 				Log.d("News", "error");
 				if (getActivity() != null) {
