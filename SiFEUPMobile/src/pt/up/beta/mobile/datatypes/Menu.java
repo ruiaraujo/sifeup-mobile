@@ -51,7 +51,7 @@ public class Menu implements Parcelable {
 		ParcelUtils.writeString(dest, state);
 		ParcelUtils.writeString(dest, date);
 		dest.writeInt(dishes.length);
-		dest.writeParcelableArray(dishes, flags);
+		dest.writeTypedArray(dishes, flags);
 	}
 
 	public static final Parcelable.Creator<Menu> CREATOR = new Parcelable.Creator<Menu>() {

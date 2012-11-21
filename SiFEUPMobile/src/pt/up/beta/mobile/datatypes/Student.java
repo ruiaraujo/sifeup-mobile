@@ -91,7 +91,7 @@ public class Student extends Profile implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeInt(courses.length);
-		dest.writeParcelableArray(courses, flags);
+		dest.writeTypedArray(courses, flags);
 	}
 
 	private Student(Parcel in) {

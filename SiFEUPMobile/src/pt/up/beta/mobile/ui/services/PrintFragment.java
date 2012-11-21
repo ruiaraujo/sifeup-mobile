@@ -75,12 +75,15 @@ public class PrintFragment extends BaseLoaderFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			quota = (PrintingQuota[]) savedInstanceState
+			final Parcelable[] storedQuota = savedInstanceState
 					.getParcelableArray(PRINTERS_KEY);
-			if (quota == null)
+			if (storedQuota == null)
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
 			else {
+				quota = new PrintingQuota[storedQuota.length];
+				for ( int i = 0; i < storedQuota.length; ++i )
+					quota[i] = (PrintingQuota) storedQuota[i];
 				displayData();
 				showMainScreen();
 			}

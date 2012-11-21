@@ -16,6 +16,7 @@ import pt.up.beta.mobile.ui.BaseFragment;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +52,15 @@ public class DynamicMailFilesFragment extends BaseFragment implements
 		if (personCode == null)
 			personCode = AccountUtils.getActiveUserCode(getActivity());
 		if (savedInstanceState != null) {
-			files = (DynamicMailFile[]) savedInstanceState
+			final Parcelable[] storedFiles = savedInstanceState
 					.getParcelableArray(FILES_KEY);
-			if (files == null) {
+			if (storedFiles == null) {
 				task = DynamicEmailUtils.getDynamicEmailFiles(personCode, this,
 						getActivity());
 			} else {
+				files = new DynamicMailFile[storedFiles.length];
+				for (int i = 0; i < storedFiles.length; ++i)
+					files[i] = (DynamicMailFile) storedFiles[i];
 				if (populateList())
 					showMainScreen();
 			}

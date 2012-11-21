@@ -84,12 +84,15 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			academicPaths = (AcademicPath[]) savedInstanceState
+			final Parcelable[] storedAcademicPaths = savedInstanceState
 					.getParcelableArray(ACADEMIC_KEY);
-			if (academicPaths == null)
+			if (storedAcademicPaths == null)
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
 			else {
+				academicPaths = new AcademicPath[storedAcademicPaths.length];
+				for (int i = 0; i < storedAcademicPaths.length; ++i)
+					academicPaths[i] = (AcademicPath) storedAcademicPaths[i];
 				viewPager.setAdapter(new PagerCourseAdapter());
 				indicator.setViewPager(viewPager);
 				setRefreshActionItemState(false);
@@ -319,7 +322,7 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 		}
 
 		public int getCount() {
-			if ( academicPaths == null )
+			if (academicPaths == null)
 				return 0;
 			return academicPaths.length;
 		}

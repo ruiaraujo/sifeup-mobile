@@ -78,7 +78,7 @@ public class ResultsPage<T extends Parcelable> implements Parcelable {
 		dest.writeInt(pageResults);
 		dest.writeString(results.getClass().getName());
 		dest.writeInt(results.length);
-		dest.writeParcelableArray(results, flags);
+		dest.writeTypedArray(results, flags);
 	}
 	
 

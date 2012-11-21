@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.format.Time;
@@ -70,11 +71,15 @@ public class ExamsFragment extends BaseLoaderFragment implements
 		if (personCode == null)
 			personCode = AccountUtils.getActiveUserCode(getActivity());
 		if (savedInstanceState != null) {
-			exams = (Exam[]) savedInstanceState.getParcelableArray(EXAM_KEY);
-			if (exams == null) {
+			final Parcelable[] storedExams = savedInstanceState
+					.getParcelableArray(EXAM_KEY);
+			if (storedExams == null) {
 				getActivity().getSupportLoaderManager().initLoader(0, null,
 						this);
 			} else {
+				exams = new Exam[storedExams.length];
+				for (int i = 0; i < storedExams.length; ++i)
+					exams[i] = (Exam) storedExams[i];
 				if (populateList())
 					showMainScreen();
 			}
