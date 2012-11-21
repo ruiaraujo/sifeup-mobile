@@ -2,6 +2,7 @@ package pt.up.beta.mobile.datatypes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This is a Java Port of the passchk utility
@@ -33,7 +34,7 @@ public class PasswordCheck {
 	   
 	   i = 1;
 	   c = CommonList.substring(i, i+1);
-	   while (c == c.toLowerCase() && i < CommonList.length())
+	   while (c == c.toLowerCase(Locale.getDefault()) && i < CommonList.length())
 	   {
 	      i++;
 	      if ( i == CommonList.length() )
@@ -95,7 +96,7 @@ public class PasswordCheck {
 
 	private int getIndex( String c)
 	{
-	   c = c.substring(0,1).toLowerCase();
+	   c = c.substring(0,1).toLowerCase(Locale.getDefault());
 	   if (c.compareTo("a") < 0|| c.compareTo("z") > 0)
 	   {
 	      return 0;
@@ -170,7 +171,7 @@ public class PasswordCheck {
 				return COMMON_WORD;
 			}
 		}
-		String plower = pass.toLowerCase();
+		String plower = pass.toLowerCase(Locale.getDefault());
 		// Calculate frequency chance
 		if (pass.length() > 1)
 		{

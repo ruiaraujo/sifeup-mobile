@@ -69,7 +69,7 @@ public class CanteenLoader extends AsyncTaskLoader<Canteen[]> {
 				} catch (Exception e) {
 					e.printStackTrace();
 					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+							"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
 									+ page, e, true);
 				}
 			}

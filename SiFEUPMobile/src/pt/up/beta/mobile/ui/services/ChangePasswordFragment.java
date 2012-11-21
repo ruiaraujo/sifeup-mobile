@@ -231,6 +231,28 @@ public class ChangePasswordFragment extends BaseFragment implements
 		}
 	}
 
+	public static class ErrorDialog extends DialogFragment {
+		public ErrorDialog() {
+		}
+
+		private String errorTitle;
+		private String errorContent;
+
+		public void setErrorTitle(String errorTitle) {
+			this.errorTitle = errorTitle;
+		}
+
+		public void setErrorContent(String errorContent) {
+			this.errorContent = errorContent;
+		}
+
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return new AlertDialog.Builder(getActivity()).setTitle(errorTitle)
+					.setMessage(errorContent).create();
+		}
+
+	}
+
 	public void onResultReceived(String[] results) {
 		if (getActivity() == null)
 			return;
@@ -238,14 +260,9 @@ public class ChangePasswordFragment extends BaseFragment implements
 		if (results != null && results.length >= 2) { // error while setting it
 			errorTitle = results[0].toString();
 			errorContent = results[1].toString();
-			DialogFragment df = new DialogFragment() {
-				public Dialog onCreateDialog(Bundle savedInstanceState) {
-					return new AlertDialog.Builder(getActivity())
-							.setTitle(errorTitle).setMessage(errorContent)
-							.create();
-				}
-
-			};
+			ErrorDialog df = new ErrorDialog();
+			df.setErrorContent(errorContent);
+			df.setErrorTitle(errorTitle);
 			df.show(getFragmentManager(), "Error Dialog");
 			return;
 		}

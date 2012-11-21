@@ -16,6 +16,7 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -63,7 +64,8 @@ public class FriendsListFragment extends BaseFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mQueryHandler = new FriendQueryHandler(getActivity()
-				.getContentResolver());
+				.getContentResolver(), getActivity().getSupportLoaderManager(),
+				this);
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class FriendsListFragment extends BaseFragment implements
 	public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
 		final Intent i = new Intent(getActivity(), ProfileActivity.class);
 		final Friend f = friends.get(position);
-		if (f.getCourse() != null)
+		if (f.getType().equals(SifeupAPI.STUDENT_TYPE))
 			i.putExtra(ProfileActivity.PROFILE_TYPE,
 					ProfileActivity.PROFILE_STUDENT);
 		else
@@ -165,17 +167,22 @@ public class FriendsListFragment extends BaseFragment implements
 	public void onLoaderReset(Loader<List<Friend>> loader) {
 	}
 
-	private class FriendQueryHandler extends AsyncQueryHandler {
+	private static class FriendQueryHandler extends AsyncQueryHandler {
+		private final LoaderCallbacks<List<Friend>> callback;
+		private final LoaderManager loaderManager;
 
-		public FriendQueryHandler(ContentResolver cr) {
+		public FriendQueryHandler(ContentResolver cr,
+				LoaderManager loaderManager,
+				LoaderCallbacks<List<Friend>> callback) {
 			super(cr);
+			this.callback = callback;
+			this.loaderManager = loaderManager;
 		}
 
 		@Override
 		protected void onDeleteComplete(int token, Object cookie, int result) {
 			super.onDeleteComplete(token, cookie, result);
-			getActivity().getSupportLoaderManager().restartLoader(0, null,
-					FriendsListFragment.this);
+			loaderManager.restartLoader(0, null, callback);
 		}
 
 	}

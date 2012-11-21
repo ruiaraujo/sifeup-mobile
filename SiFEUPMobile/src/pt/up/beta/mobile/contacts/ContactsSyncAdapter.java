@@ -15,6 +15,8 @@
  */
 package pt.up.beta.mobile.contacts;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,9 +95,13 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (Exception e) {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			; // stack trace as a string
 			EasyTracker.getTracker().trackException(
 					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
-							+ e.getMessage(), true);
+							+ sw.toString(), e, true);
 		}
 	}
 

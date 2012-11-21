@@ -25,6 +25,7 @@ public class AccountUtils {
 	private static Account mAccount;
 	private static AccountManager mAccountManager;
 	private static User user;
+	private static String cookie;
 
 	public synchronized static boolean init(final Context context) {
 		mAccountManager = AccountManager.get(context);
@@ -48,14 +49,15 @@ public class AccountUtils {
 	}
 
 	public static String renewAuthToken(final Context context,
-			final Account account, final String cookie)
+			final Account account, final String authToken)
 			throws OperationCanceledException, AuthenticatorException,
 			IOException {
 		if (needsInit()) {
 			if (!init(context))
 				return null;
 		}
-		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, cookie);
+		mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, authToken);
+		cookie = null;
 		return getAuthToken(context, account);
 	}
 
@@ -70,8 +72,10 @@ public class AccountUtils {
 		}
 		// I think that two things calling this function leads to problems.
 		synchronized (LOCK) {
-			return mAccountManager.blockingGetAuthToken(account,
-					Constants.AUTHTOKEN_TYPE, true);
+			if (cookie == null)
+				cookie = mAccountManager.blockingGetAuthToken(account,
+						Constants.AUTHTOKEN_TYPE, true);
+			return cookie;
 		}
 	}
 

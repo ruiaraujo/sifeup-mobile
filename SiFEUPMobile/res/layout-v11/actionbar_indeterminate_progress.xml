@@ -23,5 +23,6 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_gravity="center"
-        android:indeterminate="true"/>
+        android:indeterminate="true"
+        style="?android:attr/indeterminateProgressStyle" />
 </FrameLayout>

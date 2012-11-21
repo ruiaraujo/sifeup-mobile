@@ -1,5 +1,7 @@
 package pt.up.beta.mobile.utils;
 
+import java.util.Locale;
+
 /**
  * 
  *
@@ -68,7 +70,7 @@ public class StringUtils {
 		if (txt == null) {
 			return null;
 		}
-		String txtUpper = txt.toUpperCase();
+		String txtUpper = txt.toUpperCase(Locale.getDefault());
 		StringBuilder sb = new StringBuilder();
 		int n = txtUpper.length();
 		for (int i = 0; i < n; i++) {

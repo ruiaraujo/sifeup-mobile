@@ -10,6 +10,7 @@ import pt.up.beta.mobile.utils.StringUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class AcademicPath implements Parcelable {
 	 * @return boolean
 	 * @throws JSONException
 	 */
-	public static AcademicPath instance(StudentCourse course){
+	public static AcademicPath instance(StudentCourse course) {
 		final AcademicPath academicPath = new AcademicPath(course);
 
 		for (SubjectEntry subject : course.getSubjectEntries()) {
@@ -63,6 +64,8 @@ public class AcademicPath implements Parcelable {
 	}
 
 	public String getCourseAcronym() {
+		if (TextUtils.isEmpty(course.getCourseName()))
+			return course.getCourseTypeDesc();
 		return course.getCourseAcronym() == null ? StringUtils
 				.getAcronym(course.getCourseName()) : course.getCourseAcronym();
 	}

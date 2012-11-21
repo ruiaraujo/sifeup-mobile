@@ -17,6 +17,8 @@ package pt.up.beta.mobile.syncadapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ import android.content.Intent;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
@@ -186,7 +189,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			}
 		} catch (IOException e) {
 			syncResult.stats.numIoExceptions++;
-			syncResult.delayUntil = 3600;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+				syncResult.delayUntil = 3600;
 			if (listeningToProblems)
 				broadcastManager.sendBroadcast(new Intent(
 						SIGARRASYNCADAPTER_STATUS).putExtra(
@@ -206,9 +210,13 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						SIGARRASYNCADAPTER_STATUS).putExtra(
 						SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			; // stack trace as a string
 			EasyTracker.getTracker().trackException(
 					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
-							+ e.getMessage(), true);
+							+ sw.toString(), e, true);
 		}
 	}
 
@@ -267,30 +275,33 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				SigarraContract.Notifcations.PROFILE,
 				SigarraContract.Notifcations
 						.getNotificationsSelectionArgs(account.name), null);
-		if (cursor.moveToFirst()) {
-			if (!fetchedNotCodes.contains(cursor.getString(0))) {
-				getContext().getContentResolver().delete(
-						SigarraContract.Notifcations.CONTENT_URI,
-						SigarraContract.Notifcations.UPDATE_NOTIFICATION,
-						SigarraContract.Notifcations
-								.getNotificationsSelectionArgs(account.name,
-										cursor.getString(0)));
+		try {
+			if (cursor.moveToFirst()) {
+				if (!fetchedNotCodes.contains(cursor.getString(0))) {
+					getContext().getContentResolver().delete(
+							SigarraContract.Notifcations.CONTENT_URI,
+							SigarraContract.Notifcations.UPDATE_NOTIFICATION,
+							SigarraContract.Notifcations
+									.getNotificationsSelectionArgs(
+											account.name, cursor.getString(0)));
+				}
+			} else {
+				// No notifications
+				final ContentValues values = new ContentValues();
+				values.put(SigarraContract.LastSync.NOTIFICATIONS,
+						System.currentTimeMillis());
+				getContext().getContentResolver().update(
+						SigarraContract.LastSync.CONTENT_URI,
+						values,
+						SigarraContract.LastSync.PROFILE,
+						SigarraContract.LastSync
+								.getLastSyncSelectionArgs(account.name));
+				getContext().getContentResolver().notifyChange(
+						SigarraContract.Notifcations.CONTENT_URI, null);
 			}
-		} else {
-			// No notifications
-			final ContentValues values = new ContentValues();
-			values.put(SigarraContract.LastSync.NOTIFICATIONS,
-					System.currentTimeMillis());
-			getContext().getContentResolver().update(
-					SigarraContract.LastSync.CONTENT_URI,
-					values,
-					SigarraContract.LastSync.PROFILE,
-					SigarraContract.LastSync
-							.getLastSyncSelectionArgs(account.name));
-			getContext().getContentResolver().notifyChange(
-					SigarraContract.Notifcations.CONTENT_URI, null);
+		} finally {
+			cursor.close();
 		}
-		cursor.close();
 		syncResult.stats.numEntries += notifications.length;
 	}
 
@@ -553,8 +564,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			return null;
 		Bitmap pic;
 		try {
-			pic = SifeupAPI.downloadBitmap(
-					SifeupAPI.getPersonPicUrl(userCode), account, getContext());
+			pic = SifeupAPI.downloadBitmap(SifeupAPI.getPersonPicUrl(userCode),
+					account, getContext());
 			if (pic == null) {
 				return null;
 			}

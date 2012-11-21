@@ -69,7 +69,7 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 		View root = inflater.inflate(R.layout.fragment_view_pager,
 				getParentContainer(), true);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
-
+		viewPager.setAdapter(new PagerCourseAdapter());
 		// Find the indicator from the layout
 		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
@@ -319,6 +319,8 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 		}
 
 		public int getCount() {
+			if ( academicPaths == null )
+				return 0;
 			return academicPaths.length;
 		}
 

@@ -3,9 +3,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
-    <PreferenceCategory android:title="@string/lb_sync_preferences" >
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/lb_sync_preferences" >
 
         <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="@integer/default_sync_interval"
             android:entries="@array/sync_intervals"
             android:entryValues="@array/sync_intervals_values"
@@ -13,6 +18,8 @@
             android:title="@string/lb_sync_interval_title" />
 
         <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="@integer/default_notifications_sync_interval"
             android:entries="@array/sync_intervals"
             android:entryValues="@array/sync_intervals_values"
@@ -20,9 +27,14 @@
             android:title="@string/lb_sync_notifications_interval_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_search" >
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/title_search" >
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="@string/key_clean_history"
             android:summary="@string/lb_clean_history_desc"
             android:title="@string/lb_clean_history_title" />

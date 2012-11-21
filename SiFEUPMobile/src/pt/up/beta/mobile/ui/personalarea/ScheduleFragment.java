@@ -411,6 +411,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void setupDay(long startMillis, int i) {
 		Day day = new Day();
 
