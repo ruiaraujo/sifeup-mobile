@@ -29,7 +29,8 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 
 /**
  * Static library support version of the framework's
@@ -67,12 +68,20 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					final Gson gson = new Gson();
-					Type listType = new TypeToken<StudentCourse[]>() {
-					}.getType();
-					final StudentCourse[] courses = gson.fromJson(cursor.getString(0), listType);
+					final GsonBuilder gsonBuilder = new GsonBuilder();
+					gsonBuilder.registerTypeAdapter(StudentCourse.class,
+							new InstanceCreator<StudentCourse>() {
+								@Override
+								public StudentCourse createInstance(Type type) {
+									return StudentCourse.CREATOR
+											.createFromParcel(null);
+								}
+							});
+					final Gson gson = gsonBuilder.create();
+					final StudentCourse[] courses = gson.fromJson(
+							cursor.getString(0), StudentCourse[].class);
 					AcademicPath[] academicPath = new AcademicPath[courses.length];
-					for ( int i = 0; i < academicPath.length ; ++i ){
+					for (int i = 0; i < academicPath.length; ++i) {
 						academicPath[i] = AcademicPath.instance(courses[i]);
 					}
 					return academicPath;

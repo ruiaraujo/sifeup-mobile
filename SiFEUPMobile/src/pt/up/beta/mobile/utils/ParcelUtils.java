@@ -13,6 +13,8 @@ public class ParcelUtils {
 	}
 
 	public static String readString(Parcel in) {
+		if (in == null)
+			return null;
 		if (in.readByte() == 1)
 			return in.readString();
 		return null;

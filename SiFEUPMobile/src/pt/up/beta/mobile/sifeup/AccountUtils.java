@@ -39,6 +39,15 @@ public class AccountUtils {
 					mAccount, Constants.USER_CODE),
 					mAccountManager.getPassword(mAccount),
 					mAccountManager.getUserData(mAccount, Constants.USER_TYPE));
+			try {
+				cookie = getAuthToken(context, mAccount);
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (AuthenticatorException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return true;
 		} else
 			return false;

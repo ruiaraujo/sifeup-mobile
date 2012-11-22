@@ -221,7 +221,7 @@ public class StudentCourse implements Parcelable {
 		placeAcronym = ParcelUtils.readString(in);
 		curriculumYear = ParcelUtils.readString(in);
 		average = ParcelUtils.readString(in);
-		if (in.readInt() == 1) {
+		if (in != null && in.readInt() == 1) {
 			subjectEntries = new SubjectEntry[in.readInt()];
 			in.readTypedArray(subjectEntries, SubjectEntry.CREATOR);
 		} else

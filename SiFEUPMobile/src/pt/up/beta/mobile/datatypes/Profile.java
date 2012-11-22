@@ -10,12 +10,12 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
-public abstract class Profile implements Parcelable{
-	
+public abstract class Profile implements Parcelable {
+
 	/** Employee code - "419454" */
 	@SerializedName("codigo")
 	private final String code;
-	
+
 	/** Employee name - "Gil António Oliveira da Silva" */
 	@SerializedName("nome")
 	private final String name;
@@ -31,7 +31,7 @@ public abstract class Profile implements Parcelable{
 	/** Employee Phone - "22 557 4109" */
 	@SerializedName("telefone")
 	private final String phone;
-	
+
 	/** Employee Mobile Phone - 913970682 */
 	@SerializedName("telemovel")
 	private final String mobilePhone;
@@ -46,7 +46,7 @@ public abstract class Profile implements Parcelable{
 
 	public String getName() {
 		return name;
-	}	
+	}
 
 	public String getEmail() {
 		return email;
@@ -59,40 +59,38 @@ public abstract class Profile implements Parcelable{
 	public String getPhone() {
 		return phone;
 	}
-	
+
 	public String getMobilePhone() {
 		return mobilePhone;
 	}
 
 	public String getFirstName() {
-		if ( name == null )
+		if (name == null)
 			return null;
-		final String [] names = name.split(" ");
-		if ( names.length >0 )
+		final String[] names = name.split(" ");
+		if (names.length > 0)
 			return names[0];
 		return null;
 	}
-	
 
 	public String getLastName() {
-		if ( name == null )
+		if (name == null)
 			return null;
-		final String [] names = name.split(" ");
-		if ( names.length >0 )
-			return names[names.length-1];
+		final String[] names = name.split(" ");
+		if (names.length > 0)
+			return names[names.length - 1];
 		return null;
 	}
-	
 
 	public String getShortName() {
 		final StringBuilder st = new StringBuilder();
 		final String first = getFirstName();
 		final String last = getLastName();
-		if ( !TextUtils.isEmpty(first) ){
+		if (!TextUtils.isEmpty(first)) {
 			st.append(first);
 			st.append(' ');
 		}
-		if ( !TextUtils.isEmpty(last) )
+		if (!TextUtils.isEmpty(last))
 			st.append(last);
 		return st.toString();
 	}
@@ -103,37 +101,38 @@ public abstract class Profile implements Parcelable{
 
 	public interface Type {
 		String EMAIL = "email";
-		String MOBILE = "mobile"; 
+		String MOBILE = "mobile";
 		String WEBPAGE = "webpage";
 		String ROOM = "room";
 	}
+
 	/**
 	 * 
 	 * @author Rui Araújo
-	 *
+	 * 
 	 */
-	public class ProfileDetail{
+	public class ProfileDetail {
 		public String title;
 		public String content;
 		public String type;
+
 		public ProfileDetail(String title, String content, String type) {
 			this.title = title;
 			this.content = content;
 			this.type = type;
 		}
-		
+
 	}
-	
-	abstract public List<ProfileDetail> getProfileContents( Resources res );
+
+	abstract public List<ProfileDetail> getProfileContents(Resources res);
 
 	abstract public String getType();
-	
 
 	@Override
 	public int describeContents() {
 		return 0;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		ParcelUtils.writeString(dest, code);
@@ -154,9 +153,9 @@ public abstract class Profile implements Parcelable{
 		mobilePhone = ParcelUtils.readString(in);
 		webPage = ParcelUtils.readString(in);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return name;
 	}
 

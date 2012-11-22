@@ -49,6 +49,10 @@ public class Park implements Parcelable {
 	};
 
 	private Park(Parcel in) {
+		if (in == null) {
+			places = 0;
+			return;
+		}
 		places = in.readInt();
 		name = ParcelUtils.readString(in);
 	}

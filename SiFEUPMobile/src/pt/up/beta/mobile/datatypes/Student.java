@@ -96,6 +96,10 @@ public class Student extends Profile implements Parcelable {
 
 	private Student(Parcel in) {
 		super(in);
+		if (in == null) {
+			courses = null;
+			return;
+		}
 		courses = new StudentCourse[in.readInt()];
 		in.readTypedArray(courses, StudentCourse.CREATOR);
 	}
