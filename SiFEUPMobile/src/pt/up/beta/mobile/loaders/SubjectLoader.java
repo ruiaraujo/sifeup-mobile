@@ -19,14 +19,13 @@ package pt.up.beta.mobile.loaders;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.datatypes.SubjectFiles;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 /**
@@ -76,20 +75,15 @@ public class SubjectLoader extends AsyncTaskLoader<Subject> {
 					return subject;
 				} catch (Exception e) {
 					e.printStackTrace();
-					EasyTracker
-							.getTracker()
-							.trackException(
-									"Id:"
-											+ AccountUtils
-													.getActiveUserCode(null)
-											+ "\n"
-											+ "\n"
-											+ cursor.getString(cursor
-													.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT))
-											+ "\n"
-											+ cursor.getString(cursor
-													.getColumnIndex(SigarraContract.SubjectsColumns.FILES)),
-									e, true);
+					LogUtils.trackException(
+							getContext(),
+							e,
+							cursor.getString(cursor
+									.getColumnIndex(SigarraContract.SubjectsColumns.CONTENT))
+									+ "\n"
+									+ cursor.getString(cursor
+											.getColumnIndex(SigarraContract.SubjectsColumns.FILES)),
+							true);
 				}
 			}
 		}

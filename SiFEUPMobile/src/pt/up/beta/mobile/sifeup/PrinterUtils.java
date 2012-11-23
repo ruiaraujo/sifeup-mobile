@@ -2,10 +2,10 @@ package pt.up.beta.mobile.sifeup;
 
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class PrinterUtils {
@@ -27,9 +27,7 @@ public class PrinterUtils {
 				return gson.fromJson(page, RefMB.class);
 			} catch (Exception e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 			}
 			return null;
 		}

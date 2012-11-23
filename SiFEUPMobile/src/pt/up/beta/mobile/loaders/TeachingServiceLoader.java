@@ -17,14 +17,13 @@
 package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.datatypes.TeachingService;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 /**
@@ -67,9 +66,7 @@ public class TeachingServiceLoader extends AsyncTaskLoader<TeachingService> {
 							TeachingService.class);
 				} catch (Exception e) {
 					e.printStackTrace();
-					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-									+ cursor.getString(0), e, true);
+					LogUtils.trackException(getContext(), e, cursor.getString(0), true);
 				}
 			}
 		}

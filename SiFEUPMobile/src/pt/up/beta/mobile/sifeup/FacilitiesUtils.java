@@ -13,11 +13,11 @@ import org.json.JSONObject;
 import pt.up.beta.mobile.datatypes.RoomProfile;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 public class FacilitiesUtils {
@@ -168,9 +168,7 @@ public class FacilitiesUtils {
 				return hotspots;
 			} catch (JSONException e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 			}
 			return null;
 		}

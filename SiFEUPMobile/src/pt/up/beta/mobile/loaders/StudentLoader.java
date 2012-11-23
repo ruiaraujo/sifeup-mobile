@@ -21,14 +21,13 @@ import java.lang.reflect.Type;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.StudentCourse;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
@@ -92,9 +91,7 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 							Student.class);
 				} catch (Exception e) {
 					e.printStackTrace();
-					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-									+ cursor.getString(0), e, true);
+					LogUtils.trackException(getContext(), e, cursor.getString(0), true);
 				}
 			}
 		}

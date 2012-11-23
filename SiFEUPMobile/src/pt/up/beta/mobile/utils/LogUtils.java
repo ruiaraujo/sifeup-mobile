@@ -16,83 +16,104 @@
 
 package pt.up.beta.mobile.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import pt.up.beta.mobile.BuildConfig;
+import pt.up.beta.mobile.sifeup.AccountUtils;
+import android.content.Context;
 import android.util.Log;
+
+import com.google.analytics.tracking.android.EasyTracker;
 
 /**
  * Helper methods that make logging more consistent throughout the app.
  */
 public class LogUtils {
-    private static final String LOG_PREFIX = "iosched_";
-    private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
-    private static final int MAX_LOG_TAG_LENGTH = 23;
+	private static final String LOG_PREFIX = "iosched_";
+	private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
+	private static final int MAX_LOG_TAG_LENGTH = 23;
 
-    public static String makeLogTag(String str) {
-        if (str.length() > MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH) {
-            return LOG_PREFIX + str.substring(0, MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH - 1);
-        }
+	public static String makeLogTag(String str) {
+		if (str.length() > MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH) {
+			return LOG_PREFIX
+					+ str.substring(0, MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH
+							- 1);
+		}
 
-        return LOG_PREFIX + str;
-    }
+		return LOG_PREFIX + str;
+	}
 
-    /**
-     * WARNING: Don't use this when obfuscating class names with Proguard!
-     */
-    public static String makeLogTag(Class cls) {
-        return makeLogTag(cls.getSimpleName());
-    }
+	/**
+	 * WARNING: Don't use this when obfuscating class names with Proguard!
+	 */
+	public static String makeLogTag(Class<?> cls) {
+		return makeLogTag(cls.getSimpleName());
+	}
 
-    public static void LOGD(final String tag, String message) {
-        if (Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, message);
-        }
-    }
+	public static void LOGD(final String tag, String message) {
+		if (Log.isLoggable(tag, Log.DEBUG)) {
+			Log.d(tag, message);
+		}
+	}
 
-    public static void LOGD(final String tag, String message, Throwable cause) {
-        if (Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, message, cause);
-        }
-    }
+	public static void LOGD(final String tag, String message, Throwable cause) {
+		if (Log.isLoggable(tag, Log.DEBUG)) {
+			Log.d(tag, message, cause);
+		}
+	}
 
-    public static void LOGV(final String tag, String message) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-        if (BuildConfig.DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
-            Log.v(tag, message);
-        }
-    }
+	public static void LOGV(final String tag, String message) {
+		// noinspection PointlessBooleanExpression,ConstantConditions
+		if (BuildConfig.DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
+			Log.v(tag, message);
+		}
+	}
 
-    public static void LOGV(final String tag, String message, Throwable cause) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-        if (BuildConfig.DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
-            Log.v(tag, message, cause);
-        }
-    }
+	public static void LOGV(final String tag, String message, Throwable cause) {
+		// noinspection PointlessBooleanExpression,ConstantConditions
+		if (BuildConfig.DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
+			Log.v(tag, message, cause);
+		}
+	}
 
-    public static void LOGI(final String tag, String message) {
-        Log.i(tag, message);
-    }
+	public static void LOGI(final String tag, String message) {
+		Log.i(tag, message);
+	}
 
-    public static void LOGI(final String tag, String message, Throwable cause) {
-        Log.i(tag, message, cause);
-    }
+	public static void LOGI(final String tag, String message, Throwable cause) {
+		Log.i(tag, message, cause);
+	}
 
-    public static void LOGW(final String tag, String message) {
-        Log.w(tag, message);
-    }
+	public static void LOGW(final String tag, String message) {
+		Log.w(tag, message);
+	}
 
-    public static void LOGW(final String tag, String message, Throwable cause) {
-        Log.w(tag, message, cause);
-    }
+	public static void LOGW(final String tag, String message, Throwable cause) {
+		Log.w(tag, message, cause);
+	}
 
-    public static void LOGE(final String tag, String message) {
-        Log.e(tag, message);
-    }
+	public static void LOGE(final String tag, String message) {
+		Log.e(tag, message);
+	}
 
-    public static void LOGE(final String tag, String message, Throwable cause) {
-        Log.e(tag, message, cause);
-    }
+	public static void LOGE(final String tag, String message, Throwable cause) {
+		Log.e(tag, message, cause);
+	}
 
-    private LogUtils() {
-    }
+	private LogUtils() {
+	}
+
+	public static void trackException(final Context context, final Exception e,
+			final String extraInfo, final boolean fatal) {
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		; // stack trace as a string
+		EasyTracker.getTracker().trackException(
+				"Id:" + AccountUtils.getActiveUserCode(context) + "\n"
+						+ sw.toString() + "\n"
+						+ (extraInfo != null ? extraInfo : ""), e, fatal);
+
+	}
 }

@@ -18,14 +18,13 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Exam;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 /**
@@ -70,9 +69,7 @@ public class ExamsLoader extends AsyncTaskLoader<Exam[]> {
 									Exam[].class);
 				} catch (Exception e) {
 					e.printStackTrace();
-					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-									+ e.getMessage(), e, true);
+					LogUtils.trackException(getContext(), e, null, true);
 				}
 			}
 		}

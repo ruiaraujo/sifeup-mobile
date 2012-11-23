@@ -8,10 +8,9 @@ import org.json.JSONObject;
 
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
-
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class AuthenticationUtils {
 	private AuthenticationUtils() {
@@ -52,7 +51,7 @@ public class AuthenticationUtils {
 		}
 
 		protected ERROR_TYPE doInBackground(String... code) {
-			String[] page;
+			String[] page = null;
 			try {
 				page = SifeupAPI.authenticate(code[0], code[1], context);
 				if (page == null)
@@ -62,9 +61,8 @@ public class AuthenticationUtils {
 					return ERROR_TYPE.AUTHENTICATION;
 			} catch (JSONException e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ e.getMessage(), e, true);
+				LogUtils.trackException(context, e, page != null ? page[0]
+						: null, true);
 				return ERROR_TYPE.GENERAL;
 			} catch (AuthenticationException e) {
 				e.printStackTrace();
@@ -129,18 +127,14 @@ public class AuthenticationUtils {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ e.getMessage(), e, true);
+				LogUtils.trackException(context, e, page, true);
 			} catch (AuthenticationException e) {
 				try {
 					getError(page);
 					return "Error";
 				} catch (JSONException e1) {
 					e1.printStackTrace();
-					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-									+ e.getMessage(), e, true);
+					LogUtils.trackException(context, e, page, true);
 				}
 				e.printStackTrace();
 			} catch (IOException e) {

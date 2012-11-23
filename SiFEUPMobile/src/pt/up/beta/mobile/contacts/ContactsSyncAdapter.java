@@ -15,8 +15,6 @@
  */
 package pt.up.beta.mobile.contacts;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +23,8 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
@@ -95,13 +93,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (Exception e) {
 			syncResult.stats.numParseExceptions++;
 			e.printStackTrace();
-			final StringWriter sw = new StringWriter();
-			final PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			; // stack trace as a string
-			EasyTracker.getTracker().trackException(
-					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
-							+ sw.toString(), e, true);
+			LogUtils.trackException(getContext(), e, null, true);
 		}
 	}
 

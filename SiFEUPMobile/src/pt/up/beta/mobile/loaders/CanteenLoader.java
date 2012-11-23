@@ -18,14 +18,13 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
-import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 
 /**
@@ -68,9 +67,7 @@ public class CanteenLoader extends AsyncTaskLoader<Canteen[]> {
 					return new Gson().fromJson(page, Canteen[].class);
 				} catch (Exception e) {
 					e.printStackTrace();
-					EasyTracker.getTracker().trackException(
-							"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
-									+ page, e, true);
+					LogUtils.trackException(getContext(), e, page, true);
 				}
 			}
 		}

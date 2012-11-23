@@ -12,10 +12,10 @@ import pt.up.beta.mobile.datatypes.RoomSearchResult;
 import pt.up.beta.mobile.datatypes.StudentSearchResult;
 import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -153,9 +153,7 @@ public class SearchUtils {
 						}.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 
 			}
 			return null;
@@ -178,9 +176,7 @@ public class SearchUtils {
 						}.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 
 			}
 			return null;
@@ -198,9 +194,7 @@ public class SearchUtils {
 						}.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 
 			}
 			return null;
@@ -218,9 +212,7 @@ public class SearchUtils {
 						}.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
-				EasyTracker.getTracker().trackException(
-						"Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-								+ page, e, true);
+				LogUtils.trackException(null, e, page, true);
 
 			}
 			return null;

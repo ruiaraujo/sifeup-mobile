@@ -17,8 +17,6 @@ package pt.up.beta.mobile.syncadapter;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +35,10 @@ import pt.up.beta.mobile.datatypes.StudentCourse;
 import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.datatypes.TeachingService.Subject;
-import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import pt.up.beta.mobile.utils.StringUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -210,13 +208,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						SIGARRASYNCADAPTER_STATUS).putExtra(
 						SIGARRASYNCADAPTER_STATUS, GENERAL_ERROR));
 			e.printStackTrace();
-			final StringWriter sw = new StringWriter();
-			final PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			; // stack trace as a string
-			EasyTracker.getTracker().trackException(
-					"Id:" + AccountUtils.getActiveUserCode(getContext()) + "\n"
-							+ sw.toString(), e, true);
+			LogUtils.trackException(getContext(), e, null, true);
 		}
 	}
 
@@ -243,9 +235,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				Notification[].class);
 		if (notifications == null) {
 			syncResult.stats.numParseExceptions++;
-			EasyTracker.getTracker().trackException(
-					"Id:" + AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + notificationReply, true);
+			LogUtils.trackException(getContext(), new RuntimeException(), notificationReply, true);
 			return;
 		}
 		ArrayList<String> fetchedNotCodes = new ArrayList<String>();
@@ -622,9 +612,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final StudentCourse[] courses = gson.fromJson(subjectsPage, listType);
 		if (courses == null) {
 			syncResult.stats.numParseExceptions++;
-			EasyTracker.getTracker().trackException(
-					"Id:" + AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + subjectsPage, true);
+			LogUtils.trackException(getContext(), new RuntimeException(), subjectsPage, true);
 			return;
 		}
 		final List<ContentValues> values = new ArrayList<ContentValues>();
@@ -685,9 +673,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				teachingServicePage, TeachingService.class);
 		if (service == null) {
 			syncResult.stats.numParseExceptions++;
-			EasyTracker.getTracker().trackException(
-					"Id:" + AccountUtils.getActiveUserCode(getContext())
-							+ "\nPage:" + teachingServicePage, true);
+			LogUtils.trackException(getContext(), new RuntimeException(), teachingServicePage, true);
 			return;
 		}
 		final ContentValues teachingValue = new ContentValues();
