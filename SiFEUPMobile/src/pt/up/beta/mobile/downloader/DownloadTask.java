@@ -278,20 +278,19 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 	private Notification createProgressBar(CharSequence title,
 			CharSequence content, int progress, boolean indeterminate) {
 		final NotificationCompat.Builder builder = getSimple(title, content);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.setProgress(100, progress, indeterminate)
-					.setContentTitle(title).setContentText(content);
-		} else {
+		builder.setProgress(100, progress, indeterminate)
+				.setContentTitle(title).setContentText(content);
+		builder.setTicker(title);
+		builder.setOngoing(true);
+		update = builder.build();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			RemoteViews contentView = new RemoteViews(context.getPackageName(),
 					R.layout.notification_upload);
 			contentView.setTextViewText(android.R.id.text1, content);
 			contentView.setProgressBar(android.R.id.progress, 100, progress,
 					indeterminate);
-			builder.setContent(contentView);
+			update.contentView = contentView;
 		}
-		builder.setTicker(title);
-		builder.setOngoing(true);
-		update = builder.build();
 		return update;
 	}
 

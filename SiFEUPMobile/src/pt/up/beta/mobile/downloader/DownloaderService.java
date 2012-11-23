@@ -14,7 +14,7 @@ public class DownloaderService extends Service  implements FinishedTaskListener{
 	public final static String NAME_ARG = "name";
 	public final static String TYPE_ARG = "type";
 	public final static String SIZE_ARG = "size";
-	int taskRunning = 0;
+	private int taskRunning = 0;
 	
 	public static Intent newDownload(Context c, String url,
 			String name, String type, long size, String cookie) {
