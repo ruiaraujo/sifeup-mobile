@@ -25,7 +25,7 @@ import android.widget.Toast;
  * 
  */
 public class ParkOccupationFragment extends BaseFragment implements
-		ResponseCommand<Park> {
+		ResponseCommand<Park[]> {
 
 	private final static String PARK_KEY = "pt.up.fe.mobile.ui.studentarea.PARKS";
 
@@ -55,7 +55,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 			parks = savedInstanceState.getParcelableArrayList(PARK_KEY);
 			if (parks == null) {
 				parks = new ArrayList<Park>();
-				task = ParkUtils.getParkReply("P1", this, getActivity());
+				task = ParkUtils.getParksReply(this, getActivity());
 			} else {
 				ParkAdapter adapter = new ParkAdapter(getActivity(),
 						R.layout.list_item_park);
@@ -64,7 +64,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 			}
 		} else {
 			parks = new ArrayList<Park>();
-			task = ParkUtils.getParkReply("P1", this, getActivity());
+			task = ParkUtils.getParksReply(this, getActivity());
 		}
 	}
 
@@ -84,12 +84,14 @@ public class ParkOccupationFragment extends BaseFragment implements
 			View root = mInflater.inflate(R.layout.list_item_park, list, false);
 			TextView tt = (TextView) root.findViewById(R.id.park_name);
 			ImageView light = (ImageView) root.findViewById(R.id.park_light);
-			TextView places = (TextView) root.findViewById(R.id.park_occupation);
+			TextView places = (TextView) root
+					.findViewById(R.id.park_occupation);
 
 			final Park park = parks.get(position);
 
 			tt.setText(park.getName());
-			places.setText(getString(R.string.label_free_spots, Integer.toString(park.getPlacesNumber())));
+			places.setText(getString(R.string.label_free_spots,
+					Integer.toString(park.getPlacesNumber())));
 
 			int placesNumber = park.getPlacesNumber();
 
@@ -130,43 +132,35 @@ public class ParkOccupationFragment extends BaseFragment implements
 		}
 	}
 
-	public void onResultReceived(Park result) {
+	public void onResultReceived(Park[] result) {
 		if (getActivity() == null)
 			return;
-		parks.add(result);
-		switch (parks.size()) {
-		case 1:
-			parks.get(0).setName(getString(R.string.label_personnel_per_park));
-			ParkUtils.getParkReply("P3", this, getActivity());
-			break;
-		case 2:
-			parks.get(1).setName(getString(R.string.label_student_park));
-			ParkUtils.getParkReply("P4", this, getActivity());
-			break;
-		case 3:
-			parks.get(2).setName(
-					getString(R.string.label_personnel_not_per_park));
-			ParkAdapter adapter = new ParkAdapter(getActivity(),
-					R.layout.list_item_park);
-			list.setAdapter(adapter);
-			showMainScreen();
-			break;
+		for (int i = 0; i < result.length; ++i) {
+			parks.add(result[i]);
+			switch (i) {
+			case 0:
+				parks.get(i).setName(
+						getString(R.string.label_personnel_per_park));
+				break;
+			case 1:
+				parks.get(i).setName(getString(R.string.label_student_park));
+				break;
+			case 2:
+				parks.get(i).setName(
+						getString(R.string.label_personnel_not_per_park));
+				break;
+			}
 		}
+
+		ParkAdapter adapter = new ParkAdapter(getActivity(),
+				R.layout.list_item_park);
+		list.setAdapter(adapter);
+		showMainScreen();
 	}
 
 	protected void onRepeat() {
 		showLoadingScreen();
-		switch (parks.size()) {
-		case 0:
-			ParkUtils.getParkReply("P1", this, getActivity());
-			break;
-		case 1:
-			ParkUtils.getParkReply("P3", this, getActivity());
-			break;
-		case 2:
-			ParkUtils.getParkReply("P4", this, getActivity());
-			break;
-		}
+		ParkUtils.getParksReply(this, getActivity());
 	}
 
 }

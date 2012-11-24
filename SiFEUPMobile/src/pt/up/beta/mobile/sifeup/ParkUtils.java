@@ -16,10 +16,10 @@ public class ParkUtils {
 	private ParkUtils() {
 	}
 
-	public static AsyncTask<String, Void, ERROR_TYPE> getParkReply(String code,
-			ResponseCommand<Park> command, Context context) {
-		return new FetcherTask<Park>(command, new ParkParser(), context)
-				.execute(SifeupAPI.getParkOccupationUrl(code));
+	public static AsyncTask<String, Void, ERROR_TYPE> getParksReply(
+			ResponseCommand<Park[]> command, Context context) {
+		return new FetcherTask<Park[]>(command, new ParkParser(), context)
+				.execute(SifeupAPI.getParksOccupationUrl());
 	}
 
 	/**
@@ -27,9 +27,9 @@ public class ParkUtils {
 	 * Collection exams.
 	 */
 
-	private static class ParkParser implements ParserCommand<Park> {
+	private static class ParkParser implements ParserCommand<Park[]> {
 
-		public Park parse(String page) {
+		public Park[] parse(String page) {
 			try {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				gsonBuilder.registerTypeAdapter(Park.class,
@@ -40,7 +40,7 @@ public class ParkUtils {
 							}
 						});
 				Gson gson = gsonBuilder.create();
-				return gson.fromJson(page, Park.class);
+				return gson.fromJson(page, Park[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LogUtils.trackException(null, e, page, true);

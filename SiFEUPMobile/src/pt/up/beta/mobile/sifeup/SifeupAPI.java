@@ -231,7 +231,7 @@ public class SifeupAPI {
 	// .OCUPACAO
 	private interface ParkOcupation {
 		String NAME = "ocupacao";
-		String CODE = "pv_parque";
+		//String CODE = "pv_parque";
 	}
 
 	// MOB_UCURR_GERAL.CONTEUDOS
@@ -423,9 +423,8 @@ public class SifeupAPI {
 	 * @param code
 	 * @return Park Occupation Url
 	 */
-	public static String getParkOccupationUrl(String code) {
-		return SIGARRA_HOST + WebServices.PARK + ParkOcupation.NAME
-				+ WEBSERVICE_SEP + ParkOcupation.CODE + EQUALS + code;
+	public static String getParksOccupationUrl() {
+		return SIGARRA_HOST + WebServices.PARK + ParkOcupation.NAME;
 	}
 
 	/**
