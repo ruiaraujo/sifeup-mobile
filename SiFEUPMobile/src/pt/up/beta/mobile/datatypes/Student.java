@@ -34,22 +34,22 @@ public class Student extends Profile implements Parcelable {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_code), getCode(), null));
 		}
-		if (getEmail() != null) {
+		if (!TextUtils.isEmpty(getEmail())) {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_email), getEmail(),
 					Type.EMAIL));
 		}
-		if (getEmailAlt() != null) {
+		if (!TextUtils.isEmpty(getEmailAlt())) {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_email_alt),
 					getEmailAlt(), Type.EMAIL));
 		}
-		if (getMobilePhone() != null) {
+		if (!TextUtils.isEmpty(getMobilePhone())) {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_mobile),
 					getMobilePhone(), Type.MOBILE));
 		}
-		if (getPhone() != null) {
+		if (!TextUtils.isEmpty(getPhone())) {
 			result.add(new ProfileDetail(res
 					.getString(R.string.profile_title_telephone), getPhone(),
 					Type.MOBILE));

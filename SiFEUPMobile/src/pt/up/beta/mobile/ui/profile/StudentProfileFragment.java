@@ -160,7 +160,10 @@ public class StudentProfileFragment extends BaseLoaderFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			onRepeat();
+			setRefreshActionItemState(true);
+			SigarraSyncAdapterUtils.syncProfile(
+					AccountUtils.getActiveUserName(getActivity()), code,
+					SifeupAPI.STUDENT_TYPE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

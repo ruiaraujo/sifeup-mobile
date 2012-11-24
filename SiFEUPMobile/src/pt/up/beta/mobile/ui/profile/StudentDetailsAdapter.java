@@ -87,6 +87,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 					.findViewById(R.id.profile_item_content);
 			title.setText(details.get(position).title);
 			content.setText(details.get(position).content);
+			return convertView;
 		}
 		position -= details.size();
 		if (position % 5 == 0) {

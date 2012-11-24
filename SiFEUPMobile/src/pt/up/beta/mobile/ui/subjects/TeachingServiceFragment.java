@@ -64,7 +64,9 @@ public class TeachingServiceFragment extends BaseLoaderFragment implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
-			onRepeat();
+			setRefreshActionItemState(true);
+			SigarraSyncAdapterUtils.syncTeachingService(AccountUtils
+					.getActiveUserName(getActivity()));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
