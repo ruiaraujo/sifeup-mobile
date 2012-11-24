@@ -14,6 +14,7 @@ import pt.up.beta.mobile.ui.personalarea.ScheduleFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -120,18 +121,25 @@ public class RoomProfileFragment extends BaseFragment implements
 		room = results;
 		getSherlockActivity().getSupportActionBar()
 				.setTitle(room.getFullName());
-		TextView roomName = (TextView) root.findViewById(R.id.room_name);
+		final TextView roomName = (TextView) root.findViewById(R.id.room_name);
 		roomName.setText(Html.fromHtml(getString(R.string.room_name,
 				room.getFullName())));
-		TextView buildingName = (TextView) root
+		final TextView buildingName = (TextView) root
 				.findViewById(R.id.building_name);
 		buildingName.setText(Html.fromHtml(getString(R.string.room_building,
 				room.getBuildingName())));
-		TextView area = (TextView) root.findViewById(R.id.room_area);
-		area.setText(Html.fromHtml(getString(R.string.room_area, room.getArea())));
-		TextView usage = (TextView) root.findViewById(R.id.room_usage);
-		usage.setText(Html.fromHtml(getString(R.string.room_usage,
-				room.getUsage())));
+		final TextView area = (TextView) root.findViewById(R.id.room_area);
+		if (TextUtils.isEmpty(room.getArea()))
+			area.setVisibility(View.GONE);
+		else
+			area.setText(Html.fromHtml(getString(R.string.room_area,
+					room.getArea())));
+		final TextView usage = (TextView) root.findViewById(R.id.room_usage);
+		if (TextUtils.isEmpty(room.getUsage()))
+			usage.setVisibility(View.GONE);
+		else
+			usage.setText(Html.fromHtml(getString(R.string.room_usage,
+					room.getUsage())));
 
 		if (room.getAtributes().length > 0) {
 			LinearLayout attributesContainer = (LinearLayout) root
