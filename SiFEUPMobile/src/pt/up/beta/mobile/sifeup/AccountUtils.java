@@ -39,6 +39,11 @@ public class AccountUtils {
 					mAccount, Constants.USER_CODE),
 					mAccountManager.getPassword(mAccount),
 					mAccountManager.getUserData(mAccount, Constants.USER_TYPE));
+			if (user.getType() == null || user.getUserCode() == null
+					|| user.getPassword() == null) {
+				user = null;
+				return false;
+			}
 			try {
 				cookie = getAuthToken(context, mAccount);
 			} catch (OperationCanceledException e) {
@@ -54,7 +59,7 @@ public class AccountUtils {
 	}
 
 	private static boolean needsInit() {
-		return mAccount == null || mAccountManager == null;
+		return mAccount == null || mAccountManager == null || user == null;
 	}
 
 	public static String renewAuthToken(final Context context,
