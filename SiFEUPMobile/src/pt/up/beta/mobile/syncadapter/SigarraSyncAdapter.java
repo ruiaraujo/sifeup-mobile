@@ -660,11 +660,15 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				value.put(SigarraContract.SubjectsColumns.FILES, subjectFiles);
 				value.put(SigarraContract.SubjectsColumns.COURSE_ID,
 						course.getCourseId());
-				value.put(
-						SigarraContract.SubjectsColumns.COURSE_ACRONYM,
-						course.getCourseAcronym() == null ? StringUtils
-								.getAcronym(course.getCourseName()) : course
-								.getCourseAcronym());
+				if (course.getCourseName() != null)
+					value.put(
+							SigarraContract.SubjectsColumns.COURSE_ACRONYM,
+							course.getCourseAcronym() == null ? StringUtils
+									.getAcronym(course.getCourseName())
+									: course.getCourseAcronym());
+				else
+					value.put(SigarraContract.SubjectsColumns.COURSE_ACRONYM,
+							course.getCourseTypeDesc());
 				value.put(SigarraContract.SubjectsColumns.COURSE_ENTRY,
 						gson.toJson(subject));
 				value.put(BaseColumns.COLUMN_STATE, SyncStates.KEEP);
