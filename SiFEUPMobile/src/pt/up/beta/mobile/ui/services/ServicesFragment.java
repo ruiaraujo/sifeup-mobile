@@ -5,7 +5,6 @@ import pt.up.beta.mobile.sendtosamba.InternalSendToSambaActivity;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;
 import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
-import pt.up.beta.mobile.ui.services.print.InternalMobilePrintActivity;
 import pt.up.beta.mobile.ui.services.print.PrintActivity;
 import android.content.Intent;
 import android.os.Bundle;

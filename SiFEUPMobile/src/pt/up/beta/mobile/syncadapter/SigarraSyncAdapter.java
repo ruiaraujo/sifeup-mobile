@@ -35,6 +35,7 @@ import pt.up.beta.mobile.datatypes.StudentCourse;
 import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.datatypes.TeachingService.Subject;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
@@ -235,7 +236,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				Notification[].class);
 		if (notifications == null) {
 			syncResult.stats.numParseExceptions++;
-			LogUtils.trackException(getContext(), new RuntimeException(), notificationReply, true);
+			LogUtils.trackException(getContext(), new RuntimeException(),
+					notificationReply, true);
 			return;
 		}
 		ArrayList<String> fetchedNotCodes = new ArrayList<String>();
@@ -259,6 +261,32 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						SigarraContract.Notifcations.CONTENT_URI, values);
 			}
 		}
+		final Cursor syncState = getContext().getContentResolver().query(
+				SigarraContract.LastSync.CONTENT_URI,
+				SigarraContract.LastSync.COLUMNS,
+				SigarraContract.LastSync.PROFILE,
+				SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
+						.getActiveUserName(getContext())), null);
+		try {
+			if (syncState.moveToFirst()) {
+				if (syncState
+						.getLong(syncState
+								.getColumnIndex(SigarraContract.LastSync.NOTIFICATIONS)) == 0) {
+					// Report that we have checked the notifications
+					final ContentValues values = new ContentValues();
+					values.put(SigarraContract.LastSync.NOTIFICATIONS,
+							System.currentTimeMillis());
+					getContext().getContentResolver().update(
+							SigarraContract.LastSync.CONTENT_URI,
+							values,
+							SigarraContract.LastSync.PROFILE,
+							SigarraContract.LastSync
+									.getLastSyncSelectionArgs(account.name));
+				}
+			}
+		} finally {
+			syncState.close();
+		}
 		final Cursor cursor = getContext().getContentResolver().query(
 				SigarraContract.Notifcations.CONTENT_URI,
 				new String[] { SigarraContract.Notifcations.ID_NOTIFICATION },
@@ -276,16 +304,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 											account.name, cursor.getString(0)));
 				}
 			} else {
-				// No notifications
-				final ContentValues values = new ContentValues();
-				values.put(SigarraContract.LastSync.NOTIFICATIONS,
-						System.currentTimeMillis());
-				getContext().getContentResolver().update(
-						SigarraContract.LastSync.CONTENT_URI,
-						values,
-						SigarraContract.LastSync.PROFILE,
-						SigarraContract.LastSync
-								.getLastSyncSelectionArgs(account.name));
+				// no notifications
 				getContext().getContentResolver().notifyChange(
 						SigarraContract.Notifcations.CONTENT_URI, null);
 			}
@@ -612,7 +631,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final StudentCourse[] courses = gson.fromJson(subjectsPage, listType);
 		if (courses == null) {
 			syncResult.stats.numParseExceptions++;
-			LogUtils.trackException(getContext(), new RuntimeException(), subjectsPage, true);
+			LogUtils.trackException(getContext(), new RuntimeException(),
+					subjectsPage, true);
 			return;
 		}
 		final List<ContentValues> values = new ArrayList<ContentValues>();
@@ -673,7 +693,8 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				teachingServicePage, TeachingService.class);
 		if (service == null) {
 			syncResult.stats.numParseExceptions++;
-			LogUtils.trackException(getContext(), new RuntimeException(), teachingServicePage, true);
+			LogUtils.trackException(getContext(), new RuntimeException(),
+					teachingServicePage, true);
 			return;
 		}
 		final ContentValues teachingValue = new ContentValues();
