@@ -140,22 +140,35 @@ public class DynamicMailFilesFragment extends BaseFragment implements
 	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
 		final DynamicMailFile file = files[position];
-		try {
-			getActivity().startService(
-					DownloaderService.newDownload(getActivity(), SifeupAPI
-							.getDownloadMailFilesUrl(file.getCode(),
-									AccountUtils
-											.getActiveUserCode(getActivity())),
-							file.getName(), null, 0, AccountUtils.getAuthToken(
-									getActivity(), AccountUtils
-											.getActiveAccount(getActivity()))));
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-		} catch (AuthenticatorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					getActivity()
+							.startService(
+									DownloaderService.newDownload(
+											getActivity(),
+											SifeupAPI.getDownloadMailFilesUrl(
+													file.getCode(),
+													AccountUtils
+															.getActiveUserCode(getActivity())),
+											file.getName(),
+											null,
+											0,
+											AccountUtils.getAuthToken(
+													getActivity(),
+													AccountUtils
+															.getActiveAccount(getActivity()))));
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (AuthenticatorException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 }

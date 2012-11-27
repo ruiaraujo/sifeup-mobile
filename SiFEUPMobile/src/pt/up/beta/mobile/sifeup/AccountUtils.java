@@ -44,15 +44,20 @@ public class AccountUtils {
 				user = null;
 				return false;
 			}
-			try {
-				cookie = getAuthToken(context, mAccount);
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-			} catch (AuthenticatorException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						cookie = getAuthToken(context, mAccount);
+					} catch (OperationCanceledException e) {
+						e.printStackTrace();
+					} catch (AuthenticatorException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 			return true;
 		} else
 			return false;
@@ -77,7 +82,7 @@ public class AccountUtils {
 
 	private static final Object LOCK = new Object();
 
-	public synchronized static String getAuthToken(final Context context,
+	public static String getAuthToken(final Context context,
 			final Account account) throws OperationCanceledException,
 			AuthenticatorException, IOException {
 		if (needsInit()) {
