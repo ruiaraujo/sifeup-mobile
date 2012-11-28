@@ -268,12 +268,16 @@ public class ExamsFragment extends BaseLoaderFragment implements
 		for (Exam e : exams) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			String tipo = "( "
-					+ (e.getTypeDesc().contains("Mini-testes") ? "M" : "E") + " ) ";
-			map.put("chair", tipo + e.getOcorrName());
-			map.put("time",
+					+ (e.getTypeDesc().contains("Mini-testes") ? "M" : "E")
+					+ " ) ";
+			map.put(from[0], tipo + e.getOcorrName());
+			map.put(from[1],
 					e.getDate() + ": " + e.getStartTime() + "-"
 							+ e.getEndTime());
-			map.put("room", e.getRoomsString());
+			if (e.getRooms().length == 0)
+				map.put(from[2], getString(R.string.label_no_exam_room));
+			else
+				map.put(from[2], e.getRoomsString());
 			fillMaps.add(map);
 		}
 
