@@ -1,5 +1,8 @@
 package pt.up.beta.mobile.downloader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.up.beta.mobile.sendtosamba.FinishedTaskListener;
 import android.app.Service;
 import android.content.Context;
@@ -8,16 +11,17 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-public class DownloaderService extends Service  implements FinishedTaskListener{
+public class DownloaderService extends Service implements FinishedTaskListener {
 	public final static String COOKIE_ARG = "cookie";
 	public final static String URL_ARG = "url";
 	public final static String NAME_ARG = "name";
 	public final static String TYPE_ARG = "type";
 	public final static String SIZE_ARG = "size";
 	private int taskRunning = 0;
-	
-	public static Intent newDownload(Context c, String url,
-			String name, String type, long size, String cookie) {
+	private List<DownloadTask> downloads = new ArrayList<DownloadTask>();
+
+	public static Intent newDownload(Context c, String url, String name,
+			String type, long size, String cookie) {
 		final Intent i = new Intent(c, DownloaderService.class);
 		i.putExtra(URL_ARG, url);
 		i.putExtra(NAME_ARG, name);
@@ -26,7 +30,6 @@ public class DownloaderService extends Service  implements FinishedTaskListener{
 		i.putExtra(COOKIE_ARG, cookie);
 		return i;
 	}
-
 
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
@@ -49,8 +52,9 @@ public class DownloaderService extends Service  implements FinishedTaskListener{
 				filename = filterDots(filename);
 			final long filesize = i.getLongExtra(SIZE_ARG, 0);
 			final String cookie = i.getStringExtra(COOKIE_ARG);
-			final DownloadTask downloader = new DownloadTask(this, url, filename, type,
-					filesize, cookie, getApplicationContext());
+			final DownloadTask downloader = new DownloadTask(this, url,
+					filename, type, filesize, cookie, getApplicationContext());
+			downloads.add(downloader);
 			downloader.execute();
 
 		} catch (Exception e) {
@@ -59,6 +63,13 @@ public class DownloaderService extends Service  implements FinishedTaskListener{
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return START_STICKY;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		for (DownloadTask d : downloads)
+			d.cancel(true);
 	}
 
 	/**
@@ -70,7 +81,7 @@ public class DownloaderService extends Service  implements FinishedTaskListener{
 			return DownloaderService.this;
 		}
 	}
-	
+
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return new LoggerServiceBinder();

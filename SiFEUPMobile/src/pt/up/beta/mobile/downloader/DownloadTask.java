@@ -334,4 +334,10 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 		}
 		return type;
 	}
+
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		mNotificationManager.cancel(UNIQUE_ID);
+	}
 }
