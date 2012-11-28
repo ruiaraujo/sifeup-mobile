@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,16 +104,6 @@ public class BaseFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// Recovering the Cookie here
-		// as every activity will descend from this one.
-		// TODO: we need to improve this
-		// if (!AccountUtils.isAccountValid(getActivity()))
-		// goLogin();
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		if (task != null) {
@@ -157,16 +150,41 @@ public class BaseFragment extends SherlockFragment {
 		showLoadingScreen();
 	}
 
-	protected void removeDialog(String dialog) { // DialogFragment.show() will
-													// take care of adding the
-													// fragment
-		// in a transaction. We also want to remove any currently showing
-		// dialog, so make our own transaction and take care of that here.
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(dialog);
-		if (prev != null) {
-			ft.remove(prev).commitAllowingStateLoss();
+	private final static int MSG_REMOVE_DIALOG = 0;
+
+	private static class DialogHandler extends Handler {
+		private final FragmentManager mFragmentManager;
+
+		private DialogHandler(FragmentManager mFragmentManager) {
+			this.mFragmentManager = mFragmentManager;
 		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == MSG_REMOVE_DIALOG) {
+				// DialogFragment.show() will
+				// take care of adding the
+				// fragment
+				// in a transaction. We also want to remove any currently
+				// showing
+				// dialog, so make our own transaction and take care of that
+				// here.
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+				Fragment prev = mFragmentManager.findFragmentByTag(msg.obj
+						.toString());
+				if (prev != null) {
+					ft.remove(prev).commitAllowingStateLoss();
+				}
+			}
+		}
+	}
+
+	private DialogHandler handler;
+
+	protected void removeDialog(String dialog) {
+		if (handler == null)
+			handler = new DialogHandler(getFragmentManager());
+		handler.sendMessage(Message.obtain(handler, MSG_REMOVE_DIALOG, dialog));
 	}
 
 	public BaseActivity getBaseActivity() {
