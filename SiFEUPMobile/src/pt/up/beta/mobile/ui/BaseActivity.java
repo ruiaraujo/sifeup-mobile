@@ -1,6 +1,10 @@
 package pt.up.beta.mobile.ui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +21,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.ExceptionParser;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -31,6 +36,16 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	protected ActionBar actionbar;
 
 	private Handler mHandler = new Handler();
+	private final static ExceptionParser parser = new ExceptionParser() {
+		@Override
+		public String getDescription(String threadName, Throwable t) {
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+			t.printStackTrace(pw);
+			return "Id:" + AccountUtils.getActiveUserCode(null) + "\n"
+					+ sw.toString() + "\n";
+		}
+	};
 
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
@@ -54,7 +69,8 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			setSlidingActionBarEnabled(false);
 		} else {
 			final ImageView pic = new ImageView(this);
-			pic.setBackgroundColor(getResources().getColor(R.color.body_text_white));
+			pic.setBackgroundColor(getResources().getColor(
+					R.color.body_text_white));
 			setBehindContentView(pic);
 			getSlidingMenu().setSlidingEnabled(false);
 		}
@@ -64,6 +80,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getTracker().setExceptionParser(parser);
 	}
 
 	@Override
@@ -171,8 +188,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 				@Override
 				public void run() {
 					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in,
-							R.anim.fade_out);
+					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				}
 			}, 200);
 		} else {
@@ -180,7 +196,6 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
 	}
-	
 
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -234,6 +249,5 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		intent.removeExtra("_uri");
 		return intent;
 	}
-
 
 }
