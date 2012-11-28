@@ -1,8 +1,11 @@
 package pt.up.beta.mobile.ui.personalarea;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
@@ -410,7 +413,6 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void setupDay(long startMillis, int i) {
 		Day day = new Day();
 
@@ -437,21 +439,22 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		Time date = new Time(DateUtils.TIME_REFERENCE);
 		date.set(startMillis);
 		date.normalize(false);
-		day.label = android.text.format.DateUtils.getDayOfWeekString(
-				date.weekDay + 1, android.text.format.DateUtils.LENGTH_LONG)
-				+ ", " + date.format("%d-%m");
+		SimpleDateFormat sdf = new SimpleDateFormat(LABEL_DATE_FORMAT,
+				Locale.getDefault());
+		day.label = sdf.format(new Date(date.toMillis(true)));
 		mDays.add(i, day);
 	}
+
+	private final static String LABEL_DATE_FORMAT = "EEEEE, dd-MM";
 
 	private void updateDay(int index, long millis) {
 
 		Time date = new Time(DateUtils.TIME_REFERENCE);
 		date.set(millis);
 		date.normalize(false);
-		mDays.get(index).label = android.text.format.DateUtils
-				.getDayOfWeekString(date.weekDay + 1,
-						android.text.format.DateUtils.LENGTH_LONG)
-				+ ", " + date.format("%d-%m");
+		SimpleDateFormat sdf = new SimpleDateFormat(LABEL_DATE_FORMAT,
+				Locale.getDefault());
+		mDays.get(index).label = sdf.format(new Date(date.toMillis(true)));
 		mDays.get(index).timeStart = millis;
 		mDays.get(index).timeEnd = millis
 				+ android.text.format.DateUtils.DAY_IN_MILLIS;
