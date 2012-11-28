@@ -1,12 +1,9 @@
-package pt.up.beta.mobile.sendtosamba;
+package pt.up.beta.mobile.ui.services.print;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import org.jibble.simpleftp.SimpleFTP;
-import org.jibble.simpleftp.SimpleFTP.WrongCredentials;
+import javax.mail.AuthenticationFailedException;
 
 import pt.up.beta.mobile.R;
+import pt.up.beta.mobile.sendtosamba.ManagedOnPercentageChangedListener;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import pt.up.beta.mobile.ui.utils.InputStreamManaged;
 import pt.up.beta.mobile.utils.LogUtils;
@@ -21,7 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
+public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 
 	private final InputStreamManaged is;
 	private final String filename;
@@ -30,8 +27,7 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 
 	private int error = 0;
 	private final static int WRONG_CREDENTIAL = 1;
-	private final static int WRONG_HOST = 2;
-	private final static int GENERAL_ERROR = 3;
+	private final static int GENERAL_ERROR = 2;
 
 	private NotificationManager mNotificationManager;
 	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
@@ -40,17 +36,14 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 	// We use it on Notification start, and to cancel it.
 	private final int UNIQUE_ID;
 
-	private final String folder;
+	private final static String EMAIL = "mobile.print@fe.up.pt";
 
-	private final static String SERVER = "tom.fe.up.pt";
-
-	public UploaderTask(final FinishedTaskListener lis, final Context con,
+	public MobilePrintTask(final FinishedTaskListener lis, final Context con,
 			final InputStreamManaged is, final String filename) {
 		this.is = is;
 		this.filename = filename;
 		this.context = con;
 		this.listener = lis;
-		folder = "FEUPMobile";
 		UNIQUE_ID = (int) (R.string.app_name + System.currentTimeMillis());
 		mNotificationManager = (NotificationManager) con
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -61,27 +54,22 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 		mNotificationManager.notify(
 				UNIQUE_ID,
 				createProgressBar(context.getString(
-						R.string.notification_uploader_content, filename), "",
+						R.string.mobile_print_sending, filename), "",
 						0, is.getLength() == 0));
 	}
 
 	@Override
-	protected Boolean doInBackground(String... params) {
-		Log.i("UploadingService", "File " + filename);
-		final String username = params[0];
-		final String password = params[1];
-		SimpleFTP ftp = null;
+	protected Boolean doInBackground(String... args) {
 		try {
-			ftp = new SimpleFTP();
-
-			// Connect to an FTP server on port 21.
-			ftp.connect(SERVER, 21, username, password);
-
-			// Set binary mode.
-			ftp.bin();
-			// Change to a new working directory on the FTP server.
-			ftp.mkd(folder);
-			ftp.cwd(folder);
+			final String sender = args[0];
+			final String password = args[1];
+			final Mail m = new Mail(sender, password);
+			String[] toArr = { EMAIL };
+			m.setTo(toArr);
+			m.setFrom(sender);
+			m.setSubject(context.getString(R.string.app_name) + " - "
+					+ context.getString(R.string.title_mobile_printing));
+			m.setBody("");
 			is.setOnPercentageChangedListener(new ManagedOnPercentageChangedListener() {
 				long lastNotificationTime = System.currentTimeMillis();
 
@@ -92,32 +80,17 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 					}
 				}
 			});
-			// You can also upload from an InputStream, e.g.
-			ftp.stor(is, filename);
-			is.close();
-
-		} catch (UnknownHostException e) {
-			error = WRONG_HOST;
-			return false;
-		} catch (WrongCredentials e) {
+			m.addAttachment(is, filename);
+			return m.send();
+		} catch (AuthenticationFailedException e) {
+			Log.e("FileSelectorTestActivity", "File select error", e);
 			error = WRONG_CREDENTIAL;
-			return false;
 		} catch (Exception e) {
-			e.printStackTrace();
-            LogUtils.trackException(context, e, null, false);
+			Log.e("FileSelectorTestActivity", "File select error", e);
+			LogUtils.trackException(context, e, null, false);
 			error = GENERAL_ERROR;
-			return false;
-		} finally {
-			if (ftp != null) {
-				try {
-					// Quit from the FTP server.
-					ftp.disconnect();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
-		return true;
+		return false;
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
@@ -130,13 +103,12 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		if (result) {
-			mNotificationManager
-					.notify(UNIQUE_ID,
-							getSimple(
-									context.getString(R.string.app_name),
-									context.getString(
-											R.string.notification_uploader_finished,
-											filename)).build());
+			mNotificationManager.notify(
+					UNIQUE_ID,
+					getSimple(
+							context.getString(R.string.app_name),
+							context.getString(R.string.mobile_print_success,
+									filename)).build());
 		} else {
 			switch (error) {
 			case WRONG_CREDENTIAL:
@@ -147,22 +119,13 @@ public class UploaderTask extends AsyncTask<String, Integer, Boolean> {
 										context.getString(R.string.error_credential))
 										.build());
 				break;
-			case WRONG_HOST:
-				mNotificationManager
-						.notify(UNIQUE_ID,
-								getSimple(
-										context.getString(R.string.notification_uploader_error_host_title),
-										context.getString(R.string.notification_uploader_error_host))
-										.build());
-				break;
 			default:
-				mNotificationManager
-						.notify(UNIQUE_ID,
-								getSimple(
-										context.getString(R.string.error_title),
-										context.getString(
-												R.string.notification_uploader_error,
-												filename)).build());
+				mNotificationManager.notify(
+						UNIQUE_ID,
+						getSimple(
+								context.getString(R.string.error_title),
+								context.getString(R.string.mobile_print_error,
+										filename)).build());
 				break;
 			}
 		}

@@ -3,7 +3,7 @@ package pt.up.beta.mobile.downloader;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.sendtosamba.FinishedTaskListener;
+import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;

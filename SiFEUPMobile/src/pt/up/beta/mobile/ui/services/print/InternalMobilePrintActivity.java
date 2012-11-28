@@ -1,23 +1,20 @@
 package pt.up.beta.mobile.ui.services.print;
 
-import java.io.File;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 /**
  * @author paulburke (ipaulpro)
  */
-public class InternalMobilePrintActivity extends Activity {
+public class InternalMobilePrintActivity extends SherlockFragmentActivity {
 
 	private static final int REQUEST_CODE = 6384; // onActivityResult request
 													// code
@@ -49,44 +46,27 @@ public class InternalMobilePrintActivity extends Activity {
 				if (data != null) {
 					// Get the URI of the selected file
 					final Uri uri = data.getData();
-
+					if (uri == null) {
+						finish();
+						return;
+					}
 					try {
-						// Create a file instance from the URI
-						final File file = FileUtils.getFile(uri);
-						Toast.makeText(InternalMobilePrintActivity.this,
-								"File Selected: " + file.getAbsolutePath(),
-								Toast.LENGTH_LONG).show();
-						Mail m = new Mail(
-								AccountUtils.getActiveUserName(getApplicationContext())
-										+ "@fe.up.pt",
-								AccountUtils
-										.getActiveUserPassword(getApplicationContext()));
+						Intent i = new Intent(this, MobilePrintService.class);
+						i.replaceExtras(data);
+						i.setData(uri);
 
-						String[] toArr = { "ruka.araujo@gmail.com" };
-						m.setTo(toArr);
-						m.setFrom(
-								AccountUtils.getActiveUserName(getApplicationContext())
-								+ "@fe.up.pt");
-						m.setSubject("This is an email sent using my Mail JavaMail wrapper from an Android device.");
-						m.setBody("Email body.");
-
-						try {
-							m.addAttachment(file.getAbsolutePath());
-
-							if (m.send()) {
-								Toast.makeText(this,
-										"Email was sent successfully.",
-										Toast.LENGTH_LONG).show();
-							} else {
-								Toast.makeText(this, "Email was not sent.",
-										Toast.LENGTH_LONG).show();
-							}
-						} catch (Exception e) {
-							// Toast.makeText(MailApp.this,
-							// "There was a problem sending the email.",
-							// Toast.LENGTH_LONG).show();
-							Log.e("MailApp", "Could not send email", e);
-						}
+						final String sender;
+						if (AccountUtils.getActiveUserName(this).endsWith(
+								"@fe.up.pt"))
+							sender = AccountUtils.getActiveUserName(this);
+						else
+							sender = AccountUtils.getActiveUserName(this)
+									+ "@fe.up.pt";
+						final String password = AccountUtils
+								.getActiveUserPassword(this);
+						i.putExtra(MobilePrintService.USERNAME_KEY, sender);
+						i.putExtra(MobilePrintService.PASSWORD_KEY, password);
+						startService(i);
 						finish();
 					} catch (Exception e) {
 						Log.e("FileSelectorTestActivity", "File select error",
@@ -96,5 +76,6 @@ public class InternalMobilePrintActivity extends Activity {
 			}
 			break;
 		}
+		finish();
 	}
 }

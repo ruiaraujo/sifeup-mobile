@@ -1,12 +1,14 @@
-package pt.up.beta.mobile.sendtosamba;
+package pt.up.beta.mobile.ui.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import pt.up.beta.mobile.sendtosamba.ManagedOnPercentageChangedListener;
+
 public class InputStreamManaged extends InputStream {
 	
 	private InputStream __ism = null;
-	InputStreamManaged(InputStream is)
+	public InputStreamManaged(InputStream is)
 	{
 		this.__ism = is;
 	}

@@ -9,8 +9,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import pt.up.beta.mobile.R;
-import pt.up.beta.mobile.sendtosamba.FinishedTaskListener;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -104,7 +104,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			mNotificationManager
 					.notify(UNIQUE_ID,
 							getSimple(
-									context.getString(R.string.notification_error_title),
+									context.getString(R.string.error_title),
 									context.getString(R.string.toast_download_error))
 									.build());
 			break;
@@ -112,7 +112,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			mNotificationManager
 					.notify(UNIQUE_ID,
 							getSimple(
-									context.getString(R.string.notification_error_title),
+									context.getString(R.string.error_title),
 									context.getString(R.string.toast_download_error_file))
 									.build());
 			break;
@@ -120,7 +120,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			mNotificationManager
 					.notify(UNIQUE_ID,
 							getSimple(
-									context.getString(R.string.notification_error_title),
+									context.getString(R.string.error_title),
 									context.getString(R.string.toast_download_no_memory))
 									.build());
 			break;
@@ -128,7 +128,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Integer> {
 			mNotificationManager
 					.notify(UNIQUE_ID,
 							getSimple(
-									context.getString(R.string.notification_error_title),
+									context.getString(R.string.error_title),
 									context.getString(R.string.toast_download_no_memory_card))
 									.build());
 			break;

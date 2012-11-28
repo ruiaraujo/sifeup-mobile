@@ -1,7 +1,5 @@
 package pt.up.beta.mobile.sendtosamba;
 
-import java.io.File;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.app.Activity;
@@ -10,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
@@ -51,12 +48,6 @@ public class InternalSendToSambaActivity extends Activity {
 					final Uri uri = data.getData();
 
 					try {
-						// Create a file instance from the URI
-						final File file = FileUtils.getFile(uri);
-						Toast.makeText(InternalSendToSambaActivity.this,
-								"File Selected: " + file.getAbsolutePath(),
-								Toast.LENGTH_LONG).show();
-
 						Intent i = new Intent(this, UploaderService.class);
 						i.replaceExtras(data);
 						i.setData(uri);

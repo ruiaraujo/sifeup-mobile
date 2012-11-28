@@ -8,6 +8,9 @@
     <string name="button_repeat">Repeat</string>
     <string name="lb_unavailable">Unavailable</string>
     <string name="general_error">Oops!\n Something went wrong&#8230; :(</string>
+    <string name="error_credential_title">Wrong Credentials</string>
+    <string name="error_credential">Please login at FEUP Mobile.</string>
+    <string name="error_title">Error</string>
 
     <!-- *************************************************************************************** -->
     <!-- Downloader -->
@@ -349,19 +352,18 @@
 
     <!-- *************************************************************************************** -->
     <!-- Mobile Print -->
-    
+    <string name="title_mobile_printing">Mobile Print</string>
+    <string name="mobile_print_error">Error while printing \n%1$s</string>
+    <string name="mobile_print_success">%1$s sent to printer.\nSee the result in your webmail.</string>
+    <string name="mobile_print_sending">Sending %1$s\n to printer.</string>
     
     <!-- *************************************************************************************** -->
     <!-- SAMBA UPLOADER -->
     <string name="title_samba_uploader">Samba FEUP</string>
-    <string name="notification_uploader_title">FEUP Mobile</string>
     <string name="notification_uploader_content">Uploading\n%1$s</string>
     <string name="notification_uploader_finished">Finished uploading \n%1$s</string>
-    <string name="notification_uploader_error_credential_title">Wrong Credentials</string>
-    <string name="notification_uploader_error_credential">Please login at FEUP Mobile.</string>
     <string name="notification_uploader_error_host_title">Error connecting</string>
     <string name="notification_uploader_error_host">Please be inside FEUP\'s network or connected through VPN.</string>
-    <string name="notification_error_title">Error</string>
     <string name="notification_uploader_error">Error while uploading\n%1$s</string>
     <string name="notification_unsupported">Unsupported Operation</string>
 

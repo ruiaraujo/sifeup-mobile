@@ -10,11 +10,27 @@ import java.io.IOException;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 
 public class FileUtils {
     private FileUtils(){} //private constructor
+    
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        if ( cursor == null )
+            return null;
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        final String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
+    }
     
     // our caching functions
     // Find the dir to save cached images

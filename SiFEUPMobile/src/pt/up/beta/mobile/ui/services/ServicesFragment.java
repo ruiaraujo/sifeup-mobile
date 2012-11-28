@@ -5,6 +5,7 @@ import pt.up.beta.mobile.sendtosamba.InternalSendToSambaActivity;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;
 import pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity;
+import pt.up.beta.mobile.ui.services.print.InternalMobilePrintActivity;
 import pt.up.beta.mobile.ui.services.print.PrintActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,6 +60,10 @@ public class ServicesFragment extends Fragment {
 				case 5:
 					activity.openActivityOrFragment(new Intent(getActivity(),
 							InternalSendToSambaActivity.class));
+					break;
+				case 6:
+					activity.openActivityOrFragment(new Intent(getActivity(),
+							InternalMobilePrintActivity.class));
 					break;
 				}
 				return false;
@@ -129,7 +134,8 @@ public class ServicesFragment extends Fragment {
 				getString(R.string.btn_change_password),
 				getString(R.string.btn_dynamic_mail_files),
 				getString(R.string.title_advanced_search),
-				getString(R.string.title_samba_uploader) };
+				getString(R.string.title_samba_uploader) ,
+				getString(R.string.title_mobile_printing)};
 		private String[][] children = {
 				{},
 				{},
@@ -139,7 +145,7 @@ public class ServicesFragment extends Fragment {
 						getString(R.string.title_advanced_search_employees),
 						getString(R.string.title_advanced_search_rooms),
 						getString(R.string.title_advanced_search_subjects) },
-				{} };
+				{} , {}};
 
 		public Object getChild(int groupPosition, int childPosition) {
 			return children[groupPosition][childPosition];

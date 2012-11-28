@@ -1,4 +1,4 @@
-package pt.up.beta.mobile.sendtosamba;
+package pt.up.beta.mobile.ui.services.print;
 
 import java.io.ByteArrayInputStream;
 
@@ -6,6 +6,7 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import pt.up.beta.mobile.ui.utils.InputStreamManaged;
 import pt.up.beta.mobile.utils.FileUtils;
+import pt.up.beta.mobile.utils.LogUtils;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -16,16 +17,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-public class UploaderService extends Service implements FinishedTaskListener {
+public class MobilePrintService extends Service implements FinishedTaskListener {
     /**
      * Username that should be the intent
      */
-    public final static String USERNAME_KEY = "pt.up.fe.sendtosamba.USERNAME";
+    public final static String USERNAME_KEY = "pt.up.fe.services.print.USERNAME";
 
     /**
      * Password that should be the intent
      */
-    public final static String PASSWORD_KEY = "pt.up.fe.sendtosamba.PASSWORD";
+    public final static String PASSWORD_KEY = "pt.up.fe.services.print.PASSWORD";
 
     int taskRunning = 0;
 
@@ -79,14 +80,13 @@ public class UploaderService extends Service implements FinishedTaskListener {
 
                 filename = extras.getCharSequence(Intent.EXTRA_SUBJECT);
                 if (filename == null) {
-                    filename = getString(R.string.app_name)
-                            + System.currentTimeMillis();
+                    filename = getString(R.string.app_name);
                 }
                 filename = filename + ".txt";
             } else {
                 ContentResolver cr = getContentResolver();
                 is = new InputStreamManaged(cr.openInputStream(uri));
-                final String path = FileUtils.getRealPathFromUri(this,uri);
+                final String path = uri.getPath()!=null?uri.getPath():FileUtils.getRealPathFromUri(this,uri);
                 if ( path != null )
                 {
                     is.setLength(new java.io.File(path).length());
@@ -95,19 +95,29 @@ public class UploaderService extends Service implements FinishedTaskListener {
                 }
                 else
                 {
-                    is.setLength(0);
-                    filename = uri.toString();
-                    int offset = filename.toString().lastIndexOf('/');
-                    filename = filename.toString().substring(offset + 1);
+                	is.close();
+                    Toast.makeText(this,
+                            getString(R.string.notification_unsupported),
+                            Toast.LENGTH_SHORT).show();
+                    if ( taskRunning == 0 )
+                	{
+        	        	stopSelf();
+        	        	return START_NOT_STICKY;
+                	}
+                	else
+                	{
+                		return START_STICKY;
+                	}
                 }
             }
             taskRunning++;
-            final UploaderTask task = new UploaderTask(this, this, is,
+            final MobilePrintTask task = new MobilePrintTask(this, this, is,
                     filename.toString());
             task.execute(username, password);
 
         } catch (Exception e) {
             e.printStackTrace();
+            LogUtils.trackException(getApplicationContext(), e, null, false);
         }
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
@@ -119,8 +129,8 @@ public class UploaderService extends Service implements FinishedTaskListener {
      * the same process as its clients, we don't need to deal with IPC.
      */
     public class LoggerServiceBinder extends Binder {
-        public UploaderService getService() {
-            return UploaderService.this;
+        public MobilePrintService getService() {
+            return MobilePrintService.this;
         }
     }
 

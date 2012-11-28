@@ -84,8 +84,23 @@
         <activity
             android:name=".ui.services.print.InternalMobilePrintActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_printing"
+            android:label="@string/title_mobile_printing"
             android:theme="@style/Theme.Invisible" />
+        <activity
+            android:name=".ui.services.print.MobilePrintActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_mobile_printing"
+            android:noHistory="true"
+            android:theme="@style/Theme.Invisible" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -229,6 +244,7 @@
 
         <service android:name=".sendtosamba.UploaderService" />
         <service android:name=".downloader.DownloaderService" />
+        <service android:name=".ui.services.print.MobilePrintService" />
 
         <activity
             android:name=".ui.search.SearchActivity"
