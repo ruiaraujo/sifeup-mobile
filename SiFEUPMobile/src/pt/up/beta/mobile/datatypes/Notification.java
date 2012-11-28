@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 public class Notification implements Parcelable {
 
 	/** Notification Code */
-	@SerializedName("code")
+	@SerializedName("codigo")
 	private final String code;
 
 	/** Notification Link */
@@ -68,7 +68,7 @@ public class Notification implements Parcelable {
 		subject = ParcelUtils.readString(in);
 		message = ParcelUtils.readString(in);
 		obs = ParcelUtils.readString(in);
-		read = false;
+		read = ParcelUtils.readBoolean(in);
 	}
 
 	public String getLink() {
@@ -136,6 +136,7 @@ public class Notification implements Parcelable {
 		ParcelUtils.writeString(dest, subject);
 		ParcelUtils.writeString(dest, message);
 		ParcelUtils.writeString(dest, obs);
+		ParcelUtils.writeBoolean(dest, read);
 	}
 	public static final Parcelable.Creator<Notification> CREATOR = new Parcelable.Creator<Notification>() {
 		public Notification createFromParcel(Parcel in) {

@@ -350,9 +350,30 @@ public final class SigarraContract {
 		public static final String UPDATE_NOTIFICATION = CODE + "=? AND "
 				+ ID_NOTIFICATION + "=?";
 
+		public static final String getNotificationsDelete(String[] notIds) {
+			StringBuilder st = new StringBuilder(CODE + "=? AND "
+					+ ID_NOTIFICATION + " IN (");
+			for (int i = 0; i < notIds.length; ++i) {
+				if (i != 0)
+					st.append(" , ");
+				st.append("?");
+			}
+			st.append(')');
+			return st.toString();
+		}
+
 		public static final String[] getNotificationsSelectionArgs(String code,
-				String id) {
-			return new String[] { code, id };
+				String notIds) {
+			return new String[] { code, notIds };
+		}
+
+		public static final String[] getNotificationsSelectionArgs(String code,
+				String[] notIds) {
+			final String[] args = new String[notIds.length + 1];
+			args[0] = code;
+			for (int i = 0; i < notIds.length; ++i)
+				args[i + 1] = notIds[i];
+			return args;
 		}
 
 		public static final String[] COLUMNS = { CONTENT, STATE };

@@ -1,171 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:fillViewport="true" >
-	<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-    
-	    <LinearLayout
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView android:id="@+id/notification_lb_subject"
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_subject"/>
-			
-		    <TextView android:id="@+id/notification_subject"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textStyle="normal" />
-		         
-	    </LinearLayout>
-	    
-	   <LinearLayout android:id="@+id/notification_description_group"
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView android:id="@+id/notification_lb_description"
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_description"/>
-			
-		    <TextView android:id="@+id/notification_description"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        style="@style/ListItemSubtitle"/> 
-	
-	    </LinearLayout>
-	           
-	    <LinearLayout
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView android:id="@+id/notification_lb_date"
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_date"/>
-			
-		    <TextView android:id="@+id/notification_date"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        style="@style/ListItemSubtitle"/> 
-	
-	    </LinearLayout>
-	    
-	       
-	    <LinearLayout
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView android:id="@+id/notification_lb_designation"
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_designation"/>
-			
-		    <TextView android:id="@+id/notification_designation"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textStyle="normal"/> 
-		         
-	    </LinearLayout>
-	    
-	    
-	   	<LinearLayout
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView android:id="@+id/notification_lb_priority"
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_priority"/>
-			
-		    <TextView android:id="@+id/notification_priority"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        style="@style/ListItemSubtitle"/> 
-	
-	    </LinearLayout>
-	        
-	    <LinearLayout
-			android:orientation="horizontal"
-			android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-		    <TextView
-				android:textSize="16.0sp"
-				android:textStyle="normal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/lb_message"/>
-			
-		    <TextView android:id="@+id/notification_message"
-		        android:layout_gravity="left|center_vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textStyle="normal"/> 
-	
-	    </LinearLayout>
-	    
-	    
-	    <TextView android:id="@+id/notification_link"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content" 
-		    android:autoLink="all"
-		    style="@style/TextBody"/>
-		    
-		<TextView android:id="@+id/notification_reply"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content"
-		    android:paddingLeft="15.0dp"
-			android:paddingRight="15.0dp"
-			android:paddingTop="10.0dp"
-		    android:autoLink="all"
-		    android:textColor="@color/hyperlink"
-		    android:text="@string/lb_reply_notification"
-		    style="@style/TextBody"/>
-		    	    
-	</LinearLayout>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/notification_subject_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:id="@+id/notification_lb_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_subject"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_description_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:id="@+id/notification_lb_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_description"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_description"
+                style="@style/ListItemSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_date_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:id="@+id/notification_lb_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_date"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_date"
+                style="@style/ListItemSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_designation_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:id="@+id/notification_lb_designation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_designation"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_designation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_priority_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:id="@+id/notification_lb_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_priority"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_priority"
+                style="@style/ListItemSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_message_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_message"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_link_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_link"
+                android:textSize="16.0sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/notification_link"
+                style="@style/TextBody"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="20.0dp" >
+        <Button
+            android:id="@+id/notification_reply"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15.0dp"
+            android:paddingRight="15.0dp"
+            android:paddingTop="10.0dp"
+            android:text="@string/lb_reply_notification" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </ScrollView>

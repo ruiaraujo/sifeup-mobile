@@ -25,6 +25,7 @@ import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.Constants;
+import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SigarraProvider;
@@ -37,6 +38,10 @@ import pt.up.beta.mobile.datatypes.TeachingService;
 import pt.up.beta.mobile.datatypes.TeachingService.Subject;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.ui.notifications.NotificationsActivity;
+import pt.up.beta.mobile.ui.notifications.NotificationsDescActivity;
+import pt.up.beta.mobile.ui.notifications.NotificationsDescFragment;
+import pt.up.beta.mobile.ui.notifications.NotificationsFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
 import pt.up.beta.mobile.utils.LogUtils;
@@ -44,6 +49,8 @@ import pt.up.beta.mobile.utils.StringUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -56,6 +63,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -241,6 +249,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 			return;
 		}
 		ArrayList<String> fetchedNotCodes = new ArrayList<String>();
+		ArrayList<ContentValues> bulkValues = new ArrayList<ContentValues>();
 		for (Notification not : notifications) {
 			final ContentValues values = new ContentValues();
 			values.put(SigarraContract.Notifcations.CONTENT, gson.toJson(not));
@@ -257,8 +266,91 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 				values.put(SigarraContract.Notifcations.STATE,
 						SigarraContract.Notifcations.NEW);
 				values.put(SigarraContract.Notifcations.CODE, account.name);
-				getContext().getContentResolver().insert(
-						SigarraContract.Notifcations.CONTENT_URI, values);
+				bulkValues.add(values);
+			}
+
+		}
+		// inserting the values
+		if (bulkValues.size() > 0) {
+			getContext().getContentResolver().bulkInsert(
+					SigarraContract.Notifcations.CONTENT_URI,
+					bulkValues.toArray(new ContentValues[0]));
+			// if the account being synced is the current active accout
+			// display notification
+			if (AccountUtils.getActiveUserName(getContext()).equals(
+					account.name)) {
+				final NotificationManager mNotificationManager = (NotificationManager) getContext()
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+				NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(
+						getContext());
+				notBuilder.setAutoCancel(true).setOnlyAlertOnce(true);
+				if (bulkValues.size() == 1) {
+					final Notification notification = gson.fromJson(
+							bulkValues.get(0).getAsString(
+									SigarraContract.Notifcations.CONTENT),
+							Notification.class);
+					Intent notifyIntent = new Intent(getContext(),
+							NotificationsDescActivity.class).putExtra(
+							NotificationsDescFragment.NOTIFICATION,
+							notification);
+					// Creates the PendingIntent
+					PendingIntent notifyPendingIntent = PendingIntent
+							.getActivity(getContext(), 0, notifyIntent,
+									PendingIntent.FLAG_UPDATE_CURRENT);
+
+					// Sets the Activity to start in a new, empty task
+					notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					notBuilder
+							.setSmallIcon(R.drawable.icon)
+							.setTicker(notification.getMessage())
+							.setContentTitle(notification.getSubject())
+							.setContentText(notification.getMessage())
+							.setContentIntent(notifyPendingIntent)
+							.setStyle(
+									new NotificationCompat.BigTextStyle()
+											.bigText(notification.getMessage())
+											.setBigContentTitle(
+													notification.getSubject())
+											.setSummaryText(
+													notification.getMessage()));
+					mNotificationManager.notify(notification.getCode()
+							.hashCode(), notBuilder.build());
+				} else {
+					final String notTitle = getContext().getString(
+							R.string.new_notifications, bulkValues.size());
+
+					Intent notifyIntent = new Intent(getContext(),
+							NotificationsActivity.class);
+					// Sets the Activity to start in a new, empty task
+					notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					// Creates the PendingIntent
+					PendingIntent notifyPendingIntent = PendingIntent
+							.getActivity(getContext(), 0, notifyIntent,
+									PendingIntent.FLAG_UPDATE_CURRENT);
+					NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+					// Sets a title for the Inbox style big view
+					inboxStyle.setBigContentTitle(notTitle);
+					// Moves events into the big view
+					for (ContentValues value : bulkValues) {
+						final Notification notification = gson
+								.fromJson(
+										value.getAsString(SigarraContract.Notifcations.CONTENT),
+										Notification.class);
+						inboxStyle.addLine(notification.getSubject());
+					}
+					// Moves the big view style object into the notification
+					// object.
+					notBuilder.setStyle(inboxStyle);
+					notBuilder.setSmallIcon(R.drawable.icon)
+							.setTicker(notTitle).setContentTitle(notTitle)
+							.setContentText("")
+							.setContentIntent(notifyPendingIntent);
+					mNotificationManager.notify(NotificationsFragment.class
+							.getName().hashCode(), notBuilder.build());
+				}
+
 			}
 		}
 		final Cursor syncState = getContext().getContentResolver().query(
@@ -287,6 +379,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		} finally {
 			syncState.close();
 		}
+		ArrayList<String> notToDelete = new ArrayList<String>();
 		final Cursor cursor = getContext().getContentResolver().query(
 				SigarraContract.Notifcations.CONTENT_URI,
 				new String[] { SigarraContract.Notifcations.ID_NOTIFICATION },
@@ -295,14 +388,11 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						.getNotificationsSelectionArgs(account.name), null);
 		try {
 			if (cursor.moveToFirst()) {
-				if (!fetchedNotCodes.contains(cursor.getString(0))) {
-					getContext().getContentResolver().delete(
-							SigarraContract.Notifcations.CONTENT_URI,
-							SigarraContract.Notifcations.UPDATE_NOTIFICATION,
-							SigarraContract.Notifcations
-									.getNotificationsSelectionArgs(
-											account.name, cursor.getString(0)));
-				}
+				do {
+					final String code = cursor.getString(0);
+					if (!fetchedNotCodes.contains(code))
+						notToDelete.add(code);
+				} while (cursor.moveToNext());
 			} else {
 				// no notifications
 				getContext().getContentResolver().notifyChange(
@@ -311,6 +401,14 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		} finally {
 			cursor.close();
 		}
+		if (notToDelete.size() > 0)
+			getContext().getContentResolver().delete(
+					SigarraContract.Notifcations.CONTENT_URI,
+					SigarraContract.Notifcations
+							.getNotificationsDelete(notToDelete
+									.toArray(new String[0])),
+					SigarraContract.Notifcations.getNotificationsSelectionArgs(
+							account.name, notToDelete.toArray(new String[0])));
 		syncResult.stats.numEntries += notifications.length;
 	}
 

@@ -335,7 +335,9 @@
     <string name="lb_description">Descrição: </string>
     <string name="lb_subject">Assunto: </string>
     <string name="lb_message">Messagem: </string>
-    <string name="lb_reply_notification">Resposta </string>
+    <string name="lb_link">Link: </string>
+    <string name="lb_reply_notification">Resposta</string>
+    <string name="new_notifications">%1$s novas notificações </string>
     <string name="lb_no_notification">Não tem notificações.</string>
 
     <!-- *************************************************************************************** -->

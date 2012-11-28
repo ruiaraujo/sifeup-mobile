@@ -12,6 +12,8 @@ import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.BaseLoaderFragment;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -60,6 +62,10 @@ public class NotificationsFragment extends BaseLoaderFragment implements
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		final NotificationManager mNotificationManager = (NotificationManager) getActivity()
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.cancel(NotificationsFragment.class.getName()
+				.hashCode());
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 
@@ -110,7 +116,7 @@ public class NotificationsFragment extends BaseLoaderFragment implements
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {
 		Intent i = new Intent(getActivity(), NotificationsDescActivity.class);
-		i.putExtra(NotificationsDescActivity.NOTIFICATION,
+		i.putExtra(NotificationsDescFragment.NOTIFICATION,
 				notifications[position]);
 		startActivity(i);
 

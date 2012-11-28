@@ -5,13 +5,18 @@ import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;
 import pt.up.beta.mobile.ui.webclient.WebviewFragment;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -22,6 +27,8 @@ import android.widget.TextView;
  * 
  */
 public class NotificationsDescFragment extends Fragment {
+
+	public final static String NOTIFICATION = "pt.up.fe.mobile.ui.notifications.NOTIFICATION";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +47,11 @@ public class NotificationsDescFragment extends Fragment {
 		if (b == null)
 			throw new IllegalStateException(
 					"Should have an notification arguments.");
-		final Notification n = (Notification) b
-				.getSerializable(NotificationsDescActivity.NOTIFICATION);
+		final Notification n = (Notification) b.getParcelable(NOTIFICATION);
+
+		final NotificationManager mNotificationManager = (NotificationManager) getActivity()
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.cancel(n.getCode().hashCode());
 		((TextView) root.findViewById(R.id.notification_subject)).setText(" "
 				+ n.getSubject());
 		if (n.getDescription().trim().length() == 0) {
@@ -58,11 +68,17 @@ public class NotificationsDescFragment extends Fragment {
 
 		((TextView) root.findViewById(R.id.notification_designation))
 				.setText(" " + n.getDesignation());
-		((TextView) root.findViewById(R.id.notification_message)).setText(" "
-				+ n.getMessage());
-		((TextView) root.findViewById(R.id.notification_link)).setText(" "
-				+ n.getLink());
-		((TextView) root.findViewById(R.id.notification_reply))
+		((TextView) root.findViewById(R.id.notification_message)).setText(Html
+				.fromHtml(" " + n.getMessage()));
+		if (!TextUtils.isEmpty(n.getLink()))
+			((TextView) root.findViewById(R.id.notification_link)).setText(Html
+					.fromHtml(" <a>" + SifeupAPI.getSigarraUrl() + n.getLink()
+							+ "</a>"));
+		else
+			root.findViewById(R.id.notification_link_group).setVisibility(
+					View.GONE);
+
+		((Button) root.findViewById(R.id.notification_reply))
 				.setOnClickListener(new OnClickListener() {
 
 					@Override

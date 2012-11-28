@@ -374,6 +374,10 @@ public class SifeupAPI {
 		int NO_ERROR = 2;
 	}
 
+	public static String getSigarraUrl(){
+		return SIGARRA_HOST;
+	}
+	
 	/**
 	 * The student type returned by the authenticator
 	 */
