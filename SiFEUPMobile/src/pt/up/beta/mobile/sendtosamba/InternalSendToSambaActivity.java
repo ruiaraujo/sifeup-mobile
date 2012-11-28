@@ -46,7 +46,6 @@ public class InternalSendToSambaActivity extends Activity {
 				if (data != null) {
 					// Get the URI of the selected file
 					final Uri uri = data.getData();
-
 					try {
 						Intent i = new Intent(this, UploaderService.class);
 						i.replaceExtras(data);
@@ -65,5 +64,6 @@ public class InternalSendToSambaActivity extends Activity {
 			}
 			break;
 		}
+		finish();
 	}
 }
