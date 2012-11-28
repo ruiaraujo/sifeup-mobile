@@ -60,6 +60,7 @@ import android.content.Intent;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -283,7 +284,12 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						.getSystemService(Context.NOTIFICATION_SERVICE);
 				NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(
 						getContext());
-				notBuilder.setAutoCancel(true).setOnlyAlertOnce(true);
+				notBuilder
+						.setAutoCancel(true)
+						.setOnlyAlertOnce(true)
+						.setSound(
+								RingtoneManager
+										.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 				if (bulkValues.size() == 1) {
 					final Notification notification = gson.fromJson(
 							bulkValues.get(0).getAsString(
