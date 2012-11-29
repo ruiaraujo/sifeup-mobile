@@ -69,6 +69,8 @@ public class Student extends Profile implements Parcelable {
 	}
 
 	public String getProgrammeNames() {
+		if (courses == null)
+			return "";
 		if (courses.length == 0)
 			return "";
 		if (courses.length == 1)
@@ -90,13 +92,17 @@ public class Student extends Profile implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeInt(courses.length);
-		dest.writeTypedArray(courses, flags);
+		if (courses != null) {
+			dest.writeInt(1);
+			dest.writeInt(courses.length);
+			dest.writeTypedArray(courses, flags);
+		} else
+			dest.writeInt(0);
 	}
 
 	private Student(Parcel in) {
 		super(in);
-		if (in == null) {
+		if (in == null || in.readInt() == 0) {
 			courses = null;
 			return;
 		}

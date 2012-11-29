@@ -8,6 +8,7 @@ import pt.up.beta.mobile.ui.BaseFragment;
 import pt.up.beta.mobile.ui.profile.ProfileActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +41,15 @@ public class EnrolledStudentsFragment extends BaseFragment implements
 		super.onActivityCreated(savedInstanceState);
 		ocorrId = getArguments().getString(OCORR_CODE);
 		if (savedInstanceState != null) {
-			enrolledStudents = (Student[]) savedInstanceState
+			final Parcelable[] storedEnrolledStudents = savedInstanceState
 					.getParcelableArray(ENROLLED_KEY);
-			if (enrolledStudents == null) {
+			if (storedEnrolledStudents == null) {
 				task = SubjectUtils.getSubjectEnrolledStudents(ocorrId, this,
 						getActivity());
 			} else {
+				enrolledStudents = new Student[storedEnrolledStudents.length];
+				for (int i = 0; i < storedEnrolledStudents.length; ++i)
+					enrolledStudents[i] = (Student) storedEnrolledStudents[i];
 				if (populateList())
 					showMainScreen();
 			}

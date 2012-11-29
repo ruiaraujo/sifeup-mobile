@@ -11,6 +11,7 @@ import pt.up.beta.mobile.sifeup.SubjectUtils;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,12 +46,15 @@ public class OtherOccurrencesFragment extends BaseFragment implements
 		super.onActivityCreated(savedInstanceState);
 		ocorrId = getArguments().getString(OCORR_CODE);
 		if (savedInstanceState != null) {
-			occurrences = (OtherSubjectOccurrences[]) savedInstanceState
+			final Parcelable[] storedOoccurrences = savedInstanceState
 					.getParcelableArray(OCCURRENCES_KEY);
-			if (occurrences == null) {
+			if (storedOoccurrences == null) {
 				task = SubjectUtils.getOtherSubjectOccurrences(ocorrId, this,
 						getActivity());
 			} else {
+				occurrences = new OtherSubjectOccurrences[storedOoccurrences.length];
+				for (int i = 0; i < storedOoccurrences.length; ++i)
+					occurrences[i] = (OtherSubjectOccurrences) storedOoccurrences[i];
 				if (populateList())
 					showMainScreen();
 			}
@@ -69,8 +73,8 @@ public class OtherOccurrencesFragment extends BaseFragment implements
 				occurrence.getOccurenceId());
 		String title = occurrence.getName();
 		if (!UIUtils.isLocalePortuguese()
-				&& !TextUtils.isEmpty( occurrence.getNameEn()))
-			title =  occurrence.getNameEn();
+				&& !TextUtils.isEmpty(occurrence.getNameEn()))
+			title = occurrence.getNameEn();
 		i.putExtra(Intent.EXTRA_TITLE, title);
 		startActivity(i);
 
