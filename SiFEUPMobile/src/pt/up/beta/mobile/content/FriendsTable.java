@@ -7,10 +7,10 @@ public class FriendsTable implements BaseColumns {
 
 	// fields in the friends table
 	static final String KEY_ID_FRIEND = "_id";
-	static final String KEY_CODE_FRIEND = "code_friend";
-	static final String KEY_NAME_FRIEND = "name_friend";
-	static final String KEY_TYPE_FRIEND = "course_friend";
-	static final String KEY_COURSE_FRIEND = "type_friend";
+	static final String KEY_CODE_FRIEND = "code";
+	static final String KEY_NAME_FRIEND = "name";
+	static final String KEY_TYPE_FRIEND = "type";
+	static final String KEY_COURSE_FRIEND = "course";
 	static final String KEY_USER_CODE = "user_code";
 
 	// database info

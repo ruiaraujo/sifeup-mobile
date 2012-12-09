@@ -622,11 +622,11 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 							syncResult);
 					friendValues.put(SigarraContract.ProfileColumns.ID,
 							friendCode);
-					final String friendCourse = c
+					final String friendType = c
 							.getString(c
 									.getColumnIndex(SigarraContract.FriendsColumns.TYPE_FRIEND));
 					final String friendPage;
-					if (friendCourse != null) {
+					if (friendType.equals(SifeupAPI.STUDENT_TYPE)) {
 						friendPage = SifeupAPI.getReply(
 								SifeupAPI.getStudenProfiletUrl(friendCode),
 								account, getContext());
