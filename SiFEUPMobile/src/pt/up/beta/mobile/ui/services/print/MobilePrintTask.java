@@ -15,8 +15,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 
@@ -27,7 +28,8 @@ public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 
 	private int error = 0;
 	private final static int WRONG_CREDENTIAL = 1;
-	private final static int GENERAL_ERROR = 2;
+	private final static int FILE_TOO_BIG = 2;
+	private final static int GENERAL_ERROR = 3;
 
 	private NotificationManager mNotificationManager;
 	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
@@ -54,8 +56,8 @@ public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 		mNotificationManager.notify(
 				UNIQUE_ID,
 				createProgressBar(context.getString(
-						R.string.mobile_print_sending, filename), "",
-						0, is.getLength() == 0));
+						R.string.mobile_print_sending, filename), "", 0, is
+						.getLength() == 0));
 	}
 
 	@Override
@@ -83,10 +85,15 @@ public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 			m.addAttachment(is, filename);
 			return m.send();
 		} catch (AuthenticationFailedException e) {
-			Log.e("FileSelectorTestActivity", "File select error", e);
 			error = WRONG_CREDENTIAL;
+		} catch (SMTPSendFailedException e) {
+			if (e.getMessage().contains("552"))
+				error = FILE_TOO_BIG;
+			else {
+				error = GENERAL_ERROR;
+				LogUtils.trackException(context, e, null, false);
+			}
 		} catch (Exception e) {
-			Log.e("FileSelectorTestActivity", "File select error", e);
 			LogUtils.trackException(context, e, null, false);
 			error = GENERAL_ERROR;
 		}
@@ -117,6 +124,14 @@ public class MobilePrintTask extends AsyncTask<String, Integer, Boolean> {
 								getSimple(
 										context.getString(R.string.error_credential_title),
 										context.getString(R.string.error_credential))
+										.build());
+				break;
+			case FILE_TOO_BIG:
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								getSimple(
+										context.getString(R.string.error_title),
+										context.getString(R.string.mobile_print_error_too_big))
 										.build());
 				break;
 			default:

@@ -354,6 +354,7 @@
     <!-- Mobile Print -->
     <string name="title_mobile_printing">Mobile Print</string>
     <string name="mobile_print_error">Error while printing \n%1$s</string>
+    <string name="mobile_print_error_too_big">%1$s\n is too big to be sent.</string>
     <string name="mobile_print_success">%1$s sent to printer.\nSee the result in your webmail.</string>
     <string name="mobile_print_sending">Sending %1$s\n to printer.</string>
     
