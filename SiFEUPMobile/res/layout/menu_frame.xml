@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/menu_frame"
-    android:layout_width="match_parent"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/embedded"
+    android:name="pt.up.beta.mobile.ui.MenuFragment"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-     />
+    tools:layout="@layout/fragment_sidemenu" />

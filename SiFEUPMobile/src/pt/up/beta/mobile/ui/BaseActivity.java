@@ -11,19 +11,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.KeyEvent;
-import android.widget.ImageView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.ExceptionParser;
 import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -32,9 +30,9 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  * class shouldn't be used directly; instead, activities should inherit from
  * {@link BaseSinglePaneActivity} or {@link BaseMultiPaneActivity}.
  */
-public abstract class BaseActivity extends SlidingFragmentActivity {
+public abstract class BaseActivity extends SherlockFragmentActivity {
 	protected ActionBar actionbar;
-
+	private SlidingMenu slidingMenu;
 	private Handler mHandler = new Handler();
 	private final static ExceptionParser parser = new ExceptionParser() {
 		@Override
@@ -50,29 +48,15 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
 		actionbar = getSupportActionBar();
-
 		if (!UIUtils.isTablet(getApplicationContext())) {
-			// set the Behind View
-			setBehindContentView(R.layout.menu_frame);
-			FragmentTransaction t = this.getSupportFragmentManager()
-					.beginTransaction();
-			t.replace(R.id.menu_frame, new MenuFragment());
-			t.commit();
-
 			// customize the SlidingMenu
-			final SlidingMenu sm = getSlidingMenu();
-			sm.setShadowWidthRes(R.dimen.shadow_width);
-			sm.setShadowDrawable(R.drawable.shadow);
-			sm.setBehindOffsetRes(R.dimen.actionbar_home_width);
-			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-
-			setSlidingActionBarEnabled(false);
-		} else {
-			final ImageView pic = new ImageView(this);
-			pic.setBackgroundColor(getResources().getColor(
-					R.color.body_text_white));
-			setBehindContentView(pic);
-			getSlidingMenu().setSlidingEnabled(false);
+			slidingMenu = new SlidingMenu(this);
+			slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+			slidingMenu.setShadowDrawable(R.drawable.shadow);
+			slidingMenu.setBehindOffsetRes(R.dimen.actionbar_home_width);
+			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+			slidingMenu.setMenu(R.layout.menu_frame);
 		}
 	}
 
@@ -136,7 +120,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 			if (UIUtils.isTablet(getApplicationContext()))
 				goUp();
 			else
-				toggle();
+				slidingMenu.toggle();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -182,15 +166,17 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 	public void openActivityOrFragment(final Intent intent) {
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-		if (getSlidingMenu().isBehindShowing()) {
-			// delay a bit to help prevent jankyness
-			mHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					showAbove();
-				}
-			}, 50);
-		} 
+		if (slidingMenu != null) {
+			if (slidingMenu.isMenuShowing()) {
+				// delay a bit to help prevent jankyness
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						slidingMenu.showContent();
+					}
+				}, 50);
+			}
+		}
 	}
 
 	public void onBackPressed() {
@@ -246,4 +232,8 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
 		return intent;
 	}
 
+	public void showContent() {
+		if (slidingMenu != null)
+			slidingMenu.showContent();
+	}
 }

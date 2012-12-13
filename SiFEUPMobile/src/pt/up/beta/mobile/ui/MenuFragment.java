@@ -153,7 +153,7 @@ public class MenuFragment extends SherlockFragment implements
 			return;
 		}
 		if (activity.getClass() == activityToBeLaunched) {
-			activity.showAbove();
+			activity.showContent();
 			return;
 		}
 		activity.openActivityOrFragment(new Intent(getActivity(),
