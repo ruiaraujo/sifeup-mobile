@@ -51,8 +51,7 @@ public class ChangePasswordFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.change_password,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.change_password);
 
 		/** Cancel */
 		Button cancel = (Button) root.findViewById(R.id.set_password_cancel);

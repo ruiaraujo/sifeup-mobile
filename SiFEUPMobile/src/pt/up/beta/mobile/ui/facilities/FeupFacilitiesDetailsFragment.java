@@ -64,8 +64,8 @@ public class FeupFacilitiesDetailsFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		final ViewGroup root = (ViewGroup) inflater.inflate(
-				R.layout.fragment_facility_pic, getParentContainer(), true);
+		final ViewGroup root = (ViewGroup) inflateMainScreen(
+				R.layout.fragment_facility_pic);
 		pic = (TouchImageView) root.findViewById(R.id.facility_image);
 		final ZoomControls zoom = (ZoomControls) root
 				.findViewById(R.id.zoomControls);

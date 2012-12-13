@@ -38,8 +38,7 @@ public class EmployeesAdvanceSearchFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.search_form,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.search_form);
 		Button searchButton = (Button) root.findViewById(R.id.search);
 		name = (EditText) root.findViewById(R.id.name);
 		code = (EditText) root.findViewById(R.id.code);

@@ -41,8 +41,7 @@ public class ParkOccupationFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
 
-		View root = inflater.inflate(R.layout.generic_list,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.generic_list);
 		list = (ListView) root.findViewById(R.id.generic_list);
 		list.setClickable(false);
 		list.setFocusable(false);

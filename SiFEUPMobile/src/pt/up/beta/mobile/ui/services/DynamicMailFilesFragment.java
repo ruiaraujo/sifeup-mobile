@@ -39,8 +39,7 @@ public class DynamicMailFilesFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.generic_list,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.generic_list);
 		list = (ListView) root.findViewById(R.id.generic_list);
 		return getParentContainer(); // this is mandatory.
 	}

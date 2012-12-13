@@ -50,8 +50,7 @@ public class ClassDescriptionFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		View root = inflater.inflate(R.layout.class_description,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.class_description);
 
 		// Subject
 		TextView subject = (TextView) root.findViewById(R.id.class_subject);

@@ -47,8 +47,7 @@ public class CurrentAccountFragment extends BaseLoaderFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		View root = inflater.inflate(R.layout.fragment_view_pager,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 		// Find the indicator from the layout
 		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);

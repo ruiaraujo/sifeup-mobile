@@ -16,8 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -32,10 +32,10 @@ public class BaseFragment extends SherlockFragment {
 
 	public final static String URL_INTENT = "pt.up.fe.mobile.ui.webclient.URL";
 	protected final static String DIALOG = "dialog";
-
-	private ViewSwitcher switcher;
+	private FrameLayout base;
+	private View loadingScreen;
 	private View emptyScreen;
-	private View placeHolder; // to be used when the child view is
+	private View mainScreen; // to be used when the child view is
 	// replaced by "emptyScreen" view.
 	private LayoutInflater inflater;
 
@@ -44,43 +44,43 @@ public class BaseFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		switcher = (ViewSwitcher) inflater.inflate(R.layout.loading_view,
-				container, false);
-		emptyScreen = inflater.inflate(R.layout.fragment_no_results, switcher,
-				false);
+		super.onCreateView(inflater, container, savedInstanceState);
 		this.inflater = inflater;
-		return switcher;
+		base = (FrameLayout) inflater.inflate(R.layout.fragment_base,
+				container, false);
+		loadingScreen = inflater.inflate(R.layout.loading_view,
+				base, false);
+		base.addView(loadingScreen,0);
+		return base;
+	}
+
+	protected View inflateMainScreen(int resource) {
+		return mainScreen = inflater.inflate(resource, base, false);
 	}
 
 	protected void showLoadingScreen() {
-		if (switcher.getCurrentView() != switcher.getChildAt(0))
-			switcher.showNext();
+		if (base.getChildAt(0) == loadingScreen)
+			return;
+		base.removeAllViews();
+		base.addView(loadingScreen,0);
 	}
 
 	protected void showMainScreen() {
-		if (placeHolder != null) {
-			switcher.removeViewAt(1);
-			switcher.addView(placeHolder, 1);
-			placeHolder = null;
-		}
-		if (switcher.getCurrentView() != switcher.getChildAt(1))
-			switcher.showNext();
+		if (base.getChildAt(0) == mainScreen)
+			return;
+		base.removeAllViews();
+		base.addView(mainScreen,0);
 	}
 
 	protected void showEmptyScreen(final String message) {
-		if (switcher.getChildAt(1) != emptyScreen) {
-			placeHolder = switcher.getChildAt(1);
-			if (placeHolder != null) {
-				switcher.removeViewAt(1);
-				switcher.addView(emptyScreen, 1);
-			}
-		}
-
+		if (emptyScreen == null)
+			emptyScreen = inflater.inflate(R.layout.fragment_no_results, base,
+					false);
 		TextView text = (TextView) emptyScreen.findViewById(R.id.message);
 		emptyScreen.findViewById(R.id.action).setVisibility(View.GONE);
 		text.setText(message);
-		if (switcher.getCurrentView() == switcher.getChildAt(0))
-			switcher.showNext();
+		base.removeAllViews();
+		base.addView(emptyScreen,0);
 	}
 
 	protected View getEmptyScreen(final String message) {
@@ -91,10 +91,7 @@ public class BaseFragment extends SherlockFragment {
 	}
 
 	protected ViewGroup getParentContainer() {
-		if (switcher == null)
-			throw new RuntimeException(
-					"onCreateView must be called before from super");
-		return switcher;
+		return base;
 	}
 
 	@Override
@@ -124,16 +121,9 @@ public class BaseFragment extends SherlockFragment {
 	}
 
 	protected void showRepeatTaskScreen(final String message) {
-		if (switcher.getCurrentView() == switcher.getChildAt(1)) {
-			switcher.showNext();
-		}
-		if (switcher.getChildAt(1) != emptyScreen) {
-			placeHolder = switcher.getChildAt(1);
-			if (placeHolder != null) {
-				switcher.removeViewAt(1);
-				switcher.addView(emptyScreen, 1);
-			}
-		}
+		if (emptyScreen == null)
+			emptyScreen = inflater.inflate(R.layout.fragment_no_results, base,
+					false);
 		TextView text = (TextView) emptyScreen.findViewById(R.id.message);
 		Button repeat = (Button) emptyScreen.findViewById(R.id.action);
 		repeat.setVisibility(View.VISIBLE);
@@ -143,7 +133,8 @@ public class BaseFragment extends SherlockFragment {
 			}
 		});
 		text.setText(message);
-		switcher.showNext();
+		base.removeAllViews();
+		base.addView(emptyScreen);
 	}
 
 	protected void onRepeat() {

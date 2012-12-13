@@ -93,8 +93,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		layoutInflater = inflater;
-		View root = inflater.inflate(R.layout.subject_description,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.subject_description);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_subject);
 		viewPager.setAdapter(new PagerSubjectAdapter());
 		// Find the indicator from the layout

@@ -39,8 +39,7 @@ public class SubjectsAdvanceSearchFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.search_form,
-				getParentContainer(), true);
+		View root = inflateMainScreen(R.layout.search_form);
 
 		name = (EditText) root.findViewById(R.id.name);
 		code = (EditText) root.findViewById(R.id.code);

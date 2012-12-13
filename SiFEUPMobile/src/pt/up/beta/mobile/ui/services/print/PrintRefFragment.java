@@ -48,8 +48,7 @@ public class PrintRefFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.ref_mb,
-				getParentContainer(), true);
+		ViewGroup root = (ViewGroup) inflateMainScreen(R.layout.ref_mb);
 		nome = (TextView) root.findViewById(R.id.tuition_ref_detail_name);
 		entidade = ((TextView) root
 				.findViewById(R.id.tuition_ref_detail_entity));

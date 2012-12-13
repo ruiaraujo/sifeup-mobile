@@ -55,8 +55,7 @@ public class RoomProfileFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		root = (ViewGroup) inflater.inflate(R.layout.room_profile,
-				getParentContainer(), true);
+		root = (ViewGroup) inflateMainScreen(R.layout.room_profile);
 		return getParentContainer();
 	}
 

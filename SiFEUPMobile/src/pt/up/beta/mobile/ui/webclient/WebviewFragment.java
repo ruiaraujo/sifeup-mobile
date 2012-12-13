@@ -49,8 +49,7 @@ public class WebviewFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View root = inflater.inflate(R.layout.webview, getParentContainer(),
-				true);
+		View root = inflateMainScreen(R.layout.webview);
 		mWebView = (WebView) root.findViewById(R.id.webview);
 		progressWebView = (ProgressBar) root
 				.findViewById(R.id.webview_progress);

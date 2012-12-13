@@ -79,8 +79,7 @@ public class StudentProfileFragment extends BaseLoaderFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.profile,
-				getParentContainer(), true);
+		ViewGroup root = (ViewGroup) inflateMainScreen(R.layout.profile);
 		name = (TextView) root.findViewById(R.id.profile_name);
 		pic = (ImageView) root.findViewById(R.id.profile_pic);
 		details = (ListView) root.findViewById(R.id.profile_details);

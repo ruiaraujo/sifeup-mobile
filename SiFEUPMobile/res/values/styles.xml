@@ -2,7 +2,6 @@
 
     <!-- Start with the Holographic Light theme -->
     <style name="Theme.Sigarra" parent="@style/Theme.Sherlock.Light">
-        <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>

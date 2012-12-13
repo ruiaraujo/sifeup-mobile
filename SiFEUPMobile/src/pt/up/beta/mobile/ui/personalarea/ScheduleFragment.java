@@ -115,8 +115,8 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		ViewGroup root = (ViewGroup) inflater.inflate(
-				R.layout.fragment_schedule, getParentContainer(), true);
+		ViewGroup root = (ViewGroup) inflateMainScreen(
+				R.layout.fragment_schedule);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
 		mPager.setAdapter(new DayAdapter());// Workaround a android bug
 		mTitle = (TextView) root.findViewById(R.id.block_title);
