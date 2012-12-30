@@ -16,7 +16,7 @@ public class TeachingServiceTable implements BaseColumns {
     private static final String TABLE_CREATE = "CREATE TABLE "
             + TABLE + " (" + KEY_ID_USER
             + " TEXT PRIMARY KEY , " + KEY_CONTENT
-            + " TEXT NOT NULL );";
+            + " TEXT NOT NULL, " + SQL_CREATE_STATE + ");";
     
 	static void onCreate(SQLiteDatabase database) {
 		database.execSQL(TABLE_CREATE);

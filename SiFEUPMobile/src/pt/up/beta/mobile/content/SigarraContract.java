@@ -295,6 +295,11 @@ public final class SigarraContract {
 				+ INITIAL_DAY + "=? AND " + FINAL_DAY + "=? AND "
 				+ ScheduleTable.KEY_TYPE + "=? ";
 
+		public static final String SCHEDULE_DELETE = CODE + "=?";
+
+		public static final String[] getScheduleSelectionArgs(String code) {
+			return new String[] { code};
+		}
 		public static final String[] getRoomScheduleSelectionArgs(String code,
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,

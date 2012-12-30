@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME="sigarra.db";
-	private static final int SCHEMA=3;
+	private static final int SCHEMA=4;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, SCHEMA);
@@ -30,6 +30,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if ( oldVersion == 3 && newVersion == 4){
+			TeachingServiceTable.onUpgrade(db, oldVersion, newVersion);
+			return;
+		}
 		SubjectsTable.onUpgrade(db, oldVersion, newVersion);
 		FriendsTable.onUpgrade(db, oldVersion, newVersion);
 		ProfilesTable.onUpgrade(db, oldVersion, newVersion);

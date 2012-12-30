@@ -635,4 +635,85 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.LastSync.getLastSyncSelectionArgs(AccountUtils
 						.getActiveUserName(context)));
 	}
+
+	public static void deleteUserData(final Context context, final String user) {
+		context.getContentResolver().delete(
+				SigarraContract.Profiles.CONTENT_URI,
+				SigarraContract.Profiles.PROFILE, SigarraContract.Profiles.getProfileSelectionArgs(user, null));
+		context.getContentResolver().delete(
+				SigarraContract.Exams.CONTENT_URI,
+				SigarraContract.Exams.PROFILE,
+				SigarraContract.Exams.getExamsSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.AcademicPath.CONTENT_URI,
+				SigarraContract.AcademicPath.PROFILE,
+				SigarraContract.AcademicPath.getAcademicPathSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.Schedule.CONTENT_URI,
+				SigarraContract.Schedule.SCHEDULE_DELETE,
+				SigarraContract.Schedule.getScheduleSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.Friends.CONTENT_URI,
+				SigarraContract.Friends.USER_FRIENDS,
+				SigarraContract.Friends.getUserFriendsSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.LastSync.CONTENT_URI,
+				SigarraContract.LastSync.PROFILE,
+				SigarraContract.LastSync.getLastSyncSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.Notifcations.CONTENT_URI,
+				SigarraContract.Notifcations.PROFILE,
+				SigarraContract.Notifcations.getNotificationsSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.PrintingQuota.CONTENT_URI,
+				SigarraContract.PrintingQuota.PROFILE,
+				SigarraContract.PrintingQuota.getPrintingQuotaSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.Subjects.CONTENT_URI,
+				SigarraContract.Subjects.USER_SUBJECTS,
+				SigarraContract.Subjects.getUserSubjectsSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.TeachingService.CONTENT_URI,
+				SigarraContract.TeachingService.PROFILE,
+				SigarraContract.TeachingService.getTeachingServiceSelectionArgs(user));
+		context.getContentResolver().delete(
+				SigarraContract.Tuition.CONTENT_URI,
+				SigarraContract.Tuition.PROFILE,
+				SigarraContract.Tuition.getTuitionSelectionArgs(user));
+	}
+	
+	public static void deleteCacheData(final Context context) {
+		context.getContentResolver().delete(
+				SigarraContract.Profiles.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.Schedule.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.AcademicPath.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.Friends.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.PrintingQuota.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.Subjects.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.TeachingService.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+		context.getContentResolver().delete(
+				SigarraContract.Tuition.CONTENT_URI,
+				BaseColumns.CACHE_SELECTION,
+				SyncStates.CACHE_SELECTION);
+	}
 }
