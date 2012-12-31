@@ -231,7 +231,7 @@ public class SifeupAPI {
 	// .OCUPACAO
 	private interface ParkOcupation {
 		String NAME = "ocupacao";
-		//String CODE = "pv_parque";
+		// String CODE = "pv_parque";
 	}
 
 	// MOB_UCURR_GERAL.CONTEUDOS
@@ -374,10 +374,10 @@ public class SifeupAPI {
 		int NO_ERROR = 2;
 	}
 
-	public static String getSigarraUrl(){
+	public static String getSigarraUrl() {
 		return SIGARRA_HOST;
 	}
-	
+
 	/**
 	 * The student type returned by the authenticator
 	 */
@@ -1037,7 +1037,8 @@ public class SifeupAPI {
 		String page = null;
 		do {
 			final HttpsURLConnection connection = get(strUrl);
-			connection.setRequestProperty("Cookie", cookie);
+			if (cookie != null)
+				connection.setRequestProperty("Cookie", cookie);
 			final InputStream pageContent;
 			try {
 				pageContent = connection.getInputStream();
@@ -1158,7 +1159,8 @@ public class SifeupAPI {
 			throws AuthenticationException, IOException {
 		final HttpsURLConnection connection = get(url);
 		try {
-			connection.setRequestProperty("Cookie", cookie);
+			if (cookie != null)
+				connection.setRequestProperty("Cookie", cookie);
 			final InputStream is = connection.getInputStream();
 			final BufferedInputStream bis = new BufferedInputStream(is);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
@@ -1192,7 +1194,7 @@ public class SifeupAPI {
 	}
 
 	public static String getContentCharSet(final String contentType) {
-		if ( contentType == null )
+		if (contentType == null)
 			return null;
 		String[] values = contentType.split(";"); // The values.length must be
 													// equal to 2...
