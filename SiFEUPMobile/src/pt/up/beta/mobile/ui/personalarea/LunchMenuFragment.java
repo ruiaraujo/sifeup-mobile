@@ -18,6 +18,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,7 +129,6 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 		}
 	}
 
-
 	/**
 	 * Build Pages
 	 */
@@ -170,6 +171,13 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 
 		public Object instantiateItem(View collection, int position) {
 			View root = mInflater.inflate(R.layout.menu, viewPager, false);
+			final String timetable = canteens.get(position).getTimetable();
+			if (!TextUtils.isEmpty(timetable)) {
+				TextView schedule = (TextView) root
+						.findViewById(R.id.canteen_schedule);
+				schedule.setText(Html.fromHtml(getString(
+						R.string.canteen_schedule, timetable)));
+			}
 			ExpandableListView list = (ExpandableListView) root
 					.findViewById(R.id.menu_list);
 			list.setAdapter(new MenusAdapter(canteens.get(position)));
@@ -200,7 +208,7 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 
 	private class MenusAdapter extends BaseExpandableListAdapter {
 
-		Canteen canteen;
+		private final Canteen canteen;
 
 		public MenusAdapter(Canteen c) {
 			canteen = c;
@@ -215,20 +223,33 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 		}
 
 		public int getChildrenCount(int groupPosition) {
+			if (canteen.isClosed(groupPosition))
+				return 1;
 			return canteen.getDishesCount(groupPosition);
 		}
 
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
-			View root = mInflater.inflate(R.layout.list_item_menu_dish, null);
+			if (convertView == null)
+				convertView = mInflater.inflate(R.layout.list_item_menu_dish,
+						null);
 			Dish dish = (Dish) getChild(groupPosition, childPosition);
-			TextView description = (TextView) root
+			TextView description = (TextView) convertView
 					.findViewById(R.id.dish_description);
-			TextView type = (TextView) root
+			TextView type = (TextView) convertView
 					.findViewById(R.id.dish_description_type);
-			description.setText(dish.getDescription());
-			type.setText(dish.getDescriptionType());
-			return root;
+			if (canteen.isClosed(groupPosition)) {
+				description.setText(R.string.lb_closed_canteen);
+				type.setVisibility(View.GONE);
+			} else {
+				if (!TextUtils.isEmpty(dish.getDescription()))
+					description.setText(dish.getDescription());
+				else
+					description.setText(dish.getState());
+				type.setVisibility(View.VISIBLE);
+				type.setText(dish.getDescriptionType());
+			}
+			return convertView;
 		}
 
 		public Object getGroup(int groupPosition) {

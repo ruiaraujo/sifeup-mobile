@@ -214,6 +214,8 @@
     <string name="title_lunch_menu">Lunch Menus</string>
     <string name="btn_lunch_menu">Lunch Menus</string>
     <string name="lb_no_menu">There are no menus</string>
+    <string name="lb_closed_canteen">Closed</string>
+    <string name="canteen_schedule">&lt;b>Schedule:&lt;/b> %1$s</string>
 
     <!-- Park Occupation -->
     <string name="title_park_occupation">Park Occupation</string>

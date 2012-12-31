@@ -214,6 +214,8 @@
     <string name="title_lunch_menu">Ementas</string>
     <string name="btn_lunch_menu">Ementas</string>
     <string name="lb_no_menu">Não há ementas</string>
+    <string name="lb_closed_canteen">Encerrada</string>
+    <string name="canteen_schedule">&lt;b>Horário:&lt;/b> %1$s</string>
 
     <!-- Park Occupation -->
     <string name="title_park_occupation">Ocupação do Parque</string>
