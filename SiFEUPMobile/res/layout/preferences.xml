@@ -40,4 +40,16 @@
             android:title="@string/lb_clean_history_title" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/title_cache_prefs" >
+
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="@string/key_clear_cache"
+            android:summary="@string/lb_clear_cache_desc"
+            android:title="@string/lb_clear_cache_title" />
+    </PreferenceCategory>
 </PreferenceScreen>

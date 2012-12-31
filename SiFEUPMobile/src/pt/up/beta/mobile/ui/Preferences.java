@@ -3,6 +3,7 @@ package pt.up.beta.mobile.ui;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.PeriodicSyncReceiver;
 import pt.up.beta.mobile.content.SigarraContract;
+import pt.up.beta.mobile.content.SigarraProvider;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.syncadapter.SigarraSyncAdapterUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
@@ -57,6 +58,20 @@ public class Preferences extends SherlockPreferenceActivity implements
 							public void run() {
 								SearchActivity
 										.clearSearchHistory(getApplicationContext());
+							}
+						}).start();
+						return true;
+					}
+				});
+		findPreference(getString(R.string.key_clear_cache))
+				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								SigarraProvider
+										.deleteCacheData(getApplicationContext());
 							}
 						}).start();
 						return true;

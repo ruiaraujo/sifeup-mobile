@@ -38,6 +38,10 @@
     <string name="lb_clean_history_title">Limpar Histórico</string>
     <string name="lb_clean_history_desc">Limpar histórico de pesquisas</string>
     <string name="key_clean_history">clean_search_history</string>
+    <string name="title_cache_prefs">Cache</string>
+    <string name="lb_clear_cache_title">Limpar a Cache</string>
+    <string name="lb_clear_cache_desc">Limpar a cache local</string>
+    <string name="key_clear_cache">clear_cache</string>
 
     <string-array name="sync_intervals">
         <item>1 hora</item>

@@ -739,9 +739,6 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.AcademicPath.CONTENT_URI,
 				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
-				SigarraContract.Friends.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
-		context.getContentResolver().delete(
 				SigarraContract.PrintingQuota.CONTENT_URI,
 				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
