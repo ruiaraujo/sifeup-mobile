@@ -337,6 +337,11 @@
         </service>
 
         <receiver android:name=".authenticator.PeriodicSyncReceiver" />
+        <receiver android:name=".authenticator.AccountWatcher" >
+            <intent-filter>
+                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

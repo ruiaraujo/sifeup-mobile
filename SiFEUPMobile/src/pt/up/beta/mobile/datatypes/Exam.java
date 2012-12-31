@@ -133,13 +133,19 @@ public class Exam implements Parcelable {
 		type = ParcelUtils.readString(in);
 		typeDesc = ParcelUtils.readString(in);
 		season = ParcelUtils.readString(in);
-		rooms = new Room[in.readInt()];
-		in.readTypedArray(rooms, Room.CREATOR);
+		if (in == null) {
+			rooms = null;
+		} else {
+			rooms = new Room[in.readInt()];
+			in.readTypedArray(rooms, Room.CREATOR);
+		}
 	}
 
 	public static class Room implements Parcelable {
+		@SerializedName("espaco_id")
 		private final String id;
 
+		@SerializedName("espaco_sigla")
 		private final String name;
 
 		public String getId() {
@@ -153,7 +159,6 @@ public class Exam implements Parcelable {
 		private Room(Parcel in) {
 			id = ParcelUtils.readString(in);
 			name = ParcelUtils.readString(in);
-
 		}
 
 		@Override

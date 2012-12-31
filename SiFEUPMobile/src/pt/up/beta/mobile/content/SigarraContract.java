@@ -4,6 +4,12 @@ import android.net.Uri;
 
 public final class SigarraContract {
 
+	public interface UserColumns {
+		String ID = UsersTable.KEY_ID_PROFILE;
+		String TYPE = UsersTable.KEY_TYPE;
+		String CODE = UsersTable.KEY_CODE;
+	}
+
 	public interface SubjectsColumns {
 		String USER_NAME = SubjectsTable.COLUMN_USER_NAME;
 		String CODE = SubjectsTable.COLUMN_CODE;
@@ -102,6 +108,7 @@ public final class SigarraContract {
 	static final String PATH_PROFILES = "profiles";
 	static final String PATH_PROFILES_PIC = "profiles_pic";
 	static final String PATH_EXAMS = "exams";
+	static final String PATH_USERS = "users";
 	static final String PATH_ACADEMIC_PATH = "academic_path";
 	static final String PATH_TEACHING_SERVICE = "teaching_service";
 	static final String PATH_TUITION = "tuition";
@@ -196,6 +203,25 @@ public final class SigarraContract {
 
 		public static final String[] PROFILE_COLUMNS = { CONTENT };
 		public static final String[] PIC_COLUMNS = { PIC };
+
+	}
+
+	public static class Users implements UserColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+				.appendPath(PATH_USERS).build();
+
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.feup.users";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.feup.user";
+
+		public static final String PROFILE = ID + "=?";
+
+		public static final String[] getUserSelectionArgs(String code) {
+			return new String[] { code };
+		}
+		public static final int ID_COLUMN = 0;
+		public static final int CODE_COLUMN = 1;
+		public static final int TYPE_COLUMN = 2;
+		public static final String[] COLUMNS = { ID,CODE,TYPE };
 
 	}
 
@@ -298,8 +324,9 @@ public final class SigarraContract {
 		public static final String SCHEDULE_DELETE = CODE + "=?";
 
 		public static final String[] getScheduleSelectionArgs(String code) {
-			return new String[] { code};
+			return new String[] { code };
 		}
+
 		public static final String[] getRoomScheduleSelectionArgs(String code,
 				String initialDay, String finalDay, long mondayMillis) {
 			return new String[] { code, initialDay, finalDay,

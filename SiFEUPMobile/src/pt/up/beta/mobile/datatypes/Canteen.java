@@ -46,6 +46,14 @@ public class Canteen implements Parcelable {
 	public String getDate(int groupPosition) {
 		return menus[groupPosition].getDate();
 	}
+	
+	public boolean isClosed(int groupPosition) {
+		return menus[groupPosition].getState().equals("Fechado");
+	}
+
+	public String getTimetable() {
+		return timetable;
+	}
 
 	public int getMenuCount() {
 		return menus.length;

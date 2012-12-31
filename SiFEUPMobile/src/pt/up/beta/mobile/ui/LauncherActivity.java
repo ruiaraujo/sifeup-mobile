@@ -6,7 +6,6 @@ import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
 import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.SigarraContract;
-import pt.up.beta.mobile.content.SigarraProvider;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
@@ -30,7 +29,6 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -126,11 +124,6 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 					return;
 				}
 			}
-			if (!TextUtils.isEmpty(activeUser) && !logOut) {
-				Log.d("FEUPMobile", "account " + activeUser + " was deleted.");
-				SigarraProvider.deleteUserData(getApplicationContext(), activeUser);
-			}
-
 			ListView accountList = (ListView) findViewById(R.id.account_list);
 			accountList.setAdapter(new ArrayAdapter<String>(
 					getApplicationContext(), R.layout.list_item_simple,

@@ -68,6 +68,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if ( AccountUtils.isInvalidated() ){
+			logOut();
+		}
+	}
+	@Override
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance().activityStop(this); // Add this method.
@@ -124,6 +131,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	protected void logOut(){
+		Intent i = new Intent(this, LauncherActivity.class).putExtra(
+				LauncherActivity.LOGOUT_FLAG, true).addFlags(
+				Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
+		finish();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	/**

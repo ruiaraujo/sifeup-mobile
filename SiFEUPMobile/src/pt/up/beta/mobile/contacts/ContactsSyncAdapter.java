@@ -18,15 +18,15 @@ package pt.up.beta.mobile.contacts;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.Constants;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
 import pt.up.beta.mobile.datatypes.Profile;
 import pt.up.beta.mobile.datatypes.Student;
+import pt.up.beta.mobile.datatypes.User;
+import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
@@ -39,11 +39,8 @@ import com.google.gson.Gson;
 
 public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 
-	private final AccountManager mAccountManager;
-
 	public ContactsSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
-		mAccountManager = AccountManager.get(context);
 		EasyTracker.getInstance().setContext(context);
 	}
 
@@ -52,11 +49,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			ContentProviderClient provider, SyncResult syncResult) {
 		try {
 			final List<Profile> rawContacts = new ArrayList<Profile>();
-			final String userCode = mAccountManager.getUserData(account,
-					Constants.USER_CODE);
-			final String type = mAccountManager.getUserData(account,
-					Constants.USER_TYPE);
-			final Profile me = getProfile(userCode, type);
+			final User user = AccountUtils.getUser(getContext(), account.name);
+			final Profile me = getProfile(user.getUserCode(), user.getType());
 			if (me != null)
 				rawContacts.add(me);
 
@@ -66,7 +60,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 							SigarraContract.FriendsColumns.TYPE_FRIEND },
 					SigarraContract.Friends.USER_FRIENDS,
 					SigarraContract.Friends
-							.getUserFriendsSelectionArgs(userCode), null);
+							.getUserFriendsSelectionArgs(user.getUserCode()), null);
 			try {
 				if (c.moveToFirst()) {
 					do {

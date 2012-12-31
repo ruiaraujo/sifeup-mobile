@@ -30,6 +30,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -116,7 +117,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		mRequestNewAccount = mUsername == null;
 		mConfirmCredentials = intent.getBooleanExtra(PARAM_CONFIRM_CREDENTIALS,
 				false);
-		if (mConfirmCredentials){
+		if (mConfirmCredentials) {
 			mUsernameEdit.setKeyListener(null); // disable username editing
 			mPasswordEdit.requestFocus();
 		}
@@ -213,13 +214,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				final Account account = new Account(mUsername,
 						Constants.ACCOUNT_TYPE);
 				if (mRequestNewAccount) {
-					final Bundle userData = new Bundle();
-					userData.putString(Constants.USER_TYPE, user.getType());
-					userData.putString(Constants.USER_CODE, user.getUserCode());
-					mAccountManager.addAccountExplicitly(account, mPassword,
-							userData);
+					final ContentValues values = new ContentValues();
+					values.put(SigarraContract.Users.CODE, user.getUserCode());
+					values.put(SigarraContract.Users.TYPE, user.getType());
+					values.put(SigarraContract.Users.ID, account.name);
+					getContentResolver().insert(
+							SigarraContract.Users.CONTENT_URI, values);
 					// Set contacts sync for this account.
 
+					if (!mAccountManager.addAccountExplicitly(account,
+							mPassword, Bundle.EMPTY)) {
+						getContentResolver().delete(
+								SigarraContract.Users.CONTENT_URI,
+								SigarraContract.Users.PROFILE,
+								SigarraContract.Users
+										.getUserSelectionArgs(account.name));
+						finish();
+					}
 					String syncIntervalValue = PreferenceManager
 							.getDefaultSharedPreferences(
 									getApplicationContext()).getString(

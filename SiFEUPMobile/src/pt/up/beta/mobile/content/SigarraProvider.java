@@ -33,6 +33,7 @@ public class SigarraProvider extends ContentProvider {
 	private static final int NOTIFICATIONS = 90;
 	private static final int CANTEENS = 100;
 	private static final int TEACHING_SERVICE = 110;
+	private static final int USERS = 120;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -65,6 +66,8 @@ public class SigarraProvider extends ContentProvider {
 				SigarraContract.PATH_CANTEENS, CANTEENS);
 		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
 				SigarraContract.PATH_TEACHING_SERVICE, TEACHING_SERVICE);
+		sURIMatcher.addURI(SigarraContract.CONTENT_AUTHORITY,
+				SigarraContract.PATH_USERS, USERS);
 	}
 
 	private DatabaseHelper dbHelper;
@@ -127,6 +130,9 @@ public class SigarraProvider extends ContentProvider {
 		case CANTEENS:
 			table = CanteensTable.TABLE;
 			break;
+		case USERS:
+			table = UsersTable.TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -168,6 +174,8 @@ public class SigarraProvider extends ContentProvider {
 			return SigarraContract.Notifcations.CONTENT_TYPE;
 		case CANTEENS:
 			return SigarraContract.Canteens.CONTENT_TYPE;
+		case USERS:
+			return SigarraContract.Users.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -229,6 +237,10 @@ public class SigarraProvider extends ContentProvider {
 			table = CanteensTable.TABLE;
 			nullHack = null;
 			break;
+		case USERS:
+			table = UsersTable.TABLE;
+			nullHack = null;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -246,7 +258,7 @@ public class SigarraProvider extends ContentProvider {
 			db.endTransaction();
 		}
 
-		if (uriType != LAST_SYNC && uriType != FRIENDS) {
+		if (uriType != LAST_SYNC && uriType != FRIENDS && uriType != USERS) {
 			if (values.length > 0)
 				updateLastSyncState(getContext(), table);
 		}
@@ -312,13 +324,17 @@ public class SigarraProvider extends ContentProvider {
 			table = CanteensTable.TABLE;
 			nullHack = null;
 			break;
+		case USERS:
+			table = UsersTable.TABLE;
+			nullHack = null;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 
 		long rowID = getWritableDatabase().replace(table, nullHack, values);
 		if (rowID > 0) {
-			if (uriType != LAST_SYNC && uriType != FRIENDS)
+			if (uriType != LAST_SYNC && uriType != FRIENDS && uriType != USERS)
 				updateLastSyncState(getContext(), table);
 			final Uri url = ContentUris.withAppendedId(uri, rowID);
 			getContext().getContentResolver().notifyChange(url, null);
@@ -395,6 +411,11 @@ public class SigarraProvider extends ContentProvider {
 			qb.setTables(FriendsTable.TABLE);
 			if (TextUtils.isEmpty(sortOrder))
 				sortOrder = SigarraContract.Friends.DEFAULT_SORT;
+			c = qb.query(getWritableDatabase(), projection, selection,
+					selectionArgs, null, null, sortOrder);
+			break;
+		case USERS:
+			qb.setTables(UsersTable.TABLE);
 			c = qb.query(getWritableDatabase(), projection, selection,
 					selectionArgs, null, null, sortOrder);
 			break;
@@ -613,10 +634,13 @@ public class SigarraProvider extends ContentProvider {
 		case CANTEENS:
 			table = CanteensTable.TABLE;
 			break;
+		case USERS:
+			table = UsersTable.TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
-		if (uriType != LAST_SYNC && uriType != FRIENDS)
+		if (uriType != LAST_SYNC && uriType != FRIENDS && uriType != USERS)
 			updateLastSyncState(getContext(), table);
 		count = getWritableDatabase().update(table, values, selection,
 				selectionArgs);
@@ -639,23 +663,39 @@ public class SigarraProvider extends ContentProvider {
 	public static void deleteUserData(final Context context, final String user) {
 		context.getContentResolver().delete(
 				SigarraContract.Profiles.CONTENT_URI,
-				SigarraContract.Profiles.PROFILE, SigarraContract.Profiles.getProfileSelectionArgs(user, null));
-		context.getContentResolver().delete(
-				SigarraContract.Exams.CONTENT_URI,
+				SigarraContract.Profiles.PROFILE,
+				SigarraContract.Profiles.getProfilePicSelectionArgs(user));
+		context.getContentResolver().delete(SigarraContract.Exams.CONTENT_URI,
 				SigarraContract.Exams.PROFILE,
 				SigarraContract.Exams.getExamsSelectionArgs(user));
-		context.getContentResolver().delete(
-				SigarraContract.AcademicPath.CONTENT_URI,
-				SigarraContract.AcademicPath.PROFILE,
-				SigarraContract.AcademicPath.getAcademicPathSelectionArgs(user));
+		context.getContentResolver()
+				.delete(SigarraContract.AcademicPath.CONTENT_URI,
+						SigarraContract.AcademicPath.PROFILE,
+						SigarraContract.AcademicPath
+								.getAcademicPathSelectionArgs(user));
 		context.getContentResolver().delete(
 				SigarraContract.Schedule.CONTENT_URI,
 				SigarraContract.Schedule.SCHEDULE_DELETE,
 				SigarraContract.Schedule.getScheduleSelectionArgs(user));
-		context.getContentResolver().delete(
-				SigarraContract.Friends.CONTENT_URI,
-				SigarraContract.Friends.USER_FRIENDS,
-				SigarraContract.Friends.getUserFriendsSelectionArgs(user));
+		final Cursor c = context.getContentResolver()
+				.query(SigarraContract.Friends.CONTENT_URI,
+						SigarraContract.Friends.FRIENDS_COLUMNS,
+						SigarraContract.Friends.USER_FRIENDS,
+						SigarraContract.Friends
+								.getUserFriendsSelectionArgs(user), null);
+		try {
+			if (c.moveToFirst()) {
+				do {
+					context.getContentResolver().delete(
+							SigarraContract.Friends.CONTENT_URI,
+							SigarraContract.Friends.FRIEND_SELECTION,
+							SigarraContract.Friends.getFriendSelectionArgs(
+									user, c.getString(0)));
+				} while (c.moveToNext());
+			}
+		} finally {
+			c.close();
+		}
 		context.getContentResolver().delete(
 				SigarraContract.LastSync.CONTENT_URI,
 				SigarraContract.LastSync.PROFILE,
@@ -663,11 +703,13 @@ public class SigarraProvider extends ContentProvider {
 		context.getContentResolver().delete(
 				SigarraContract.Notifcations.CONTENT_URI,
 				SigarraContract.Notifcations.PROFILE,
-				SigarraContract.Notifcations.getNotificationsSelectionArgs(user));
+				SigarraContract.Notifcations
+						.getNotificationsSelectionArgs(user));
 		context.getContentResolver().delete(
 				SigarraContract.PrintingQuota.CONTENT_URI,
 				SigarraContract.PrintingQuota.PROFILE,
-				SigarraContract.PrintingQuota.getPrintingQuotaSelectionArgs(user));
+				SigarraContract.PrintingQuota
+						.getPrintingQuotaSelectionArgs(user));
 		context.getContentResolver().delete(
 				SigarraContract.Subjects.CONTENT_URI,
 				SigarraContract.Subjects.USER_SUBJECTS,
@@ -675,45 +717,41 @@ public class SigarraProvider extends ContentProvider {
 		context.getContentResolver().delete(
 				SigarraContract.TeachingService.CONTENT_URI,
 				SigarraContract.TeachingService.PROFILE,
-				SigarraContract.TeachingService.getTeachingServiceSelectionArgs(user));
+				SigarraContract.TeachingService
+						.getTeachingServiceSelectionArgs(user));
 		context.getContentResolver().delete(
 				SigarraContract.Tuition.CONTENT_URI,
 				SigarraContract.Tuition.PROFILE,
 				SigarraContract.Tuition.getTuitionSelectionArgs(user));
+		context.getContentResolver().delete(SigarraContract.Users.CONTENT_URI,
+				SigarraContract.Users.PROFILE,
+				SigarraContract.Users.getUserSelectionArgs(user));
 	}
-	
+
 	public static void deleteCacheData(final Context context) {
 		context.getContentResolver().delete(
 				SigarraContract.Profiles.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.Schedule.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.AcademicPath.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.Friends.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.PrintingQuota.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.Subjects.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.TeachingService.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 		context.getContentResolver().delete(
 				SigarraContract.Tuition.CONTENT_URI,
-				BaseColumns.CACHE_SELECTION,
-				SyncStates.CACHE_SELECTION);
+				BaseColumns.CACHE_SELECTION, SyncStates.CACHE_SELECTION);
 	}
 }
