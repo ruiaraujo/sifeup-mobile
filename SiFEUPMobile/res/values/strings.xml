@@ -101,9 +101,9 @@
     <string name="bt_about_title">About FEUP Mobile</string>
     <string name="bt_about_message">This application gives FEUP students a mobile platform
                                  where they can track their academic life with ease.
-                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>                                 \n\n<b>Version: </b>1.1.3
+                                 \n\n<a href="http://code.google.com/p/sifeup-mobile">Project\'s Website</a>                                 \n\n<b>Version: </b>1.1.4
                                  \n
-                                 12/12/2012
+                                 07/01/2013
                                  \n\n<b>Credits:</b>\n<ul><li>Faculty of Engineering of University of Porto</li> \n<li>CICA</li> \n<li>Master in Informatics and Computing Engineering</li> \n<li>Distributed Systems course</li> \n</ul></string>
 
     <!-- MAIN  MENU -->
