@@ -19,6 +19,7 @@ import pt.up.beta.mobile.utils.calendar.Event;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -39,7 +42,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class ExamsFragment extends BaseLoaderFragment implements
-		LoaderCallbacks<Exam[]> {
+		LoaderCallbacks<Exam[]>, OnItemClickListener {
 
 	private final static String EXAM_KEY = "pt.up.fe.mobile.ui.studentarea.EXAMS";
 
@@ -283,7 +286,7 @@ public class ExamsFragment extends BaseLoaderFragment implements
 		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
 				R.layout.list_item_exam, from, to);
 		list.setAdapter(adapter);
-		list.setClickable(false);
+		list.setOnItemClickListener(this);
 		return true;
 	}
 
@@ -311,6 +314,17 @@ public class ExamsFragment extends BaseLoaderFragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Exam[]> loader) {
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapter, View view, int position,
+			long id) {
+		final Exam e = exams[position];
+		final String tipo = "( "
+				+ (e.getTypeDesc().contains("Mini-testes") ? "M" : "E") + " ) ";
+		startActivity(new Intent(getActivity(), ExamDescriptionActivity.class)
+				.putExtra(ExamDescriptionFragment.EXAM, e).putExtra(
+						Intent.EXTRA_TITLE, tipo + e.getOcorrName()));
 	}
 
 }

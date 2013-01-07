@@ -141,6 +141,7 @@
     <string name="title_surveillances">Vigilâncias</string>
     <string name="label_no_exams">Não tem exames marcados.</string>
     <string name="label_no_exam_room">Sem salas marcadas</string>
+    <string name="date_exam">&lt;b>Data:&lt;/b>%1$s</string>
 
     <!-- Subjects -->
     <string name="btn_subjects">Unidades Curriculares</string>

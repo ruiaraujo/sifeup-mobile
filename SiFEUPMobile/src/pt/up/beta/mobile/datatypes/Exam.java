@@ -173,6 +173,11 @@ public class Exam implements Parcelable {
 
 		}
 
+		@Override
+		public String toString() {
+			return name;
+		}
+
 		public static final Parcelable.Creator<Room> CREATOR = new Parcelable.Creator<Room>() {
 			public Room createFromParcel(Parcel in) {
 				return new Room(in);

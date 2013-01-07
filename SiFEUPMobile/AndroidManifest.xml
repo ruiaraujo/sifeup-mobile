@@ -106,6 +106,10 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_exams" />
         <activity
+            android:name=".ui.personalarea.ExamDescriptionActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_exams" />
+        <activity
             android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_student_area" />

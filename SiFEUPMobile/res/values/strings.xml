@@ -141,6 +141,7 @@
     <string name="title_surveillances">Surveillances</string>
     <string name="label_no_exams">You have no scheduled exams</string>
     <string name="label_no_exam_room">No scheduled rooms</string>
+    <string name="date_exam">&lt;b>Date:&lt;/b>%1$s</string>
 
     <!-- Subjects -->
     <string name="btn_subjects">Subjects</string>

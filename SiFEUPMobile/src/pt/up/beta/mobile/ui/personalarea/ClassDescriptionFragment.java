@@ -103,9 +103,8 @@ public class ClassDescriptionFragment extends BaseFragment {
 				llItem.setOnClickListener(teacherClick);
 				teachersContainer.addView(llItem);
 			}
-		} else {
-			root.findViewById(R.id.list_teachers).setVisibility(View.GONE);
-			root.findViewById(R.id.class_teacher).setVisibility(View.GONE);
+			root.findViewById(R.id.list_teachers).setVisibility(View.VISIBLE);
+			root.findViewById(R.id.class_teacher).setVisibility(View.VISIBLE);
 		}
 		if (block.getRooms().length > 0) {
 			// Rooms
@@ -142,13 +141,13 @@ public class ClassDescriptionFragment extends BaseFragment {
 
 		// Team
 		// only show if the class is a composition
-		TextView team = (TextView) root.findViewById(R.id.class_team);
 		if (block.getClasses().length > 0) {
-			if (block.getClasses().length > 1)
+			final TextView team = (TextView) root.findViewById(R.id.class_team);
+			if (block.getClasses().length > 1){
 				team.setText(Html.fromHtml(getString(R.string.class_team,
 						block.getClassAcronym())));
-			else
-				team.setVisibility(View.GONE);
+				team.setVisibility(View.VISIBLE);
+			}
 
 			// Rooms
 			LinearLayout classContainer = (LinearLayout) root
@@ -180,9 +179,8 @@ public class ClassDescriptionFragment extends BaseFragment {
 				llItem.setOnClickListener(classClick);
 				classContainer.addView(llItem);
 			}
-		}else {
-			root.findViewById(R.id.list_class).setVisibility(View.GONE);
-			team.setVisibility(View.GONE);
+			root.findViewById(R.id.list_class).setVisibility(View.VISIBLE);
+			root.findViewById(R.id.class_classes).setVisibility(View.VISIBLE);
 		}
 
 		// Start time
