@@ -50,8 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				values.put(UsersTable.KEY_TYPE, accountManager.getUserData(
 						account, "pt.up.beta.mobile.USER_TYPE"));
 				values.put(UsersTable.KEY_ID_PROFILE, account.name);
-				context.getContentResolver().insert(
-						SigarraContract.Users.CONTENT_URI, values);
+				db.insert(UsersTable.TABLE, null, values);
 			}
 			return;
 		}
