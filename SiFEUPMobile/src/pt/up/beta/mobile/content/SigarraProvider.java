@@ -337,7 +337,6 @@ public class SigarraProvider extends ContentProvider {
 			if (uriType != LAST_SYNC && uriType != FRIENDS && uriType != USERS)
 				updateLastSyncState(getContext(), table);
 			final Uri url = ContentUris.withAppendedId(uri, rowID);
-			getContext().getContentResolver().notifyChange(url, null);
 			getContext().getContentResolver().notifyChange(uri, null);
 			return url;
 		}

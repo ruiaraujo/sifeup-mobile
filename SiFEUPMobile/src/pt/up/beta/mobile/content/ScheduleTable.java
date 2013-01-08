@@ -24,10 +24,11 @@ public class ScheduleTable implements BaseColumns {
 	static final String TABLE = "schedules";
 
 	private static final String TABLE_CREATE = "CREATE TABLE " + TABLE + " ("
-			+ KEY_ID + " TEXT PRIMARY KEY , " + KEY_CONTENT
-			+ " TEXT NOT NULL, " + KEY_TYPE + " TEXT NOT NULL, "
-			+ KEY_INITIAL_DAY + " TEXT NOT NULL, " + KEY_FINAL_DAY
-			+ " TEXT NOT NULL, " + SQL_CREATE_STATE + " );";
+			+ KEY_ID + " TEXT, " + KEY_CONTENT + " TEXT NOT NULL, " + KEY_TYPE
+			+ " TEXT NOT NULL, " + KEY_INITIAL_DAY + " TEXT NOT NULL, "
+			+ KEY_FINAL_DAY + " TEXT NOT NULL, " + SQL_CREATE_STATE
+			+ ", PRIMARY KEY (" + KEY_ID + "," + KEY_INITIAL_DAY + ","
+			+ KEY_TYPE + "));";
 
 	static void onCreate(SQLiteDatabase database) {
 		database.execSQL(TABLE_CREATE);

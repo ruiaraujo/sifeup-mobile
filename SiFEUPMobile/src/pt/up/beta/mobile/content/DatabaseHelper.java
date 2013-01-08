@@ -37,8 +37,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion == 3 && newVersion == 4) {
-			TeachingServiceTable.onUpgrade(db, oldVersion, newVersion);
+		//
+		if (newVersion == 4) {
 			UsersTable.onCreate(db);
 			final AccountManager accountManager = AccountManager.get(context);
 			Account[] accounts = accountManager
@@ -52,9 +52,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				values.put(UsersTable.KEY_ID_PROFILE, account.name);
 				db.insert(UsersTable.TABLE, null, values);
 			}
-			return;
+			// if version < 3 we need to upgrade evertything
+			if (oldVersion == 3) {
+				TeachingServiceTable.onUpgrade(db, oldVersion, newVersion);
+				ScheduleTable.onUpgrade(db, oldVersion, newVersion);
+			}
 		}
-		UsersTable.onUpgrade(db, oldVersion, newVersion);
+		if (oldVersion >= 4)
+			UsersTable.onUpgrade(db, oldVersion, newVersion);
 		SubjectsTable.onUpgrade(db, oldVersion, newVersion);
 		FriendsTable.onUpgrade(db, oldVersion, newVersion);
 		ProfilesTable.onUpgrade(db, oldVersion, newVersion);
@@ -67,6 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		CanteensTable.onUpgrade(db, oldVersion, newVersion);
 		LastSyncTable.onUpgrade(db, oldVersion, newVersion);
 		TeachingServiceTable.onUpgrade(db, oldVersion, newVersion);
+
 	}
 
 }
