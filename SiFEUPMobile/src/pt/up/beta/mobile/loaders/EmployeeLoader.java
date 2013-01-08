@@ -18,6 +18,7 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Employee;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -63,7 +64,7 @@ public class EmployeeLoader extends AsyncTaskLoader<Employee> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					Gson gson = new Gson();
+					final Gson gson = GsonUtils.getGson();
 					final String content = cursor.getString(cursor
 							.getColumnIndex(SigarraContract.Profiles.CONTENT));
 					return gson.fromJson(content,

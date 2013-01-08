@@ -18,14 +18,13 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
-
-import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -64,7 +63,7 @@ public class CanteenLoader extends AsyncTaskLoader<Canteen[]> {
 				final String page = cursor.getString(cursor
 						.getColumnIndex(SigarraContract.Canteens.CONTENT));
 				try {
-					return new Gson().fromJson(page, Canteen[].class);
+					return 	GsonUtils.getGson().fromJson(page, Canteen[].class);
 				} catch (Exception e) {
 					e.printStackTrace();
 					LogUtils.trackException(getContext(), e, page, true);

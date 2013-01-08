@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * 
@@ -40,6 +41,7 @@ public class ResultsPage<T extends Parcelable> implements Parcelable {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (NoSuchFieldException e) {
+			Log.e("", "Class " + c.getName());
 			e.printStackTrace();
 		}
 		if (c != null && creator != null) {

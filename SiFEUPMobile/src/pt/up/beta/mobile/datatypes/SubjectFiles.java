@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONException;
 
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -256,7 +257,7 @@ public class SubjectFiles implements Parcelable {
 	 */
 	public static SubjectFiles JSONSubjectContent(String page) {
 		final SubjectFiles subjectFiles = new SubjectFiles();
-		final Gson gson = new Gson();
+		final Gson gson = GsonUtils.getGson();
 		Folder[] folders = gson.fromJson(page, Folder[].class);
 		for (Folder folder : folders) {
 			folder.parent = subjectFiles.root;

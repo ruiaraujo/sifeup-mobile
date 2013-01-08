@@ -18,14 +18,13 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.PaymentTypology;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
-
-import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -62,7 +61,7 @@ public class TuitionLoader extends AsyncTaskLoader<PaymentTypology[]> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 				try {
-					return new Gson()
+					return GsonUtils.getGson()
 							.fromJson(
 									cursor.getString(cursor
 											.getColumnIndex(SigarraContract.TuitionColumns.CONTENT)),

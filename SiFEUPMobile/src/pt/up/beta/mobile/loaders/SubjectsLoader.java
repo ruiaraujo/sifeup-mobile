@@ -26,6 +26,7 @@ import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.StudentCourse;
 import pt.up.beta.mobile.datatypes.SubjectEntry;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.GsonUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -69,7 +70,7 @@ public class SubjectsLoader extends AsyncTaskLoader<StudentCourse[]> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 				// This is not one of my finest moments
-				final Gson gson = new Gson();
+				final Gson gson = GsonUtils.getGson();
 				final HashMap<String, List<SubjectEntry>> entries = new HashMap<String, List<SubjectEntry>>();
 				final HashMap<String, String> courses = new HashMap<String, String>();
 				do {

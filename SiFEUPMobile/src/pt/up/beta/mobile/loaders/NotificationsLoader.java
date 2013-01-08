@@ -19,6 +19,7 @@ package pt.up.beta.mobile.loaders;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.AccountUtils;
+import pt.up.beta.mobile.utils.GsonUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -62,7 +63,7 @@ public class NotificationsLoader extends AsyncTaskLoader<Notification[]> {
 			mCursor = cursor;
 			if (cursor.moveToFirst()) {
 					Notification[] notifications = new Notification[cursor.getCount()];
-					final Gson gson = new Gson();
+					final Gson gson = GsonUtils.getGson();
 					int i = 0;
 					do {
 						notifications[i] = gson.fromJson(cursor.getString(cursor

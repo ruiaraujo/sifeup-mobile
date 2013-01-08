@@ -2,11 +2,10 @@ package pt.up.beta.mobile.sifeup;
 
 import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
-
-import com.google.gson.Gson;
 
 public class PrinterUtils {
 	private PrinterUtils() {
@@ -23,8 +22,7 @@ public class PrinterUtils {
 
 		public RefMB parse(String page) {
 			try {
-				final Gson gson = new Gson();
-				return gson.fromJson(page, RefMB.class);
+				return GsonUtils.getGson().fromJson(page, RefMB.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LogUtils.trackException(null, e, page, true);

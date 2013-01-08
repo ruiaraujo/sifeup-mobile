@@ -19,6 +19,7 @@ package pt.up.beta.mobile.loaders;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Subject;
 import pt.up.beta.mobile.datatypes.SubjectFiles;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -64,7 +65,7 @@ public class SubjectLoader extends AsyncTaskLoader<Subject> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					final Gson gson = new Gson();
+					final Gson gson = GsonUtils.getGson();
 					final Subject subject = gson
 							.fromJson(
 									cursor.getString(cursor

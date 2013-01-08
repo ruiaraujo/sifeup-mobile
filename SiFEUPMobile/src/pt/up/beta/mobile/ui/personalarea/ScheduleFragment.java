@@ -75,7 +75,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	private int mTitleCurrentDayIndex = -1;
 	private View mLeftIndicator;
 	private View mRightIndicator;
-	private List<ScheduleBlock> schedule;
+	private Schedule schedule;
 	private List<Day> mDays = new ArrayList<Day>();
 	private long mondayMillis;
 	private LayoutInflater mInflater;
@@ -115,8 +115,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mInflater = inflater;
-		ViewGroup root = (ViewGroup) inflateMainScreen(
-				R.layout.fragment_schedule);
+		ViewGroup root = (ViewGroup) inflateMainScreen(R.layout.fragment_schedule);
 		mPager = (ViewPager) root.findViewById(R.id.pager);
 		mPager.setAdapter(new DayAdapter());// Workaround a android bug
 		mTitle = (TextView) root.findViewById(R.id.block_title);
@@ -170,8 +169,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (schedule != null)
-			outState.putParcelableArrayList(SCHEDULE_KEY,
-					(ArrayList<? extends Parcelable>) schedule);
+			outState.putParcelable(SCHEDULE_KEY, schedule);
 		outState.putLong(MILLISECONDS_KEY, mondayMillis);
 	}
 
@@ -181,7 +179,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			long millis = savedInstanceState.getLong(MILLISECONDS_KEY);
 			if (millis != 0)
 				mondayMillis = millis;
-			schedule = savedInstanceState.getParcelableArrayList(SCHEDULE_KEY);
+			schedule = savedInstanceState.getParcelable(SCHEDULE_KEY);
 			if (schedule == null)
 				updateSchedule();
 			else {
@@ -214,7 +212,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			// export to Calendar (create event)
 			EasyTracker.getTracker().trackEvent("ui_action", "button_press",
 					"Export Calendar", 0L);
-			if (schedule.isEmpty()) {
+			if (schedule.getBlocks().length == 0) {
 				Toast.makeText(getActivity(), R.string.label_no_classes,
 						Toast.LENGTH_SHORT).show();
 				return true;
@@ -549,7 +547,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 						public void onClick(DialogInterface dialog, int which) {
 
 							// iterate over schedule and add them to schedule
-							for (ScheduleBlock b : schedule) {
+							for (ScheduleBlock b : schedule.getBlocks()) {
 								// new event
 								String title = b.getLectureAcronym() + " ("
 										+ b.getLectureType() + ")";
@@ -674,7 +672,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	}
 
 	private ScheduleBlock findBlock(String blockId) {
-		for (ScheduleBlock block : schedule) {
+		for (ScheduleBlock block : schedule.getBlocks()) {
 			if (block.getBlockId().equals(blockId))
 				return block;
 		}
@@ -694,9 +692,9 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		}
 
 		Log.d("Schedule", "success");
-		for (ScheduleBlock block : schedule)
+		for (ScheduleBlock block : schedule.getBlocks())
 			addBlock(block.getWeekDay(), block);
-		if (schedule.isEmpty())
+		if (schedule.getBlocks().length == 0)
 			Toast.makeText(getActivity(), R.string.label_no_classes,
 					Toast.LENGTH_SHORT).show();
 		mPager.setAdapter(new DayAdapter());
@@ -719,7 +717,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 
 	private void updateSchedule() {
 		if (fetchingNextWeek || fetchingPreviousWeek || setToNow) {
-			ProgressDialogFragment.newInstance(false).show(
+			ProgressDialogFragment.newInstance(true).show(
 					getFragmentManager(), DIALOG);
 		}
 		getActivity().getSupportLoaderManager().restartLoader(scheduleType,
@@ -778,7 +776,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 		if (getActivity() == null || schedule == null)
 			return;
 		removeDialog(DIALOG);
-		this.schedule = schedule.getBlocks();
+		this.schedule = schedule;
 		displaySchedule();
 		setRefreshActionItemState(false);
 		showMainScreen();

@@ -13,12 +13,11 @@ import org.json.JSONObject;
 import pt.up.beta.mobile.datatypes.RoomProfile;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
 import pt.up.beta.mobile.ui.utils.BuildingPicHotspot;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-
-import com.google.gson.Gson;
 
 public class FacilitiesUtils {
 	private FacilitiesUtils() {
@@ -67,8 +66,7 @@ public class FacilitiesUtils {
 
 		@Override
 		public RoomProfile parse(String page) {
-			final Gson gson = new Gson();
-			return gson.fromJson(page, RoomProfile.class);
+			return GsonUtils.getGson().fromJson(page, RoomProfile.class);
 		}
 
 	}

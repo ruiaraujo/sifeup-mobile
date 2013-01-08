@@ -16,10 +16,9 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.lang.reflect.Type;
-
 import pt.up.beta.mobile.datatypes.AcademicPath;
 import pt.up.beta.mobile.datatypes.StudentCourse;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -28,8 +27,6 @@ import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 
 /**
  * Static library support version of the framework's
@@ -67,16 +64,7 @@ public class AcademicPathLoader extends AsyncTaskLoader<AcademicPath[]> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					final GsonBuilder gsonBuilder = new GsonBuilder();
-					gsonBuilder.registerTypeAdapter(StudentCourse.class,
-							new InstanceCreator<StudentCourse>() {
-								@Override
-								public StudentCourse createInstance(Type type) {
-									return StudentCourse.CREATOR
-											.createFromParcel(null);
-								}
-							});
-					final Gson gson = gsonBuilder.create();
+					final Gson gson = GsonUtils.getGson();
 					final StudentCourse[] courses = gson.fromJson(
 							cursor.getString(0), StudentCourse[].class);
 					AcademicPath[] academicPath = new AcademicPath[courses.length];

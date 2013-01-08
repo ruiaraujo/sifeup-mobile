@@ -45,6 +45,7 @@ import pt.up.beta.mobile.ui.notifications.NotificationsDescFragment;
 import pt.up.beta.mobile.ui.notifications.NotificationsFragment;
 import pt.up.beta.mobile.utils.DateUtils;
 import pt.up.beta.mobile.utils.FileUtils;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import pt.up.beta.mobile.utils.StringUtils;
 import android.accounts.Account;
@@ -242,7 +243,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final String notificationReply = SifeupAPI.getReply(
 				SifeupAPI.getNotificationsUrl(user.getUserCode()), account,
 				getContext());
-		final Gson gson = new Gson();
+		final Gson gson = GsonUtils.getGson();
 		final Notification[] notifications = gson.fromJson(notificationReply,
 				Notification[].class);
 		if (notifications == null) {
@@ -726,7 +727,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 						.getUserSubjectsSelectionArgs(account.name));
 		final String subjectsPage = SifeupAPI.getReply(SifeupAPI
 				.getStudentCurrentSubjectsUrl(user.getUserCode()), account, getContext());
-		final Gson gson = new Gson();
+		final Gson gson = GsonUtils.getGson();
 		Type listType = new TypeToken<StudentCourse[]>() {
 		}.getType();
 		final StudentCourse[] courses = gson.fromJson(subjectsPage, listType);
@@ -794,7 +795,7 @@ public class SigarraSyncAdapter extends AbstractThreadedSyncAdapter {
 		final User user = AccountUtils.getUser(getContext(), account.name);
 		final String teachingServicePage = SifeupAPI.getReply(SifeupAPI
 				.getTeachingServiceUrl(user.getUserCode(), null), account, getContext());
-		final TeachingService service = new Gson().fromJson(
+		final TeachingService service = GsonUtils.getGson().fromJson(
 				teachingServicePage, TeachingService.class);
 		if (service == null) {
 			syncResult.stats.numParseExceptions++;

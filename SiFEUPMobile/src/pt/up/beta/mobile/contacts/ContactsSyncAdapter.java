@@ -25,6 +25,7 @@ import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -103,7 +104,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (c.moveToFirst()) {
 				final String content = c.getString(c
 						.getColumnIndex(SigarraContract.Profiles.CONTENT));
-				final Gson gson = new Gson();
+				final Gson gson = GsonUtils.getGson();
 				if (type.equals(SifeupAPI.STUDENT_TYPE))
 					profile = gson.fromJson(content, Student.class);
 				else

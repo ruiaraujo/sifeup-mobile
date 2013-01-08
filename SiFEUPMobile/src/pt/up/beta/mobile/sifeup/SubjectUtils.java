@@ -1,18 +1,12 @@
 package pt.up.beta.mobile.sifeup;
 
-import java.lang.reflect.Type;
-
 import pt.up.beta.mobile.datatypes.OtherSubjectOccurrences;
 import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.datatypes.StudentCourse;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 
 public class SubjectUtils {
 	private SubjectUtils() {
@@ -43,7 +37,7 @@ public class SubjectUtils {
 
 		public OtherSubjectOccurrences[] parse(String page) {
 			try {
-				return new Gson().fromJson(page,
+				return GsonUtils.getGson().fromJson(page,
 						OtherSubjectOccurrences[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -64,23 +58,7 @@ public class SubjectUtils {
 
 		public Student[] parse(String page) {
 			try {
-				GsonBuilder gsonBuilder = new GsonBuilder();
-				gsonBuilder.registerTypeAdapter(Student.class,
-						new InstanceCreator<Student>() {
-							@Override
-							public Student createInstance(Type type) {
-								return Student.CREATOR.createFromParcel(null);
-							}
-						});
-				gsonBuilder.registerTypeAdapter(StudentCourse.class,
-						new InstanceCreator<StudentCourse>() {
-							@Override
-							public StudentCourse createInstance(Type type) {
-								return StudentCourse.CREATOR.createFromParcel(null);
-							}
-						});
-				Gson gson = gsonBuilder.create();
-				return gson.fromJson(page, Student[].class);
+				return GsonUtils.getGson().fromJson(page, Student[].class);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LogUtils.trackException(null, e, page, true);

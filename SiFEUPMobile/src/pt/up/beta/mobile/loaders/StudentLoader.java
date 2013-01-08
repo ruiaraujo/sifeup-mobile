@@ -16,21 +16,15 @@
 
 package pt.up.beta.mobile.loaders;
 
-import java.lang.reflect.Type;
-
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Student;
-import pt.up.beta.mobile.datatypes.StudentCourse;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 
 /**
  * Static library support version of the framework's
@@ -68,30 +62,16 @@ public class StudentLoader extends AsyncTaskLoader<Student> {
 
 			if (cursor.moveToFirst()) {
 				try {
-					GsonBuilder gsonBuilder = new GsonBuilder();
-					gsonBuilder.registerTypeAdapter(Student.class,
-							new InstanceCreator<Student>() {
-								@Override
-								public Student createInstance(Type type) {
-									return Student.CREATOR
-											.createFromParcel(null);
-								}
-							});
-					gsonBuilder.registerTypeAdapter(StudentCourse.class,
-							new InstanceCreator<StudentCourse>() {
-								@Override
-								public StudentCourse createInstance(Type type) {
-									return StudentCourse.CREATOR
-											.createFromParcel(null);
-								}
-							});
-					Gson gson = gsonBuilder.create();
-					return gson.fromJson(cursor.getString(cursor
-							.getColumnIndex(SigarraContract.Profiles.CONTENT)),
-							Student.class);
+					return GsonUtils
+							.getGson()
+							.fromJson(
+									cursor.getString(cursor
+											.getColumnIndex(SigarraContract.Profiles.CONTENT)),
+									Student.class);
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtils.trackException(getContext(), e, cursor.getString(0), true);
+					LogUtils.trackException(getContext(), e,
+							cursor.getString(0), true);
 				}
 			}
 		}

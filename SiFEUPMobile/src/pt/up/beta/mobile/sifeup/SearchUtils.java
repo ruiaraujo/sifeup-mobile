@@ -12,11 +12,11 @@ import pt.up.beta.mobile.datatypes.RoomSearchResult;
 import pt.up.beta.mobile.datatypes.StudentSearchResult;
 import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand.ERROR_TYPE;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class SearchUtils {
@@ -68,8 +68,7 @@ public class SearchUtils {
 	public static ResultsPage<SubjectSearchResult> getSubjectsSearchReply(
 			String code, String name, String acronym, String year, int page,
 			Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
+		return GsonUtils.getGson().fromJson(
 				getJson(SifeupAPI.getSubjectsSearchUrl(encode(code),
 						encode(name), encode(acronym), encode(year), page),
 						context),
@@ -79,8 +78,7 @@ public class SearchUtils {
 
 	public static ResultsPage<RoomSearchResult> getRoomsSearchReply(
 			String query, int page, Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
+		return GsonUtils.getGson().fromJson(
 				getJson(SifeupAPI.getRoomSearchUrl(encode(query), page),
 						context),
 				new TypeToken<ResultsPage<RoomSearchResult>>() {
@@ -90,8 +88,7 @@ public class SearchUtils {
 	public static ResultsPage<StudentSearchResult> getStudentsSearchReply(
 			String code, String name, String email, String state,
 			String firstYear, int page, Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
+		return GsonUtils.getGson().fromJson(
 				getJson(SifeupAPI.getStudentsSearchUrl(encode(code),
 						encode(name), encode(email), encode(state),
 						encode(firstYear), page), context),
@@ -102,8 +99,7 @@ public class SearchUtils {
 	public static ResultsPage<EmployeeSearchResult> getEmployeesSearchReply(
 			String code, String name, String email, String state,
 			String acronym, int page, Context context) {
-		final Gson gson = new Gson();
-		return gson.fromJson(
+		return GsonUtils.getGson().fromJson(
 				getJson(SifeupAPI.getEmployeeSearchUrl(encode(code),
 						encode(name), encode(email), encode(state),
 						encode(acronym), page), context),
@@ -147,8 +143,7 @@ public class SearchUtils {
 
 		public ResultsPage<StudentSearchResult> parse(String page) {
 			try {
-				final Gson gson = new Gson();
-				return gson.fromJson(page,
+				return GsonUtils.getGson().fromJson(page,
 						new TypeToken<ResultsPage<StudentSearchResult>>() {
 						}.getType());
 			} catch (Exception e) {
@@ -170,8 +165,7 @@ public class SearchUtils {
 
 		public ResultsPage<EmployeeSearchResult> parse(String page) {
 			try {
-				final Gson gson = new Gson();
-				return gson.fromJson(page,
+				return GsonUtils.getGson().fromJson(page,
 						new TypeToken<ResultsPage<EmployeeSearchResult>>() {
 						}.getType());
 			} catch (Exception e) {
@@ -188,8 +182,7 @@ public class SearchUtils {
 
 		public ResultsPage<RoomSearchResult> parse(String page) {
 			try {
-				final Gson gson = new Gson();
-				return gson.fromJson(page,
+				return GsonUtils.getGson().fromJson(page,
 						new TypeToken<ResultsPage<RoomSearchResult>>() {
 						}.getType());
 			} catch (Exception e) {
@@ -206,8 +199,7 @@ public class SearchUtils {
 
 		public ResultsPage<SubjectSearchResult> parse(String page) {
 			try {
-				final Gson gson = new Gson();
-				return gson.fromJson(page,
+				return GsonUtils.getGson().fromJson(page,
 						new TypeToken<ResultsPage<SubjectSearchResult>>() {
 						}.getType());
 			} catch (Exception e) {

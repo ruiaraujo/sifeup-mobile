@@ -18,14 +18,13 @@ package pt.up.beta.mobile.loaders;
 
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Schedule;
+import pt.up.beta.mobile.utils.GsonUtils;
 import pt.up.beta.mobile.utils.LogUtils;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
-
-import com.google.gson.Gson;
 
 /**
  * Static library support version of the framework's
@@ -64,8 +63,7 @@ public class ScheduleLoader extends AsyncTaskLoader<Schedule> {
 				final String page = cursor.getString(cursor
 						.getColumnIndex(SigarraContract.Schedule.CONTENT));
 				try {
-					final Gson gson = new Gson();
-					return gson.fromJson(page, Schedule.class);
+					return GsonUtils.getGson().fromJson(page, Schedule.class);
 				} catch (Exception e) {
 					e.printStackTrace();
 					LogUtils.trackException(getContext(), e, page, true);
@@ -88,8 +86,6 @@ public class ScheduleLoader extends AsyncTaskLoader<Schedule> {
 	public void deliverResult(Schedule scheduleBlocks) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped
-			if (scheduleBlocks != null && scheduleBlocks.getBlocks() != null)
-				scheduleBlocks.getBlocks().clear();
 			scheduleBlocks = null;
 			return;
 		}
@@ -175,8 +171,6 @@ public class ScheduleLoader extends AsyncTaskLoader<Schedule> {
 			mCursor.close();
 		}
 		mCursor = null;
-		if (scheduleBlocks != null && scheduleBlocks.getBlocks() != null)
-			scheduleBlocks.getBlocks().clear();
 		scheduleBlocks = null;
 	}
 }
