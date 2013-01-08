@@ -124,7 +124,7 @@
     <string name="toast_now_not_visible">Press this button during the workdays to show the current time.</string>
     <string name="description_now">Go to Now</string>
     <string name="description_schedule">See the Schedule</string>
-    <string name="label_no_classes">You have no scheduled classes</string>
+    <string name="label_no_classes">There are no scheduled classes</string>
 
     <!-- Class Description -->
     <string name="class_subject">&lt;b>Subject:&lt;/b>%1$s</string>

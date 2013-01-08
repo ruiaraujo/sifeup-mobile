@@ -124,7 +124,7 @@
     <string name="toast_now_not_visible">Pressione este botão durante os dias úteis para mostrar o tempo atual.</string>
     <string name="description_now">Ir para hoje</string>
     <string name="description_schedule">Ver o Horário</string>
-    <string name="label_no_classes">Não tem aulas marcadas</string>
+    <string name="label_no_classes">Não há aulas marcadas</string>
 
     <!-- Class Description -->
     <string name="class_subject">&lt;b>Subject:&lt;/b>%1$s</string>
