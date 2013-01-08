@@ -83,6 +83,10 @@ public class RoomsSearchFragment extends BaseFragment implements
 				query = savedInstanceState.getString(SearchManager.QUERY);
 				results = savedInstanceState.getParcelableArrayList(RESULTS);
 				currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+				if (resultPage.getResults().length == 0) {
+					showEmptyScreen(getString(R.string.toast_search_error));
+					return;
+				}
 				if (hasMoreResults()) {
 					adapter = new EndlessSearchAdapter(getActivity(),
 							new SearchCustomAdapter(getActivity(),

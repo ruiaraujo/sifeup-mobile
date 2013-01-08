@@ -93,6 +93,10 @@ public class EmployeesSearchFragment extends BaseFragment implements
 				if (query == null)
 					advancedSearchParameters = savedInstanceState
 							.getStringArray(SearchManager.QUERY);
+				if (resultPage.getResults().length == 0) {
+					showEmptyScreen(getString(R.string.toast_search_error));
+					return;
+				}
 				if (hasMoreResults()) {
 					adapter = new EndlessSearchAdapter(getActivity(),
 							new SearchCustomAdapter(getActivity(),
