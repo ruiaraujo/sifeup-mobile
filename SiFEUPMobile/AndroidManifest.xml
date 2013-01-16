@@ -34,6 +34,7 @@
         android:required="false" />
 
     <application
+        android:name=".FEUPMobileApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
