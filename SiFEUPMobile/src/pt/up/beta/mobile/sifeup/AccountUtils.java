@@ -162,6 +162,8 @@ public class AccountUtils {
 	}
 
 	public static User getUser(final Context context, final String name) {
+		final AccountManager mAccountManager = AccountManager.get(context);
+		final Account mAccount = new Account(name, Constants.ACCOUNT_TYPE);
 		final Cursor cursor = context.getContentResolver().query(
 				SigarraContract.Users.CONTENT_URI,
 				SigarraContract.Users.COLUMNS,
