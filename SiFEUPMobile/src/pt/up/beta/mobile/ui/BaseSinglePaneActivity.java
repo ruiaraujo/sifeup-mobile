@@ -16,10 +16,15 @@
 
 package pt.up.beta.mobile.ui;
 
+import external.com.google.android.apps.iosched.util.UIUtils;
 import pt.up.beta.mobile.R;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.ListView;
 
 /**
  * A {@link BaseActivity} that simply contains a single fragment. The intent
@@ -34,6 +39,30 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_singlepane_empty);
+		
+		if (!UIUtils.isTablet(getApplicationContext()))
+		{			
+			System.out.println("Found: " + findViewById(R.id.drawer_layout));
+			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			drawerList = (ListView) findViewById(R.id.drawer_list);
+			
+			drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.icon, 0, 0) 
+	        {
+	            public void onDrawerClosed(View view) 
+	            {
+	            	super.onDrawerClosed(view);
+	            }
+
+	            public void onDrawerOpened(View drawerView) 
+	            {
+	            	getSupportActionBar().setTitle(R.string.app_name);
+					super.onDrawerOpened(drawerView);
+	            }
+	        };
+	        drawerLayout.setDrawerListener(drawerToggle);
+	        //drawerList.setAdapter(mMenuAdapter);
+			//drawerList.setOnItemClickListener(new DrawerItemClickListener());
+		}
 
 		final String customTitle = getIntent().getStringExtra(
 				Intent.EXTRA_TITLE);
@@ -43,7 +72,7 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
 		if (savedInstanceState == null) {
 			mFragment = onCreatePane();
 			mFragment.setArguments(intentToFragmentArguments(getIntent()));
-
+			
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.root_container, mFragment).commit();
 		}
