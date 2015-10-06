@@ -40,9 +40,13 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_singlepane_empty);
 		
+		final String customTitle = getIntent().getStringExtra(
+				Intent.EXTRA_TITLE);
+		if (customTitle != null)
+			actionbar.setTitle(customTitle);
+		
 		if (!UIUtils.isTablet(getApplicationContext()))
 		{			
-			System.out.println("Found: " + findViewById(R.id.drawer_layout));
 			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 			drawerList = (ListView) findViewById(R.id.drawer_list);
 			
@@ -50,6 +54,9 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
 	        {
 	            public void onDrawerClosed(View view) 
 	            {
+	            	if (customTitle != null)
+	            		getSupportActionBar().setTitle(customTitle);
+	            	
 	            	super.onDrawerClosed(view);
 	            }
 
@@ -60,14 +67,7 @@ public abstract class BaseSinglePaneActivity extends BaseActivity {
 	            }
 	        };
 	        drawerLayout.setDrawerListener(drawerToggle);
-	        //drawerList.setAdapter(mMenuAdapter);
-			//drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		}
-
-		final String customTitle = getIntent().getStringExtra(
-				Intent.EXTRA_TITLE);
-		if (customTitle != null)
-			actionbar.setTitle(customTitle);
 
 		if (savedInstanceState == null) {
 			mFragment = onCreatePane();

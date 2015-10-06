@@ -31,13 +31,7 @@
 
     <style name="TitlePageIndicator">
         <item name="android:background">#FFFFFFFF</item>
-        <!--<item name="footerColor">@color/feup</item>-->
-        <!--<item name="footerLineHeight">1dp</item>-->
-        <!--<item name="footerIndicatorHeight">3dp</item>-->
-        <!--<item name="footerIndicatorStyle">underline</item>-->
         <item name="android:textColor">@color/body_text_grey</item>
-        <!--<item name="selectedColor">#FF000000</item>-->
-        <!--<item name="selectedBold">true</item>-->
     </style>
 
     <style name="TabPageIndicator">
@@ -133,35 +127,35 @@
         <item name="android:textColor">@color/body_text_1</item>
         <item name="android:maxLines">?attr/textHeaderMaxLines</item>
         <item name="android:ellipsize">end</item>
-        <!--<item name="android:textIsSelectable">true</item>-->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextHeaderSub">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/body_text_2</item>
-        <!--<item name="android:textIsSelectable">true</item>-->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextHeader2">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/feup</item>
-        <!--<item name="android:textIsSelectable">true</item>-->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextHeader3">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/body_text_1</item>
-        <!--<item name="android:textIsSelectable">true</item>-->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextBody">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textColor">@color/body_text_1</item>
-        <!--<item name="android:textIsSelectable">true</item>-->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="PushButton">
