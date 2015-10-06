@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -52,7 +51,6 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 	private AcademicPath[] academicPaths;
 
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 	private LayoutInflater mInflater;
 
 	@Override
@@ -69,8 +67,6 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 		viewPager.setAdapter(new PagerCourseAdapter());
-		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
 
@@ -93,7 +89,6 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 				for (int i = 0; i < storedAcademicPaths.length; ++i)
 					academicPaths[i] = (AcademicPath) storedAcademicPaths[i];
 				viewPager.setAdapter(new PagerCourseAdapter());
-				indicator.setViewPager(viewPager);
 				setRefreshActionItemState(false);
 				showMainScreen();
 			}
@@ -299,7 +294,6 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 			return;
 		academicPaths = result;
 		viewPager.setAdapter(new PagerCourseAdapter());
-		indicator.setViewPager(viewPager);
 		setRefreshActionItemState(false);
 		showMainScreen();
 	}
@@ -355,7 +349,6 @@ public class AcademicPathFragment extends BaseLoaderFragment implements
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {

@@ -53,7 +53,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TabPageIndicator;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -74,9 +73,6 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 	/** */
 	private ViewPager viewPager;
 
-	/** */
-	private TabPageIndicator indicator;
-
 	private int currentPage = 0;
 
 	@Override
@@ -96,15 +92,9 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 		View root = inflateMainScreen(R.layout.subject_description);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_subject);
 		viewPager.setAdapter(new PagerSubjectAdapter());
-		// Find the indicator from the layout
-		indicator = (TabPageIndicator) root
-				.findViewById(R.id.indicator_subject);
 		// Create our custom adapter to supply pages to the viewpager.
 		pagerAdapter = new PagerSubjectAdapter();
 		viewPager.setAdapter(pagerAdapter);
-		indicator.setViewPager(viewPager);
-		// Set the indicator as the pageChangeListener
-		indicator.setOnPageChangeListener(this);
 		return getParentContainer();
 	}
 
@@ -673,9 +663,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 				title = subject.getNameEn();
 			getSherlockActivity().getSupportActionBar().setTitle(title);
 			subjectFiles = subject.getFiles();
-			// Start at a custom position
-			indicator.setCurrentItem(0);
-			indicator.notifyDataSetChanged();
+			pagerAdapter.notifyDataSetChanged();
 			setRefreshActionItemState(false);
 			showMainScreen();
 		}

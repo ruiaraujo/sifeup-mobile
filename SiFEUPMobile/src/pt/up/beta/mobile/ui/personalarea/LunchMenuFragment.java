@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * Lunch Menu Fragment
@@ -47,7 +46,6 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 
 	private PagerMenuAdapter pagerAdapter;
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 	private List<Canteen> canteens;
 	private LayoutInflater mInflater;
 
@@ -65,8 +63,6 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 
-		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
 
@@ -137,7 +133,6 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 		pagerAdapter = new PagerMenuAdapter();
 
 		viewPager.setAdapter(pagerAdapter);
-		indicator.setViewPager(viewPager);
 	}
 
 	@Override
@@ -191,7 +186,6 @@ public class LunchMenuFragment extends BaseLoaderFragment implements
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {

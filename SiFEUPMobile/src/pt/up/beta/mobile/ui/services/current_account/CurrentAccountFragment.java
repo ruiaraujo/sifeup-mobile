@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
 
 public class CurrentAccountFragment extends BaseLoaderFragment implements
 		LoaderCallbacks<PaymentTypology[]>, OnItemClickListener {
@@ -34,7 +33,6 @@ public class CurrentAccountFragment extends BaseLoaderFragment implements
 	private PaymentTypology[] typologies;
 
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 	private LayoutInflater mInflater;
 
 	@Override
@@ -49,8 +47,6 @@ public class CurrentAccountFragment extends BaseLoaderFragment implements
 		mInflater = inflater;
 		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
-		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
 
@@ -120,7 +116,6 @@ public class CurrentAccountFragment extends BaseLoaderFragment implements
 			return;
 		typologies = results;
 		viewPager.setAdapter(new PagerTypologiesAdapter());
-		indicator.setViewPager(viewPager);
 		setRefreshActionItemState(false);
 		showMainScreen();
 	}
@@ -160,7 +155,6 @@ public class CurrentAccountFragment extends BaseLoaderFragment implements
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {
