@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -236,7 +235,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 		return intent;
 	}
 
-	@TargetApi(14)
 	public void showContent() {
 		if (drawerLayout != null)
 			drawerLayout.closeDrawer(Gravity.START);
