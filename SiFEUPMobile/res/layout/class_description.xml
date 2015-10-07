@@ -16,6 +16,7 @@
             android:layout_gravity="left|center_vertical"
             android:drawableEnd="@drawable/arrow_to_right"
             android:paddingBottom="15dip"
+            android:drawableRight="@drawable/arrow_to_right"
             android:paddingTop="30dip"
             android:textSize="16.0sp" />
 

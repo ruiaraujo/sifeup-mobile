@@ -2,7 +2,6 @@ package pt.up.beta.mobile.ui;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import pt.up.beta.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
@@ -10,19 +9,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.KeyEvent;
-
+import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.ExceptionParser;
-import com.slidingmenu.lib.SlidingMenu;
-
 import external.com.google.android.apps.iosched.util.UIUtils;
 
 /**
@@ -32,8 +31,9 @@ import external.com.google.android.apps.iosched.util.UIUtils;
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
 	protected ActionBar actionbar;
-	private SlidingMenu slidingMenu;
-	private Handler mHandler = new Handler();
+	protected DrawerLayout drawerLayout;
+	protected ListView drawerList;
+	protected ActionBarDrawerToggle drawerToggle;
 	private final static ExceptionParser parser = new ExceptionParser() {
 		@Override
 		public String getDescription(String threadName, Throwable t) {
@@ -41,23 +41,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			final PrintWriter pw = new PrintWriter(sw);
 			t.printStackTrace(pw);
 			return "Id:" + AccountUtils.getActiveUserCode(null) + "\n"
-					+ sw.toString() + "\n";
+			+ sw.toString() + "\n";
 		}
 	};
 
 	public void onCreate(Bundle o) {
 		super.onCreate(o);
 		actionbar = getSupportActionBar();
-		if (!UIUtils.isTablet(getApplicationContext())) {
-			// customize the SlidingMenu
-			slidingMenu = new SlidingMenu(this);
-			slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-			slidingMenu.setShadowDrawable(R.drawable.shadow);
-			slidingMenu.setBehindOffsetRes(R.dimen.actionbar_home_width);
-			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-			slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-			slidingMenu.setMenu(R.layout.menu_frame);
-		}
 	}
 
 	@Override
@@ -127,16 +117,22 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			if (UIUtils.isTablet(getApplicationContext()))
 				goUp();
 			else
-				slidingMenu.toggle();
+			{
+				if (drawerLayout.isDrawerOpen(Gravity.START)) {
+					drawerLayout.closeDrawer(Gravity.START);
+				} else {
+					drawerLayout.openDrawer(Gravity.START);
+				}
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	protected void logOut(){
 		Intent i = new Intent(this, LauncherActivity.class).putExtra(
 				LauncherActivity.LOGOUT_FLAG, true).addFlags(
-				Intent.FLAG_ACTIVITY_NEW_TASK
+						Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
@@ -157,7 +153,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 			// new task
 			// with a synthesized back stack.
 			TaskStackBuilder.create(this).addNextIntent(upIntent)
-					.startActivities();
+			.startActivities();
 			finish();
 		} else {
 			// This activity is part of the application's task, so simply
@@ -184,17 +180,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	public void openActivityOrFragment(final Intent intent) {
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-		if (slidingMenu != null) {
-			if (slidingMenu.isMenuShowing()) {
-				// delay a bit to help prevent jankyness
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						slidingMenu.showContent();
-					}
-				}, 50);
-			}
-		}
 	}
 
 	public void onBackPressed() {
@@ -251,7 +236,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 	}
 
 	public void showContent() {
-		if (slidingMenu != null)
-			slidingMenu.showContent();
+		if (drawerLayout != null)
+			drawerLayout.closeDrawer(Gravity.START);
 	}
 }

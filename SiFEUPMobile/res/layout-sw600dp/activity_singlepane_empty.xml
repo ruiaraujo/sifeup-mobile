@@ -11,8 +11,7 @@
         android:name="pt.up.beta.mobile.ui.MenuFragment"
         android:layout_width="0px"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_sidemenu" />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/root_container"

@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
@@ -45,7 +44,6 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 	private StudentCourse[] studentCourses = new StudentCourse[0];
 
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 	private LayoutInflater mInflater;
 
 	@Override
@@ -62,8 +60,6 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 		viewPager.setAdapter(new PagerCourseAdapter());
-		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
 
@@ -162,7 +158,6 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 			return;
 		}
 		viewPager.setAdapter(new PagerCourseAdapter());
-		indicator.setViewPager(viewPager);
 
 		setRefreshActionItemState(false);
 		showMainScreen();
@@ -237,7 +232,6 @@ public class SubjectsFragment extends BaseLoaderFragment implements
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {

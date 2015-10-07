@@ -34,7 +34,7 @@ public class MenuFragment extends SherlockFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		final View root = inflater.inflate(R.layout.fragment_sidemenu,
 				container, false);
-		list = (ListView) root.findViewById(R.id.list);
+		list = (ListView) root.findViewById(R.id.drawer_list);
 		return root;
 	}
 

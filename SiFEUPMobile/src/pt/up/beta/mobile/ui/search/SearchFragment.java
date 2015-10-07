@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.viewpagerindicator.TitlePageIndicator;
-
 /**
  * 
  * @author Angela Igreja
@@ -21,7 +19,6 @@ import com.viewpagerindicator.TitlePageIndicator;
 public class SearchFragment extends BaseFragment {
 
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,11 +27,7 @@ public class SearchFragment extends BaseFragment {
 		View root = inflateMainScreen(R.layout.fragment_view_pager);
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 
-		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
-
 		viewPager.setAdapter(new PagerMenuAdapter(getFragmentManager()));
-		indicator.setViewPager(viewPager);
 		showMainScreen();
 		return getParentContainer();// mandatory
 	}

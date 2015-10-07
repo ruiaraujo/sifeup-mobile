@@ -77,12 +77,10 @@ public class LauncherActivity extends SherlockFragmentActivity implements
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 					builder = new StrictMode.VmPolicy.Builder()
 							.detectLeakedSqlLiteObjects()
-							.detectLeakedClosableObjects().penaltyLog()
-							.penaltyDeath();
+							.detectLeakedClosableObjects().penaltyLog();
 				else
 					builder = new StrictMode.VmPolicy.Builder()
-							.detectLeakedSqlLiteObjects().penaltyLog()
-							.penaltyDeath();
+							.detectLeakedSqlLiteObjects().penaltyLog();
 				StrictMode.setVmPolicy(builder.build());
 			}
 		}

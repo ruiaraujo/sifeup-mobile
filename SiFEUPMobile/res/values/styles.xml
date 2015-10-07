@@ -26,22 +26,15 @@
     </style>
 
     <style name="Theme.Sigarra.TabPageIndicator" parent="style/Theme.Sigarra">
-        <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
         <item name="android:textColor">@color/body_text_1</item>
     </style>
 
     <style name="TitlePageIndicator">
         <item name="android:background">#FFFFFFFF</item>
-        <item name="footerColor">@color/feup</item>
-        <item name="footerLineHeight">1dp</item>
-        <item name="footerIndicatorHeight">3dp</item>
-        <item name="footerIndicatorStyle">underline</item>
         <item name="android:textColor">@color/body_text_grey</item>
-        <item name="selectedColor">#FF000000</item>
-        <item name="selectedBold">true</item>
     </style>
 
-    <style name="TabPageIndicator" parent="Widget.TabPageIndicator">
+    <style name="TabPageIndicator">
         <item name="android:background">@drawable/tab_indicator</item>
     </style>
 
