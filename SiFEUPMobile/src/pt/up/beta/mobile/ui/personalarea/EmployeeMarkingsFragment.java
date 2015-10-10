@@ -22,7 +22,6 @@ public class EmployeeMarkingsFragment extends BaseLoaderFragment implements
 	private EmployeeMarkings[] markings;
 
 	private ViewPager viewPager;
-	private TitlePageIndicator indicator;
 	private LayoutInflater mInflater;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
