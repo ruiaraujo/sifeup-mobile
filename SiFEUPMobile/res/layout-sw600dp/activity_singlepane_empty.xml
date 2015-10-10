@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/embedded"
-        android:name="pt.up.beta.mobile.ui.MenuFragment"
+        android:name="pt.up.mobile.ui.MenuFragment"
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="1" />

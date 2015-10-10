@@ -11,8 +11,8 @@
         android:summary="@string/lb_sync_preferences_sum">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="pt.up.beta.mobile"
-            android:targetClass="pt.up.beta.mobile.ui.Preferences" />
+            android:targetPackage="pt.up.mobile"
+            android:targetClass="pt.up.mobile.ui.Preferences" />
     </PreferenceScreen>
     
 </PreferenceScreen>

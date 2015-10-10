@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
     android:contentAuthority="com.android.contacts"
-    android:accountType="pt.up.beta.mobile"
+    android:accountType="pt.up.mobile"
     android:supportsUploading="false"
     android:userVisible="true"
 />

@@ -30,9 +30,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-
-import static pt.up.beta.mobile.utils.LogUtils.LOGD;
-import static pt.up.beta.mobile.utils.LogUtils.makeLogTag;
+import static pt.up.mobile.utils.LogUtils.LOGD;
+import static pt.up.mobile.utils.LogUtils.makeLogTag;
 
 /**
  * An {@link ImageView} that draws its contents inside a mask and draws a border

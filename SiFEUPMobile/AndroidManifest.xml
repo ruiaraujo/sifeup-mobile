@@ -34,7 +34,7 @@
         android:required="false" />
 
     <application
-        android:name="pt.up.beta.mobile.FEUPMobileApplication"
+        android:name=".FEUPMobileApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
@@ -43,7 +43,7 @@
 
         <!-- Activities for both phones and tablets -->
         <activity
-            android:name="pt.up.beta.mobile.ui.LauncherActivity"
+            android:name=".ui.LauncherActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sigarra.Home" >
@@ -74,21 +74,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pt.up.beta.mobile.ui.services.print.PrintActivity"
+            android:name=".ui.services.print.PrintActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_printing" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.print.PrintRefActivity"
+            android:name=".ui.services.print.PrintRefActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_printing"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.print.InternalMobilePrintActivity"
+            android:name=".ui.services.print.InternalMobilePrintActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_mobile_printing"
             android:theme="@style/Theme.Invisible" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.print.MobilePrintActivity"
+            android:name=".ui.services.print.MobilePrintActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_mobile_printing"
             android:noHistory="true"
@@ -103,123 +103,123 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.ExamsActivity"
+            android:name=".ui.personalarea.ExamsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_exams" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.ExamDescriptionActivity"
+            android:name=".ui.personalarea.ExamDescriptionActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_exams" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity"
+            android:name=".ui.personalarea.PersonalAreaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_student_area" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.ServicesActivity"
+            android:name=".ui.services.ServicesActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_student_services" />
         <activity
-            android:name="pt.up.beta.mobile.ui.facilities.FeupFacilitiesActivity"
+            android:name=".ui.facilities.FeupFacilitiesActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_map" />
         <activity
-            android:name="pt.up.beta.mobile.ui.facilities.FeupFacilitiesDetailsActivity"
+            android:name=".ui.facilities.FeupFacilitiesDetailsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_map" />
         <activity
-            android:name="pt.up.beta.mobile.ui.notifications.NotificationsActivity"
+            android:name=".ui.notifications.NotificationsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_notifications" />
         <activity
-            android:name="pt.up.beta.mobile.ui.notifications.NotificationsDescActivity"
+            android:name=".ui.notifications.NotificationsDescActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_notifications" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.ScheduleActivity"
+            android:name=".ui.personalarea.ScheduleActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.LunchMenuActivity"
+            android:name=".ui.personalarea.LunchMenuActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_lunch_menu" />
         <activity
-            android:name="pt.up.beta.mobile.ui.profile.ProfileActivity"
+            android:name=".ui.profile.ProfileActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_profile" />
         <activity
-            android:name="pt.up.beta.mobile.ui.news.NewsActivity"
+            android:name=".ui.news.NewsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_news" />
         <activity
-            android:name="pt.up.beta.mobile.ui.news.NewsDescActivity"
+            android:name=".ui.news.NewsDescActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_news" />
         <activity
-            android:name="pt.up.beta.mobile.ui.friends.FriendsActivity"
+            android:name=".ui.friends.FriendsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_friends" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.ChangePasswordActivity"
+            android:name=".ui.services.ChangePasswordActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_change_password" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.DynamicMailFilesActivity"
+            android:name=".ui.services.DynamicMailFilesActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_dynamic_mail_files" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.ParkOccupationActivity"
+            android:name=".ui.personalarea.ParkOccupationActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_park_occupation" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.ClassDescriptionActivity"
+            android:name=".ui.personalarea.ClassDescriptionActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_schedule" />
         <activity
-            android:name="pt.up.beta.mobile.ui.search.AdvanceSearchActivity"
+            android:name=".ui.search.AdvanceSearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_advanced_search"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="pt.up.beta.mobile.ui.subjects.SubjectsActivity"
+            android:name=".ui.subjects.SubjectsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_subjects" />
         <activity
-            android:name="pt.up.beta.mobile.ui.subjects.SubjectDescriptionActivity"
+            android:name=".ui.subjects.SubjectDescriptionActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_subjects"
             android:theme="@style/Theme.Sigarra.TabPageIndicator" />
         <activity
-            android:name="pt.up.beta.mobile.ui.subjects.OtherOccurrencesActivity"
+            android:name=".ui.subjects.OtherOccurrencesActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_other_occurrences" />
         <activity
-            android:name="pt.up.beta.mobile.ui.subjects.EnrolledStudentsActivity"
+            android:name=".ui.subjects.EnrolledStudentsActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_enrolled_students" />
         <activity
-            android:name="pt.up.beta.mobile.ui.subjects.TeachingServiceActivity"
+            android:name=".ui.subjects.TeachingServiceActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_teaching_service" />
         <activity
-            android:name="pt.up.beta.mobile.ui.personalarea.AcademicPathActivity"
+            android:name=".ui.personalarea.AcademicPathActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_academic_path" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.current_account.CurrentAccountActivity"
+            android:name=".ui.services.current_account.CurrentAccountActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition" />
         <activity
-            android:name="pt.up.beta.mobile.ui.services.current_account.MovementDetailActivity"
+            android:name=".ui.services.current_account.MovementDetailActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_tuition_ref_detail" />
         <activity
-            android:name="pt.up.beta.mobile.sendtosamba.InternalSendToSambaActivity"
+            android:name=".sendtosamba.InternalSendToSambaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_samba_uploader"
             android:theme="@style/Theme.Invisible" >
         </activity>
         <activity
-            android:name="pt.up.beta.mobile.sendtosamba.SendToSambaActivity"
+            android:name=".sendtosamba.SendToSambaActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_samba_uploader"
             android:noHistory="true"
@@ -247,12 +247,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name="pt.up.beta.mobile.sendtosamba.UploaderService" />
-        <service android:name="pt.up.beta.mobile.downloader.DownloaderService" />
-        <service android:name="pt.up.beta.mobile.ui.services.print.MobilePrintService" />
+        <service android:name=".sendtosamba.UploaderService" />
+        <service android:name=".downloader.DownloaderService" />
+        <service android:name=".ui.services.print.MobilePrintService" />
 
         <activity
-            android:name="pt.up.beta.mobile.ui.search.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_search"
             android:launchMode="singleTop" >
@@ -267,7 +267,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="pt.up.beta.mobile.ui.webclient.WebviewActivity"
+            android:name=".ui.webclient.WebviewActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_webview"
             android:launchMode="singleInstance" />
@@ -280,11 +280,11 @@
             android:value=".ui.search.SearchActivity" />
 
         <provider
-            android:name="pt.up.beta.mobile.ui.search.SearchSuggestionHistory"
+            android:name=".ui.search.SearchSuggestionHistory"
             android:authorities="pt.up.fe.mobile.SearchSuggestionProvider"
             android:exported="false" />
         <provider
-            android:name="pt.up.beta.mobile.content.SigarraProvider"
+            android:name=".content.SigarraProvider"
             android:authorities="pt.up.fe.mobile.content.SigarraProvider"
             android:exported="false"
             android:label="Sigarra"
@@ -292,7 +292,7 @@
 
         <!-- The authenticator service -->
         <service
-            android:name="pt.up.beta.mobile.authenticator.AuthenticationService"
+            android:name=".authenticator.AuthenticationService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -304,11 +304,11 @@
         </service>
 
         <activity
-            android:name="pt.up.beta.mobile.ui.Preferences"
+            android:name=".ui.Preferences"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_preferences" />
         <activity
-            android:name="pt.up.beta.mobile.authenticator.AuthenticatorActivity"
+            android:name=".authenticator.AuthenticatorActivity"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
@@ -316,7 +316,7 @@
             android:theme="@style/Theme.Sigarra.Home" />
 
         <service
-            android:name="pt.up.beta.mobile.syncadapter.SigarraSyncService"
+            android:name=".syncadapter.SigarraSyncService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -327,7 +327,7 @@
                 android:resource="@xml/sigarrasyncadapter" />
         </service>
         <service
-            android:name="pt.up.beta.mobile.contacts.ContactsSyncService"
+            android:name=".contacts.ContactsSyncService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -341,8 +341,8 @@
                 android:resource="@xml/contacts" />
         </service>
 
-        <receiver android:name="pt.up.beta.mobile.authenticator.PeriodicSyncReceiver" />
-        <receiver android:name="pt.up.beta.mobile.authenticator.AccountWatcher" >
+        <receiver android:name=".authenticator.PeriodicSyncReceiver" />
+        <receiver android:name=".authenticator.AccountWatcher" >
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
             </intent-filter>

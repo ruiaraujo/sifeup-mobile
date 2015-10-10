@@ -21,7 +21,7 @@
 <!-- for the Account Manager. -->
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="pt.up.beta.mobile"
+    android:accountType="pt.up.mobile"
     android:icon="@drawable/icon"
     android:smallIcon="@drawable/icon"
     android:label="@string/app_name"
