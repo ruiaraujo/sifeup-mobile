@@ -2,7 +2,7 @@
 <resources>
 
     <!-- APPLICATION -->
-    <string name="app_name">FEUP Mobile</string>
+    <string name="app_name">SiFEUP Mobile</string>
     <string name="description_refresh">Refrescar</string>
     <string name="description_share">Partilhar</string>
     <string name="button_repeat">Repetir</string>
