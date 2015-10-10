@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.viewpagerindicator.TitlePageIndicator;
-
 public class EmployeeMarkingsFragment extends BaseLoaderFragment implements
 		ResponseCommand<EmployeeMarkings[]> {
 
@@ -35,7 +33,6 @@ public class EmployeeMarkingsFragment extends BaseLoaderFragment implements
 		viewPager = (ViewPager) root.findViewById(R.id.pager_menu);
 		viewPager.setAdapter(new PagerCourseAdapter());
 		// Find the indicator from the layout
-		indicator = (TitlePageIndicator) root.findViewById(R.id.indicator_menu);
 		return getParentContainer();// mandatory
 	}
 
@@ -85,7 +82,6 @@ public class EmployeeMarkingsFragment extends BaseLoaderFragment implements
 			return;
 		}
 		viewPager.setAdapter(new PagerCourseAdapter());
-		indicator.setViewPager(viewPager);
 
 		setRefreshActionItemState(false);
 		showMainScreen();
@@ -118,7 +114,6 @@ public class EmployeeMarkingsFragment extends BaseLoaderFragment implements
 		}
 
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			indicator.setViewPager(viewPager);
 		}
 
 		public Parcelable saveState() {
