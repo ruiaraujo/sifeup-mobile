@@ -1,7 +1,7 @@
 package pt.up.beta.mobile.ui.services;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.PasswordCheck;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;

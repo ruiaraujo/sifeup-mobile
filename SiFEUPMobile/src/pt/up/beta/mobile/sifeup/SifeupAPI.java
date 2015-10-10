@@ -23,7 +23,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import android.accounts.Account;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;

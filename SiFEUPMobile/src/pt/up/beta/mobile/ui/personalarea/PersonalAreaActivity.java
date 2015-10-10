@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.BaseSinglePaneActivity;

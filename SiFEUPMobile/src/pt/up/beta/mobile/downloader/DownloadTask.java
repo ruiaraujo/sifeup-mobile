@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import android.annotation.TargetApi;

@@ -25,7 +25,7 @@ import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.BaseColumns;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SigarraProvider;

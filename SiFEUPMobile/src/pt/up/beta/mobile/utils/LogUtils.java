@@ -19,7 +19,7 @@ package pt.up.beta.mobile.utils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import pt.up.beta.mobile.BuildConfig;
+import pt.up.mobile.BuildConfig;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.Context;
 import android.util.Log;

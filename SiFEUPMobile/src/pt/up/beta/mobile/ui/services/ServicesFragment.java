@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.services;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sendtosamba.InternalSendToSambaActivity;
 import pt.up.beta.mobile.ui.BaseActivity;
 import pt.up.beta.mobile.ui.search.AdvanceSearchActivity;

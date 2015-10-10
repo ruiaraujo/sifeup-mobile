@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.services.current_account;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.PaymentTypology.Movement;
 import android.content.Context;
 import android.view.LayoutInflater;

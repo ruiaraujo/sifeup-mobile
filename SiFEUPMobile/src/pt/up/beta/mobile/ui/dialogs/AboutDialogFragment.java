@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.dialogs;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;

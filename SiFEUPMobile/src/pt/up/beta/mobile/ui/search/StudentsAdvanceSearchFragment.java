@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.search;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.app.SearchManager;
 import android.content.Context;

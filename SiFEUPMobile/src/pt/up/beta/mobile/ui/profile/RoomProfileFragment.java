@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.profile;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.RoomProfile;
 import pt.up.beta.mobile.datatypes.RoomProfile.Attributes;
 import pt.up.beta.mobile.datatypes.RoomProfile.People;

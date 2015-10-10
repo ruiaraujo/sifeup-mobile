@@ -17,7 +17,7 @@
 package pt.up.beta.mobile.ui;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;

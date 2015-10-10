@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.personalarea;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.ScheduleBlock;
 import pt.up.beta.mobile.datatypes.ScheduleClass;
 import pt.up.beta.mobile.datatypes.ScheduleRoom;

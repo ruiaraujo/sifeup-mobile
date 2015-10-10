@@ -1,8 +1,8 @@
 package pt.up.beta.mobile.ui;
 
-import pt.up.beta.mobile.BuildConfig;
+import pt.up.mobile.BuildConfig;
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
 import pt.up.beta.mobile.contacts.ContactManager;
 import pt.up.beta.mobile.content.SigarraContract;

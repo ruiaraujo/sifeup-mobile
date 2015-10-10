@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui.services.print;
 
 import javax.mail.AuthenticationFailedException;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sendtosamba.ManagedOnPercentageChangedListener;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import pt.up.beta.mobile.ui.utils.InputStreamManaged;

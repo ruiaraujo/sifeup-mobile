@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.subjects;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.sifeup.SubjectUtils;

@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui.friends;
 
 import java.util.List;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Friend;
 import pt.up.beta.mobile.loaders.FriendsLoader;

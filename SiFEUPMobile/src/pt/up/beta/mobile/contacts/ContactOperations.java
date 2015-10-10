@@ -18,7 +18,7 @@ package pt.up.beta.mobile.contacts;
 import java.io.ByteArrayOutputStream;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;

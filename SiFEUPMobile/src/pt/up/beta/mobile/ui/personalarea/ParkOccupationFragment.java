@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui.personalarea;
 
 import java.util.ArrayList;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.Park;
 import pt.up.beta.mobile.sifeup.ParkUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;

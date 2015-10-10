@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.sendtosamba;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;

@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.personalarea.PersonalAreaActivity;
 import android.content.Intent;

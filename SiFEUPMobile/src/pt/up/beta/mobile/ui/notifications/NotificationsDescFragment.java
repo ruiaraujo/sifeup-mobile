@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.notifications;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.Notification;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import pt.up.beta.mobile.ui.webclient.WebviewActivity;

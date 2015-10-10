@@ -18,7 +18,7 @@ package pt.up.beta.mobile.contacts;
 import java.util.List;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.Profile;
 import android.accounts.Account;
 import android.content.ContentResolver;

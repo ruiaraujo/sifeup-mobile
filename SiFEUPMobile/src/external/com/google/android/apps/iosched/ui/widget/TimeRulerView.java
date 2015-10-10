@@ -18,7 +18,7 @@ package external.com.google.android.apps.iosched.ui.widget;
 
 
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.utils.DateUtils;
 
 import android.content.Context;

@@ -3,7 +3,7 @@ package pt.up.beta.mobile.ui.services.print;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.authenticator.AuthenticatorActivity;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.LauncherActivity;

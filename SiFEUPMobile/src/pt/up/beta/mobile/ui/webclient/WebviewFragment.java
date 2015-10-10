@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.webclient;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import pt.up.beta.mobile.ui.BaseFragment;

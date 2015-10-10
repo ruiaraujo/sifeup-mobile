@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import org.jibble.simpleftp.SimpleFTP;
 import org.jibble.simpleftp.SimpleFTP.WrongCredentials;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import pt.up.beta.mobile.ui.utils.InputStreamManaged;
 import pt.up.beta.mobile.utils.LogUtils;

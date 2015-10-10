@@ -18,7 +18,7 @@ package pt.up.beta.mobile.authenticator;
 
 import pt.up.beta.mobile.AccountAuthenticatorActivity;
 import pt.up.beta.mobile.Constants;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.User;
 import pt.up.beta.mobile.sifeup.AuthenticationUtils;

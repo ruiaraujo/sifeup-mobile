@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.services.current_account;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.PaymentTypology;
 import pt.up.beta.mobile.loaders.TuitionLoader;

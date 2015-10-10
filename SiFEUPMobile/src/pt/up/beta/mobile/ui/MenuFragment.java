@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.ui.facilities.FeupFacilitiesActivity;
 import pt.up.beta.mobile.ui.friends.FriendsActivity;
 import pt.up.beta.mobile.ui.news.NewsActivity;

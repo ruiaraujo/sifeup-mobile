@@ -21,7 +21,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import pt.up.beta.mobile.BuildConfig;
+import pt.up.mobile.BuildConfig;
 
 public class Mail extends javax.mail.Authenticator {
 	private String user;

@@ -3,7 +3,7 @@ package pt.up.beta.mobile.ui.personalarea;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.datatypes.Canteen;
 import pt.up.beta.mobile.datatypes.Dish;

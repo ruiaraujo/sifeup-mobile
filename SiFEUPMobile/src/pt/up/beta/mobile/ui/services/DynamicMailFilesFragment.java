@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.DynamicMailFile;
 import pt.up.beta.mobile.downloader.DownloaderService;
 import pt.up.beta.mobile.sifeup.AccountUtils;

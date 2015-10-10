@@ -1,5 +1,5 @@
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:sigarra="http://schemas.android.com/apk/res/pt.up.beta.mobile"
+    xmlns:sigarra="http://schemas.android.com/apk/res/pt.up.mobile"
     android:id="@+id/blocks_scroll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"

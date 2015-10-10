@@ -3,7 +3,7 @@ package pt.up.beta.mobile.datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.SifeupAPI;
 import android.content.res.Resources;
 import android.os.Parcel;

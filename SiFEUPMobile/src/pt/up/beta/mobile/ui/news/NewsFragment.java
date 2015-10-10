@@ -11,7 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.ui.BaseFragment;
 import android.content.Intent;
 import android.os.AsyncTask;

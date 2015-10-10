@@ -4,7 +4,7 @@ import java.util.List;
 
 import external.com.google.android.apps.iosched.util.UIUtils;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.Profile.ProfileDetail;
 import pt.up.beta.mobile.datatypes.Student;
 import pt.up.beta.mobile.datatypes.StudentCourse;

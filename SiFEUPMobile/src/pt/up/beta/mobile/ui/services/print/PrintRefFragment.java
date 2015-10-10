@@ -15,7 +15,7 @@ import pt.up.beta.mobile.datatypes.RefMB;
 import pt.up.beta.mobile.sifeup.PrinterUtils;
 import pt.up.beta.mobile.sifeup.ResponseCommand;
 import pt.up.beta.mobile.ui.BaseFragment;
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 
 /**
  * This interface is responsible for fetching information from ATM reference

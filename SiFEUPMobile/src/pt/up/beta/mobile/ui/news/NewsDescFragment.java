@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 
 /**
 * This interface is responsible for displaying information 

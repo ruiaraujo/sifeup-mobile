@@ -38,7 +38,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 /**
  * An assortment of UI helpers.
  */

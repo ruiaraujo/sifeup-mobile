@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui.services.print;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.sifeup.AccountUtils;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;

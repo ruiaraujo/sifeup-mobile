@@ -2,7 +2,7 @@ package pt.up.beta.mobile.ui.search;
 
 import java.util.ArrayList;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.datatypes.ResultsPage;
 import pt.up.beta.mobile.datatypes.SubjectSearchResult;
 import pt.up.beta.mobile.sifeup.ResponseCommand;

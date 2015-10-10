@@ -2,7 +2,7 @@ package pt.up.beta.mobile.sendtosamba;
 
 import java.io.ByteArrayInputStream;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.ui.utils.FinishedTaskListener;
 import pt.up.beta.mobile.ui.utils.InputStreamManaged;
 import pt.up.beta.mobile.utils.FileUtils;

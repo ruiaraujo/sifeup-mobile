@@ -1,6 +1,6 @@
 package pt.up.beta.mobile.ui;
 
-import pt.up.beta.mobile.R;
+import pt.up.mobile.R;
 import pt.up.beta.mobile.authenticator.PeriodicSyncReceiver;
 import pt.up.beta.mobile.content.SigarraContract;
 import pt.up.beta.mobile.content.SigarraProvider;
