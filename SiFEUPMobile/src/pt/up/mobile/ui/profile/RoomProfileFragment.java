@@ -36,7 +36,7 @@ import com.google.analytics.tracking.android.EasyTracker;
  * @author Ângela Igreja
  */
 public class RoomProfileFragment extends BaseFragment implements
-		ResponseCommand<RoomProfile> {
+ResponseCommand<RoomProfile> {
 	private ViewGroup root;
 	private LayoutInflater mInflater;
 	private String code;
@@ -73,23 +73,26 @@ public class RoomProfileFragment extends BaseFragment implements
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_schedule) {
-			final Intent intent = new Intent(getActivity(),
-					ScheduleActivity.class);
-			intent.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-					ScheduleFragment.SCHEDULE_ROOM);
-			intent.putExtra(ScheduleFragment.SCHEDULE_CODE, room.getCode());
-			intent.putExtra(Intent.EXTRA_TITLE,
-					getString(R.string.title_schedule_arg, room.getFullName()));
-			startActivity(intent);
-			return true;
-		}
-		if (item.getItemId() == R.id.menu_map) {
-			final Intent intent = new Intent(getActivity(),
-					FeupFacilitiesDetailsActivity.class);
-			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
-			startActivity(intent);
-			return true;
+		if (room != null)
+		{
+			if (item.getItemId() == R.id.menu_schedule) {
+				final Intent intent = new Intent(getActivity(),
+						ScheduleActivity.class);
+				intent.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+						ScheduleFragment.SCHEDULE_ROOM);
+				intent.putExtra(ScheduleFragment.SCHEDULE_CODE, room.getCode());
+				intent.putExtra(Intent.EXTRA_TITLE,
+						getString(R.string.title_schedule_arg, room.getFullName()));
+				startActivity(intent);
+				return true;
+			}
+			if (item.getItemId() == R.id.menu_map) {
+				final Intent intent = new Intent(getActivity(),
+						FeupFacilitiesDetailsActivity.class);
+				intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
+				startActivity(intent);
+				return true;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -119,7 +122,7 @@ public class RoomProfileFragment extends BaseFragment implements
 			return;
 		room = results;
 		getSherlockActivity().getSupportActionBar()
-				.setTitle(room.getFullName());
+		.setTitle(room.getFullName());
 		final TextView roomName = (TextView) root.findViewById(R.id.room_name);
 		roomName.setText(Html.fromHtml(getString(R.string.room_name,
 				room.getFullName())));
