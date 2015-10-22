@@ -52,7 +52,6 @@ public class EmployeeAreaFragment extends ListFragment {
 
 		HashMap<String, String> park = new HashMap<String, String>();
 		park.put(from[0], getString(R.string.btn_park_occupation));
-		fillMaps.add(park);
 
 		// fill in the grid_item layout
 		SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps,
@@ -96,10 +95,6 @@ public class EmployeeAreaFragment extends ListFragment {
 		case 4:
 			activity.openActivityOrFragment(new Intent(getActivity(),
 					LunchMenuActivity.class));
-			return;
-		case 5:
-			activity.openActivityOrFragment(new Intent(getActivity(),
-					ParkOccupationActivity.class));
 			return;
 		}
 	}

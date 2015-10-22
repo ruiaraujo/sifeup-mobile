@@ -225,7 +225,7 @@
     <!-- Park Occupation -->
     <string name="title_park_occupation">Ocupação do Parque</string>
     <string name="btn_park_occupation">Ocupação do Parque</string>
-    <string name="label_student_park">P2 - Alunos</string>
+    <string name="label_student_park">P3 - Alunos</string>
     <string name="label_personnel_per_park">P1 - Pessoal Permanente</string>
     <string name="label_personnel_not_per_park">P4 - Pessoal Não Permanente</string>
     <string name="label_free_spots">Lugares livres: %1$s</string>
