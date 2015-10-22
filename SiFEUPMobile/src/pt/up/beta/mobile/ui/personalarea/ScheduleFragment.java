@@ -208,7 +208,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			}
 			return true;
 		}
-		if (item.getItemId() == R.id.menu_export_calendar) {
+		if (item.getItemId() == R.id.menu_export_calendar && schedule != null) {
 			// export to Calendar (create event)
 			EasyTracker.getTracker().trackEvent("ui_action", "button_press",
 					"Export Calendar", 0L);
