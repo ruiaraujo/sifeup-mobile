@@ -3,9 +3,8 @@
 	<name>SiFEUP Mobile</name>
 	<comment></comment>
 	<projects>
-		<project>actionbarsherlock</project>
+		<project>ActionBarSherlock-4.2.0</project>
 		<project>aFileChooser</project>
-		<project>Android-ViewPagerIndicator</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
