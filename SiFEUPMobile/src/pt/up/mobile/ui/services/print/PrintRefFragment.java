@@ -167,7 +167,7 @@ public class PrintRefFragment extends BaseFragment implements
 		final String refStr = ref.getRef();
 		referencia.setText(refStr.substring(0, 3) + " "
 				+ refStr.substring(3, 6) + " " + refStr.substring(6, 9));
-		valor.setText(ref.getAmount() + "â‚¬");
+		valor.setText(ref.getAmount() + "€");
 		dataInicio.setText(ref.getStartDate());
 		dataFim.setText(ref.getEndDate());
 	}
