@@ -38,6 +38,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -240,7 +241,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					final TextView text = (TextView) root
 							.findViewById(R.id.content);
-					text.setText(subject.getObjectives());
+					text.setText(Html.fromHtml(subject.getObjectives()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -251,7 +252,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					final TextView text = (TextView) root
 							.findViewById(R.id.content);
-					text.setText(subject.getContent());
+					text.setText(Html.fromHtml(subject.getContent()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -383,7 +384,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView metodologyText = (TextView) root
 							.findViewById(R.id.content);
-					metodologyText.setText(subject.getMetodology());
+					metodologyText.setText(Html.fromHtml(subject.getMetodology()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -428,7 +429,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView admissionExamsText = (TextView) root
 							.findViewById(R.id.content);
-					admissionExamsText.setText(subject.getFrequenceCond());
+					admissionExamsText.setText(Html.fromHtml(subject.getFrequenceCond()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -439,7 +440,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView finalGradeText = (TextView) root
 							.findViewById(R.id.content);
-					finalGradeText.setText(subject.getEvaluationFormula());
+					finalGradeText.setText(Html.fromHtml(subject.getEvaluationFormula()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -450,7 +451,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView specialEvaluationText = (TextView) root
 							.findViewById(R.id.content);
-					specialEvaluationText.setText(subject.getEvaluationProc());
+					specialEvaluationText.setText(Html.fromHtml(subject.getEvaluationProc()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -461,8 +462,8 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView improvementClassificationText = (TextView) root
 							.findViewById(R.id.content);
-					improvementClassificationText.setText(subject
-							.getImprovementProc());
+					improvementClassificationText.setText(Html.fromHtml(subject
+							.getImprovementProc()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
@@ -473,7 +474,7 @@ public class SubjectDescriptionFragment extends BaseLoaderFragment implements
 							viewPager, false);
 					TextView commentsText = (TextView) root
 							.findViewById(R.id.content);
-					commentsText.setText(subject.getObservations());
+					commentsText.setText(Html.fromHtml(subject.getObservations()));
 				} else
 					root = getEmptyScreen(getString(R.string.no_data));
 				break;
