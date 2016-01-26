@@ -69,30 +69,29 @@ ResponseCommand<RoomProfile> {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.schedule_menu_items, menu);
 		inflater.inflate(R.menu.map_menu_items, menu);
+		menu.findItem(R.id.menu_schedule).setEnabled(room != null);
+		menu.findItem(R.id.menu_map).setEnabled(room != null);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (room != null)
-		{
-			if (item.getItemId() == R.id.menu_schedule) {
-				final Intent intent = new Intent(getActivity(),
-						ScheduleActivity.class);
-				intent.putExtra(ScheduleFragment.SCHEDULE_TYPE,
-						ScheduleFragment.SCHEDULE_ROOM);
-				intent.putExtra(ScheduleFragment.SCHEDULE_CODE, room.getCode());
-				intent.putExtra(Intent.EXTRA_TITLE,
-						getString(R.string.title_schedule_arg, room.getFullName()));
-				startActivity(intent);
-				return true;
-			}
-			if (item.getItemId() == R.id.menu_map) {
-				final Intent intent = new Intent(getActivity(),
-						FeupFacilitiesDetailsActivity.class);
-				intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
-				startActivity(intent);
-				return true;
-			}
+		if (item.getItemId() == R.id.menu_schedule) {
+			final Intent intent = new Intent(getActivity(),
+					ScheduleActivity.class);
+			intent.putExtra(ScheduleFragment.SCHEDULE_TYPE,
+					ScheduleFragment.SCHEDULE_ROOM);
+			intent.putExtra(ScheduleFragment.SCHEDULE_CODE, room.getCode());
+			intent.putExtra(Intent.EXTRA_TITLE,
+					getString(R.string.title_schedule_arg, room.getFullName()));
+			startActivity(intent);
+			return true;
+		}
+		if (item.getItemId() == R.id.menu_map) {
+			final Intent intent = new Intent(getActivity(),
+					FeupFacilitiesDetailsActivity.class);
+			intent.putExtra(FeupFacilitiesDetailsFragment.ROOM_EXTRA, room);
+			startActivity(intent);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -210,7 +209,7 @@ ResponseCommand<RoomProfile> {
 			root.findViewById(R.id.list_occupiers).setVisibility(View.GONE);
 			root.findViewById(R.id.room_occupiers).setVisibility(View.GONE);
 		}
+		getActivity().invalidateOptionsMenu();
 		showMainScreen();
-
 	}
 }

@@ -196,6 +196,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.schedule_fragment_menu_items, menu);
 		inflater.inflate(R.menu.refresh_menu_items, menu);
+		menu.findItem(R.id.menu_export_calendar).setEnabled(schedule != null);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -208,7 +209,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			}
 			return true;
 		}
-		if (item.getItemId() == R.id.menu_export_calendar && schedule != null) {
+		if (item.getItemId() == R.id.menu_export_calendar) {
 			// export to Calendar (create event)
 			EasyTracker.getTracker().trackEvent("ui_action", "button_press",
 					"Export Calendar", 0L);
@@ -777,6 +778,7 @@ public class ScheduleFragment extends BaseLoaderFragment implements
 			return;
 		removeDialog(DIALOG);
 		this.schedule = schedule;
+		getActivity().invalidateOptionsMenu();
 		displaySchedule();
 		setRefreshActionItemState(false);
 		showMainScreen();
