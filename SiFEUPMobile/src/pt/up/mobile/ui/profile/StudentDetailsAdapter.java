@@ -31,7 +31,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return details.size() + courses.length * 5; // 5 fields per course are
+		return details.size() + courses.length * 4; // 4 fields per course are
 													// used
 	}
 
@@ -41,22 +41,20 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			return details.get(position);
 		}
 		position -= details.size();
-		switch (position % 5) {
+		switch (position % 4) {
 		default:
 		case 0:
 			return HEADER;
 		case 1:
-			final String courseName = courses[position / 5].getCourseName();
-			return courseName != null ? courseName : courses[position / 5]
+			final String courseName = courses[position / 4].getCourseName();
+			return courseName != null ? courseName : courses[position / 4]
 					.getCourseTypeDesc();
 		case 2:
-			return courses[position / 5].getStateName();
-		case 3:
-			return courses[position / 5].getCurriculumYear() != null ? courses[position / 5]
+			return courses[position / 4].getCurriculumYear() != null ? courses[position / 4]
 					.getCurriculumYear() : context
 					.getString(R.string.lb_unavailable);
-		case 4:
-			return courses[position / 5].getPlaceName();
+		case 3:
+			return courses[position / 4].getPlaceName();
 		}
 	}
 
@@ -89,7 +87,7 @@ public class StudentDetailsAdapter extends BaseAdapter {
 			return convertView;
 		}
 		position -= details.size();
-		if (position % 5 == 0) {
+		if (position % 4 == 0) {
 			if (convertView == null
 					|| convertView.getTag().toString().equals(NORMAL)) {
 				convertView = mInflater.inflate(
@@ -111,29 +109,25 @@ public class StudentDetailsAdapter extends BaseAdapter {
 					.findViewById(R.id.profile_item_title);
 			final TextView content = (TextView) convertView
 					.findViewById(R.id.profile_item_content);
-			switch (position % 5) {
+			switch (position % 4) {
 			case 1:
 				title.setText(R.string.profile_title_programme);
 				if (UIUtils.isLocalePortuguese()
-						|| TextUtils.isEmpty(courses[position / 5]
+						|| TextUtils.isEmpty(courses[position / 4]
 								.getCourseNameEn()))
-					content.setText(courses[position / 5].getCourseName());
+					content.setText(courses[position / 4].getCourseName());
 				else
-					content.setText(courses[position / 5].getCourseNameEn());
+					content.setText(courses[position / 4].getCourseNameEn());
 				break;
 			case 2:
-				title.setText(R.string.profile_title_status);
-				content.setText(courses[position / 5].getStateName());
-				break;
-			case 3:
 				title.setText(R.string.profile_title_year);
-				content.setText(courses[position / 5].getCurriculumYear() != null ? courses[position / 5]
+				content.setText(courses[position / 4].getCurriculumYear() != null ? courses[position / 4]
 						.getCurriculumYear() : context
 						.getString(R.string.lb_unavailable));
 				break;
-			case 4:
+			case 3:
 				title.setText(R.string.profile_title_faculty);
-				content.setText(courses[position / 5].getPlaceName());
+				content.setText(courses[position / 4].getPlaceName());
 				break;
 			}
 		}
